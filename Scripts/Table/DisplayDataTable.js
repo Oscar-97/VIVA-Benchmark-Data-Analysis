@@ -3,11 +3,19 @@ export function DisplayDataTable(Instance, Solvers, InstanceLabels, DataLabels, 
     const NewDataTable = document.createElement("table");
     NewDataTable.className="table table-bordered";
 
+    let InstanceSolversThead = "<thead class='thead-dark'><tr>" + "<th colspan='7'>" + Instance + "</th>"
+    for (var i = 0; i<Solvers.length; i++){
+        InstanceSolversThead += "<th colspan='8'>" + Solvers[i] + "</th>";
+    }
+    InstanceSolversThead +=  "</tr></thead>"
+    console.log(InstanceSolversThead)
     // Create the table header.
     let ResultThead = "";
+    // Instance labels.
     for (var i = 0; i < InstanceLabels.length; i++){
         ResultThead += "<th scope='col'>" + InstanceLabels[i]+ "</th>";
     }
+    // Data labels.
     for (var i = 0; i < DataLabels.length; i++) {
         ResultThead += "<th>" + DataLabels[i]+ "</th>";
     }
@@ -28,7 +36,7 @@ export function DisplayDataTable(Instance, Solvers, InstanceLabels, DataLabels, 
         tableData += "<tr>" + "<th scope='row'>"+ Problems[i] + "</th>" + resultRow + "</tr>";
     }
     // Create the table.
-    NewDataTable.innerHTML = "<thead><tr>" + ResultThead + "</tr></thead>" 
+    NewDataTable.innerHTML = InstanceSolversThead + "<thead class='thead-dark'><tr>" + ResultThead + "</tr></thead>" 
     + "<tbody>" + tableData + "</tbody>";
 
     console.log("Length of ResultsData: ", ResultsData.length)
