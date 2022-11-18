@@ -1,9 +1,9 @@
 export function CreateChart(dataLabel, dataLabels, data1, data2, data3) {
 
-    console.log("Label set to: ", dataLabel);
-    console.log("Data 1: ", data1);
-    console.log("Data 2: ", data2);
-    console.log("Data 3: ", data3);
+    //console.log("Label set to: ", dataLabel);
+    //console.log("Data 1: ", data1);
+    //console.log("Data 2: ", data2);
+    //console.log("Data 3: ", data3);
 
     function RemoveNullEmptyResults(dataSet) {
         for (var i = dataSet.length - 1; i >= 0; i--) {
