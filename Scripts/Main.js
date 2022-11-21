@@ -1,10 +1,11 @@
 import { ImportData } from './DataProcessing/ImportData.js';
-import { DisplayDataTable } from './Table/DisplayDataTable.js'
+import { DisplayDataTable } from './Table/DisplayDataTable.js';
+import { TableFilters } from './Table/TableFilters.js';
 import { GetInstanceAndSolvers, GetDataLabels, GetProblems } from './DataProcessing/FilterData.js';
 import { CreateChart } from './Chart/CreateChart.js';
 
 // Import the data.
-let SolvedData = ImportData("solvedata2.txt"); // Path to local file.
+let SolvedData = ImportData("solvedata.txt"); // Path to local file.
 
  // Total rows of the raw data.
 console.clear();
@@ -57,6 +58,9 @@ for (FirstProblem; FirstProblem < SolvedData.length; FirstProblem++) {
   ResultsData.push(GetProblems(SolvedData[FirstProblem]).slice(1));
 }
 console.log("ResultsData.length: ", ResultsData.length)
+// Create the solver filters.
+TableFilters(Solvers);
+
 // Display the data in the div with the id "dataTable".
 DisplayDataTable(Instance, Solvers, InstanceLabels, DataLabels, ProblemList, ResultsData);
 
