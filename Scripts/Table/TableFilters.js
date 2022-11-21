@@ -19,7 +19,6 @@ export function TableFilters(Solvers) {
         FilterInput.className = 'form-check-input';
         FilterInput.type = "checkbox";
         FilterInput.id = Solvers[i]
-        FilterInput.innerHTML = Solvers[i];
         
         // Append elements.
         FilterCheckboxes.appendChild(FilterInput)
