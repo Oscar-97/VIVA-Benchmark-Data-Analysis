@@ -10,10 +10,6 @@ let SolvedData = ImportData("solvedata2.txt"); // Path to local file.
 console.clear();
 console.log("Total number of rows in the data file: \n" + SolvedData.length);
 
-// INSTANCE: Index on datalabel array -> match resultarray? name -> alan, vars -> 8. name -> batch, vars -> 46
-// Maybe call the array Instance? and assign: #Vars #Disc #Equs Dir Dual bound Primal bound I to it.
-// Solvers: From the data label Termstatus -> normal etc.
-
 //#region First row of the raw data:
 // Instance is at Index 0.
 let Instance = GetInstanceAndSolvers(SolvedData[0]).shift();
@@ -61,52 +57,9 @@ for (FirstProblem; FirstProblem < SolvedData.length; FirstProblem++) {
   ResultsData.push(GetProblems(SolvedData[FirstProblem]).slice(1));
 }
 console.log("ResultsData.length: ", ResultsData.length)
-// Send to display data.
+// Display the data in the div with the id "dataTable".
 DisplayDataTable(Instance, Solvers, InstanceLabels, DataLabels, ProblemList, ResultsData);
 
-// TODO: Add filters:
+// TODO: Add event on clicking on filters.
 
-// TODO: Create charts from filters:
-
-// Old example.
-// //#region Get filtered results for dual bound for the solvers:
-// // Solver: Scp2804s@1
-// let B = 8; // Column for the results. Make dynamic.
-// let Scp2804_data = [];
-// console.log("Scp280s@1")
-// for (FirstProblem; FirstProblem <= LastProblem; FirstProblem++) {
-//   // Insert to array:
-//   Scp2804_data.push(GetProblems(SolvedData[FirstProblem])[B]);
-// }
-// FirstProblem = 3; // Temp reset
-// console.log("Size of Scp2804_data: ", Scp2804_data.length);
-// console.log("- - - - -");
-
-// // Solver: aecp@1
-// let C = 16; // Column for the results. Make dynamic.
-// let aecp_data = [];
-// console.log("aecp@1")
-// for (FirstProblem; FirstProblem <= LastProblem; FirstProblem++) {
-//   // Insert to array:
-//   aecp_data.push(GetProblems(SolvedData[FirstProblem])[C]);
-// }
-// FirstProblem = 3; // Temp reset.
-// console.log("Size of aecp_data: ", aecp_data.length);
-// console.log("- - - - -");
-
-// // Solver: sbb@1
-// let D = 48; // Column for the results. Make dynamic.
-// let sbb_data = [];
-// console.log("sbb@1")
-// for (FirstProblem; FirstProblem <= LastProblem; FirstProblem++) {
-//   //console.log(GetProblems(SolvedData[FirstProblem])[D])
-//   // Insert to array:
-//   sbb_data.push(GetProblems(SolvedData[FirstProblem])[D]);
-// }
-// FirstProblem = 3; // Temp reset
-// console.log("Size of sbb_data: ", sbb_data.length);
-// console.log("- - - - -");
-
-// // Create a chart (with Chart.js) using the "filtered" data. Displayed in report.html.
-// CreateChart("Number of non null/empty results.", Solvers, Scp2804_data, aecp_data, sbb_data);
-// //#endregion
+// TODO: Create charts from filters.

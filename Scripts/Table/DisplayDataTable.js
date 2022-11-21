@@ -3,10 +3,37 @@ export function DisplayDataTable(Instance, Solvers, InstanceLabels, DataLabels, 
     const NewDataTable = document.createElement("table");
     NewDataTable.className="table table-bordered";
 
+    let FilterCheckboxes; 
+    let FilterLabels;
+    let FilterInput;
+
     let InstanceSolversThead = "<thead class='thead-dark'><tr>" + "<th colspan='7'>" + Instance + "</th>"
-    for (var i = 0; i<Solvers.length; i++){
+    for (var i = 0; i < Solvers.length; i++){
+        // Create thead.
         InstanceSolversThead += "<th colspan='8'>" + Solvers[i] + "</th>";
+        
+        // Create filter form div.
+        FilterCheckboxes = document.createElement('div');
+        FilterCheckboxes.className = "form-check form-check-inline";
+
+        // Create filter labels.
+        FilterLabels = document.createElement('label');
+        FilterLabels.className = "form-check-label";
+        FilterLabels.innerText = Solvers[i];
+
+        // Create input buttons.
+        FilterInput = document.createElement('input');
+        FilterInput.className = 'form-check-input';
+        FilterInput.type = "checkbox";
+        FilterInput.id = Solvers[i]
+        FilterInput.innerHTML = Solvers[i];
+        
+        // Append elements.
+        FilterCheckboxes.appendChild(FilterInput)
+        FilterCheckboxes.appendChild(FilterLabels)
+        document.getElementById('tableFilters').appendChild(FilterCheckboxes);
     }
+
     InstanceSolversThead +=  "</tr></thead>"
     console.log(InstanceSolversThead)
     // Create the table header.
@@ -40,5 +67,4 @@ export function DisplayDataTable(Instance, Solvers, InstanceLabels, DataLabels, 
     + "<tbody>" + tableData + "</tbody>";
 
     console.log("Length of ResultsData: ", ResultsData.length)
-    console.log("Data in non functioning index", ResultsData[404])
 }
