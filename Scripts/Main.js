@@ -5,7 +5,7 @@ import { GetInstanceAndSolvers, GetDataLabels, GetProblems } from './DataProcess
 import { CreateChart } from './Chart/CreateChart.js';
 
 // Import the data.
-let SolvedData = ImportData("solvedata.txt"); // Path to local file.
+let SolvedData = ImportData("solvedata3.txt"); // Path to local file.
 
  // Total rows of the raw data.
 console.clear();
@@ -29,7 +29,7 @@ console.log("Number of filtered data labels: ", DataLabels.length);
 console.log("Data labels: \n", DataLabels);
 
 // Only instance categories.
-let InstanceLabels = DataLabels.splice(0, 6);
+let InstanceLabels = DataLabels.splice(0, 7);
 console.log("Instance categories: \n", InstanceLabels)
 //#endregion
 
@@ -62,8 +62,42 @@ console.log("ResultsData.length: ", ResultsData.length)
 TableFilters(Solvers);
 
 // Display the data in the div with the id "dataTable".
-DisplayDataTable(Instance, Solvers, InstanceLabels, DataLabels, ProblemList, ResultsData);
+//DisplayDataTable(Instance, Solvers, InstanceLabels, DataLabels, ProblemList, ResultsData);
 
 // TODO: Add event on clicking on filters.
 
+let FilterSolvers;
+let ComparisonArray = [];
+const FilterDataTableButton = document.getElementById("filterDataTable");
+FilterDataTableButton.addEventListener("click", function() {
+  // Foreach input in div with inputs, maybe take ID
+  FilterSolvers = document.getElementsByTagName("input")
+
+  let CheckedSolvers = []
+  for (let Solver of FilterSolvers) {
+    if (Solver.checked){
+    CheckedSolvers.push(Solver.id);
+    }
+  }
+  console.log(CheckedSolvers)
+  
+  // Compare checked solvers versus full list of solvers.
+  for (let i = 0; i < Solvers.length; i++) {
+    if (CheckedSolvers.includes(Solvers[i])) {
+      ComparisonArray[i] = "Used";
+    }
+    else {
+      ComparisonArray[i] = "NotUsed";
+    }
+  }
+  console.log(ComparisonArray)
+
+  // Pass the ComparisonArray.
+  DisplayDataTable(Instance, CheckedSolvers, InstanceLabels, DataLabels, ProblemList, ResultsData, ComparisonArray);
+})
+
+/* If */
 // TODO: Create charts from filters.
+// onclick function -> grab all that are checked -> run displaydatatable again with new arrays.
+
+// If none checked = display all.

@@ -1,4 +1,30 @@
-export function DisplayDataTable(Instance, Solvers, InstanceLabels, DataLabels, Problems, ResultsData) {
+export function DisplayDataTable(Instance, Solvers, InstanceLabels, DataLabels, Problems, ResultsData, ComparisonArray) {
+    
+    // Solvers already fixed. Instancelabels are okay. Problems can be kept as they are.
+    // Check if comparison array is used or notused, then remove 8 elements from Datalabels and ResultsData
+    ComparisonArray.forEach( (element, index) => {
+        if (element == "NotUsed") {
+            // Remove DataLabels
+            // Start index to end index.
+            let StartLabel = index * 8;
+            let EndLabel = index * 8 + 8;
+            console.log("Index value: ", index)
+            console.log(DataLabels)
+            console.log(DataLabels.slice(StartLabel , EndLabel));
+            
+            // Result data has a different index, as the instance data is inserted.
+            let StartValue = index * 8 + 6;
+            let EndValue = index * 8 + 14;
+            for (var i = 0; i < Problems.length; i++){
+                console.log("Resultsdata splice: ", ResultsData[i].slice(StartValue, EndValue))
+            }
+        }
+    })
+    
+    const DivToUse = document.getElementById("dataTable");
+    // Clear it.
+    DivToUse.innerHTML = "";
+    
     // Create the table element.
     const NewDataTable = document.createElement("table");
     NewDataTable.className="table table-bordered";
@@ -23,7 +49,6 @@ export function DisplayDataTable(Instance, Solvers, InstanceLabels, DataLabels, 
     }
 
     // Add the data to the div.
-    const DivToUse = document.getElementById("dataTable");
     DivToUse.appendChild(NewDataTable);
 
     let tableData = "";
@@ -31,15 +56,16 @@ export function DisplayDataTable(Instance, Solvers, InstanceLabels, DataLabels, 
     for (var i = 0; i < Problems.length; i++) {
         // Result row. Reset in every loop.
         let resultRow = "";
+        /* Working */
         ResultsData[i].forEach( element => {
             resultRow += "<td>" + element + "</td>";
         })
+
         // Header for each row.
         tableData += "<tr>" + "<th scope='row'>"+ Problems[i] + "</th>" + resultRow + "</tr>";
     }
     // Create the table.
     NewDataTable.innerHTML = InstanceSolversThead + "<thead class='thead-dark'><tr>" + ResultThead + "</tr></thead>" 
     + "<tbody>" + tableData + "</tbody>";
-
     console.log("Length of ResultsData: ", ResultsData.length)
 }
