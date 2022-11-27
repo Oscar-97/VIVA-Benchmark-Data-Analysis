@@ -8,9 +8,7 @@ This is a project in progress for creating a dynamic reporting system, in a HTML
 3. The dynamic report should now be accessible by navigating to the liver servers address.
 --- 
 ### TODO
-- Make the filtering of the raw data more dynamic.
-- Display data in BS4 table.
-    - Filters for the data.
+- Clean up TableSearch.js and DisplayDataTable.js
 - Display plots for results.
 - Import the data by uploading the data-file.
 - Cache the data.
