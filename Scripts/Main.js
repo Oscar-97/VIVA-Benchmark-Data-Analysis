@@ -70,6 +70,18 @@ let ComparisonArray = [];
 const ViewDataTableButton = document.getElementById("viewDataTable");
 const FilterDataTableButton = document.getElementById("filterDataTable");
 
+// Select all checkboxes.
+ViewDataTableButton.addEventListener("click", function() {
+  FilterSolvers = document.getElementsByTagName("input");
+  for (let Solver of FilterSolvers) {
+    if (!Solver.checked){
+    Solver.click();
+    }
+  }
+  ViewDataTableButton.disabled = true;
+})
+
+// Filter and display the data.
 FilterDataTableButton.addEventListener("click", function() {
   // Foreach input in div with inputs.
   FilterSolvers = document.getElementsByTagName("input")
@@ -100,15 +112,5 @@ FilterDataTableButton.addEventListener("click", function() {
   inputSearch.value = "";
   inputSearch.oninput = () => {
     TableSearch();
-  }
-})
-
-ViewDataTableButton.addEventListener("click", function() {
-  FilterSolvers = document.getElementsByTagName("input");
-  for (let Solver of FilterSolvers) {
-    if (!Solver.checked){
-    Solver.click();
-    }
-    ViewDataTableButton.disabled = true;
   }
 })
