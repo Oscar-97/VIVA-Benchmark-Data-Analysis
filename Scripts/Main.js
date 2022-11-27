@@ -1,11 +1,12 @@
 import { ImportData } from './DataProcessing/ImportData.js';
 import { DisplayDataTable } from './Table/DisplayDataTable.js';
 import { TableFilters } from './Table/TableFilters.js';
+import { TableSearch } from './Table/TableSearch.js';
 import { GetInstanceAndSolvers, GetDataLabels, GetProblems } from './DataProcessing/FilterData.js';
 import { CreateChart } from './Chart/CreateChart.js';
 
 // Import the data.
-let SolvedData = ImportData("solvedata3.txt"); // Path to local file.
+let SolvedData = ImportData("solvedata.txt"); // Path to local file.
 
  // Total rows of the raw data.
 console.clear();
@@ -50,7 +51,7 @@ for (var i = FirstProblem; i < SolvedData.length; i++) {
   ProblemList.push(GetProblems(SolvedData[i])[0]);
 }
 console.log("ProblemList.length: ", ProblemList.length)
-//#endregion
+
 
 let ResultsData = [];
 for (FirstProblem; FirstProblem < SolvedData.length; FirstProblem++) {
@@ -58,19 +59,19 @@ for (FirstProblem; FirstProblem < SolvedData.length; FirstProblem++) {
   ResultsData.push(GetProblems(SolvedData[FirstProblem]).slice(1));
 }
 console.log("ResultsData.length: ", ResultsData.length)
+//#endregion
+
 // Create the solver filters.
 TableFilters(Solvers);
 
-// Display the data in the div with the id "dataTable".
-//DisplayDataTable(Instance, Solvers, InstanceLabels, DataLabels, ProblemList, ResultsData);
-
-// TODO: Add event on clicking on filters.
-
+// Display the data in the div with the id "dataTable" after selecting checkboxes and clicking on view selection.
 let FilterSolvers;
 let ComparisonArray = [];
+const ViewDataTableButton = document.getElementById("viewDataTable");
 const FilterDataTableButton = document.getElementById("filterDataTable");
+
 FilterDataTableButton.addEventListener("click", function() {
-  // Foreach input in div with inputs, maybe take ID
+  // Foreach input in div with inputs.
   FilterSolvers = document.getElementsByTagName("input")
 
   let CheckedSolvers = []
@@ -94,10 +95,20 @@ FilterDataTableButton.addEventListener("click", function() {
 
   // Pass the ComparisonArray.
   DisplayDataTable(Instance, CheckedSolvers, InstanceLabels, DataLabels, ProblemList, ResultsData, ComparisonArray);
+  ViewDataTableButton.disabled = false;
+  let inputSearch = document.getElementById("tableSearch");
+  inputSearch.value = "";
+  inputSearch.oninput = () => {
+    TableSearch();
+  }
 })
 
-/* If */
-// TODO: Create charts from filters.
-// onclick function -> grab all that are checked -> run displaydatatable again with new arrays.
-
-// If none checked = display all.
+ViewDataTableButton.addEventListener("click", function() {
+  FilterSolvers = document.getElementsByTagName("input");
+  for (let Solver of FilterSolvers) {
+    if (!Solver.checked){
+    Solver.click();
+    }
+    ViewDataTableButton.disabled = true;
+  }
+})
