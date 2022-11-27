@@ -28,6 +28,8 @@ export function GetDataLabels(data) {
         tempData3[i] = "Primal bound";
     } else if (tempData3[i] === "Dual"){
         tempData3[i] = "Dual bound"
+    } else if (tempData3[i] === "Nodes"){
+        tempData3[i] = "Nodes I"
     }
     returnData = tempData3;
     // Remove last /r in array before returning the data.
