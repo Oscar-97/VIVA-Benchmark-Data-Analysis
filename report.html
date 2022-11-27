@@ -1,74 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" 
-    rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" 
-    crossorigin="anonymous">
-    <!-- Chart.js-->
-    <script 
-    src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" 
-    integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" 
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
+    integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
     crossorigin="anonymous" referrerpolicy="no-referrer">
     </script>
-    <!-- Title and icon-->
-    <title id="ReportTitle">Report</title>
-    <link rel="icon" href="CSS/tab_icon.png">
-    <script 
-    id="MainFunction"
-    type="module" 
-    src="Scripts/Main.js">
-    </script>
-    <style>
-      #dataTable{
-        padding: 2rem;
-        padding-top: 1rem;
-      }
-      #tableFilters {
-        margin-left: 2rem;
-      }
-      #tableSearch {
-        margin-top: 1rem;
-        margin-bottom: 0.5rem;
-        width: auto;
-      }
-    </style>
+  <!-- Title and icon -->
+  <title id="ReportTitle">Report</title>
+  <link rel="icon" href="CSS/tab_icon.png">
+  <!-- Styling -->
+  <link rel="stylesheet" type="text/css" href="./CSS/style.css">
+  <!-- Main script -->
+  <script id="MainFunction" type="module" src="Scripts/Main.js">
+  </script>
 </head>
+
 <body>
-    <nav class="navbar sticky-top navbar-expand-lg bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand">
-            <img src="CSS/tab_icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
-            <b>Dynamic Report</b></a>
-          <button class="navbar-toggler" type="button" 
-          data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page">Table</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" href="Pages/plots.html">Plots</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-    </nav>
-    <div id="tableFilters"><p class="fw-semibold">Solvers:</p>
-      <button class="btn btn-primary btn-sm" type="submit" id="viewDataTable">Select All</button>
-      <button class="btn btn-dark btn-sm" type="submit" id="filterDataTable">View Selection</button>
-      <!-- Table filters will be created here. -->
+  <nav class="navbar sticky-top navbar-expand-lg bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand">
+        <img src="CSS/tab_icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
+        <b>Dynamic Report</b></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page">Table</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="Pages/plots.html">Plots</a>
+          </li>
+        </ul>
+      </div>
     </div>
-    <div id="dataTable">
-      <!-- Table element will be created here. -->
-    </div>
-    <script id="MainFunction" type="module" src="Scripts/Main.js"></script>
-    <script id="BootstrapJSImport" src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  </nav>
+  <div id="tableFilters">
+    <p class="fw-semibold">Solvers:</p>
+    <button class="btn btn-primary btn-sm" type="submit" id="viewDataTable">Select All</button>
+    <button class="btn btn-dark btn-sm" type="submit" id="filterDataTable">View Selection</button>
+    <hr/>
+    <!-- Table filters will be created here. -->
+    <!-- Table search appears after creating a table. -->
+  </div>
+  <div id="dataTable">
+    <!-- Table element will be created here. -->
+  </div>
+  <script id="MainFunction" type="module" src="Scripts/Main.js"></script>
+  <script id="BootstrapJSImport" src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+    crossorigin="anonymous"></script>
 </body>
+
 </html>
