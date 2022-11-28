@@ -1,22 +1,23 @@
 export function TableSearch() {
-    let SearchInput = document.getElementById("tableSearch");
-    let SearchValue = SearchInput.value.toUpperCase();
-    let TableToSearch = document.getElementById("dataTableGenerated");
-    let tr = TableToSearch.getElementsByTagName("tr");
-    let td, found;
+    const SearchInput = document.getElementById("tableSearch");
+    const SearchValue = SearchInput.value.toUpperCase();
+    const TableToSearch = document.getElementById("dataTableGenerated");
+    const TableRow = TableToSearch.getElementsByTagName("tr");
+    let DataCell, FoundProblem;
 
-    for (let i = 2; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("th");
-        for (let j = 0; j < td.length; j++) {
-            if (td[j].innerHTML.toUpperCase().indexOf(SearchValue) > -1) {
-                found = true;
+    // Ignore the two first header rows.
+    for (let i = 2; i < TableRow.length; i++) {
+        DataCell = TableRow[i].getElementsByTagName("th");
+        for (let j = 0; j < DataCell.length; j++) {
+            if (DataCell[j].innerHTML.toUpperCase().indexOf(SearchValue) > -1) {
+                FoundProblem = true;
             }
         }
-        if (found) {
-            tr[i].style.display = "";
-            found = false;
+        if (FoundProblem) {
+            TableRow[i].style.display = "";
+            FoundProblem = false;
         } else {
-            tr[i].style.display = "none";
+            TableRow[i].style.display = "none";
         }
     }
 }
