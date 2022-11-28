@@ -1,37 +1,19 @@
-export function CreateChart(dataLabel, dataLabels, data1, data2, data3) {
-
-    //console.log("Label set to: ", dataLabel);
-    //console.log("Data 1: ", data1);
-    //console.log("Data 2: ", data2);
-    //console.log("Data 3: ", data3);
-
-    function RemoveNullEmptyResults(dataSet) {
-        for (var i = dataSet.length - 1; i >= 0; i--) {
-            if (
-                dataSet[i] === "inf" |
-                dataSet[i] === "-inf" |
-                dataSet[i] === "--"
-            ) {
-                dataSet.splice(i, 1);
-            }
-        }
-    }
-
-    RemoveNullEmptyResults(data1);
-    RemoveNullEmptyResults(data2);
-    RemoveNullEmptyResults(data3);
-
+export function CreateChart(Solvers, DataLabels, ResultsData) {
+    console.log("Solvers: ", Solvers);
+    console.log("DataLabels: ", DataLabels);
+    console.log("ResultsData: ", ResultsData);
+    
     const ctx = document.getElementById('dataChartExample');
     const myChart = new Chart(ctx, {
         type: 'bar',
         data: {
             // Labels for the data.
-            labels: dataLabels,
+            labels: DataLabels,
             datasets: [{
                 // Data label.
-                label: dataLabel,
+                label: 'Insert Solver Name Here',
                 // Data related to the labels.
-                data: [data1.length, data2.length, data3.length],
+                data: 'Insert Result  Category',
                 // For each row, set a color.
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
