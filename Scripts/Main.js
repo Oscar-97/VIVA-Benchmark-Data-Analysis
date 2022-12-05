@@ -6,7 +6,7 @@ import { GetInstanceAndSolvers, GetDataLabels, GetProblems } from './DataProcess
 import { CreateChart } from './Chart/CreateChart.js';
 
 // Import the data.
-const SolvedData = ImportData("../solvedata.txt"); // Path to local file.
+const SolvedData = ImportData("../solvedata.txt"); // TEMP: Path to local file.
 
 //First row of the data:
 const Instance = GetInstanceAndSolvers(SolvedData[0]).shift(); // Instance is at Index 0.
@@ -29,7 +29,7 @@ for (FirstProblem; FirstProblem < SolvedData.length; FirstProblem++) {
   ResultsData.push(GetProblems(SolvedData[FirstProblem]).slice(1));
 }
 
-//#region Console logs.
+//#region Printing information of the data.
 console.log("Total number of rows in the data file: \n" + SolvedData.length);
 console.log("Solvers: \n", Solvers)
 console.log("Number of filtered data labels: ", DataLabels.length);
@@ -41,7 +41,7 @@ console.log("Filtered results for problem: \n", ProblemAndResults[0], "results: 
 // Create the solver filters.
 TableFilters(Solvers);
 
-// Display the data in the div with the id "dataTable" after selecting checkboxes and clicking on view selection.
+// Checking which solvers to use.
 let FilterSolvers;
 const ComparisonArray = [];
 
@@ -57,13 +57,13 @@ ViewDataTableButton.addEventListener("click", function () {
   ViewDataTableButton.disabled = true;
 })
 
-// Filter and display the data.
+// Display the data in the div with the id "dataTable"
 if (document.title == "Report") {
   const ViewSelectionButton = document.getElementById("viewSelectionButton");
   ViewSelectionButton.addEventListener("click", function () {
+    
     // Foreach input in div with inputs.
     FilterSolvers = document.getElementsByTagName("input");
-
     let CheckedSolvers = []
     for (let Solver of FilterSolvers) {
       if (Solver.checked) {
@@ -94,9 +94,12 @@ if (document.title == "Report") {
   })
 }
 
+// Filter and display the data in plots.
 if (document.title == "Plots") {
   const ViewPlotsButton = document.getElementById('viewPlotsButton');
   ViewPlotsButton.addEventListener("click", function() {
+    
+    // Foreach input in div with inputs.
     FilterSolvers = document.getElementsByTagName("input");
     let CheckedSolvers = [];
     for (let Solver of FilterSolvers) {
@@ -104,7 +107,19 @@ if (document.title == "Plots") {
         CheckedSolvers.push(Solver.id);
       }
     }
+    console.log(CheckedSolvers);
+
+    // Compare checked solvers versus full list of solvers.
+    for (let i = 0; i < Solvers.length; i++) {
+      if (CheckedSolvers.includes(Solvers[i])) {
+        ComparisonArray[i] = "Used";
+      }
+      else {
+        ComparisonArray[i] = "NotUsed";
+      }
+    }
+    console.log(ComparisonArray);
     console.log("Sending to CreateChart.");
-    CreateChart(CheckedSolvers, DataLabels, ResultsData);
+    CreateChart(Solvers, ResultsData, ComparisonArray,);
   })
 }
