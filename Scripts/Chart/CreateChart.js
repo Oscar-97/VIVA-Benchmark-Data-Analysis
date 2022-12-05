@@ -1,39 +1,77 @@
-export function CreateChart(Solvers, DataLabels, ResultsData) {
-    console.log("Solvers: ", Solvers);
-    console.log("DataLabels: ", DataLabels);
-    console.log("ResultsData: ", ResultsData);
-    
-    const ctx = document.getElementById('dataChartExample');
-    const myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            // Labels for the data.
-            labels: DataLabels,
-            datasets: [{
-                // Data label.
-                label: 'Insert Solver Name Here',
-                // Data related to the labels.
-                data: 'Insert Result  Category',
-                // For each row, set a color.
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                ],
-                borderWidth: 2
-            }]
-        },
+export function CreateChart(Solvers, ResultsData, ComparisonArray) {
+    // Create x and y data.
+    function CreateXAndYData(LoopCount) {
+        let TempData = [];
+        let TempData2 = [];
+        let IndexOfPrimGap = LoopCount * 8 + 10;
+        for (var i = 0; i < ResultsData.length; i++) {
+            TempData.push(ResultsData[i][IndexOfPrimGap])
+        }
+        for (var i = 0; i < ResultsData.length; i++) {
+            TempData2.push({ x: TempData[i], y: i })
+        }
+        return TempData2;
+    }
+
+    // Add a random color for the dataset.
+    function PickColor() {
+        const Hex = Math.floor(Math.random() * 16777215).toString(16);
+        let Color = '#' + Hex;
+        return Color;
+    }
+
+    // Fetch data for the selected solvers.
+    const SelectedSolvers = [];
+    for (let i = 0; i < Solvers.length; i++) {
+        console.log("Status: ", ComparisonArray[i]);
+        // Only run if the solvers are used.
+        if (ComparisonArray[i] === "Used") {
+            console.log("Creating dataset for: ", Solvers[i]);
+            // Push the label and the data to the dataset.
+            SelectedSolvers.push({ label: Solvers[i], data: CreateXAndYData(i), backgroundColor: PickColor() });
+        }
+    }
+    console.log("Dataset content: ", SelectedSolvers);
+
+    // Dataset to be used in the chart.
+    const CreatedDataset = {
+        datasets: SelectedSolvers
+    }
+
+    // Create the data chart.
+    const DataChartElement = document.getElementById('dataChart');
+    const myChart = new Chart(DataChartElement, {
+        type: 'scatter',
+        data: CreatedDataset,
+        //data: { datasets: SelectedSolvers },
         options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Absolute performance profile (PrimalGap)'
+                }
+            },
             scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'PrimalGap'
+                    }
+                },
                 y: {
-                    beginAtZero: true
+                    //beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of instances.'
+                    }
                 }
             }
         }
     });
+
+    const ViewPlotsButton = document.getElementById('viewPlotsButton');
+    // Destroy the canvas on button click to be able to create a new canvas.
+    ViewPlotsButton.addEventListener("click", function () {
+        myChart.destroy();
+    })
 }
