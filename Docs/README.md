@@ -10,7 +10,8 @@ This is a project in progress for creating a dynamic reporting system, in a HTML
 --- 
 ## TODO
 - Clean up TableSearch.js and DisplayDataTable.js
-- Display plots for results.
+- Add more plotting types.
 - Add option to highlight columns and rows in the table.
+- Fix destruction on Chart.js canvas.
 - Import the data by uploading the data-file.
 - Cache the data.
