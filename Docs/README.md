@@ -1,6 +1,6 @@
 ## Data Visualization Project
 This is a project in progress for creating a dynamic reporting system, in a HTML format, for SHOT benchmark results.
-![Screenshot](./Docs/Images/OverView.png)
+![Screenshot](./Images/OverView.png)
 
 ---
 ## Instructions
