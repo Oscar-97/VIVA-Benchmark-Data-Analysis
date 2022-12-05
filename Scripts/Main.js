@@ -5,6 +5,37 @@ import { TableSearch } from './Table/TableSearch.js';
 import { GetInstanceAndSolvers, GetDataLabels, GetProblems } from './DataProcessing/FilterData.js';
 import { CreateChart } from './Chart/CreateChart.js';
 
+// Get the solvers that are marked as checked.
+function GetCheckedSolvers() {
+  FilterSolvers = document.getElementsByTagName("input");
+  let CheckedSolvers = []
+  for (let Solver of FilterSolvers) {
+    if (Solver.checked) {
+      CheckedSolvers.push(Solver.id);
+    }
+  }
+  console.log(CheckedSolvers);
+  return CheckedSolvers;
+}
+
+// Compare checked solvers versus full list of solvers.
+function GetComparisonArray(CheckedSolvers) {
+  for (let i = 0; i < Solvers.length; i++) {
+    if (CheckedSolvers.includes(Solvers[i])) {
+      ComparisonArray[i] = "Used";
+    }
+    else {
+      ComparisonArray[i] = "NotUsed";
+    }
+  }
+  console.log(ComparisonArray);
+  return ComparisonArray;
+}
+
+// Vars.
+let FilterSolvers;
+const ComparisonArray = [];
+
 // Import the data.
 const SolvedData = ImportData("../solvedata.txt"); // TEMP: Path to local file.
 
@@ -41,10 +72,6 @@ console.log("Filtered results for problem: \n", ProblemAndResults[0], "results: 
 // Create the solver filters.
 TableFilters(Solvers);
 
-// Checking which solvers to use.
-let FilterSolvers;
-const ComparisonArray = [];
-
 // Select all checkboxes.
 const ViewDataTableButton = document.getElementById("selectAllButton");
 ViewDataTableButton.addEventListener("click", function () {
@@ -61,31 +88,13 @@ ViewDataTableButton.addEventListener("click", function () {
 if (document.title == "Report") {
   const ViewSelectionButton = document.getElementById("viewSelectionButton");
   ViewSelectionButton.addEventListener("click", function () {
-    
-    // Foreach input in div with inputs.
-    FilterSolvers = document.getElementsByTagName("input");
-    let CheckedSolvers = []
-    for (let Solver of FilterSolvers) {
-      if (Solver.checked) {
-        CheckedSolvers.push(Solver.id);
-      }
-    }
-    console.log(CheckedSolvers);
+    let CheckedSolvers = GetCheckedSolvers();
+    let ComparisonArray = GetComparisonArray(CheckedSolvers);
 
-    // Compare checked solvers versus full list of solvers.
-    for (let i = 0; i < Solvers.length; i++) {
-      if (CheckedSolvers.includes(Solvers[i])) {
-        ComparisonArray[i] = "Used";
-      }
-      else {
-        ComparisonArray[i] = "NotUsed";
-      }
-    }
-    console.log(ComparisonArray);
-
-    // Pass the ComparisonArray.
     TableDisplayData(Instance, CheckedSolvers, InstanceLabels, DataLabels, ProblemList, ResultsData, ComparisonArray);
     ViewDataTableButton.disabled = false;
+    
+    // Create the input search element.
     const InputSearch = document.getElementById("tableSearch");
     InputSearch.value = "";
     InputSearch.oninput = () => {
@@ -97,29 +106,11 @@ if (document.title == "Report") {
 // Filter and display the data in plots.
 if (document.title == "Plots") {
   const ViewPlotsButton = document.getElementById('viewPlotsButton');
-  ViewPlotsButton.addEventListener("click", function() {
+  ViewPlotsButton.addEventListener("click", function () {
+    let CheckedSolvers = GetCheckedSolvers();
+    let ComparisonArray = GetComparisonArray(CheckedSolvers);
     
-    // Foreach input in div with inputs.
-    FilterSolvers = document.getElementsByTagName("input");
-    let CheckedSolvers = [];
-    for (let Solver of FilterSolvers) {
-      if (Solver.checked) {
-        CheckedSolvers.push(Solver.id);
-      }
-    }
-    console.log(CheckedSolvers);
-
-    // Compare checked solvers versus full list of solvers.
-    for (let i = 0; i < Solvers.length; i++) {
-      if (CheckedSolvers.includes(Solvers[i])) {
-        ComparisonArray[i] = "Used";
-      }
-      else {
-        ComparisonArray[i] = "NotUsed";
-      }
-    }
-    console.log(ComparisonArray);
     console.log("Sending to CreateChart.");
-    CreateChart(Solvers, ResultsData, ComparisonArray,);
+    CreateChart(Solvers, ResultsData, ComparisonArray);
   })
 }
