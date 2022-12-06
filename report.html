@@ -15,16 +15,16 @@
     </script>
   <!-- Title and icon -->
   <title id="ReportTitle">Report</title>
-  <link rel="icon" href="CSS/tab_icon.png">
+  <link rel="icon" href="./Src/CSS/tab_icon.png">
   <!-- Styling -->
-  <link rel="stylesheet" type="text/css" href="./CSS/style.css">
+  <link rel="stylesheet" type="text/css" href="./Src/CSS/style.css">
 </head>
 
 <body>
   <nav class="navbar sticky-top navbar-expand-lg bg-light">
     <div class="container-fluid">
       <a class="navbar-brand">
-        <img src="CSS/tab_icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
+        <img src="./Src/CSS/tab_icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
         <b>Dynamic Report</b></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,17 +36,17 @@
             <a class="nav-link active" aria-current="page">Table</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="Pages/plots.html">Plots</a>
+            <a class="nav-link" href="./Src/Pages/plots.html">Plots</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
   <div id="tableFilters">
-    <p class="fw-semibold">Solvers:</p>
     <button class="btn btn-primary btn-sm" type="submit" id="selectAllButton">Select All</button>
     <button class="btn btn-dark btn-sm" type="submit" id="viewSelectionButton">View Selection</button>
     <hr/>
+    <span class="badge bg-dark">Solvers</span>
     <!-- Table filters will be created here. -->
     <!-- Table search appears after creating a table. -->
   </div>
@@ -54,7 +54,7 @@
     <!-- Table element will be created here. -->
   </div>
   <!-- Main script -->
-  <script id="MainFunction" type="module" src="Scripts/Main.js"></script>
+  <script id="MainFunction" type="module" src="./Src/Scripts/Main.js"></script>
   <script id="BootstrapJSImport" src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
     crossorigin="anonymous"></script>
 </body>
