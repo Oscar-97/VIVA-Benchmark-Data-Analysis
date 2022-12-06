@@ -5,7 +5,7 @@ This is a project in progress for creating a dynamic reporting system, in a HTML
 ---
 ## Instructions
 1. Run the `report.html` with a live server.
-2. Place the `solvedata3.txt` in the root directory.
+2. Place the `solvedata*.txt` in the root directory.
 3. The dynamic report should now be accessible by navigating to the live server address.
 --- 
 ## TODO
