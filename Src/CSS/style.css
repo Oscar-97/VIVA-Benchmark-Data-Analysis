@@ -25,3 +25,7 @@ hr {
     margin-left: 0rem;
     margin-right: 1rem;
 }
+
+tr:hover {
+    background-color: rgb(151, 151, 151);
+}
