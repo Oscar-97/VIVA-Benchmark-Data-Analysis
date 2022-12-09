@@ -19,7 +19,14 @@ const RawData = [];
 
 // Click on the upload data button to start the process.
 ImportDataButton.addEventListener("click", function () {
-  console.clear();
+  
+  // Remove existing Solvers and the search bar when uploading a new result file.
+  try {
+    document.querySelectorAll('.form-check').forEach(solver => {solver.remove();});
+    document.getElementById('tableSearch').remove();
+  }
+  catch {}
+
   // Change the statuses of the buttons after uploading the data.
   SelectAllButton.disabled = false;
   if (document.title == "Report") {
@@ -28,6 +35,7 @@ ImportDataButton.addEventListener("click", function () {
     viewPlotsButton.disabled = false;
   }
   ImportDataButton.disabled = true;
+  
   // Run the remaining functions.
   ManageData();
 });
@@ -45,7 +53,6 @@ FileInput.addEventListener('change', function () {
       let line = lines[i];
       RawData.push(line);
     }
-    console.clear();
   });
   // Read the file as text
   Reader.readAsText(FileInput.files[0]);
