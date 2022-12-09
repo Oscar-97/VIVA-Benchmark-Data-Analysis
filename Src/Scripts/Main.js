@@ -2,6 +2,7 @@
 import { TableDisplayData } from './Table/TableDisplayData.js';
 import { TableFilters } from './Table/TableFilters.js';
 import { TableSearch } from './Table/TableSearch.js';
+import { TableDownloadCSV } from './Table/TableDownloadCSV.js';
 import { GetInstanceAndSolvers, GetDataLabels, GetProblems } from './DataProcessing/FilterData.js';
 import { CreateChart } from './Chart/CreateChart.js';
 
@@ -24,6 +25,7 @@ ImportDataButton.addEventListener("click", function () {
   try {
     document.querySelectorAll('.form-check').forEach(solver => {solver.remove();});
     document.getElementById('tableSearch').remove();
+    document.getElementById('downloadCSVButton').remove();
   }
   catch {}
 
@@ -129,7 +131,6 @@ function ManageData() {
   TableFilters(Solvers);
 
   // Select all checkboxes button functionality.
-  //const SelectAllButton = document.getElementById("selectAllButton");
   SelectAllButton.addEventListener("click", function () {
     let FilterSolvers = document.getElementsByTagName("input");
     for (let Solver of FilterSolvers) {
@@ -142,7 +143,6 @@ function ManageData() {
 
   // Display the data in the div with the id "dataTable" when clicking on the view selection button
   if (document.title == "Report") {
-    //const ViewSelectionButton = document.getElementById("viewSelectionButton");
     ViewSelectionButton.addEventListener("click", function () {
       let CheckedSolvers = GetCheckedSolvers();
       let ComparisonArray = GetComparisonArray(CheckedSolvers, Solvers);
@@ -156,6 +156,10 @@ function ManageData() {
       InputSearch.oninput = () => {
         TableSearch();
       }
+
+      // Create a save CSV button after generating the table.
+      const DownloadCSVButton = document.getElementById("downloadCSVButton");
+      DownloadCSVButton.addEventListener("click", TableDownloadCSV(DownloadCSVButton));
     })
   }
 

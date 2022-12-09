@@ -90,4 +90,15 @@ export function TableDisplayData(Instance, Solvers, InstanceLabels, DataLabels, 
         NewTableSearch.placeholder = "Search for a problem...";
         document.getElementById("tableFilters").appendChild(NewTableSearch);
     }
+
+    // Create a download CSV button.
+    const DownloadCSVButton = document.getElementById("downloadCSVButton");
+    if(!document.body.contains(DownloadCSVButton)) {
+        const NewDownloadCSVButton = document.createElement('a');
+        NewDownloadCSVButton.id = "downloadCSVButton";
+        NewDownloadCSVButton.type = "button";
+        NewDownloadCSVButton.className = "btn btn-success btn-sm";
+        NewDownloadCSVButton.innerHTML = "Download CSV";
+        document.getElementById("buttonField").appendChild(NewDownloadCSVButton);
+    }
 }
