@@ -51,8 +51,10 @@
 
 </div>
   <div id="tableFilters">
-    <button class="btn btn-primary btn-sm" type="none" id="selectAllButton" disabled="true">Select All</button>
-    <button class="btn btn-dark btn-sm" id="viewSelectionButton" disabled="true">View Selection</button>
+    <div id="buttonField">
+      <button class="btn btn-primary btn-sm" type="none" id="selectAllButton" disabled="true">Select All</button>
+      <button class="btn btn-dark btn-sm" id="viewSelectionButton" disabled="true">View Selection</button>
+    </div>
     <hr/>
     <span class="badge bg-dark">Solvers</span>
     <!-- Table filters will be created here. -->
@@ -63,6 +65,7 @@
   </div>
   <!-- Main script -->
   <script id="MainFunction" src="Dist/bundle.js"></script>
+  <!--<script id="MainFunction" type="module" src="./Src/Scripts/Main.js"></script>-->
   <script id="BootstrapJSImport" src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
     crossorigin="anonymous"></script>
 </body>
