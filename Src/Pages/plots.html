@@ -41,7 +41,7 @@
           <li class="nav-item">
             <div class="input-group">
               <input type="file" class="form-control" id="fileInput" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-              <button class="btn btn-outline-secondary" type="button" id="importDataButton">Upload</button>
+              <button class="btn btn-outline-primary" type="button" id="importDataButton" disabled="true">Upload</button>
             </div>
           </li>
         </ul>
@@ -55,9 +55,11 @@
     <span class="badge bg-dark">Solvers</span>
     <!-- Table filters will be created here. -->
   </div>
-  <canvas id="dataChart">
-    <!-- Content created with Chart.js will be displayed here. -->
-  </canvas>
+  <div id="chartContainer">
+    <canvas id="dataChart">
+      <!-- Content created with Chart.js will be displayed here. -->
+    </canvas>
+  </div>
   <!-- Main script -->
   <script id="MainFunction" type="module" src="../Scripts/Main.js"></script>
   <script id="BootstrapJSImport" src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
