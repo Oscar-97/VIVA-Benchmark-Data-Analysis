@@ -1,5 +1,5 @@
 // Filter the instance and solvers.
-export function GetInstanceAndSolvers(data) {
+export function GetInstanceAndSolvers(data: string) {
     let TempData1 = data.split("\|");
     let TempData2 = TempData1.filter(item => item);
     for (var i = TempData2.length - 1; i >= 0; i--) {
@@ -10,7 +10,7 @@ export function GetInstanceAndSolvers(data) {
 }
 
 // Filter the data labels.
-export function GetDataLabels(data) {
+export function GetDataLabels(data: string) {
     // Get the solver names.
     let ReturnData = data.split(" ");
     // Remove extra 'bound' in array when splitting.
@@ -39,7 +39,7 @@ export function GetDataLabels(data) {
 }
 
 // Filter the problems.
-export function GetProblems(data) {
+export function GetProblems(data: string) {
     let ReturnData = data.split(" ");
     // Remove blanks.
     let TempData = ReturnData.filter(item => item);

@@ -1,7 +1,4 @@
-// Regarding load a local file:
-// https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors/CORSRequestNotHttp
-
-export function ImportData(FilePath) {
+export function ImportData(FilePath: string | URL) {
     // Using XMLHttpRequest. 
     // Replace at a later stage where user can upload the file from their directory.
     const RawData = new XMLHttpRequest();

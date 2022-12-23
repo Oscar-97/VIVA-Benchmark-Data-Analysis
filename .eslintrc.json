@@ -1,0 +1,8 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint", "html"],
+    "rules": {
+      // your rules go here
+    }
+  }
+  

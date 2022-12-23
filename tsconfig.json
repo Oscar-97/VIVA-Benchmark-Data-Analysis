@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "outDir": "./Built",
+    "rootDir": "./Src/.",
+    "allowJs": true,
+    "target": "es6",
+  },
+  "include": [
+    "./Src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "typedocOptions": {
+    "entryPoints": [
+      "./Src/index.ts"
+    ],
+    "out": "./Docs"
+  }
+}

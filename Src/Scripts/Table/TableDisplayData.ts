@@ -1,13 +1,13 @@
-export function TableDisplayData(Instance, Solvers, InstanceLabels, DataLabels, Problems, ResultsData, ComparisonArray) {
+export function TableDisplayData(Instance: string, Solvers: string | any[], InstanceLabels: string | any[], DataLabels: any[], Problems: string | any[], ResultsData: any[], ComparisonArray: any[]) {
     // Check if comparison array is used or not used, then remove 8 elements from Datalabels and in each row of ResultsData.
-    let NewResultsData;
-    let NewDataLabels;
+    let NewResultsData: any[][];
+    let NewDataLabels: any[];
     console.log("NewDataLabels length: ", NewDataLabels);
     console.log("NewResultsData length: ", NewResultsData);
 
     // New data labels.
     NewDataLabels = [];
-    ComparisonArray.forEach((element, index) => {
+    ComparisonArray.forEach((element: string, index: number) => {
         if (element === "Used") {
             // Remove DataLabels that are not used.
             // Start index to end index.
@@ -24,7 +24,7 @@ export function TableDisplayData(Instance, Solvers, InstanceLabels, DataLabels, 
     // Set the columns to always use the instance data.
     const ColumnsToUse = [0, 1, 2, 3, 4, 5];
     // Check which solvers to use.
-    ComparisonArray.forEach((element, index) => {
+    ComparisonArray.forEach((element: string, index: number) => {
         const StartValue = index * 8 + 6;
         const EndValue = index * 8 + 14;
         if (element === "Used") {
@@ -34,7 +34,7 @@ export function TableDisplayData(Instance, Solvers, InstanceLabels, DataLabels, 
         }
     })
     console.log("Columns to use: ", ColumnsToUse);
-    NewResultsData = ResultsData.map(r => ColumnsToUse.map(i => r[i]));
+    NewResultsData = ResultsData.map((r: any[]) => ColumnsToUse.map(i => r[i]));
     console.log("NewResultsData after modifications: ", NewResultsData);
 
     // Empty the div that will contain the dataTable.
@@ -63,7 +63,7 @@ export function TableDisplayData(Instance, Solvers, InstanceLabels, DataLabels, 
     for (let i = 0; i < Problems.length; i++) {
         // Result row. Reset in every loop.
         let ResultRow = "";
-        NewResultsData[i].forEach(element => {
+        NewResultsData[i].forEach((element: string) => {
             ResultRow += "<td>" + element + "</td>";
         })
         // Header for each row.

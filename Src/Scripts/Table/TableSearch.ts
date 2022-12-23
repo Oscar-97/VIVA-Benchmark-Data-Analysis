@@ -1,9 +1,9 @@
 export function TableSearch() {
-    const SearchInput = document.getElementById("tableSearch");
+    const SearchInput = document.getElementById("tableSearch") as HTMLInputElement;
     const SearchValue = SearchInput.value.toUpperCase();
     const TableToSearch = document.getElementById("dataTableGenerated");
     const TableRow = TableToSearch.getElementsByTagName("tr");
-    let DataCell, FoundProblem;
+    let DataCell: string | any[] | HTMLCollectionOf<HTMLTableCellElement>, FoundProblem: boolean;
 
     // Ignore the two first header rows.
     for (let i = 2; i < TableRow.length; i++) {

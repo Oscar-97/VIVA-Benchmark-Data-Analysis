@@ -1,4 +1,4 @@
-export function TableFilters(Solvers) {
+export function TableFilters(Solvers: string | any[]) {
     for (var i = 0; i < Solvers.length; i++){
         // Create filter form div.
         const FilterCheckboxes = document.createElement('div');

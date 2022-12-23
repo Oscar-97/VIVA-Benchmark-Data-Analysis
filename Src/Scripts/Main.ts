@@ -1,19 +1,20 @@
 //import { ImportData } from './DataProcessing/ImportData.js'; // Only for accessing files without using upload.
-import { TableDisplayData } from './Table/TableDisplayData.js';
-import { TableFilters } from './Table/TableFilters.js';
-import { TableSearch } from './Table/TableSearch.js';
-import { TableDownloadCSV } from './Table/TableDownloadCSV.js';
-import { GetInstanceAndSolvers, GetDataLabels, GetProblems } from './DataProcessing/FilterData.js';
-import { CreateChart } from './Chart/CreateChart.js';
+import { TableDisplayData } from './Table/TableDisplayData';
+import { TableFilters } from './Table/TableFilters';
+import { TableSearch } from './Table/TableSearch';
+import { TableDownloadCSV } from './Table/TableDownloadCSV';
+import { GetInstanceAndSolvers, GetDataLabels, GetProblems } from './DataProcessing/FilterData';
+import { CreateChart } from './Chart/CreateChart';
 
 // Set input value for file upload to empty at load.
-document.getElementById('fileInput').value='';
+(<HTMLInputElement>document.getElementById('fileInput')).value='';
 
 // Get the elements.
-const FileInput = document.getElementById('fileInput');
-const ImportDataButton = document.getElementById('importDataButton');
-const SelectAllButton = document.getElementById("selectAllButton");
-const ViewSelectionButton = document.getElementById("viewSelectionButton");
+const FileInput = document.getElementById('fileInput') as HTMLInputElement;
+const ImportDataButton = document.getElementById('importDataButton') as HTMLButtonElement;
+const SelectAllButton = document.getElementById("selectAllButton") as HTMLButtonElement;
+const ViewSelectionButton = document.getElementById("viewSelectionButton") as HTMLButtonElement;
+const ViewPlotsButton = document.getElementById('viewPlotsButton') as HTMLButtonElement;
 
 // Store all RawData here.
 const RawData = [];
@@ -34,7 +35,7 @@ ImportDataButton.addEventListener("click", function () {
   if (document.title == "Report") {
     ViewSelectionButton.disabled = false;
   } else if (document.title == "Plots") {
-    viewPlotsButton.disabled = false;
+    ViewPlotsButton.disabled = false;
   }
   ImportDataButton.disabled = true;
   
@@ -49,7 +50,7 @@ FileInput.addEventListener('change', function () {
   Reader.addEventListener('load', function () {
     RawData.length = 0;
     // Split the file's text into an array of lines
-    let lines = Reader.result.split('\n');
+    let lines = (<string>Reader.result).split('\n');
     // Iterate over the lines array and process each line as needed
     for (let i = 0; i < lines.length; i++) {
       let line = lines[i];
@@ -151,7 +152,7 @@ function ManageData() {
       SelectAllButton.disabled = false;
 
       // Create the input search element after generating the table.
-      const InputSearch = document.getElementById("tableSearch");
+      const InputSearch = (<HTMLInputElement>document.getElementById("tableSearch"));
       InputSearch.value = "";
       InputSearch.oninput = () => {
         TableSearch();
@@ -159,7 +160,7 @@ function ManageData() {
 
       // Create a save CSV button after generating the table.
       const DownloadCSVButton = document.getElementById("downloadCSVButton");
-      DownloadCSVButton.addEventListener("click", TableDownloadCSV(DownloadCSVButton));
+      DownloadCSVButton.addEventListener("click", () => TableDownloadCSV());
     })
   }
 

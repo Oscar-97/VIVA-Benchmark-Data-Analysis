@@ -1,6 +1,6 @@
-export function CreateChart(Solvers, ResultsData, ComparisonArray) {
+export function CreateChart(Solvers: string | any[], ResultsData: string | any[], ComparisonArray: any[]) {
     // Create x and y data.
-    function CreateXAndYData(LoopCount) {
+    function CreateXAndYData(LoopCount: number) {
         let TempData = [];
         let TempData2 = [];
         let IndexOfPrimGap = LoopCount * 8 + 10;
@@ -40,6 +40,7 @@ export function CreateChart(Solvers, ResultsData, ComparisonArray) {
 
     // Create the data chart.
     const DataChartElement = document.getElementById('dataChart');
+    // @ts-ignore
     const myChart = new Chart(DataChartElement, {
         type: 'scatter',
         data: CreatedDataset,
