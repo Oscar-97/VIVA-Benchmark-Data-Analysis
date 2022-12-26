@@ -1,0 +1,8 @@
+{
+  "entryPoints": ["Src/Scripts/*"],
+  "entryPointStrategy": "expand",
+  "out": "Docs",
+  "cleanOutputDir": false,
+  "name": "System Documentation",
+  "readme": "Docs/README.md"
+}
