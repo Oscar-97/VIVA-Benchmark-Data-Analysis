@@ -1,5 +1,9 @@
 export function CreateChart(Solvers: string | any[], ResultsData: string | any[], ComparisonArray: any[]) {
-    // Create x and y data.
+    /**
+     * Create the X and Y data for Chart.js.
+     * @param LoopCount 
+     * @returns X and Y data.
+     */
     function CreateXAndYData(LoopCount: number) {
         let TempData = [];
         let TempData2 = [];
@@ -14,13 +18,19 @@ export function CreateChart(Solvers: string | any[], ResultsData: string | any[]
     }
 
     // Add a random color for the dataset.
+    /**
+     * @param PickColor Color picker for the data.
+     * @returns Random different colors for each solver.
+     */
     function PickColor() {
         const Hex = Math.floor(Math.random() * 16777215).toString(16);
         let Color = '#' + Hex;
         return Color;
     }
 
-    // Fetch data for the selected solvers.
+    /**
+     * Fetch data for the selected solvers.
+     */
     const SelectedSolvers = [];
     for (let i = 0; i < Solvers.length; i++) {
         console.log("Status: ", ComparisonArray[i]);
@@ -33,18 +43,22 @@ export function CreateChart(Solvers: string | any[], ResultsData: string | any[]
     }
     console.log("Dataset content: ", SelectedSolvers);
 
-    // Dataset to be used in the chart.
+    /**
+     * @param CreatedDataset Dataset to be used in the chart.
+     */
     const CreatedDataset = {
         datasets: SelectedSolvers
     }
 
-    // Create the data chart.
+    /**
+     * Create the data chart.
+     * @param DataChartElement The data chart which will be displayed in the element with the id dataChart.
+     */
     const DataChartElement = document.getElementById('dataChart');
     // @ts-ignore
     const myChart = new Chart(DataChartElement, {
         type: 'scatter',
         data: CreatedDataset,
-        //data: { datasets: SelectedSolvers },
         options: {
             plugins: {
                 title: {
@@ -60,7 +74,6 @@ export function CreateChart(Solvers: string | any[], ResultsData: string | any[]
                     }
                 },
                 y: {
-                    //beginAtZero: true,
                     title: {
                         display: true,
                         text: 'Number of instances.'
@@ -70,8 +83,10 @@ export function CreateChart(Solvers: string | any[], ResultsData: string | any[]
         }
     });
 
-    const ViewPlotsButton = document.getElementById('viewPlotsButton');
-    // Destroy the canvas on button click to be able to create a new canvas.
+    /**
+     * @param ViewPlotsButton Displays the plot in a canvas. Destroy the canvas on button click to be able to create a new canvas.
+     */
+    const ViewPlotsButton = document.getElementById('viewPlotsButton') as HTMLButtonElement;
     ViewPlotsButton.addEventListener("click", function () {
         myChart.destroy();
     })

@@ -1,5 +1,8 @@
 export function TableDownloadCSV() {
-  const DownloadCSVButton = document.getElementById("downloadCSVButton") as any;
+  /**
+   * @param DownloadableFile CSV file containing the table data.
+   */
+  const DownloadCSVButton = document.getElementById("downloadCSVButton") as HTMLAnchorElement;
   const Table = document.querySelector('#dataTableGenerated') as HTMLTableElement;
   const Data = Array.from(Table.rows)
     .map((row) => Array.from(row.cells)

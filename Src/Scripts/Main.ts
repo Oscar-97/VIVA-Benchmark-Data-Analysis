@@ -6,20 +6,35 @@ import { TableDownloadCSV } from './Table/TableDownloadCSV';
 import { GetInstanceAndSolvers, GetDataLabels, GetProblems } from './DataProcessing/FilterData';
 import { CreateChart } from './Chart/CreateChart';
 
-// Set input value for file upload to empty at load.
-(<HTMLInputElement>document.getElementById('fileInput')).value='';
+/**
+ *  Set input value for file upload to empty at load.
+ */
+//(<HTMLInputElement>document.getElementById('fileInput')).value='';
 
-// Get the elements.
+/**
+ * Elements that the user can interact with.
+ * @param FileInput Allows the user to select a benchmark results file for upload, located at the top of the page.
+ * @param ImportDataButton Allows the user to upload the selected file, located at the top of the page.
+ * @param SelectAllButton Selects all solvers from the benchmark results file.
+ * @param ViewSelectionButton Displays a table with the currently selected solvers.
+ * @param ViewPlotsButton Displays a plot with the currently selected solvers.
+ */
 const FileInput = document.getElementById('fileInput') as HTMLInputElement;
 const ImportDataButton = document.getElementById('importDataButton') as HTMLButtonElement;
 const SelectAllButton = document.getElementById("selectAllButton") as HTMLButtonElement;
 const ViewSelectionButton = document.getElementById("viewSelectionButton") as HTMLButtonElement;
 const ViewPlotsButton = document.getElementById('viewPlotsButton') as HTMLButtonElement;
 
-// Store all RawData here.
+FileInput.value = '';
+
+/**
+ * Storage of the imported benchmark results.
+ */
 const RawData = [];
 
-// Click on the upload data button to start the process.
+/**
+ * Click on the upload data button to start the process.
+ */
 ImportDataButton.addEventListener("click", function () {
   
   // Remove existing Solvers and the search bar when uploading a new result file.
@@ -43,7 +58,9 @@ ImportDataButton.addEventListener("click", function () {
   ManageData();
 });
 
-// Read the data from the input file.
+/**
+ * Read the data from the input file.
+ */
 FileInput.addEventListener('change', function () {
   ImportDataButton.disabled = false;
   let Reader = new FileReader();
@@ -61,7 +78,9 @@ FileInput.addEventListener('change', function () {
   Reader.readAsText(FileInput.files[0]);
 });
 
-// Get the solvers that are marked as checked.
+/**
+ * @returns Get the solvers that are marked as checked.
+ */
 function GetCheckedSolvers() {
   let FilterSolvers = document.getElementsByTagName("input");
   let CheckedSolvers = []
@@ -74,7 +93,12 @@ function GetCheckedSolvers() {
   return CheckedSolvers;
 }
 
-// Compare checked solvers versus full list of solvers.
+/**
+ * Compare checked solvers versus full list of solvers.
+ * @param CheckedSolvers 
+ * @param Solvers 
+ * @returns The ComparisonArray, which contains Used and not Used status on the solvers found in the benchmark results file.
+ */
 function GetComparisonArray(CheckedSolvers, Solvers) {
   const ComparisonArray = [];
   for (let i = 0; i < Solvers.length; i++) {
@@ -89,31 +113,48 @@ function GetComparisonArray(CheckedSolvers, Solvers) {
   return ComparisonArray;
 }
 
-// Sort the text file and display the relevant elements per page.
+/**
+ * Sort the benchmark results file and display the relevant elements per page. 
+ */
 function ManageData() {
   // Import the data.
   //const SolvedData = ImportData("../../solvedata.txt"); // TEMP: Path to local file without upload.
+  
+  /**
+   * Setting the benchmark results file data.
+   * @param SolvedData Data from the benchmark results file.
+   */
   const SolvedData = RawData;
 
-  // First row of the data:
-  const Instance = GetInstanceAndSolvers(SolvedData[0]).shift(); // Instance is at Index 0.
-  const Solvers = GetInstanceAndSolvers(SolvedData[0]).slice(1); // Solvers are in the rest of the indices.
-
-  // Second row of the data:
-  const DataLabels = GetDataLabels(SolvedData[1]); // Data labels.
-  const InstanceLabels = DataLabels.splice(0, 7); // Only instance categories.
-
-  // Third row and onwards of the data:
-  const ProblemAndResults = GetProblems(SolvedData[3]); // Problem and the results.
-  let FirstProblem = 3; // The problems from the specified row.
+  /**
+   * First row of the benchmark results file.
+   * @param Instance The column where the instance is located. Instance is at index 0.
+   * @param Solvers The columns where the solvers are located. Solvers are in the rest of the indices.
+   * Second row of the benchmark results file.
+   * @param DataLabels The data labels.
+   * @param InstanceLabels The instance categories.
+   * Third row and onwards of the benchmark results file.
+   * @param ProblemAndResults The problems and the results.
+   * @param FirstProblem The first problem = 3.
+   */
+  const Instance = GetInstanceAndSolvers(SolvedData[0]).shift();
+  const Solvers = GetInstanceAndSolvers(SolvedData[0]).slice(1);
+  const DataLabels = GetDataLabels(SolvedData[1]);
+  const InstanceLabels = DataLabels.splice(0, 7);
+  const ProblemAndResults = GetProblems(SolvedData[3]);
+  let FirstProblem = 3;
   
-  // List of problems.
+  /**
+   * @param ProblemList List of the problems.
+   */
   const ProblemList = []; 
   for (var i = FirstProblem; i < SolvedData.length; i++) {
     ProblemList.push(GetProblems(SolvedData[i])[0]);
   }
 
-  // List of results.
+  /**
+   * @param ResultsData List of results.
+   */
   const ResultsData = [];
   for (FirstProblem; FirstProblem < SolvedData.length; FirstProblem++) {
     ResultsData.push(GetProblems(SolvedData[FirstProblem]).slice(1));
@@ -122,16 +163,21 @@ function ManageData() {
   //#region Printing information of the data.
   console.log("Total number of rows in the data file: \n" + SolvedData.length);
   console.log("Solvers: \n", Solvers)
-  console.log("Number of filtered data labels: ", DataLabels.length);
+  console.log("Number of filtered data labels: \n", DataLabels.length);
   console.log("Data labels: \n", DataLabels);
   console.log("Instance categories: \n", InstanceLabels)
   console.log("Filtered results for problem: \n", ProblemAndResults[0], "results: ", ProblemAndResults.slice(1));
   //#endregion
 
-  // Create the solver filters, displayed in the element with the id: tableFilters.
+  /**
+   * Create the solver filters, displayed in the element with the id: tableFilters.
+   * @param TableFilters Filters for the table.;
+   */
   TableFilters(Solvers);
 
-  // Select all checkboxes button functionality.
+  /**
+   * Select all checkboxes button functionality.
+   */
   SelectAllButton.addEventListener("click", function () {
     let FilterSolvers = document.getElementsByTagName("input");
     for (let Solver of FilterSolvers) {
@@ -142,36 +188,45 @@ function ManageData() {
     SelectAllButton.disabled = true;
   })
 
-  // Display the data in the div with the id "dataTable" when clicking on the view selection button
+  /**
+   * Check if the user us is on the Report page.
+   */
   if (document.title == "Report") {
     ViewSelectionButton.addEventListener("click", function () {
       let CheckedSolvers = GetCheckedSolvers();
       let ComparisonArray = GetComparisonArray(CheckedSolvers, Solvers);
 
+      /**
+       * @param TableDisplayData Display the data in the div with the id "dataTable" when clicking on the view selection button.
+       * @param TableSearch Create the input search element after generating the table.
+       * @param TableDownloadCSV Create a save CSV button after generating the table.
+       */
       TableDisplayData(Instance, CheckedSolvers, InstanceLabels, DataLabels, ProblemList, ResultsData, ComparisonArray);
       SelectAllButton.disabled = false;
 
-      // Create the input search element after generating the table.
-      const InputSearch = (<HTMLInputElement>document.getElementById("tableSearch"));
+      const InputSearch = document.getElementById("tableSearch") as HTMLInputElement;
       InputSearch.value = "";
       InputSearch.oninput = () => {
         TableSearch();
       }
 
-      // Create a save CSV button after generating the table.
-      const DownloadCSVButton = document.getElementById("downloadCSVButton");
+      const DownloadCSVButton = document.getElementById("downloadCSVButton") as HTMLButtonElement;
       DownloadCSVButton.addEventListener("click", () => TableDownloadCSV());
     })
   }
 
-  // Filter and display the data in plots when clicking on the view plots button.
+  /**
+   * Check if the user us is on the Plots page.
+   */
   if (document.title == "Plots") {
-    const ViewPlotsButton = document.getElementById('viewPlotsButton');
+    const ViewPlotsButton = document.getElementById('viewPlotsButton') as HTMLButtonElement;
     ViewPlotsButton.addEventListener("click", function () {
       let CheckedSolvers = GetCheckedSolvers();
       let ComparisonArray = GetComparisonArray(CheckedSolvers, Solvers);
 
-      console.log("Sending to CreateChart.");
+      /**
+       * @param CreateChart Filter and display the data in plots when clicking on the view plots button.
+       */
       CreateChart(Solvers, ResultsData, ComparisonArray);
       SelectAllButton.disabled = false;
     })
