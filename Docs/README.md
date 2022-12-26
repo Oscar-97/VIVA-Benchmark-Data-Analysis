@@ -14,7 +14,8 @@ Once you have selected a file, click on the solvers that you want to see the res
 
 ## TODO
 - Add option to highlight columns and rows in the table. (Checkboxes and sorting by asc/desc)
-- Table.js or other.
+- Table.js or other library for tables.
+- Custom X/Y value.
 - Clear data after uploading a new file.
 - Add more plotting types. (Selected from navbar -> plots -> type)
 - Add option to highlight columns and rows in the table. (Checkboxes and sorting by asc/desc)
