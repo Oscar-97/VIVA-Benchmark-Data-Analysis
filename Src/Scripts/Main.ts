@@ -7,11 +7,6 @@ import { GetInstanceAndSolvers, GetDataLabels, GetProblems } from './DataProcess
 import { CreateChart } from './Chart/CreateChart';
 
 /**
- *  Set input value for file upload to empty at load.
- */
-//(<HTMLInputElement>document.getElementById('fileInput')).value='';
-
-/**
  * Elements that the user can interact with.
  * @param FileInput Allows the user to select a benchmark results file for upload, located at the top of the page.
  * @param ImportDataButton Allows the user to upload the selected file, located at the top of the page.
