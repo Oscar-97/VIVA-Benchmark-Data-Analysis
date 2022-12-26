@@ -63,8 +63,9 @@ FileInput.addEventListener('change', function () {
     RawData.length = 0;
     // Split the file's text into an array of lines
     let lines = (<string>Reader.result).split('\n');
-    // Iterate over the lines array and process each line as needed
-    for (let i = 0; i < lines.length; i++) {
+    // Iterate over the lines array and process each line as needed. 
+    // Skip the last line, as it is always empty in the benchmark results file.
+    for (let i = 0; i < lines.length-1; i++) {
       let line = lines[i];
       RawData.push(line);
     }
