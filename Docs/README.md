@@ -6,23 +6,31 @@ This is a project in progress for creating a dynamic reporting system, in a HTML
 </div>
 
 ---
-## Instructions
+## Instructions for Using the System
 To get started with the project, clone the repository and open the report.html file in a web browser. Select a `solvedata*.txt` file from your computer by clicking the "Browse" button and selecting a file from the file picker that appears.
 Once you have selected a file, click on the solvers that you want to see the result for and click on view selection to get the data in a tabular or chart format.
 
 --- 
 
-## TODO
-- Add option to highlight columns and rows in the table. (Checkboxes and sorting by asc/desc)
-- Table.js or other library for tables.
-- Custom X/Y value.
-- Clear data after uploading a new file.
-- Add more plotting types. (Selected from navbar -> plots -> type)
-- Add option to highlight columns and rows in the table. (Checkboxes and sorting by asc/desc)
-- Fix destruction on Chart.js canvas.
+## Features to Implement
+### General
 - Cache the data.
+- Add DocType support.
+- Update the 'Working with codebase' chapter.
+- Add automated UI testing.
+
+### Table Page
 - Check if the number of columns matches with the data.
-- Add autoamted UI testing.
+- Add option to highlight columns and rows in the table. 
+    - Checkboxes 
+    - Sorting by asc/desc
+- Clear data after uploading a new file.
+- Table.js or other library for tables.
+
+### Plot Page
+- Add support for ustom X/Y values.
+- Add more plotting types. (Selected from navbar -> plots -> type)
+- Fix destruction on Chart.js canvas.
 
 ## Working with the Codebase
 ### 1. Prerequisites
