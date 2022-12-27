@@ -14,23 +14,23 @@ Once you have selected a file, click on the solvers that you want to see the res
 
 ## Features to Implement
 ### General
-- Cache the data.
-- Add DocType support.
-- Update the 'Working with codebase' chapter.
-- Add automated UI testing.
+- [ ] Cache the data.
+- [ ] Add DocType support.
+- [ ] Update the 'Working with codebase' chapter.
+- [ ] Add automated UI testing.
 
 ### Table Page
-- Check if the number of columns matches with the data.
-- Add option to highlight columns and rows in the table. 
-    - Checkboxes 
-    - Sorting by asc/desc
-- Clear data after uploading a new file.
-- Table.js or other library for tables.
+- [ ] Check if the number of columns matches with the data.
+- [ ] Add option to highlight columns and rows in the table. 
+    - [ ] Checkboxes 
+    - [x] Sorting by asc/desc
+- [x] Clear data after uploading a new file.
+- [x] Table.js or other library for tables.
 
 ### Plot Page
-- Add support for ustom X/Y values.
-- Add more plotting types. (Selected from navbar -> plots -> type)
-- Fix destruction on Chart.js canvas.
+- [ ] Add support for ustom X/Y values.
+- [ ] Add more plotting types. (Selected from navbar -> plots -> type)
+- [ ] Fix destruction on Chart.js canvas.
 
 ## Working with the Codebase
 ### 1. Prerequisites
