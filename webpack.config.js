@@ -1,4 +1,5 @@
 module.exports = {
+  mode: 'production',
   entry: './Src/Scripts/Main.ts', // The entry point for your code
   output: {
     filename: 'bundle.js', // The name of the bundled file
