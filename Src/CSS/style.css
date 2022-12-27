@@ -29,3 +29,7 @@ hr {
 tr:hover {
     background-color: rgb(151, 151, 151);
 }
+
+.row-selected-problems {
+    background-color: rgb(151, 151, 151);
+}
