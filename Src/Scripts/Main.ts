@@ -1,4 +1,12 @@
 //import { ImportData } from './DataProcessing/ImportData.js'; // Only for accessing files without using upload.
+const jq = require('jquery');
+const DataTables = require('datatables.net-bs5');
+const Buttons = require('datatables.net-buttons-bs5');
+// const ButtonsColVis = require('datatables.net-buttons/js/buttons.colVis.js');
+// const ColReorder = require('datatables.net-colreorder-bs5');
+const RowReorder = require('datatables.net-rowreorder-bs5');
+const Select = require('datatables.net-select-bs5');
+
 import { TableDisplayData } from './Table/TableDisplayData';
 import { TableFilters } from './Table/TableFilters';
 import { TableSearch } from './Table/TableSearch';
@@ -37,6 +45,7 @@ ImportDataButton.addEventListener("click", function () {
     document.querySelectorAll('.form-check').forEach(solver => {solver.remove();});
     document.getElementById('tableSearch').remove();
     document.getElementById('downloadCSVButton').remove();
+    document.getElementById('dataTableGenerated_wrapper').remove();
   }
   catch {}
 
@@ -199,6 +208,25 @@ function ManageData() {
        */
       TableDisplayData(Instance, CheckedSolvers, InstanceLabels, DataLabels, ProblemList, ResultsData, ComparisonArray);
       SelectAllButton.disabled = false;
+
+      // @ts-ignore
+      jq("#dataTableGenerated").DataTable(
+        {
+          // colReorder: true,
+          rowReorder: true,
+          buttons: ['copy'],
+          // columnDefs: [ {
+          //     orderable: false,
+          //     className: 'select-checkbox',
+          //     targets: 0
+          //     } ],
+          select: {
+              style: 'os',
+              blurable: true,
+              className: 'row-selected-problems'
+              }
+        }
+      );
 
       const InputSearch = document.getElementById("tableSearch") as HTMLInputElement;
       InputSearch.value = "";
