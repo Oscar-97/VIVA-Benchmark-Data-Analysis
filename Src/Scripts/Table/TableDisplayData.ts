@@ -93,7 +93,7 @@ export function TableDisplayData(Instance: string, Solvers: string | any[], Inst
      * @param NewDataTable Table element which is built with InstanceSolversThead, ResultThead and DataTable.
      */
     const NewDataTable = document.createElement("table") as HTMLTableElement;
-    NewDataTable.className = "table table-bordered";
+    NewDataTable.className = "table table-bordered table-sm";
     NewDataTable.id = "dataTableGenerated";
     NewDataTable.innerHTML = InstanceSolversThead + ResultThead + DataTable;
 
