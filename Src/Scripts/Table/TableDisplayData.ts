@@ -57,17 +57,18 @@ export function TableDisplayData(Instance: string, Solvers: string | any[], Inst
     for (let i = 0; i < Solvers.length; i++) {
         InstanceSolversThead += "<th colspan='8'>" + Solvers[i] + "</th>";
     }
-    InstanceSolversThead += "</tr></thead>";
+    // InstanceSolversThead += "</tr></thead>";
+    InstanceSolversThead += "</tr>";
 
     /**
      * @param ResultThead Thead for instance and data labels.
      */
-    let ResultThead = "<thead class='thead-dark' id='datalabelsThead'><tr>";
+    let ResultThead = "<tr>";
     for (let i = 0; i < InstanceLabels.length; i++) {
-        ResultThead += "<th scope='col'>" + InstanceLabels[i] + "</th>";
+        ResultThead += "<th>" + InstanceLabels[i] + '<small class="text-muted">&#8645</small>'; + "</th>";
     }
     for (let i = 0; i < NewDataLabels.length; i++) {
-        ResultThead += "<th>" + NewDataLabels[i] + "</th>";
+        ResultThead += "<th>" + NewDataLabels[i] + '<small class="text-muted">&#8645</small>'; + "</th>";
     }
     ResultThead += "</tr></thead>";
 
@@ -92,7 +93,7 @@ export function TableDisplayData(Instance: string, Solvers: string | any[], Inst
      * @param NewDataTable Table element which is built with InstanceSolversThead, ResultThead and DataTable.
      */
     const NewDataTable = document.createElement("table") as HTMLTableElement;
-    NewDataTable.className = "table table-bordered table-sm";
+    NewDataTable.className = "table table-bordered";
     NewDataTable.id = "dataTableGenerated";
     NewDataTable.innerHTML = InstanceSolversThead + ResultThead + DataTable;
 
