@@ -27,5 +27,10 @@ hr {
 }
 
 tr:hover {
-    background-color: rgb(151, 151, 151);
+    background-color: #0d6efd;
+}
+
+.row-selected-problems {
+    background-color: #0d6efd;
+    color: #ffffff;
 }
