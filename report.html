@@ -36,7 +36,7 @@
           </li>
           <li class="nav-item">
             <div class="input-group">
-              <input type="file" class="form-control" id="fileInput" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+              <input type="file" class="form-control" id="fileInput" aria-describedby="inputGroupFileAddon04" aria-label="Upload" value="">
               <button class="btn btn-outline-primary" type="button" id="importDataButton" disabled="true">Upload</button>
             </div>
           </li>
@@ -48,8 +48,10 @@
 </div>
   <div id="tableFilters">
     <div id="buttonField">
-      <button class="btn btn-primary btn-sm" type="none" id="selectAllButton" disabled="true">Select All</button>
-      <button class="btn btn-dark btn-sm" id="viewSelectionButton" disabled="true">View Selection</button>
+      <button class="btn btn-primary btn-sm" type="none" id="selectAllButton" disabled="true">Select All Solvers</button>
+      <button class="btn btn-dark btn-sm" id="viewSelectionButton" disabled="true">View All Problems</button>
+      <button class="btn btn-dark btn-sm" id="filterSelectionButton" disabled="true">View Selected Problems</button>
+      <a class="btn btn-success btn-sm" id="downloadCSVButton" type="button">Download CSV</a> <small class="text-muted">(Currently visible table)</small>
     </div>
     <hr/>
     <span class="badge bg-dark">Solvers</span>
