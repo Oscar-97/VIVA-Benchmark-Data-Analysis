@@ -1,9 +1,10 @@
+import { DownloadCSVButton } from "../Elements/Elements";
+
 export function TableDownloadCSV() {
   /**
    * @param DownloadableFile CSV file containing the table data.
    */
-  const DownloadCSVButton = document.getElementById("downloadCSVButton") as HTMLAnchorElement;
-  const Table = document.querySelector('#dataTableGenerated') as HTMLTableElement;
+  const Table = document.getElementById('dataTableGenerated') as HTMLTableElement;
   const Data = Array.from(Table.rows)
     .map((row) => Array.from(row.cells)
       .map((cell) => cell.innerText)
@@ -13,5 +14,4 @@ export function TableDownloadCSV() {
 
   DownloadCSVButton.href = window.URL.createObjectURL(DownloadableFile);
   DownloadCSVButton.download = 'benchmark-table.csv';
-  console.log("Clicked download.")
 }

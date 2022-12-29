@@ -1,4 +1,4 @@
-export function TableDisplayData(Instance: string, Solvers: string | any[], InstanceLabels: string | any[], DataLabels: any[], Problems: string | any[], ResultsData: any[], ComparisonArray: any[]) {
+export function TableData(Instance: string, Solvers: string | any[], InstanceLabels: string | any[], DataLabels: any[], Problems: string | any[], ResultsData: any[], ComparisonArray: any[]) {
     /**
      * Check if comparison array is used or not used, then remove 8 elements from Datalabels and in each row of ResultsData.
      */
@@ -105,26 +105,13 @@ export function TableDisplayData(Instance: string, Solvers: string | any[], Inst
     /**
      * @param TableSearch Table search element.
      */
-    const TableSearch = document.getElementById("tableSearch") as HTMLInputElement;
-    if (!document.body.contains(TableSearch)) {
-        const NewTableSearch = document.createElement('input') as HTMLInputElement;
-        NewTableSearch.id = "tableSearch";
-        NewTableSearch.type = "text";
-        NewTableSearch.className = "form-control";
-        NewTableSearch.placeholder = "Search for a problem...";
-        document.getElementById("tableFilters").appendChild(NewTableSearch);
-    }
-
-    /**
-     * @param DownloadCSVButton Download CSV button element.
-     */
-    const DownloadCSVButton = document.getElementById("downloadCSVButton") as HTMLButtonElement;
-    if(!document.body.contains(DownloadCSVButton)) {
-        const NewDownloadCSVButton = document.createElement('a') as HTMLAnchorElement;
-        NewDownloadCSVButton.id = "downloadCSVButton";
-        NewDownloadCSVButton.type = "button";
-        NewDownloadCSVButton.className = "btn btn-success btn-sm";
-        NewDownloadCSVButton.innerHTML = "Download CSV";
-        document.getElementById("buttonField").appendChild(NewDownloadCSVButton);
-    }
+    // const TableSearch = document.getElementById("tableSearch") as HTMLInputElement;
+    // if (!document.body.contains(TableSearch)) {
+    //     const NewTableSearch = document.createElement('input') as HTMLInputElement;
+    //     NewTableSearch.id = "tableSearch";
+    //     NewTableSearch.type = "text";
+    //     NewTableSearch.className = "form-control";
+    //     NewTableSearch.placeholder = "Search for a problem...";
+    //     document.getElementById("tableFilters").appendChild(NewTableSearch);
+    // }
 }
