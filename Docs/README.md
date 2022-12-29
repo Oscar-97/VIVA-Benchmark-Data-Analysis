@@ -21,11 +21,6 @@ Once you have selected a file, click on the solvers that you want to see the res
 
 ### Table Page
 - [ ] Check if the number of columns matches with the data.
-- [ ] Add option to highlight columns and rows in the table. 
-    - [ ] Checkboxes 
-    - [x] Sorting by asc/desc
-- [x] Clear data after uploading a new file.
-- [x] Table.js or other library for tables.
 
 ### Plot Page
 - [ ] Add support for ustom X/Y values.
