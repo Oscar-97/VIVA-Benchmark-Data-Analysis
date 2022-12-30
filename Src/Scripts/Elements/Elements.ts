@@ -21,3 +21,8 @@ export const ViewPlotsButton = document.getElementById('viewPlotsButton') as HTM
 
 export const DownloadCSVButton = document.getElementById("downloadCSVButton") as HTMLAnchorElement;
 export const InputSearch = document.getElementById("tableSearch") as HTMLInputElement;
+
+export const xMaxInput = document.getElementById('xMaxInput') as HTMLInputElement;
+export const xMinInput = document.getElementById('xMinInput') as HTMLInputElement;
+export const yMaxInput = document.getElementById('yMaxInput') as HTMLInputElement;
+export const yMinInput = document.getElementById('yMinInput') as HTMLInputElement;
