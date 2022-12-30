@@ -1,3 +1,5 @@
+import { xMaxInput, xMinInput, yMaxInput, yMinInput } from "../Elements/Elements";
+
 export function CreateChart(Solvers: string | any[], ResultsData: string | any[], ComparisonArray: any[]) {
     /**
      * Create the X and Y data for Chart.js.
@@ -55,7 +57,7 @@ export function CreateChart(Solvers: string | any[], ResultsData: string | any[]
      * @param DataChartElement The data chart which will be displayed in the element with the id dataChart.
      */
     const DataChartElement = document.getElementById('dataChart');
-    // @ts-ignore
+    //@ts-ignore
     const myChart = new Chart(DataChartElement, {
         type: 'scatter',
         data: CreatedDataset,
@@ -88,6 +90,7 @@ export function CreateChart(Solvers: string | any[], ResultsData: string | any[]
      */
     const ViewPlotsButton = document.getElementById('viewPlotsButton') as HTMLButtonElement;
     ViewPlotsButton.addEventListener("click", function () {
+        // @ts-ignore
         myChart.destroy();
     })
 }
