@@ -51,33 +51,33 @@
   </nav>
   <div id="tableFilters">
     <button class="btn btn-primary btn-sm" type="submit" id="selectAllButton" disabled="true">Select All</button>
-    <button class="btn btn-dark btn-sm" type="submit" id="viewPlotsButton" disabled="true">View Plots</button>
+    <button class="btn btn-dark btn-sm" type="submit" id="viewPlotsButton" disabled="true">View Plot</button>
     <div class="input-group input-group-sm mb-3 d-flex" id="axesValues">
       <div class="row">
         <div class="input-group-prepend input-group-sm mb-3 col flex-nowrap">
           <span class="input-group-text">X max</span>
-          <input type="number" class="form-control input-group-sm mb-3 col" id="xMaxInput">
+          <input type="number" class="form-control input-group-sm mb-3 col" id="xMaxInput" value="">
         </div>
 
       </div>
       <div class="row">
         <div class="input-group-prepend input-group-sm mb-3 col flex-nowrap">
           <span class="input-group-text">X min</span>
-          <input type="number" class="form-control input-group-sm mb-3 col" id="xMinInput">
+          <input type="number" class="form-control input-group-sm mb-3 col" id="xMinInput" value="">
         </div>
 
       </div>
       <div class="row">
         <div class="input-group-prepend input-group-sm mb-3 col flex-nowrap">
           <span class="input-group-text">Y max</span>
-          <input type="number" class="form-control input-group-sm mb-3 col" id="yMaxInput">
+          <input type="number" class="form-control input-group-sm mb-3 col" id="yMaxInput" value="">
         </div>
 
       </div>
       <div class="row">
         <div class="input-group-prepend input-group-sm mb-3 col flex-nowrap">
           <span class="input-group-text">Y min</span>
-          <input type="number" class="form-control input-group-sm mb-3 col" id="yMinInput">
+          <input type="number" class="form-control input-group-sm mb-3 col" id="yMinInput" value="">
         </div>
 
       </div>
@@ -88,7 +88,7 @@
     <!-- Table filters will be created here. -->
   </div>
   <div id="chartContainer">
-    <canvas id="dataChart">
+    <canvas id="myChart" class="chart">
       <!-- Content created with Chart.js will be displayed here. -->
     </canvas>
   </div>
