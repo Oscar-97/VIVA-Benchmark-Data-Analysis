@@ -3,6 +3,10 @@ a {
     color: #ffffff;
 }
 
+#saveButtonsField {
+    padding-top: 1rem;
+}
+
 #dataTable {
     padding: 1rem;
     padding-top: 1rem;
