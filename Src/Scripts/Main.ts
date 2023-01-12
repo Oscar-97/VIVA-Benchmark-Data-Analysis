@@ -3,35 +3,47 @@ import { TableDisplay } from './Table/TableDisplay';
 import { UpdateProblemList, UpdateResultsData } from "./Table/TableSaveSelection";
 import { TableDownloadCSV } from "./Table/TableDownloadCSV";
 import { TableSearch } from "./Table/TableSearch";
+import { CreateData } from './DataProcessing/CreateData';
 import { ImportDataEvents } from './DataProcessing/ImportDataEvents';
 import { ReadData } from './DataProcessing/ReadData';
 import { GetInstanceAndSolvers, GetDataLabels, GetProblems } from './DataProcessing/FilterData';
 import { InitializePlots } from './Chart/InitializePlot';
 import { SelectAllSolvers } from './Solvers/SelectAllSolvers';
-import { FileInput, ImportDataButton, SelectAllButton, ViewSelectionButton, ViewPlotsButton, FilterSelectionButton, DownloadCSVButton, InputSearch } from './Elements/Elements';
+import { FileInput, ImportDataButton, SelectAllButton, ViewSelectionButton, ViewPlotsButton, FilterSelectionButton, SaveLocalStorageButton, DownloadCSVButton, InputSearch } from './Elements/Elements';
 
 /**
- * Set the filename to be empty.
+ * Set the filename to be empty and declare an array to store the benchmarks in.
+ * @param RawData Raw data of the imported benchmark results.
  */
 FileInput.value = '';
-/**
- * Storage of the imported benchmark results.
- */
 let RawData = [];
 
 /**
- * Click on the upload data button to start the process.
+ * Try to retrieve stored data.
  */
-ImportDataButton.addEventListener("click", () => {
-  ImportDataEvents();
+try {
+  //RawData = JSON.parse(localStorage.getItem('myData'));
+  SelectAllButton.disabled = false;
+  ViewSelectionButton.disabled = false;
   ManageData();
-});
+} catch {
+  console.log("No data found in local storage.");
+}
 
 /**
  * Read the data from the input file.
  */
 FileInput.addEventListener('change', () => {
   RawData = ReadData(RawData);
+});
+
+
+/**
+ * Click on the upload data button to start the process. Store the data in localStorage.
+ */
+ImportDataButton.addEventListener("click", () => {
+  ImportDataEvents();
+  ManageData();
 });
 
 /**
@@ -76,7 +88,8 @@ function ManageData() {
 
   //#region Printing information of the data.
   console.log("Total number of rows in the data file: \n" + SolvedData.length);
-  console.log("Solvers: \n", Solvers)
+  console.log("Solvers: \n", Solvers);
+  console.log("Instance: \n", Instance);
   console.log("Instance categories: \n", InstanceLabels);
   console.log("Number of data labels: \n", DataLabels.length, " and data labels: ", DataLabels);
   console.log("All problems: \n", ProblemList);
@@ -101,8 +114,7 @@ function ManageData() {
    */
   if (document.title == "Report") {
     /**
-     * TODO:
-     * Make it possible to shot the original data after modifying it.
+     * Shows all problems.
      */
     ViewSelectionButton.addEventListener("click", () => {
       TableDisplay(Instance, Solvers, InstanceLabels, DataLabels, ProblemList, ResultsData);
@@ -112,21 +124,42 @@ function ManageData() {
      * Shows the selected problems by modifying the ProblemList and ResultsData.
      */
     FilterSelectionButton.addEventListener("click", () => {
-      ProblemList = UpdateProblemList(ProblemList);
-      ResultsData = UpdateResultsData(ResultsData);
-      console.log("ProblemList: ", ProblemList);
+
+      console.log("Problemlist: ", ProblemList);
       console.log("ResultsData: ", ResultsData);
-      TableDisplay(Instance, Solvers, InstanceLabels, DataLabels, ProblemList, ResultsData);
+      let ProblemListFiltered = [];
+      let ResultsDataFiltered = [];
+      ProblemListFiltered = UpdateProblemList();
+      ResultsDataFiltered = UpdateResultsData();
+  
+      console.log("ProblemListFiltered: ", ProblemListFiltered);
+      console.log("ResultsDataFiltered: ", ResultsDataFiltered);
+      TableDisplay(Instance, Solvers, InstanceLabels, DataLabels, ProblemListFiltered, ResultsDataFiltered);
+      //console.clear();
+
+      /**
+       * TODO:
+       * Add the following to a NewSolvedData.
+       */
+      let output = CreateData(Instance, Solvers, InstanceLabels, DataLabels, ProblemListFiltered, ResultsDataFiltered);
+      console.log(output);
     });
 
+    /**
+     * Save to local storage when clicking on the relevant button.
+     * Make the visible data to 1 new SolvedData.
+     */
+    // SaveLocalStorageButton.addEventListener("click", () => {
+    //   localStorage.setItem('SavedBenchmarkResults', JSON.stringify(SolvedData));
+    //   console.log("Saved benchmarks:\n", SolvedData);
+    // })
+
+    /**
+     * Download the currently displayed table as a CSV.
+     */
     DownloadCSVButton.addEventListener("click", () => {
       TableDownloadCSV();
     });
-
-    // InputSearch.value = "";
-    // InputSearch.oninput = () => {
-    //   TableSearch();
-    // }
   }
 
   /**
