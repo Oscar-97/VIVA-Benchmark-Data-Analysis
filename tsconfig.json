@@ -4,11 +4,12 @@
     "rootDir": "./Src/.",
     "allowJs": true,
     "target": "es6",
+    "skipLibCheck": true
   },
   "include": [
     "./Src/**/*"
   ],
   "exclude": [
-    "node_modules"
+    "**/node_modules/**"
   ]
 }
