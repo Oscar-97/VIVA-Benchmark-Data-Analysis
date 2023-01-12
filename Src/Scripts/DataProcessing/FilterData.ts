@@ -52,11 +52,11 @@ export function GetDataLabels(data: string) {
  * @returns Problems.
  */
 export function GetProblems(data: string) {
-    let ReturnData = data.split(" ");
     // Remove blanks.
-    let TempData = ReturnData.filter(item => item);
+    let TempData = data.replace(/\s+/g,' ');
+    let ReturnData = TempData.split(" ");
     // Remove "|".
-    let TempData2 = TempData.map(function (value) {
+    let TempData2 = ReturnData.map(function (value) {
         return value.replace(/[|]/g, '');
     });
     ReturnData = TempData2;
