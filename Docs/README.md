@@ -21,6 +21,7 @@ Once you have selected a file, click on the solvers that you want to see the res
 
 ### Table Page
 - [ ] Check if the number of columns matches with the data.
+- [ ] Hide/Show columns.
 
 ### Plot Page
 - [ ] Add support for ustom X/Y values.
