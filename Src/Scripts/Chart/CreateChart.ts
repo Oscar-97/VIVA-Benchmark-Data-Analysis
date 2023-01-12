@@ -6,32 +6,28 @@ export function CreateChart(Solvers: string | any[], ResultsData: string | any[]
     /**
      * If canvas exist -> update it.
      */
-    if (ctx.width != 300) {
-        console.log("Canvas already exist. Updating axes values.");
+    // if (ctx.width != 300) {
+    //     console.log("Canvas already exist. Updating axes values.");
 
-        const xMax = parseInt(xMaxInput.value)
-        const xMin = parseInt(xMinInput.value)
-        const yMax = parseInt(yMaxInput.value)
-        const yMin = parseInt(yMinInput.value)
-        
-        myChart.options.scales = {
-            // @ts-ignore
-            xAxes: [{
-                ticks: {
-                    min: xMin,
-                    max: xMax
-                }
-            }],
-            yAxes: [{
-                ticks: {
-                    min: yMin,
-                    max: yMax
-                }
-            }]
-        };
-        myChart.update();
+    //     const xMax = parseInt(xMaxInput.value)
+    //     const xMin = parseInt(xMinInput.value)
+    //     const yMax = parseInt(yMaxInput.value)
+    //     const yMin = parseInt(yMinInput.value)
 
-    } else {
+    //     myChart.options.scales = {
+    //         // @ts-ignore
+    //         x: [{
+    //             min: xMin,
+    //             max: xMax
+    //         }],
+    //         y: [{
+    //             min: yMin,
+    //             max: yMax
+    //         }]
+    //     };
+    //     myChart.update();
+
+    // } else {
         /**
          * Create the X and Y data for Chart.js.
          * @param LoopCount 
@@ -97,22 +93,41 @@ export function CreateChart(Solvers: string | any[], ResultsData: string | any[]
                 scales: {
                     // @ts-ignore
                     x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        gridLines: {
+                            display: true
+                        },
                         title: {
                             display: true,
                             text: 'PrimalGap'
+                        },
+                        ticks: {
+                            min: parseInt(xMinInput.value),
+                            max: parseInt(xMaxInput.value)
                         }
                     },
                     y: {
+                        type: 'linear',
+                        position: 'left',
+                        gridLines: {
+                            display: true
+                        },
                         title: {
                             display: true,
                             text: 'Number of instances.'
+                        },
+                        ticks: {
+                            min: parseInt(yMinInput.value), 
+                            max: parseInt(yMaxInput.value)
                         }
                     }
                 }
+
             }
         });
     }
-}
+//}
 
 // export function UpdateChartScales(myChart, xMax, xMin, yMax, yMin) {
 //     myChart.options.scales = {
