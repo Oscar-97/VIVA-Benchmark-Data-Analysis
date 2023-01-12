@@ -14,6 +14,9 @@
   <link rel="icon" href="./Src/CSS/tab_icon.png">
   <!-- Styling -->
   <link rel="stylesheet" type="text/css" href="./Src/CSS/style.css">
+  <!-- DataTables Styling -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.bootstrap5.min.css">
 </head>
 
 <body>
@@ -31,8 +34,14 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page">Table</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./Src/Pages/plots.html">Plots</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Plots</a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="./Src/Pages/plots.html">PrimalGap (Absolute Performance Profile)</a></li>
+              <li><a class="dropdown-item" href="#">DualGap</a></li>
+              <li><a class="dropdown-item" href="#">PrimalBound</a></li>
+              <li><a class="dropdown-item" href="#">DualBound</a></li>
+            </ul>
           </li>
           <li class="nav-item">
             <div class="input-group">
@@ -61,6 +70,7 @@
     <!-- Table filters will be created here. -->
     <!-- Table search appears after creating a table. -->
   </div>
+  <hr/>
   <div id="dataTable">
     <!-- Table element will be created here. -->
   </div>
