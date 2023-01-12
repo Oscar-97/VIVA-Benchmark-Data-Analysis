@@ -57,7 +57,6 @@ export function TableData(Instance: string, Solvers: string | any[], InstanceLab
     for (let i = 0; i < Solvers.length; i++) {
         InstanceSolversThead += "<th colspan='8'>" + Solvers[i] + "</th>";
     }
-    // InstanceSolversThead += "</tr></thead>";
     InstanceSolversThead += "</tr>";
 
     /**
@@ -65,10 +64,10 @@ export function TableData(Instance: string, Solvers: string | any[], InstanceLab
      */
     let ResultThead = "<tr>";
     for (let i = 0; i < InstanceLabels.length; i++) {
-        ResultThead += "<th>" + InstanceLabels[i] + '<small class="text-muted">&#8645</small>'; + "</th>";
+        ResultThead += "<th>" + InstanceLabels[i] + "</th>";
     }
     for (let i = 0; i < NewDataLabels.length; i++) {
-        ResultThead += "<th>" + NewDataLabels[i] + '<small class="text-muted">&#8645</small>'; + "</th>";
+        ResultThead += "<th>" + NewDataLabels[i] + "</th>";
     }
     ResultThead += "</tr></thead>";
 
