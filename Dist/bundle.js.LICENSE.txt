@@ -1,4 +1,9 @@
 /*!
+ * Column visibility buttons for Buttons and DataTables.
+ * 2016 SpryMedia Ltd - datatables.net/license
+ */
+
+/*!
  * Sizzle CSS Selector Engine v2.3.9
  * https://sizzlejs.com/
  *
