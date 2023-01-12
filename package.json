@@ -31,6 +31,7 @@
     "webpack-cli": "^5.0.1"
   },
   "dependencies": {
+    "@types/chart.js": "^2.9.37",
     "datatables.net-bs5": "^1.13.1",
     "datatables.net-buttons-bs5": "^2.3.3",
     "datatables.net-colreorder-bs5": "^1.6.1",
