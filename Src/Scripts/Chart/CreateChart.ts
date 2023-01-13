@@ -1,93 +1,144 @@
+import { xMaxInput, xMinInput, yMaxInput, yMinInput } from "../Elements/Elements";
+
 export function CreateChart(Solvers: string | any[], ResultsData: string | any[], ComparisonArray: any[]) {
+    let myChart: Chart | null = null;
+    const ctx = document.getElementById('myChart') as HTMLCanvasElement;
     /**
-     * Create the X and Y data for Chart.js.
-     * @param LoopCount 
-     * @returns X and Y data.
+     * If canvas exist -> update it.
      */
-    function CreateXAndYData(LoopCount: number) {
-        let TempData = [];
-        let TempData2 = [];
-        let IndexOfPrimGap = LoopCount * 8 + 10;
-        for (var i = 0; i < ResultsData.length; i++) {
-            TempData.push(ResultsData[i][IndexOfPrimGap])
+    // if (ctx.width != 300) {
+    //     console.log("Canvas already exist. Updating axes values.");
+
+    //     const xMax = parseInt(xMaxInput.value)
+    //     const xMin = parseInt(xMinInput.value)
+    //     const yMax = parseInt(yMaxInput.value)
+    //     const yMin = parseInt(yMinInput.value)
+
+    //     myChart.options.scales = {
+    //         // @ts-ignore
+    //         x: [{
+    //             min: xMin,
+    //             max: xMax
+    //         }],
+    //         y: [{
+    //             min: yMin,
+    //             max: yMax
+    //         }]
+    //     };
+    //     myChart.update();
+
+    // } else {
+        /**
+         * Create the X and Y data for Chart.js.
+         * @param LoopCount 
+         * @returns X and Y data.
+         */
+        function CreateXAndYData(LoopCount: number) {
+            let TempData = [];
+            let TempData2 = [];
+            let IndexOfPrimGap = LoopCount * 8 + 10;
+            for (var i = 0; i < ResultsData.length; i++) {
+                TempData.push(ResultsData[i][IndexOfPrimGap])
+            }
+            for (var i = 0; i < ResultsData.length; i++) {
+                TempData2.push({ x: TempData[i], y: i })
+            }
+            return TempData2;
         }
-        for (var i = 0; i < ResultsData.length; i++) {
-            TempData2.push({ x: TempData[i], y: i })
+
+        /**
+         * Add a random color for the dataset.
+         * @param PickColor Color picker for the data.
+         * @returns Random different colors for each solver.
+         */
+        function PickColor() {
+            const Hex = Math.floor(Math.random() * 16777215).toString(16);
+            let Color = '#' + Hex;
+            return Color;
         }
-        return TempData2;
-    }
 
-    // Add a random color for the dataset.
-    /**
-     * @param PickColor Color picker for the data.
-     * @returns Random different colors for each solver.
-     */
-    function PickColor() {
-        const Hex = Math.floor(Math.random() * 16777215).toString(16);
-        let Color = '#' + Hex;
-        return Color;
-    }
-
-    /**
-     * Fetch data for the selected solvers.
-     */
-    const SelectedSolvers = [];
-    for (let i = 0; i < Solvers.length; i++) {
-        console.log("Status: ", ComparisonArray[i]);
-        // Only run if the solvers are used.
-        if (ComparisonArray[i] === "Used") {
-            console.log("Creating dataset for: ", Solvers[i]);
-            // Push the label and the data to the dataset.
-            SelectedSolvers.push({ label: Solvers[i], data: CreateXAndYData(i), backgroundColor: PickColor() });
-        }
-    }
-    console.log("Dataset content: ", SelectedSolvers);
-
-    /**
-     * @param CreatedDataset Dataset to be used in the chart.
-     */
-    const CreatedDataset = {
-        datasets: SelectedSolvers
-    }
-
-    /**
-     * Create the data chart.
-     * @param DataChartElement The data chart which will be displayed in the element with the id dataChart.
-     */
-    const DataChartElement = document.getElementById('dataChart');
-    // @ts-ignore
-    const myChart = new Chart(DataChartElement, {
-        type: 'scatter',
-        data: CreatedDataset,
-        options: {
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Absolute performance profile (PrimalGap)'
-                }
-            },
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'PrimalGap'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Number of instances.'
-                    }
-                }
+        /**
+         * Fetch data for the selected solvers.
+         */
+        const SelectedSolvers = [];
+        for (let i = 0; i < Solvers.length; i++) {
+            console.log("Status: ", ComparisonArray[i]);
+            // Only run if the solvers are used.
+            if (ComparisonArray[i] === "Used") {
+                console.log("Creating dataset for: ", Solvers[i]);
+                // Push the label and the data to the dataset.
+                SelectedSolvers.push({ label: Solvers[i], data: CreateXAndYData(i), backgroundColor: PickColor() });
             }
         }
-    });
+        console.log("Dataset content: ", SelectedSolvers);
 
-    /**
-     * @param ViewPlotsButton Displays the plot in a canvas. Destroy the canvas on button click to be able to create a new canvas.
-     */
-    const ViewPlotsButton = document.getElementById('viewPlotsButton') as HTMLButtonElement;
-    ViewPlotsButton.addEventListener("click", function () {
-        myChart.destroy();
-    })
-}
+        /**
+         * @param CreatedDataset Dataset to be used in the chart.
+         */
+        const CreatedDataset = {
+            datasets: SelectedSolvers
+        }
+
+        // @ts-ignore
+        myChart = new Chart(ctx, {
+            type: 'scatter',
+            data: CreatedDataset,
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Absolute performance profile (PrimalGap)'
+                    }
+                },
+                scales: {
+                    // @ts-ignore
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        gridLines: {
+                            display: true
+                        },
+                        title: {
+                            display: true,
+                            text: 'PrimalGap'
+                        },
+                        ticks: {
+                            min: parseInt(xMinInput.value),
+                            max: parseInt(xMaxInput.value)
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        position: 'left',
+                        gridLines: {
+                            display: true
+                        },
+                        title: {
+                            display: true,
+                            text: 'Number of instances.'
+                        },
+                        ticks: {
+                            min: parseInt(yMinInput.value), 
+                            max: parseInt(yMaxInput.value)
+                        }
+                    }
+                }
+
+            }
+        });
+    }
+//}
+
+// export function UpdateChartScales(myChart, xMax, xMin, yMax, yMin) {
+//     myChart.options.scales = {
+//         x: {
+//             min: xMin,
+//             max: xMax,
+//         },
+//         y: {
+//             min: yMin,
+//             max: yMax,
+//         }
+//     };
+//     myChart.update();
+// }

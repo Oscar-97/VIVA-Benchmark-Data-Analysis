@@ -1,3 +1,12 @@
+a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+#saveButtonsField {
+    padding-top: 1rem;
+}
+
 #dataTable {
     padding: 1rem;
     padding-top: 1rem;
@@ -12,6 +21,10 @@
     margin-top: 1rem;
     margin-bottom: 0.5rem;
     width: auto;
+}
+
+#axesValues {
+    margin-top: 1rem;
 }
 
 #chartContainer {

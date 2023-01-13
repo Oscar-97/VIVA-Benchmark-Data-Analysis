@@ -7,20 +7,25 @@ This is a project in progress for creating a dynamic reporting system, in a HTML
 
 ---
 ## Instructions for Using the System
-To get started with the project, clone the repository and open the report.html file in a web browser. Select a `solvedata*.txt` file from your computer by clicking the "Browse" button and selecting a file from the file picker that appears.
+To get started with the project, clone the repository and open the `report.html` file in a web browser. Select a `solvedata*.txt` file from your computer by clicking the "Browse" button and selecting a file from the file picker that appears.
 Once you have selected a file, click on the solvers that you want to see the result for and click on view selection to get the data in a tabular or chart format.
 
 --- 
 
 ## Features to Implement
 ### General
+- [ ] Restructure importing of data.
+- [ ] Add TRC as standard file format for importing.
 - [ ] Cache the data.
+- [ ] Add support for saving as configuration.
 - [ ] Add DocType support.
 - [ ] Update the 'Working with codebase' chapter.
 - [ ] Add automated UI testing.
 
 ### Table Page
 - [ ] Check if the number of columns matches with the data.
+- [ ] Hide/Show columns.
+- [ ] Hover on problem to get more in-depth details.
 
 ### Plot Page
 - [ ] Add support for ustom X/Y values.
@@ -36,31 +41,21 @@ Before getting started, make sure you have the following software installed on y
     TypeScript: https://www.typescriptlang.org/
     Webpack: https://webpack.js.org/
 
-### 2. Compiling TypeScript to JavaScript
-Navigate to the project directory in your terminal.
-Run the following command to compile the TypeScript files to JavaScript:
+Install the required packages by running: 
+    
+    npm install
 
-    tsc
+### 2. Compiling
+Navigate to the project directory in your terminal and run:
 
-This will generate a new directory called build which contains the compiled JavaScript files.
+    npm run build
 
-### 3. Bundling JavaScript with Webpack
-Make sure you have run the steps to compile the TypeScript files to JavaScript.
-Run the following command to bundle the JavaScript files with Webpack:
+This runs the command "webpack --config webpack.config.js", which will build the application using webpack and the configuration file 'webpack.config.js'.
 
-    npx webpack
+### 3. Other Scripts
+    npm run build-docs
+Runs the command "typedoc --options typedoc.json", which will generate documentation for the project using typedoc and the configuration file 'typedoc.json'. The produced documentation is located in the Docs folder.
 
-This will generate a new file called bundle.js in the build directory.
+    npm run lint
 
-### 4. Serving the Project
-To view the project in a web browser, you can use a simple HTTP server such as http-server.
-Install http-server by running the following command:
-
-    npm install -g http-server
-
-Navigate to the build directory and start the HTTP server:
-
-    cd build
-    http-server
-
-Open a web browser and navigate to http://localhost:8080 to view the project.
+Runs the command "eslint . --ext .ts,.tsx,.html", which will lint the code in the current directory for any issues, including files with the extensions '.ts', '.tsx', and '.html'.

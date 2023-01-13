@@ -14,6 +14,9 @@
   <link rel="icon" href="./Src/CSS/tab_icon.png">
   <!-- Styling -->
   <link rel="stylesheet" type="text/css" href="./Src/CSS/style.css">
+  <!-- DataTables Styling -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.bootstrap5.min.css">
 </head>
 
 <body>
@@ -31,8 +34,14 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page">Table</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./Src/Pages/plots.html">Plots</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Plots</a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="./Src/Pages/plots.html">PrimalGap (Absolute Performance Profile)</a></li>
+              <li><a class="dropdown-item disabled" href="#">DualGap</a></li>
+              <li><a class="dropdown-item disabled" href="#">PrimalBound</a></li>
+              <li><a class="dropdown-item disabled" href="#">DualBound</a></li>
+            </ul>
           </li>
           <li class="nav-item">
             <div class="input-group">
@@ -44,20 +53,23 @@
       </div>
     </div>
   </nav>
-
 </div>
   <div id="tableFilters">
-    <div id="buttonField">
+    <div id="actionButtonsField">
       <button class="btn btn-primary btn-sm" type="none" id="selectAllButton" disabled="true">Select All Solvers</button>
       <button class="btn btn-dark btn-sm" id="viewSelectionButton" disabled="true">View All Problems</button>
       <button class="btn btn-dark btn-sm" id="filterSelectionButton" disabled="true">View Selected Problems</button>
-      <a class="btn btn-success btn-sm" id="downloadCSVButton" type="button">Download CSV</a> <small class="text-muted">(Currently visible table)</small>
+    </div>
+    <div id="saveButtonsField">
+      <button class="btn btn-success btn-sm" id="saveLocalStorage" disabled="true">Save to local storage</button>
+      <button class="btn btn-success btn-sm" type="button" id="downloadCSVButtonLayer" disabled="true"><a id="downloadCSVButton" type="button">Download CSV</a></button> <small class="text-muted">(Currently visible table)</small>
     </div>
     <hr/>
     <span class="badge bg-dark">Solvers</span>
     <!-- Table filters will be created here. -->
     <!-- Table search appears after creating a table. -->
   </div>
+  
   <div id="dataTable">
     <!-- Table element will be created here. -->
   </div>
