@@ -3,18 +3,33 @@ import { FileInput, ImportDataButton } from "../Elements/Elements";
 export function ReadData(RawData: any[]) {
     ImportDataButton.disabled = false;
     let Reader = new FileReader();
+    let File = FileInput.files[0];
+    let FileName = File.name;
+    let FileExtension = FileName.split('.').pop();
     Reader.addEventListener('load', function () {
         RawData.length = 0;
-        // Split the file's text into an array of lines.
-        let lines = (<string>Reader.result).split('\n');
-        // Iterate over the lines array and process each line as needed. .
-        // Skip the last line, as it is always empty in the benchmark results file.
-        for (let i = 0; i < lines.length - 1; i++) {
-            let line = lines[i];
-            RawData.push(line);
+        if (FileExtension === "txt") {
+            // Split the file's text into an array of lines.
+            let lines = (<string>Reader.result).split('\n');
+            // Iterate over the lines array and process each line as needed.
+            // Skip the last line, as it is always empty in the benchmark results file.
+            for (let i = 0; i <= lines.length - 1; i++) {
+                let line = lines[i];
+                RawData.push(line);
+            }
+        } else if (FileExtension === "trc") {
+            console.log("To be implemented.")
+        } else {
+            console.log("Invalid file extension. Please use a .txt or .trc file.");
+            return;
         }
+
     });
     // Read the file as text.
     Reader.readAsText(FileInput.files[0]);
     return RawData;
+}
+
+export function GetFileType() {
+    return FileInput.files[0].name.split('.').pop();
 }
