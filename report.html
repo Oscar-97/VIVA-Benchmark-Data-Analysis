@@ -45,8 +45,8 @@
           </li>
           <li class="nav-item">
             <div class="input-group">
-              <input type="file" class="form-control" id="fileInput" aria-describedby="inputGroupFileAddon04" aria-label="Upload" value="">
-              <button class="btn btn-outline-primary" type="button" id="importDataButton" disabled="true">Upload</button>
+              <input type="file" class="form-control" id="fileInput" aria-describedby="inputGroupFileAddon04" aria-label="Upload" value="" data-toggle="tooltip" data-placement="top" title="Select and upload a .txt or .trc file.">
+              <button class="btn btn-outline-primary" type="button" id="importDataButton" disabled="true" data-toggle="tooltip" data-placement="top" title="Upload the selected file for processing.">Upload</button>
             </div>
           </li>
         </ul>
@@ -56,13 +56,13 @@
 </div>
   <div id="tableFilters">
     <div id="actionButtonsField">
-      <button class="btn btn-primary btn-sm" type="none" id="selectAllButton" disabled="true">Select All Solvers</button>
-      <button class="btn btn-dark btn-sm" id="viewSelectionButton" disabled="true">View All Problems</button>
-      <button class="btn btn-dark btn-sm" id="filterSelectionButton" disabled="true">View Selected Problems</button>
+      <button class="btn btn-primary btn-sm" type="none" id="selectAllButton" disabled="true" data-toggle="tooltip" data-placement="top" title="Select all solvers found in the uploaded file.">Select All Solvers</button>
+      <button class="btn btn-dark btn-sm" id="viewSelectionButton" disabled="true" data-toggle="tooltip" data-placement="top" title="View all problems found in the uploaded file.">View All Problems</button>
+      <button class="btn btn-dark btn-sm" id="filterSelectionButton" disabled="true" data-toggle="tooltip" data-placement="top" title="View problems that have been selected from the table.">View Selected Problems</button>
     </div>
     <div id="saveButtonsField">
-      <button class="btn btn-success btn-sm" id="saveLocalStorage" disabled="true">Save to local storage</button>
-      <button class="btn btn-success btn-sm" type="button" id="downloadCSVButtonLayer" disabled="true"><a id="downloadCSVButton" type="button">Download CSV</a></button> <small class="text-muted">(Currently visible table)</small>
+      <button class="btn btn-success btn-sm" id="saveLocalStorage" disabled="true" data-toggle="tooltip" data-placement="top" title="Save current table configuration.">Save Configuration</button>
+      <button class="btn btn-success btn-sm" type="button" id="downloadCSVButtonLayer" disabled="true"><a id="downloadCSVButton" type="button" data-toggle="tooltip" data-placement="top" title="Download the currently visible table as a CSV file.">Download CSV</a></button> <small class="text-muted">(Currently visible table)</small>
     </div>
     <hr/>
     <span class="badge bg-dark">Solvers</span>
