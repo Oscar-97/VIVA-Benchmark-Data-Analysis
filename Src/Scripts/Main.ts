@@ -92,10 +92,7 @@ function ManageData() {
     InstanceLabels = GetInstanceLabels(DataLabels);
     ProblemList = GetProblems(SolvedData);
     ResultsData = GetResults(SolvedData);
-    /**
-    * Create the solver filters, displayed in the element with the id: tableFilters.
-    * @param TableFilters Filters for the table.
-    */
+
     TableFilters(Solvers, "Solvers");
   }
   else if (FileExtensionType === "trc") {
