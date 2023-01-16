@@ -1,5 +1,11 @@
-export function TableFilters(Solvers: string | any[]) {
-    for (var i = 0; i < Solvers.length; i++){
+import { SolverAndProblemsHeader } from "../Elements/Elements";
+
+export function TableFilters(Elements: string | any[], BadgeName: string) {
+
+    SolverAndProblemsHeader.hidden = false;
+    SolverAndProblemsHeader.innerText = BadgeName;
+
+    for (var i = 0; i < Elements.length; i++){
         /**
          * @param FilterCheckboxes Filter form div.
          * @param FilterLabels Filter labels.
@@ -12,13 +18,13 @@ export function TableFilters(Solvers: string | any[]) {
         // Create filter labels.
         const FilterLabels = document.createElement('label') as HTMLLabelElement;
         FilterLabels.className = "form-check-label";
-        FilterLabels.innerText = Solvers[i];
+        FilterLabels.innerText = Elements[i];
 
         // Create input buttons.
         const FilterInput = document.createElement('input') as HTMLInputElement;
         FilterInput.className = 'form-check-input';
         FilterInput.type = "checkbox";
-        FilterInput.id = Solvers[i];
+        FilterInput.id = Elements[i];
         
         // Append elements.
         FilterCheckboxes.appendChild(FilterInput);
