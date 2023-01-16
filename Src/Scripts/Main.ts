@@ -5,7 +5,8 @@ import { TableDownloadCSV } from "./Table/TableDownloadCSV";
 import { CreateData } from './DataProcessing/CreateData';
 import { ImportDataEvents } from './DataProcessing/ImportDataEvents';
 import { ReadData, GetFileType } from './DataProcessing/ReadData';
-import { GetInstance, GetSolvers, GetInstanceLabels, GetDataLabels, GetProblems, GetResults } from './DataProcessing/FilterData';
+import { ExtractTrcData } from './DataProcessing/FilterDataTrc';
+import { GetInstance, GetSolvers, GetInstanceLabels, GetDataLabels, GetProblems, GetResults } from './DataProcessing/FilterDataTxt';
 import { InitializePlots } from './Chart/InitializePlot';
 import { SelectAllSolvers } from './Solvers/SelectAllSolvers';
 import { FileInput, ImportDataButton, SelectAllButton, ViewSelectionButton, ViewPlotsButton, FilterSelectionButton, SaveLocalStorageButton, DownloadCSVButton, InputSearch } from './Elements/Elements';
@@ -75,7 +76,7 @@ function ManageData() {
    * @param ResultsData List of results.
    */
   let Instance: string;
-  let Solvers: string[];
+  let Solvers: string[] = [];
   let DataLabels: string[];
   let InstanceLabels: string[];
   let ProblemList = [];
@@ -91,16 +92,21 @@ function ManageData() {
     InstanceLabels = GetInstanceLabels(DataLabels);
     ProblemList = GetProblems(SolvedData);
     ResultsData = GetResults(SolvedData);
+    /**
+    * Create the solver filters, displayed in the element with the id: tableFilters.
+    * @param TableFilters Filters for the table.
+    */
+    TableFilters(Solvers, "Solvers");
   }
   else if (FileExtensionType === "trc") {
-
+    let TrcData = [] = ExtractTrcData(SolvedData);
+    for (let i = 0; i < TrcData.length; i++) {
+      ProblemList.push(TrcData[i]["InputFileName"]);
+    }
+    TableFilters(ProblemList, "Problems");
   }
 
-  /**
-   * Create the solver filters, displayed in the element with the id: tableFilters.
-   * @param TableFilters Filters for the table.
-   */
-  TableFilters(Solvers);
+
 
   /**
    * Select all checkboxes button functionality.
