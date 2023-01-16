@@ -8,17 +8,14 @@ export function ReadData(RawData: any[]) {
     let FileExtension = FileName.split('.').pop();
     Reader.addEventListener('load', function () {
         RawData.length = 0;
-        if (FileExtension === "txt") {
+        if (FileExtension === "txt" || FileExtension === "trc") {
             // Split the file's text into an array of lines.
-            let lines = (<string>Reader.result).split('\n');
+            let lines = (<string>Reader.result).split('\r\n');
             // Iterate over the lines array and process each line as needed.
-            // Skip the last line, as it is always empty in the benchmark results file.
             for (let i = 0; i <= lines.length - 1; i++) {
                 let line = lines[i];
                 RawData.push(line);
             }
-        } else if (FileExtension === "trc") {
-            console.log("To be implemented.")
         } else {
             console.log("Invalid file extension. Please use a .txt or .trc file.");
             return;
