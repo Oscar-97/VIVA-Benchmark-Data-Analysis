@@ -1,9 +1,17 @@
 import { SolverAndProblemsHeader } from "../Elements/Elements";
-
+/**
+ * Create the solver filters, displayed in the element with the id: tableFilters.
+ * @param Elements Filters for the table.
+ * @param BadgeName Name of the badge displayed at the top of the row.
+ */
 export function TableFilters(Elements: string | any[], BadgeName: string) {
 
     SolverAndProblemsHeader.hidden = false;
     SolverAndProblemsHeader.innerText = BadgeName;
+
+    const FilterCheckboxesContainer = document.createElement('div') as HTMLDivElement;
+    FilterCheckboxesContainer.id = "checkboxContainer";
+    document.getElementById('tableFilters').appendChild(FilterCheckboxesContainer);
 
     for (var i = 0; i < Elements.length; i++){
         /**
@@ -29,6 +37,6 @@ export function TableFilters(Elements: string | any[], BadgeName: string) {
         // Append elements.
         FilterCheckboxes.appendChild(FilterInput);
         FilterCheckboxes.appendChild(FilterLabels);
-        document.getElementById('tableFilters').appendChild(FilterCheckboxes);
+        document.getElementById('checkboxContainer').appendChild(FilterCheckboxes);
     }
 }

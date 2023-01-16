@@ -17,6 +17,13 @@ a {
     padding-top: 1rem;
 }
 
+#checkboxContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+
 #tableSearch {
     margin-top: 1rem;
     margin-bottom: 0.5rem;
@@ -41,6 +48,11 @@ hr {
 
 tr:hover {
     background-color: #0d6efd;
+}
+
+.form-check {
+    width: 150px;
+    height: 40px;
 }
 
 .row-selected-problems {
