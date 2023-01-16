@@ -51,8 +51,7 @@ export function GetDataLabels(SolvedData: string[]) {
         } else if (TempData3[i] === "Nodes") {
             TempData3[i] = "Nodes I";
         }
-    // Remove last /r in array before returning the data.
-    DataLabels = TempData3.slice(0, -1);
+    DataLabels = TempData3;
     console.log("Number of data labels: ", DataLabels.length, " and data labels: ", DataLabels);
     return DataLabels;
 }
@@ -88,13 +87,12 @@ export function GetResults(SolvedData: string[]) {
  * Extract the instance and solvers.
  */
 function ExtractInstanceAndSolvers(data: string) {
-    let TempData1 = data.split("\|");
-    let TempData2 = TempData1.filter(item => item);
-    for (var i = TempData2.length - 1; i >= 0; i--) {
-        TempData2[i] = TempData2[i].replace(/\s+/g, "");
+    let TempData = data.split("\|");
+    let InstanceAndSolvers = TempData.filter(item => item);
+    for (var i = InstanceAndSolvers.length - 1; i >= 0; i--) {
+        InstanceAndSolvers[i] = InstanceAndSolvers[i].replace(/\s+/g, "");
     }
-    let ReturnData = TempData2;
-    return ReturnData.slice(0, -1);
+    return InstanceAndSolvers;
 }
 
 /**
@@ -102,13 +100,11 @@ function ExtractInstanceAndSolvers(data: string) {
  */
 function ExtractProblemsAndResults(data: string) {
     // Remove blanks.
-    let TempData = data.replace(/\s+/g, ' ');
-    let ReturnData = TempData.split(" ");
+    let ProblemsAndResults = data.replace(/\s+/g, ' ').split(" ");
     // Remove "|".
-    let TempData2 = ReturnData.map(function (value) {
+    let TempData = ProblemsAndResults.map(function (value) {
         return value.replace(/[|]/g, '');
     });
-    ReturnData = TempData2;
-    // Remove last /r in array and return data.
-    return ReturnData.slice(0, -1);
+    ProblemsAndResults = TempData;
+    return ProblemsAndResults;
 }
