@@ -15,7 +15,7 @@ Once you have selected a file, click on the solvers that you want to see the res
 ## Features to Implement
 ### General
 - [ ] Restructure importing of data.
-- [ ] Add TRC as standard file format for importing.
+- [x] Add TRC as standard file format for importing.
 - [ ] Cache the data.
 - [ ] Add support for saving as configuration.
 - [ ] Add DocType support.
