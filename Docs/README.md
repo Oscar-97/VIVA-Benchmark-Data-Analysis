@@ -7,7 +7,7 @@ This is a project in progress for creating a dynamic reporting system, in a HTML
 
 ---
 ## Instructions for Using the System
-To get started with the project, clone the repository and open the `report.html` file in a web browser. Select a `solvedata*.txt` file from your computer by clicking the "Browse" button and selecting a file from the file picker that appears.
+To get started with the project, clone the repository and open the `report.html` file in a web browser. Select a `solvedata*.txt` or `traceresult.trc` file from your computer by clicking the "Browse" button and selecting a file from the file picker that appears.
 Once you have selected a file, click on the solvers that you want to see the result for and click on view selection to get the data in a tabular or chart format.
 
 --- 
