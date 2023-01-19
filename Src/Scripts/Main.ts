@@ -1,15 +1,15 @@
 import { TableFilters } from './Table/TableFilters';
-import { TableDisplay } from './Table/TableDisplay';
-import { UpdateProblemList, UpdateResultsData } from "./Table/TableSaveSelection";
+import { TableDisplay, TableDisplayTrc } from './Table/TableDisplay';
+import { UpdateProblemList, UpdateResultsData, UpdateResultsTrc } from "./Table/TableSaveSelection";
 import { TableDownloadCSV } from "./Table/TableDownloadCSV";
 import { CreateData } from './DataProcessing/CreateData';
 import { ImportDataEvents } from './DataProcessing/ImportDataEvents';
 import { ReadData, GetFileType } from './DataProcessing/ReadData';
-import { ExtractTrcData } from './DataProcessing/FilterDataTrc';
+import { ExtractTrcData, GetTrcDataCategory } from './DataProcessing/FilterDataTrc';
 import { GetInstance, GetSolvers, GetInstanceLabels, GetDataLabels, GetProblems, GetResults } from './DataProcessing/FilterDataTxt';
 import { InitializePlots } from './Chart/InitializePlot';
 import { SelectAllSolvers } from './Solvers/SelectAllSolvers';
-import { FileInput, ImportDataButton, SelectAllButton, ViewSelectionButton, ViewPlotsButton, FilterSelectionButton, SaveLocalStorageButton, DownloadCSVButton, InputSearch } from './Elements/Elements';
+import { FileInput, ImportDataButton, SelectAllButton, ViewAllResultsButton, ViewPlotsButton, FilterSelectionButton, SaveLocalStorageButton, DownloadCSVButton, InputSearch } from './Elements/Elements';
 
 /**
  * Set the filename to be empty and declare an array to store the benchmarks in.
@@ -27,7 +27,7 @@ let FileExtensionType = '';
 try {
   //RawData = JSON.parse(localStorage.getItem('myData'));
   SelectAllButton.disabled = false;
-  ViewSelectionButton.disabled = false;
+  ViewAllResultsButton.disabled = false;
   ManageData();
 } catch {
   console.log("No data found in local storage.");
@@ -82,6 +82,14 @@ function ManageData() {
   let ProblemList = [];
   let ResultsData = [];
 
+  let TrcData = [];
+  let ModelTypes = [];
+  let Directions = [];
+  let ModelStatuses = [];
+  let SolverStatuses = [];
+  let ObjectiveValues = [];
+  let SolverTimes = [];
+
   /**
    * Check which file format is used.
    */
@@ -94,16 +102,25 @@ function ManageData() {
     ResultsData = GetResults(SolvedData);
 
     TableFilters(Solvers, "Solvers");
-  }
-  else if (FileExtensionType === "trc") {
-    let TrcData = [] = ExtractTrcData(SolvedData);
-    for (let i = 0; i < TrcData.length; i++) {
-      ProblemList.push(TrcData[i]["InputFileName"]);
-    }
-    TableFilters(ProblemList, "Problems");
-  }
+  } else if (FileExtensionType === "trc") {
+    TrcData = ExtractTrcData(SolvedData);
+    console.log("Content of .trc file: ", TrcData);
+    ProblemList = GetTrcDataCategory(TrcData, "InputFileName");
+    ModelTypes = GetTrcDataCategory(TrcData, "ModelType");
+    Solvers = GetTrcDataCategory(TrcData, "SolverName");
+    Directions = GetTrcDataCategory(TrcData, "Direction");
+    ModelStatuses = GetTrcDataCategory(TrcData, "ModelStatus");
+    SolverStatuses = GetTrcDataCategory(TrcData, "SolverStatus");
+    ObjectiveValues = GetTrcDataCategory(TrcData, "ObjectiveValue");
+    SolverTimes = GetTrcDataCategory(TrcData, "SolverTime");
 
-
+    /**
+     * Create the filters for problems.
+     * TODO: Add functionality for this.
+     * Only displayed at the moment.
+     */
+    //TableFilters(ProblemList, "Problems");
+  }
 
   /**
    * Select all checkboxes button functionality.
@@ -117,33 +134,46 @@ function ManageData() {
    */
   if (document.title == "Report") {
     /**
-     * Shows all problems.
+     * Shows all problems depending on the uploaded file.
      */
-    ViewSelectionButton.addEventListener("click", () => {
-      TableDisplay(Instance, Solvers, InstanceLabels, DataLabels, ProblemList, ResultsData);
+    ViewAllResultsButton.addEventListener("click", () => {
+      if (FileExtensionType === "txt") {
+        TableDisplay(Instance, Solvers, InstanceLabels, DataLabels, ProblemList, ResultsData);
+      }
+      else if (FileExtensionType === "trc") {
+        //TableDisplayTrc(ProblemList, ModelTypes, Solvers, Directions, ModelStatuses, SolverStatuses, ObjectiveValues, SolverTimes);
+        TableDisplayTrc(TrcData);
+      }
     });
 
     /**
      * Shows the selected problems by modifying the ProblemList and ResultsData.
      */
     FilterSelectionButton.addEventListener("click", () => {
-      console.log("Problemlist: ", ProblemList);
-      console.log("ResultsData: ", ResultsData);
-      let ProblemListFiltered = [];
-      let ResultsDataFiltered = [];
-      ProblemListFiltered = UpdateProblemList();
-      ResultsDataFiltered = UpdateResultsData();
 
-      console.log("ProblemListFiltered: ", ProblemListFiltered);
-      console.log("ResultsDataFiltered: ", ResultsDataFiltered);
-      TableDisplay(Instance, Solvers, InstanceLabels, DataLabels, ProblemListFiltered, ResultsDataFiltered);
+      FilterSelectionButton.disabled = true;
+      if (FileExtensionType === "txt") {
+        let ProblemListFiltered = [];
+        let ResultsDataFiltered = [];
+        ProblemListFiltered = UpdateProblemList();
+        ResultsDataFiltered = UpdateResultsData();
+
+        console.log("ProblemListFiltered: ", ProblemListFiltered);
+        console.log("ResultsDataFiltered: ", ResultsDataFiltered);
+        TableDisplay(Instance, Solvers, InstanceLabels, DataLabels, ProblemListFiltered, ResultsDataFiltered);
+      } else if (FileExtensionType === "trc") {
+        let TrcDataFiltered = [];
+        TrcDataFiltered = UpdateResultsTrc();
+        console.log("TrcData Filtered: ", TrcDataFiltered);
+        TableDisplayTrc(TrcDataFiltered);
+      }
 
       /**
        * TODO:
        * Add the following to a NewSolvedData.
        */
-      let output = CreateData(Instance, Solvers, InstanceLabels, DataLabels, ProblemListFiltered, ResultsDataFiltered);
-      console.log(output);
+      //let output = CreateData(Instance, Solvers, InstanceLabels, DataLabels, ProblemListFiltered, ResultsDataFiltered);
+      //console.log(output);
     });
 
     /**
