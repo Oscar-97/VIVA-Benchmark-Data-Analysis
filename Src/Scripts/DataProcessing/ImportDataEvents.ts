@@ -1,7 +1,7 @@
 /**
  * Click on the upload data button to start the process.
  */
-import { FileInput, ImportDataButton, SelectAllButton, ViewSelectionButton, ViewPlotsButton } from '../Elements/Elements';
+import { FileInput, ImportDataButton, SelectAllButton, ViewAllResultsButton, ViewPlotsButton } from '../Elements/Elements';
 
 export function ImportDataEvents() {
 
@@ -17,7 +17,7 @@ export function ImportDataEvents() {
     // Change the statuses of the buttons after uploading the data.
     SelectAllButton.disabled = false;
     if (document.title == "Report") {
-        ViewSelectionButton.disabled = false;
+        ViewAllResultsButton.disabled = false;
     } else if (document.title == "Plots") {
         ViewPlotsButton.disabled = false;
     }
