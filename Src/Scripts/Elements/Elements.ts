@@ -22,7 +22,7 @@ export const SelectAllButton = document.getElementById("selectAllButton") as HTM
  * @param InputSearch Input for searching for problems.
  * @param SolverAndProblemsHeader Badge with the text Solvers or Problems.
  */
-export const ViewSelectionButton = document.getElementById("viewSelectionButton") as HTMLButtonElement;
+export const ViewAllResultsButton = document.getElementById("viewAllResultsButton") as HTMLButtonElement;
 export const FilterSelectionButton = document.getElementById("filterSelectionButton") as HTMLButtonElement;
 export const SaveLocalStorageButton = document.getElementById("saveLocalStorage") as HTMLButtonElement;
 export const DownloadCSVButton = document.getElementById("downloadCSVButton") as HTMLAnchorElement;
