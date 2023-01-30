@@ -10,6 +10,7 @@ export const ImportDataButton = document.getElementById('importDataButton') as H
  * On both pages.
  * @param SelectAllButton Selects all solvers from the benchmark results file.
  */
+export const AlertNotification = document.getElementById("alertNotification") as HTMLDivElement;
 export const SelectAllButton = document.getElementById("selectAllButton") as HTMLButtonElement;
 
 /**

@@ -3,6 +3,13 @@ a {
     color: #ffffff;
 }
 
+#alertNotification {
+    display: none;
+    width: auto;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
 #saveButtonsField {
     padding-top: 1rem;
 }
