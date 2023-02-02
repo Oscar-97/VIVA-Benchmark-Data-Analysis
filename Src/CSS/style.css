@@ -3,6 +3,13 @@ a {
     color: #ffffff;
 }
 
+#alertNotification {
+    display: none;
+    width: auto;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
 #saveButtonsField {
     padding-top: 1rem;
 }
@@ -15,6 +22,13 @@ a {
 #tableFilters {
     padding-left: 1rem;
     padding-top: 1rem;
+}
+
+#checkboxContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 #tableSearch {
@@ -41,6 +55,11 @@ hr {
 
 tr:hover {
     background-color: #0d6efd;
+}
+
+.form-check {
+    width: 150px;
+    height: 40px;
 }
 
 .row-selected-problems {

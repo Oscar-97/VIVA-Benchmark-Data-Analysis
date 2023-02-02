@@ -26,7 +26,7 @@
 <a href="#instructions-for-using-the-system" id="instructions-for-using-the-system" style="color: inherit; text-decoration: none;">
   <h2>Instructions for Using the System</h2>
 </a>
-<p>To get started with the project, clone the repository and open the report.html file in a web browser. Select a <code>solvedata*.txt</code> file from your computer by clicking the &quot;Browse&quot; button and selecting a file from the file picker that appears.
+<p>To get started with the project, clone the repository and open the <code>report.html</code> file in a web browser. Select a <code>solvedata*.txt</code> or <code>traceresult.trc</code> file from your computer by clicking the &quot;Browse&quot; button and selecting a file from the file picker that appears.
 Once you have selected a file, click on the solvers that you want to see the result for and click on view selection to get the data in a tabular or chart format.</p>
 <hr>
 
@@ -38,7 +38,10 @@ Once you have selected a file, click on the solvers that you want to see the res
   <h3>General</h3>
 </a>
 <ul>
+<li><input disabled="" type="checkbox"> Restructure importing of data.</li>
+<li><input checked="" disabled="" type="checkbox"> Add TRC as standard file format for importing.</li>
 <li><input disabled="" type="checkbox"> Cache the data.</li>
+<li><input disabled="" type="checkbox"> Add support for saving as configuration.</li>
 <li><input disabled="" type="checkbox"> Add DocType support.</li>
 <li><input disabled="" type="checkbox"> Update the &#39;Working with codebase&#39; chapter.</li>
 <li><input disabled="" type="checkbox"> Add automated UI testing.</li>
@@ -50,6 +53,7 @@ Once you have selected a file, click on the solvers that you want to see the res
 <ul>
 <li><input disabled="" type="checkbox"> Check if the number of columns matches with the data.</li>
 <li><input disabled="" type="checkbox"> Hide/Show columns.</li>
+<li><input disabled="" type="checkbox"> Hover on problem to get more in-depth details.</li>
 </ul>
 
 <a href="#plot-page" id="plot-page" style="color: inherit; text-decoration: none;">
@@ -71,36 +75,27 @@ Once you have selected a file, click on the solvers that you want to see the res
 <p>Before getting started, make sure you have the following software installed on your machine:</p>
 <pre><code><span class="hl-0">Node</span><span class="hl-1">.</span><span class="hl-0">js</span><span class="hl-1">: </span><span class="hl-2">https</span><span class="hl-1">:</span><span class="hl-3">//nodejs.org/</span><br/><span class="hl-2">TypeScript</span><span class="hl-1">: </span><span class="hl-2">https</span><span class="hl-1">:</span><span class="hl-3">//www.typescriptlang.org/</span><br/><span class="hl-2">Webpack</span><span class="hl-1">: </span><span class="hl-2">https</span><span class="hl-1">:</span><span class="hl-3">//webpack.js.org/</span>
 </code></pre>
+<p>Install the required packages by running: </p>
+<pre><code><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-0">install</span>
+</code></pre>
 
-<a href="#2-compiling-typescript-to-javascript" id="2-compiling-typescript-to-javascript" style="color: inherit; text-decoration: none;">
-  <h3>2. Compiling TypeScript to JavaScript</h3>
+<a href="#2-compiling" id="2-compiling" style="color: inherit; text-decoration: none;">
+  <h3>2. Compiling</h3>
 </a>
-<p>Navigate to the project directory in your terminal.
-Run the following command to compile the TypeScript files to JavaScript:</p>
-<pre><code><span class="hl-0">tsc</span>
+<p>Navigate to the project directory in your terminal and run:</p>
+<pre><code><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-0">run</span><span class="hl-1"> </span><span class="hl-0">build</span>
 </code></pre>
-<p>This will generate a new directory called build which contains the compiled JavaScript files.</p>
+<p>This runs the command &quot;webpack --config webpack.config.js&quot;, which will build the application using webpack and the configuration file &#39;webpack.config.js&#39;.</p>
 
-<a href="#3-bundling-javascript-with-webpack" id="3-bundling-javascript-with-webpack" style="color: inherit; text-decoration: none;">
-  <h3>3. Bundling JavaScript with Webpack</h3>
+<a href="#3-other-scripts" id="3-other-scripts" style="color: inherit; text-decoration: none;">
+  <h3>3. Other Scripts</h3>
 </a>
-<p>Make sure you have run the steps to compile the TypeScript files to JavaScript.
-Run the following command to bundle the JavaScript files with Webpack:</p>
-<pre><code><span class="hl-0">npx</span><span class="hl-1"> </span><span class="hl-0">webpack</span>
+<pre><code><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-0">run</span><span class="hl-1"> </span><span class="hl-0">build</span><span class="hl-1">-</span><span class="hl-0">docs</span>
 </code></pre>
-<p>This will generate a new file called bundle.js in the build directory.</p>
-
-<a href="#4-serving-the-project" id="4-serving-the-project" style="color: inherit; text-decoration: none;">
-  <h3>4. Serving the Project</h3>
-</a>
-<p>To view the project in a web browser, you can use a simple HTTP server such as http-server.
-Install http-server by running the following command:</p>
-<pre><code><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-0">install</span><span class="hl-1"> -</span><span class="hl-0">g</span><span class="hl-1"> </span><span class="hl-0">http</span><span class="hl-1">-</span><span class="hl-0">server</span>
+<p>Runs the command &quot;typedoc --options typedoc.json&quot;, which will generate documentation for the project using typedoc and the configuration file &#39;typedoc.json&#39;. The produced documentation is located in the Docs folder.</p>
+<pre><code><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-0">run</span><span class="hl-1"> </span><span class="hl-0">lint</span>
 </code></pre>
-<p>Navigate to the build directory and start the HTTP server:</p>
-<pre><code><span class="hl-0">cd</span><span class="hl-1"> </span><span class="hl-0">build</span><br/><span class="hl-0">http</span><span class="hl-1">-</span><span class="hl-0">server</span>
-</code></pre>
-<p>Open a web browser and navigate to <a href="http://localhost:8080">http://localhost:8080</a> to view the project.</p>
+<p>Runs the command &quot;eslint . --ext .ts,.tsx,.html&quot;, which will lint the code in the current directory for any issues, including files with the extensions &#39;.ts&#39;, &#39;.tsx&#39;, and &#39;.html&#39;.</p>
 </div></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
@@ -126,7 +121,8 @@ Install http-server by running the following command:</p>
 <li class="tsd-kind-module"><a href="modules/Chart_CreateChart.html">Chart/<wbr/>Create<wbr/>Chart</a></li>
 <li class="tsd-kind-module"><a href="modules/Chart_InitializePlot.html">Chart/<wbr/>Initialize<wbr/>Plot</a></li>
 <li class="tsd-kind-module"><a href="modules/DataProcessing_CreateData.html">Data<wbr/>Processing/<wbr/>Create<wbr/>Data</a></li>
-<li class="tsd-kind-module"><a href="modules/DataProcessing_FilterData.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data</a></li>
+<li class="tsd-kind-module"><a href="modules/DataProcessing_FilterDataTrc.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data<wbr/>Trc</a></li>
+<li class="tsd-kind-module"><a href="modules/DataProcessing_FilterDataTxt.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data<wbr/>Txt</a></li>
 <li class="tsd-kind-module"><a href="modules/DataProcessing_ImportDataEvents.html">Data<wbr/>Processing/<wbr/>Import<wbr/>Data<wbr/>Events</a></li>
 <li class="tsd-kind-module"><a href="modules/DataProcessing_ReadData.html">Data<wbr/>Processing/<wbr/>Read<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="modules/Elements_Elements.html">Elements/<wbr/>Elements</a></li>

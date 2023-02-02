@@ -4,8 +4,6 @@ export function TableData(Instance: string, Solvers: string | any[], InstanceLab
      */
     let NewResultsData: any[][];
     let NewDataLabels: any[];
-    console.log("NewDataLabels length: ", NewDataLabels);
-    console.log("NewResultsData length: ", NewResultsData);
 
     /**
      * Remove DataLabels that are not used.
@@ -51,41 +49,41 @@ export function TableData(Instance: string, Solvers: string | any[], InstanceLab
     DataTableDiv.innerHTML = "";
 
     /**
-     * @param InstanceSolversThead Thead for instance and solvers.
+     * @param DataTableHeaders Thead created from instance and solvers on the first row, data labels on the second row.
+     * Thead for instance and solvers.
      */
-    let InstanceSolversThead = "<thead class='thead-dark' <tr>" + "<th colspan='7'>" + Instance + "</th>";
+    let DataTableHeaders = "<thead class='thead-dark' <tr>" + "<th colspan='7'>" + Instance + "</th>";
     for (let i = 0; i < Solvers.length; i++) {
-        InstanceSolversThead += "<th colspan='8'>" + Solvers[i] + "</th>";
+        DataTableHeaders += "<th colspan='8'>" + Solvers[i] + "</th>";
     }
-    InstanceSolversThead += "</tr>";
+    DataTableHeaders += "</tr> <tr>";
 
-    /**
-     * @param ResultThead Thead for instance and data labels.
-     */
-    let ResultThead = "<tr>";
     for (let i = 0; i < InstanceLabels.length; i++) {
-        ResultThead += "<th>" + InstanceLabels[i] + "</th>";
+        DataTableHeaders += "<th>" + InstanceLabels[i] + "</th>";
     }
     for (let i = 0; i < NewDataLabels.length; i++) {
-        ResultThead += "<th>" + NewDataLabels[i] + "</th>";
+        DataTableHeaders += "<th>" + NewDataLabels[i] + "</th>";
     }
-    ResultThead += "</tr></thead>";
+    DataTableHeaders += "</tr></thead>";
 
     /**
-     * @param NewResultsData Contains all the result data and the table tags.
+     * @param DataTableContent The content of the data table.
      * @param ResultRow Result row, reset in every loop.
+     * @param NewResultsData Contains all the result data and the table tags.
      */
-    let DataTable = "<tbody>";
+    let DataTableContent = "<tbody>";
     console.log("Problems length: ", Problems.length)
     for (let i = 0; i < Problems.length; i++) {
         let ResultRow = "";
         NewResultsData[i].forEach((element: string) => {
             ResultRow += "<td>" + element + "</td>";
         })
-        // Header for each row.
-        DataTable += "<tr>" + "<th scope='row'>" + Problems[i] + "</th>" + ResultRow + "</tr>";
+        /**
+         * Header for each row.
+         */
+        DataTableContent += "<tr>" + "<th scope='row'>" + Problems[i] + "</th>" + ResultRow + "</tr>";
     }
-    DataTable += "</tbody>";
+    DataTableContent += "</tbody>";
 
     /**
      * Create the table element.
@@ -94,23 +92,61 @@ export function TableData(Instance: string, Solvers: string | any[], InstanceLab
     const NewDataTable = document.createElement("table") as HTMLTableElement;
     NewDataTable.className = "table table-bordered table-sm";
     NewDataTable.id = "dataTableGenerated";
-    NewDataTable.innerHTML = InstanceSolversThead + ResultThead + DataTable;
+    //NewDataTable.innerHTML = DataTableHeaders + ResultThead + DataTableContent;
+    NewDataTable.innerHTML = DataTableHeaders + DataTableContent;
 
     /**
-     * Add the data to the div.
+     * Add the table to the div.
      */
     DataTableDiv.appendChild(NewDataTable);
+}
+
+export function TableDataTrc(TrcData: any[]) {
+    /**
+     * @param DataTableDiv Div that contains the data table.
+     */
+    const DataTableDiv = document.getElementById("dataTable") as HTMLDivElement;
+    DataTableDiv.innerHTML = "";
 
     /**
-     * @param TableSearch Table search element.
+     * @param DataTableHeaders Thead created from the categories.
      */
-    // const TableSearch = document.getElementById("tableSearch") as HTMLInputElement;
-    // if (!document.body.contains(TableSearch)) {
-    //     const NewTableSearch = document.createElement('input') as HTMLInputElement;
-    //     NewTableSearch.id = "tableSearch";
-    //     NewTableSearch.type = "text";
-    //     NewTableSearch.className = "form-control";
-    //     NewTableSearch.placeholder = "Search for a problem...";
-    //     document.getElementById("tableFilters").appendChild(NewTableSearch);
-    // }
+    let DataTableHeaders = "<thead class='thead-dark'> <tr>";
+    
+    /**
+     * Add headers.
+     */
+    for (const key of Object.keys(TrcData[0])) {
+        DataTableHeaders += "<th>" + `${key}` + "</th>"
+    }
+    DataTableHeaders += "</tr> </thead>";
+    
+    /**
+     * Add the results.
+     * @param DataTableContent The content of the data table.
+     */
+    let DataTableContent = "<tbody>";
+    for (let obj of TrcData) {
+        let Results = Object.values(obj);
+        let ResultRow = "";
+        for (let i = 0; i < Results.length; i++) {
+            ResultRow += "<td>" + Results[i] + "</td>"
+        }
+        DataTableContent += "<tr>" + ResultRow + "</tr>";
+    }
+
+    /**
+     * Data table body.
+     */
+    DataTableContent += "</tbody>";
+
+    const NewDataTable = document.createElement("table") as HTMLTableElement;
+    NewDataTable.className = "table table-bordered table-sm";
+    NewDataTable.id = "dataTableGenerated";
+    NewDataTable.innerHTML = DataTableHeaders + DataTableContent;
+
+      /**
+     * Add the table to the div.
+     */
+      DataTableDiv.appendChild(NewDataTable);
 }
