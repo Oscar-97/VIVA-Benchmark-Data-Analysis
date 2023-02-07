@@ -17,17 +17,22 @@ export const SelectAllButton = document.getElementById("selectAllButton") as HTM
  * Table page.
  * @param ViewSelectionButton Displays a table with the currently selected solvers.
  * @param FilterSelectionButton Saves the currently marked rows.
- * @param SaveLocalStorageButton Save current table to the local storage.
+ * @param SaveLocalStorageButton Save current table data to the local storage.
  * @param DownloadCSVButton Download link the currently displayed table.
  * @param DownloadCSVButtonLayer Button element layer for the link.
+ * @param DeleteLocalStorageButton Delete current saved table data from local storage.
+ * @param clearTableButtonButton Clear current settings.
  * @param InputSearch Input for searching for problems.
  * @param SolverAndProblemsHeader Badge with the text Solvers or Problems.
  */
 export const ViewAllResultsButton = document.getElementById("viewAllResultsButton") as HTMLButtonElement;
 export const FilterSelectionButton = document.getElementById("filterSelectionButton") as HTMLButtonElement;
-export const SaveLocalStorageButton = document.getElementById("saveLocalStorage") as HTMLButtonElement;
+export const SaveLocalStorageButton = document.getElementById("saveLocalStorageButton") as HTMLButtonElement;
 export const DownloadCSVButton = document.getElementById("downloadCSVButton") as HTMLAnchorElement;
 export const DownloadCSVButtonLayer = document.getElementById("downloadCSVButtonLayer") as HTMLButtonElement;
+export const DeleteLocalStorageButton = document.getElementById("deleteLocalStorageButton") as HTMLButtonElement;
+export const ClearTableButtonButton = document.getElementById("clearTableButtonButton") as HTMLButtonElement;
+
 export const InputSearch = document.getElementById("tableSearch") as HTMLInputElement;
 export const SolverAndProblemsHeader = document.getElementById('SolverAndProblemsHeader') as HTMLSpanElement;
 
