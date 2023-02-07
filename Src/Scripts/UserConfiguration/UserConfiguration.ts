@@ -1,3 +1,5 @@
+import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
+
 const UserData = {
     dataSet: [],
     fileExtensionType: "",
@@ -7,6 +9,7 @@ export function CreateUserConfiguration(RawData: any[], FileExtensionType: strin
     UserData.dataSet = RawData;
     UserData.fileExtensionType = FileExtensionType;
     localStorage.setItem("UserConfiguration", JSON.stringify(UserData))
+    DisplayAlertNotification("Saved configuration.");
 }
 
 export function GetUserConfiguration(): [any[], string] {
@@ -24,4 +27,5 @@ export function GetUserConfiguration(): [any[], string] {
 
 export function DeleteUserConfiguration() {
     localStorage.removeItem("UserConfiguration");
+    DisplayAlertNotification("Deleted configuration.");
 }
