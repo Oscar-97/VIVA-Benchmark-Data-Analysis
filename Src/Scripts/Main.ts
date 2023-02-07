@@ -9,8 +9,8 @@ import { ExtractTrcData, GetTrcDataCategory } from './DataProcessing/FilterDataT
 import { GetInstance, GetSolvers, GetInstanceLabels, GetDataLabels, GetProblems, GetResults } from './DataProcessing/FilterDataTxt';
 import { InitializePlots } from './Chart/InitializePlot';
 import { SelectAllSolvers } from './Solvers/SelectAllSolvers';
-import { CreateUserConfiguration, GetUserConfiguration } from './UserConfiguration/UserConfiguration';
-import { FileInput, ImportDataButton, SelectAllButton, ViewAllResultsButton, ViewPlotsButton, FilterSelectionButton, SaveLocalStorageButton, DownloadCSVButton, InputSearch } from './Elements/Elements';
+import { CreateUserConfiguration, GetUserConfiguration, DeleteUserConfiguration } from './UserConfiguration/UserConfiguration';
+import { FileInput, ImportDataButton, SelectAllButton, ViewAllResultsButton, ViewPlotsButton, FilterSelectionButton, SaveLocalStorageButton, DownloadCSVButton, InputSearch, DeleteLocalStorageButton } from './Elements/Elements';
 
 /**
  * Set the filename to be empty and declare an array to store the benchmarks in.
@@ -42,7 +42,6 @@ FileInput.addEventListener('change', () => {
 
 /**
  * Click on the upload data button to start the process.
- * TODO: Check button statuses.
  */
 ImportDataButton.addEventListener("click", () => {
   ImportDataEvents("Benchmark file succesfully loaded!");
@@ -194,6 +193,13 @@ function ManageData() {
     SaveLocalStorageButton.addEventListener("click", () => {
       CreateUserConfiguration(RawData, FileExtensionType);
       console.log("Saved benchmarks.");
+    })
+
+    /**
+     * Delete stored data in local storage.
+     */
+    DeleteLocalStorageButton.addEventListener("click", () => {
+      DeleteUserConfiguration();
     })
 
     /**
