@@ -4,6 +4,7 @@ const Buttons = require('datatables.net-buttons-bs5');
 const ColVis = require('datatables.net-buttons/js/buttons.colVis.js');
 const RowReorder = require('datatables.net-rowreorder-bs5');
 const Select = require('datatables.net-select-bs5');
+const FixedColumns = require('datatables.net-fixedcolumns-bs5');
 
 import { GetCheckedSolvers, GetComparisonArray } from "../Solvers/UsedSolvers";
 import { TableData, TableDataTrc } from "./TableData";
@@ -58,7 +59,10 @@ export function TableDisplayTrc(TrcData: any[]) {
         DataTablesConfiguration();
     });
 
+    SelectAllButton.disabled = false;
     FilterSelectionButton.disabled = false;
+    SaveLocalStorageButton.disabled = false;
+    DownloadCSVButtonLayer.disabled = false;
     }, 500)
 }
 
@@ -86,7 +90,7 @@ function DataTablesConfiguration() {
         select: {
             style: 'os',
             blurable: true,
-            className: 'bg-primary text-light row-selected-problems'
+            className: 'bg-primary row-selected-problems'
         },
         responsive: {
             details: {
@@ -100,6 +104,14 @@ function DataTablesConfiguration() {
                 { name: 'phone', width: 480 }
             ]
         },
+        scrollY: "",
+        scrollX: true,
+        scrollCollapse: true,
+        paging: true,
+        // fixedColumns: {
+        //     left: 1
+        // },
+        fixedColumns: true,
         buttons: ['copy', 'excel', 'pdf', 'colvis']
     });
 
