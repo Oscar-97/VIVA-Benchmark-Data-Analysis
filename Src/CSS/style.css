@@ -14,6 +14,10 @@ a {
     padding-top: 1rem;
 }
 
+#deleteButtonsField {
+    padding-top: 1rem;
+}
+
 #dataTable {
     padding: 1rem;
     padding-top: 1rem;
@@ -57,12 +61,26 @@ tr:hover {
     background-color: #0d6efd;
 }
 
+table.dataTable tr.odd {
+    background-color: #cccccc;
+}
+
+table.dataTable tr.odd .sorting_1 {
+    background-color: #cccccc;
+}
+
 .form-check {
     width: 150px;
     height: 40px;
 }
 
-.row-selected-problems {
+tr.even.bg-primary.row-selected-problems,
+tr.odd.bg-primary.row-selected-problems,
+tr.even.bg-primary.row-selected-problems td.sorting_1.dtfc-fixed-left,
+tr.odd.bg-primary.row-selected-problems td.sorting_1.dtfc-fixed-left,
+tr.odd.bg-primary.row-selected-problems th.sorting_1.dtfc-fixed-left,
+tr.even.bg-primary.row-selected-problems th.sorting_1.dtfc-fixed-left {
     background-color: #0d6efd;
     color: #ffffff;
+    font-weight: bold;
 }
