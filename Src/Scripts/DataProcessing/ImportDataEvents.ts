@@ -1,7 +1,8 @@
 /**
  * Click on the upload data button to start the process.
  */
-import { AlertNotification, FileInput, ImportDataButton, SelectAllButton, ViewAllResultsButton, ViewPlotsButton } from '../Elements/Elements';
+import { FileInput, ImportDataButton, SelectAllButton, ViewAllResultsButton, ViewPlotsButton } from '../Elements/Elements';
+import { DisplayAlertNotification } from '../Elements/DisplayAlertNotification';
 
 export function ImportDataEvents(message: string) {
 
@@ -30,15 +31,7 @@ export function ImportDataEvents(message: string) {
         ViewPlotsButton.disabled = false;
     }
     ImportDataButton.disabled = true;
-
-    /**
-     * Show a simple success alert for 3 seconds.
-     */
-    AlertNotification.style.display = "block";
-    AlertNotification.innerText = message;
-
-    setTimeout(() => {
-    AlertNotification.style.display = "none";
-    }, 3000);
-
+    
+    // Display alert with message.
+    DisplayAlertNotification(message);
 }
