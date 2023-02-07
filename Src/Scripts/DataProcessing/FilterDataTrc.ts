@@ -29,9 +29,35 @@ export function ExtractTrcData(RawData: string | any[]) {
         }
     } else if (!FirstLine[0].startsWith("*")) {
         /**
-         * TODO: Check if there is a standard order for these.
+         * Standard order of headers: 
+         * https://www.gamsworld.org/performance/trace.htm
          */
-        const defaultHeaders = ["InputFileName", "ModelType", "SolverName", "Direction", "ModelStatus", "SolverStatus", "ObjectiveValue", "SolverTime"];
+        //const defaultHeaders = ["InputFileName", "ModelType", "SolverName", "Direction", 
+        //"ModelStatus", "SolverStatus", "ObjectiveValue", "SolverTime"];
+        const defaultHeaders = [
+            "filename",   
+            "modeltype", 
+            "solvername", 
+            "NLP def",    
+            "MIP def",    
+            "juliantoday",
+            "direction", 
+            "equnum",     
+            "varnum",	 
+            "dvarnum",    
+            "nz",       
+            "nlnz",    
+            "optfile",   
+            "modelstatus",  
+            "solvestatus",
+            "obj",    
+            "objest",    
+            "res used",   
+            "iter used",
+            "dom used",
+            "nodes used",
+            "user1"
+        ]
 
         for (let i = 0; i < RawData.length; i++) {
             const Obj = {};
