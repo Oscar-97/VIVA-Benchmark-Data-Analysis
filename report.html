@@ -17,6 +17,7 @@
   <!-- DataTables Styling -->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.bootstrap5.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/4.2.1/css/fixedColumns.bootstrap5.min.css">
 </head>
 
 <body>
@@ -45,7 +46,7 @@
           </li>
           <li class="nav-item">
             <div class="input-group">
-              <input type="file" class="form-control" id="fileInput" aria-describedby="inputGroupFileAddon04" aria-label="Upload" value="" data-toggle="tooltip" data-placement="top" title="Select and upload a .txt or .trc file.">
+              <input type="file" class="form-control" id="fileInput" aria-describedby="inputGroupFileAddon04" aria-label="Upload" value="" data-toggle="tooltip" data-placement="top" title="Select and upload a .txt or .trc file." multiple>
               <button class="btn btn-outline-primary" type="button" id="importDataButton" disabled="true" data-toggle="tooltip" data-placement="top" title="Upload the selected file for processing.">Upload</button>
             </div>
           </li>
@@ -54,7 +55,7 @@
     </div>
   </nav>
 </div>
-<div class="alert alert-success" role="alert" id="alertNotification"></div>
+<div class="alert" role="alert" id="alertNotification"></div>
   <div id="tableFilters">
     <div id="actionButtonsField">
       <button class="btn btn-primary btn-sm" type="none" id="selectAllButton" disabled="true" data-toggle="tooltip" data-placement="top" title="Select all solvers found in the uploaded file.">Select All Solvers</button>
@@ -62,8 +63,12 @@
       <button class="btn btn-dark btn-sm" id="filterSelectionButton" disabled="true" data-toggle="tooltip" data-placement="top" title="View problems that have been selected from the table.">View Selected Problems</button>
     </div>
     <div id="saveButtonsField">
-      <button class="btn btn-success btn-sm" id="saveLocalStorage" disabled="true" data-toggle="tooltip" data-placement="top" title="Save current table configuration.">Save Configuration</button>
+      <button class="btn btn-success btn-sm" id="saveLocalStorageButton" disabled="true" data-toggle="tooltip" data-placement="top" title="Save current table configuration.">Save Configuration</button>
       <button class="btn btn-success btn-sm" type="button" id="downloadCSVButtonLayer" disabled="true"><a id="downloadCSVButton" type="button" data-toggle="tooltip" data-placement="top" title="Download the currently visible table as a CSV file.">Download CSV</a></button> <small class="text-muted">(Currently visible table)</small>
+    </div>
+    <div id="deleteButtonsField">
+      <button class="btn btn-danger btn-sm" id="deleteLocalStorageButton" data-toggle="tooltip" data-placement="top" title="Delete current table configuration from local storage.">Delete Configuration</button>
+      <button class="btn btn-danger btn-sm" id="clearTableButtonButton" data-toggle="tooltip" data-placement="top" title="Clear current table.">Clear Data Table</button>
     </div>
     <hr/>
     <span class="badge bg-dark" id="SolverAndProblemsHeader" hidden></span>
