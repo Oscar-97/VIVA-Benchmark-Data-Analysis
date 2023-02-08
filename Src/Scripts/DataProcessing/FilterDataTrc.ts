@@ -34,7 +34,7 @@ export function ExtractTrcData(RawData: string | any[]) {
          */
         //const defaultHeaders = ["InputFileName", "ModelType", "SolverName", "Direction", 
         //"ModelStatus", "SolverStatus", "ObjectiveValue", "SolverTime"];
-        const defaultHeaders = [
+        const DefaultHeaders = [
             "filename",   
             "modeltype", 
             "solvername", 
@@ -58,15 +58,25 @@ export function ExtractTrcData(RawData: string | any[]) {
             "nodes used",
             "user1"
         ]
+        const PreviousRow = {};
 
         for (let i = 0; i < RawData.length; i++) {
+            const CurrentLine = RawData[i].split(",");
+            const Filename = CurrentLine[0];
+            const Solvername = CurrentLine[2];
+
+            // Check if the combination of filename and solver has been used earlier.
+            if (PreviousRow[Filename] === Solvername) {
+              continue;
+            }
+            PreviousRow[Filename] = Solvername;
+            
             const Obj = {};
-            const currentLine = RawData[i].split(",");
-            for (let j = 0; j < defaultHeaders.length; j++) {
-                Obj[defaultHeaders[j]] = currentLine[j];
+            for (let j = 0; j < DefaultHeaders.length; j++) {
+              Obj[DefaultHeaders[j]] = CurrentLine[j];
             }
             TrcData.push(Obj);
-        }
+          }
     }
     return TrcData;
 }
