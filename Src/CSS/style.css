@@ -1,3 +1,7 @@
+.navbar-brand {
+    font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", sans-serif;
+}
+
 a {
     text-decoration: none;
     color: #ffffff;
@@ -14,8 +18,17 @@ a {
     padding-top: 1rem;
 }
 
+#uploadExtraFilesFieldd {
+    padding-top: 2rem;
+}
+
+#instancedataInput {
+    margin-top: 1rem;
+    width: 20rem;
+}
+
 #deleteButtonsField {
-    padding-top: 1rem;
+    margin-top: 1rem;
 }
 
 #dataTable {
