@@ -4,13 +4,14 @@ import { UpdateProblemList, UpdateResultsData, UpdateResultsTrc } from "./Table/
 import { TableDownloadCSV } from "./Table/TableDownloadCSV";
 import { CreateData } from './DataProcessing/CreateData';
 import { ImportDataEvents } from './DataProcessing/ImportDataEvents';
-import { ReadData, GetFileType } from './DataProcessing/ReadData';
+import { ReadData, ReadInstanceInformationData, GetFileType } from './DataProcessing/ReadData';
 import { ExtractTrcData, GetTrcDataCategory } from './DataProcessing/FilterDataTrc';
+import { GetInstanceInformation } from './DataProcessing/FilterDataTrcInfo';
 import { GetInstance, GetSolvers, GetInstanceLabels, GetDataLabels, GetProblems, GetResults } from './DataProcessing/FilterDataTxt';
 import { InitializePlots } from './Chart/InitializePlot';
 import { SelectAllSolvers } from './Solvers/SelectAllSolvers';
 import { CreateUserConfiguration, GetUserConfiguration, DeleteUserConfiguration } from './UserConfiguration/UserConfiguration';
-import { FileInput, ImportDataButton, SelectAllButton, ViewAllResultsButton, ViewPlotsButton, FilterSelectionButton, SaveLocalStorageButton, DownloadCSVButton, InputSearch, DeleteLocalStorageButton } from './Elements/Elements';
+import { FileInput, ImportDataButton, SelectAllButton, ViewAllResultsButton, ViewPlotsButton, FilterSelectionButton, SaveLocalStorageButton, DownloadCSVButton, InstanceDataInput, ImportInstanceDataButton, InputSearch, DeleteLocalStorageButton } from './Elements/Elements';
 
 /**
  * Set the filename to be empty and declare an array to store the benchmarks in.
@@ -20,6 +21,8 @@ import { FileInput, ImportDataButton, SelectAllButton, ViewAllResultsButton, Vie
 FileInput.value = '';
 let RawData = [];
 let FileExtensionType = '';
+let RawInstanceInfoData = [];
+let InstanceInfoData = {};
 
 /**
  * Try to retrieve stored config/data/state.
@@ -35,7 +38,7 @@ try {
 /**
  * Read the data from the input file and set the file extension type.
  */
-FileInput.addEventListener('change', () => {
+FileInput.addEventListener("change", () => {
   RawData = ReadData(RawData);
   FileExtensionType = GetFileType();
 });
@@ -54,9 +57,8 @@ ImportDataButton.addEventListener("click", () => {
 function ManageData() {
   /**
    * Setting the benchmark results file data.
-   * @param SolvedData Data from the benchmark results file.
    */
-  console.log("The SolvedData: ", RawData);
+  console.log("The RawData: ", RawData);
   console.log("File extension: ", FileExtensionType);
 
   /**
@@ -150,6 +152,11 @@ function ManageData() {
         TableDisplay(Instance, Solvers, InstanceLabels, DataLabels, ProblemList, ResultsData);
       }
       else if (FileExtensionType === "trc") {
+        /**
+         * Check if instancedata.csv is provided.
+         * 
+         * If not, use regular display data
+         */
         TableDisplayTrc(TrcData);
       }
     });
@@ -193,6 +200,20 @@ function ManageData() {
     SaveLocalStorageButton.addEventListener("click", () => {
       CreateUserConfiguration(RawData, FileExtensionType);
       console.log("Saved benchmarks.");
+    })
+
+    /**
+     * Import information regarding the problems from an 'instancedata.csv' file.
+     */
+    InstanceDataInput.addEventListener("change", () => {
+      RawInstanceInfoData = ReadInstanceInformationData(RawInstanceInfoData);
+    });
+
+    /**
+     * Convert instance information to objects.
+     */
+    ImportInstanceDataButton.addEventListener("click", () => {
+      InstanceInfoData = GetInstanceInformation(RawInstanceInfoData);
     })
 
     /**
