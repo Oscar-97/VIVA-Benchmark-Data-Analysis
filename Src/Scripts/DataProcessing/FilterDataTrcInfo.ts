@@ -1,21 +1,26 @@
 import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
 
-export function GetInstanceInformation(RawData: string[]) {
+export function GetInstanceInformation(RawInstanceInfoData: string[]) {
     const InstanceInfo = [];
-    const FirstLine = RawData[0].split(";");
 
-    // Set headers.
-    const Header = FirstLine.map((element: string) => element.replace(/^[\*]/, "").trim());
-    console.log("Header: ", Header);
+    // Set header.
+    const Header = RawInstanceInfoData[0].split(";");
+    console.log("Header: ", Header)
 
-    for (let i = 1; i < RawData.length; i++) {
+    for (let i = 1; i < RawInstanceInfoData.length; i++) {
         const Obj = {};
-        const currentLine = RawData[i].split(",");
+        const currentLine = RawInstanceInfoData[i].split(";");
+        // "Set value to empty if it's not existing."
         for (let j = 0; j < Header.length; j++) {
-            Obj[Header[j]] = currentLine[j];
+            Obj[Header[j]] = currentLine[j] || "";
         }
         InstanceInfo.push(Obj);
     }
     DisplayAlertNotification("Instance information succesfully loaded!");
+    console.log("Instance info: ", InstanceInfo);
+
+
+    DisplayAlertNotification("Instance information succesfully loaded!");
+    console.log("Instance info: ", InstanceInfo);
     return InstanceInfo;
 }
