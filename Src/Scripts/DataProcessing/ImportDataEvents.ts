@@ -1,7 +1,7 @@
 /**
  * Click on the upload data button to start the process.
  */
-import { FileInput, ImportDataButton, SelectAllButton, ViewAllResultsButton, ViewPlotsButton } from '../Elements/Elements';
+import { FileInput, InstanceDataInput, ImportDataButton, SelectAllButton, ViewAllResultsButton, ViewPlotsButton } from '../Elements/Elements';
 import { DisplayAlertNotification } from '../Elements/DisplayAlertNotification';
 
 export function ImportDataEvents(message: string) {
@@ -31,6 +31,7 @@ export function ImportDataEvents(message: string) {
         ViewPlotsButton.disabled = false;
     }
     ImportDataButton.disabled = true;
+    InstanceDataInput.disabled = false;
     
     // Display alert with message.
     DisplayAlertNotification(message);
