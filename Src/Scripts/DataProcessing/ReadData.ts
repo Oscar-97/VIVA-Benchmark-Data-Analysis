@@ -1,7 +1,7 @@
 import { FileInput, ImportDataButton, InstanceDataInput, ImportInstanceDataButton } from "../Elements/Elements";
 import { DisplayErrorNotification } from "../Elements/DisplayAlertNotification";
 
-export function ReadData(RawData: any[]) {
+export function ReadData(RawData: string[]) {
   RawData = [];
   ImportDataButton.disabled = false;
 
@@ -37,8 +37,8 @@ export function GetFileType() {
   return FileInput.files[0].name.split('.').pop();
 }
 
-export function ReadInstanceInformationData(RawData) {
-  RawData = [];
+export function ReadInstanceInformationData(RawInstanceInfoData: string[]) {
+  RawInstanceInfoData = [];
   ImportInstanceDataButton.disabled = false;
 
   let Reader = new FileReader();
@@ -51,11 +51,11 @@ export function ReadInstanceInformationData(RawData) {
     // Iterate over the lines array and process each line as needed.
     for (let i = 0; i <= lines.length - 1; i++) {
       let line = lines[i];
-      RawData.push(line);
+      RawInstanceInfoData.push(line);
     }
   });
 
   // Read the file as text.
   Reader.readAsText(File);
-  return RawData;
+  return RawInstanceInfoData;
 }
