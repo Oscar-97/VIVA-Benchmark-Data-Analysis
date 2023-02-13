@@ -70,16 +70,17 @@ export function TableDisplayTrc(TrcData: any[]) {
  * DataTables settings.
  */
 function DataTablesConfiguration() {
-    jq.fn.dataTable.ext.errMode = 'none';
-    try {
-        if (jq.fn.dataTable.isDataTable(table)) {
-            table.destroy();
-        }
-    }
-    catch {
+    //jq.fn.dataTable.ext.errMode = 'none';
+    // try {
+    //     if (jq.fn.dataTable.isDataTable(table)) {
+    //         table.destroy();
+    //     }
+    // }
+    // catch {
 
-    }
+    // }
     var table = jq("#dataTableGenerated").DataTable({
+        destroy: true,
         stateSave: true,
         dom:
             "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
