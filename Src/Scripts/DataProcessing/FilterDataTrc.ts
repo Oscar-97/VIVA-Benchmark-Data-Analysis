@@ -21,9 +21,9 @@ export function ExtractTrcData(RawData: string | any[]) {
 
         for (let i = 1; i < RawData.length; i++) {
             const Obj = {};
-            const currentLine = RawData[i].split(",");
+            const CurrentLine = RawData[i].split(",");
             for (let j = 0; j < Header.length; j++) {
-                Obj[Header[j]] = currentLine[j];
+                Obj[Header[j]] = CurrentLine[j];
             }
             TrcData.push(Obj);
         }
