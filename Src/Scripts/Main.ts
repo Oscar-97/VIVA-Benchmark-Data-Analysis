@@ -8,6 +8,7 @@ import { ReadData, ReadInstanceInformationData, GetFileType } from './DataProces
 import { ExtractTrcData, GetTrcDataCategory } from './DataProcessing/FilterDataTrc';
 import { GetInstanceInformation } from './DataProcessing/FilterDataTrcInfo';
 import { GetInstance, GetSolvers, GetInstanceLabels, GetDataLabels, GetProblems, GetResults } from './DataProcessing/FilterDataTxt';
+import { MergeData } from './DataProcessing/MergeData';
 import { InitializePlots } from './Chart/InitializePlot';
 import { SelectAllSolvers } from './Solvers/SelectAllSolvers';
 import { CreateUserConfiguration, GetUserConfiguration, DeleteUserConfiguration } from './UserConfiguration/UserConfiguration';
@@ -19,10 +20,11 @@ import { FileInput, ImportDataButton, SelectAllButton, ViewAllResultsButton, Vie
  * @param FileExtensionType Type of file extension for the imported data.
  */
 FileInput.value = '';
+InstanceDataInput.value = '';
 let RawData = [];
 let FileExtensionType = '';
 let RawInstanceInfoData = [];
-let InstanceInfoData = {};
+let InstanceInfoData = [];
 
 /**
  * Try to retrieve stored config/data/state.
@@ -84,20 +86,8 @@ function ManageData() {
   /**
    * TrcData results file.
    * @param TrcData
-   * @param ModelTypes
-   * @param Directions
-   * @param ModelStatuses
-   * @param SolverStatuses
-   * @param ObjectiveValues
-   * @param SolverTimes
    */
   let TrcData = [];
-  let ModelTypes = [];
-  let Directions = [];
-  let ModelStatuses = [];
-  let SolverStatuses = [];
-  let ObjectiveValues = [];
-  let SolverTimes = [];
 
   /**
    * Check which file format is used and add the data to correct categories.
@@ -115,21 +105,13 @@ function ManageData() {
   else if (FileExtensionType === "trc") {
     TrcData = ExtractTrcData(RawData);
     console.log("Content of .trc file: ", TrcData);
-    
-    ProblemList = GetTrcDataCategory(TrcData, "InputFileName");
-    ModelTypes = GetTrcDataCategory(TrcData, "ModelType");
-    Solvers = GetTrcDataCategory(TrcData, "SolverName");
-    Directions = GetTrcDataCategory(TrcData, "Direction");
-    ModelStatuses = GetTrcDataCategory(TrcData, "ModelStatus");
-    SolverStatuses = GetTrcDataCategory(TrcData, "SolverStatus");
-    ObjectiveValues = GetTrcDataCategory(TrcData, "ObjectiveValue");
-    SolverTimes = GetTrcDataCategory(TrcData, "SolverTime");
 
     /**
      * Create the filters for problems.
      * TODO: Add functionality for this.
      * Only displayed at the moment.
      */
+    //ProblemList = GetTrcDataCategory(TrcData, "filename");
     //TableFilters(ProblemList, "Problems");
   }
 
@@ -154,10 +136,14 @@ function ManageData() {
       else if (FileExtensionType === "trc") {
         /**
          * Check if instancedata.csv is provided.
-         * 
          * If not, use regular display data
          */
-        TableDisplayTrc(TrcData);
+        if (InstanceInfoData.length === 0) {
+          TableDisplayTrc(TrcData);
+        } else {
+          let MergedData = MergeData(TrcData, InstanceInfoData);
+          TableDisplayTrc(MergedData);
+        }
       }
     });
 
