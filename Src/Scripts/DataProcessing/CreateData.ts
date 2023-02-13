@@ -11,3 +11,24 @@ export function CreateData(Instance:string, Solvers: any[], InstanceLabels: any[
      */
     return output;
 }
+
+export function CreateDataTrc(TrcData: any[]) {
+    console.clear();
+    console.log("Data to exported: ", TrcData);
+    let ExportData: string[] = [];
+    /**
+     * Create headers line based on existing keys, then add the rest of the objects.
+     */
+    let Keys = Object.keys(TrcData[0]);
+    let HeaderString = "* " + Keys.join(",");
+    ExportData.push(HeaderString);
+
+    for (let i = 0; i < TrcData.length; i++) {
+        let currentObject = TrcData[i];
+        let currentString = Object.values(currentObject).join(",");
+        ExportData.push(currentString);
+    }
+
+    console.log("Exported Data: ", ExportData);
+    return ExportData;
+}

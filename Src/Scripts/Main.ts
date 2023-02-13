@@ -1,18 +1,25 @@
+//#region Imports
 import { TableFilters } from './Table/TableFilters';
 import { TableDisplay, TableDisplayTrc } from './Table/TableDisplay';
 import { UpdateProblemList, UpdateResultsData, UpdateResultsTrc } from "./Table/TableSaveSelection";
 import { TableDownloadCSV } from "./Table/TableDownloadCSV";
-import { CreateData } from './DataProcessing/CreateData';
+
+import { CreateData, CreateDataTrc } from './DataProcessing/CreateData';
 import { ImportDataEvents } from './DataProcessing/ImportDataEvents';
 import { ReadData, ReadInstanceInformationData, GetFileType } from './DataProcessing/ReadData';
 import { ExtractTrcData, GetTrcDataCategory } from './DataProcessing/FilterDataTrc';
 import { GetInstanceInformation } from './DataProcessing/FilterDataTrcInfo';
 import { GetInstance, GetSolvers, GetInstanceLabels, GetDataLabels, GetProblems, GetResults } from './DataProcessing/FilterDataTxt';
 import { MergeData } from './DataProcessing/MergeData';
+
 import { InitializePlots } from './Chart/InitializePlot';
+
 import { SelectAllSolvers } from './Solvers/SelectAllSolvers';
+
 import { CreateUserConfiguration, GetUserConfiguration, DeleteUserConfiguration } from './UserConfiguration/UserConfiguration';
+
 import { FileInput, ImportDataButton, SelectAllButton, ViewAllResultsButton, ViewPlotsButton, FilterSelectionButton, SaveLocalStorageButton, DownloadCSVButton, InstanceDataInput, ImportInstanceDataButton, InputSearch, DeleteLocalStorageButton } from './Elements/Elements';
+//#endregion
 
 /**
  * Set the filename to be empty and declare an array to store the benchmarks in.
@@ -33,7 +40,7 @@ try {
   [RawData, FileExtensionType] = GetUserConfiguration();
   ImportDataEvents("Found cached benchmark file!");
   ManageData();
-} catch(err) {
+} catch (err) {
   console.log("No data found in local storage: ", err);
 }
 
@@ -82,12 +89,17 @@ function ManageData() {
   let InstanceLabels: string[];
   let ProblemList = [];
   let ResultsData = [];
+  
+  let ProblemListFiltered = [];
+  let ResultsDataFiltered = [];
 
   /**
    * TrcData results file.
    * @param TrcData
+   * @param TrcDataFiltered
    */
   let TrcData = [];
+  let TrcDataFiltered = [];
 
   /**
    * Check which file format is used and add the data to correct categories.
@@ -101,7 +113,7 @@ function ManageData() {
     ResultsData = GetResults(RawData);
 
     TableFilters(Solvers, "Solvers");
-  } 
+  }
   else if (FileExtensionType === "trc") {
     TrcData = ExtractTrcData(RawData);
     console.log("Content of .trc file: ", TrcData);
@@ -154,39 +166,51 @@ function ManageData() {
 
       FilterSelectionButton.disabled = true;
       if (FileExtensionType === "txt") {
-        let ProblemListFiltered = [];
-        let ResultsDataFiltered = [];
-        
         ProblemListFiltered = UpdateProblemList();
         ResultsDataFiltered = UpdateResultsData();
+        
         console.log("ProblemListFiltered: ", ProblemListFiltered);
         console.log("ResultsDataFiltered: ", ResultsDataFiltered);
 
         TableDisplay(Instance, Solvers, InstanceLabels, DataLabels, ProblemListFiltered, ResultsDataFiltered);
       } else if (FileExtensionType === "trc") {
-        let TrcDataFiltered = [];
-        
         TrcDataFiltered = UpdateResultsTrc();
-        console.log("TrcData Filtered: ", TrcDataFiltered);
         
+        console.log("TrcData Filtered: ", TrcDataFiltered);
+
         TableDisplayTrc(TrcDataFiltered);
       }
-
-      /**
-       * TODO:
-       * Add the following to a NewSolvedData.
-       */
-      //let output = CreateData(Instance, Solvers, InstanceLabels, DataLabels, ProblemListFiltered, ResultsDataFiltered);
-      //console.log(output);
     });
 
     /**
      * Save to local storage when clicking on the relevant button.
      */
     SaveLocalStorageButton.addEventListener("click", () => {
-      CreateUserConfiguration(RawData, FileExtensionType);
+      if (FileExtensionType === "txt") {
+        CreateData(Instance, Solvers, InstanceLabels, DataLabels, ProblemListFiltered, ResultsDataFiltered);
+        CreateUserConfiguration(RawData, FileExtensionType);
+      } else if (FileExtensionType === "trc") {
+        /**
+         * Save the modified NewRawData as user configuration.
+         */
+        let NewRawData = [];
+        if (TrcDataFiltered.length === 0) {
+          NewRawData = CreateDataTrc(TrcData);
+        }
+        else {
+          NewRawData = CreateDataTrc(TrcDataFiltered);
+        }
+        CreateUserConfiguration(NewRawData, FileExtensionType);
+      }
       console.log("Saved benchmarks.");
     })
+
+    /**
+     * Download the currently displayed table as a CSV.
+     */
+    DownloadCSVButton.addEventListener("click", () => {
+      TableDownloadCSV();
+    });
 
     /**
      * Import information regarding the problems from an 'instancedata.csv' file.
@@ -208,13 +232,6 @@ function ManageData() {
     DeleteLocalStorageButton.addEventListener("click", () => {
       DeleteUserConfiguration();
     })
-
-    /**
-     * Download the currently displayed table as a CSV.
-     */
-    DownloadCSVButton.addEventListener("click", () => {
-      TableDownloadCSV();
-    });
   }
 
   /**
