@@ -70,15 +70,6 @@ export function TableDisplayTrc(TrcData: any[]) {
  * DataTables settings.
  */
 function DataTablesConfiguration() {
-    //jq.fn.dataTable.ext.errMode = 'none';
-    // try {
-    //     if (jq.fn.dataTable.isDataTable(table)) {
-    //         table.destroy();
-    //     }
-    // }
-    // catch {
-
-    // }
     var table = jq("#dataTableGenerated").DataTable({
         destroy: true,
         stateSave: true,
@@ -109,11 +100,8 @@ function DataTablesConfiguration() {
         scrollX: true,
         scrollCollapse: true,
         paging: true,
-        // fixedColumns: {
-        //     left: 1
-        // },
         fixedColumns: true,
-        buttons: ['copy', 'excel', 'pdf', 'colvis']
+        buttons: ['colvis']
     });
 
     jq('.dataTables_length select').addClass('custom-select custom-select-sm');
