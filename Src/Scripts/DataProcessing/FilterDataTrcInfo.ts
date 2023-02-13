@@ -18,9 +18,5 @@ export function GetInstanceInformation(RawInstanceInfoData: string[]) {
     }
     DisplayAlertNotification("Instance information succesfully loaded!");
     console.log("Instance info: ", InstanceInfo);
-
-
-    DisplayAlertNotification("Instance information succesfully loaded!");
-    console.log("Instance info: ", InstanceInfo);
     return InstanceInfo;
 }
