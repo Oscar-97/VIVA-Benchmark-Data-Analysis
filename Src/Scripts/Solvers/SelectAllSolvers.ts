@@ -1,9 +1,13 @@
 import { SelectAllButton } from "../Elements/Elements";
 
+/**
+ * Select all solvers by clicking on all inputs inside the checkboxContainer.
+ */
 export function SelectAllSolvers() {
-    let FilterSolvers = document.getElementsByTagName("input");
+    let CheckboxContainer = document.getElementById("checkboxContainer");
+    let FilterSolvers = CheckboxContainer.getElementsByTagName("input");
     for (let Solver of FilterSolvers) {
-        if (!Solver.checked && Solver.id != "fileInput") {
+        if (!Solver.checked) {
             Solver.click();
         }
     }
