@@ -117,7 +117,9 @@ export function TableDataTrc(TrcData: any[]) {
      * Add headers.
      */
     for (const key of Object.keys(TrcData[0])) {
-        DataTableHeaders += "<th>" + `${key}` + "</th>"
+        if (key !== undefined) {
+            DataTableHeaders += "<th>" + `${key}` + "</th>"
+        }
     }
     DataTableHeaders += "</tr> </thead>";
     
