@@ -1,29 +1,29 @@
 import { AlertNotification } from "./Elements";
 
-export function DisplayAlertNotification(message: string) {
-    /**
-     * Show a simple success alert for 3 seconds.
-     */
-    AlertNotification.classList.add("alert-success");
-    AlertNotification.style.display = "block";
-    AlertNotification.innerText = message;
+export function DisplayAlertNotification(message: string): void {
+  /**
+   * Show a simple success alert for 3 seconds.
+   */
+  AlertNotification.classList.add("alert-success");
+  AlertNotification.style.display = "block";
+  AlertNotification.innerText = message;
 
-    setTimeout(() => {
+  setTimeout(() => {
     AlertNotification.style.display = "none";
     AlertNotification.classList.remove("alert-success");
-    }, 3000);
+  }, 3000);
 }
 
-export function DisplayErrorNotification(message: string) {
-    /**
-     * Show a simple success alert for 3 seconds.
-     */
-    AlertNotification.classList.add("alert-danger");
-    AlertNotification.style.display = "block";
-    AlertNotification.innerText = message;
+export function DisplayErrorNotification(message: string): void {
+  /**
+   * Show a simple success alert for 3 seconds.
+   */
+  AlertNotification.classList.add("alert-danger");
+  AlertNotification.style.display = "block";
+  AlertNotification.innerText = message;
 
-    setTimeout(() => {
+  setTimeout(() => {
     AlertNotification.style.display = "none";
     AlertNotification.classList.remove("alert-danger");
-    }, 5000);
+  }, 5000);
 }

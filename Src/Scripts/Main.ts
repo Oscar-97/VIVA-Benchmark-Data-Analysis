@@ -1,24 +1,58 @@
 //#region Imports
-import { TableFilters } from './Table/TableFilters';
-import { TableDisplay, TableDisplayTrc } from './Table/TableDisplay';
-import { UpdateProblemList, UpdateResultsData, UpdateResultsTrc } from "./Table/TableSaveSelection";
+import { TableFilters } from "./Table/TableFilters";
+import { TableDisplay, TableDisplayTrc } from "./Table/TableDisplay";
+import {
+  UpdateProblemList,
+  UpdateResultsData,
+  UpdateResultsTrc,
+} from "./Table/TableSaveSelection";
 import { TableDownloadCSV } from "./Table/TableDownloadCSV";
 
-import { CreateData, CreateDataTrc } from './DataProcessing/CreateData';
-import { ImportDataEvents } from './DataProcessing/ImportDataEvents';
-import { ReadData, ReadInstanceInformationData, GetFileType } from './DataProcessing/ReadData';
-import { ExtractTrcData, GetTrcDataCategory } from './DataProcessing/FilterDataTrc';
-import { GetInstanceInformation } from './DataProcessing/FilterDataTrcInfo';
-import { GetInstance, GetSolvers, GetInstanceLabels, GetDataLabels, GetProblems, GetResults } from './DataProcessing/FilterDataTxt';
-import { MergeData } from './DataProcessing/MergeData';
+import { CreateData, CreateDataTrc } from "./DataProcessing/CreateData";
+import { ImportDataEvents } from "./DataProcessing/ImportDataEvents";
+import {
+  ReadData,
+  ReadInstanceInformationData,
+  GetFileType,
+} from "./DataProcessing/ReadData";
+import {
+  ExtractTrcData,
+  GetTrcDataCategory,
+} from "./DataProcessing/FilterDataTrc";
+import { GetInstanceInformation } from "./DataProcessing/FilterDataTrcInfo";
+import {
+  GetInstance,
+  GetSolvers,
+  GetInstanceLabels,
+  GetDataLabels,
+  GetProblems,
+  GetResults,
+} from "./DataProcessing/FilterDataTxt";
+import { MergeData } from "./DataProcessing/MergeData";
 
-import { InitializePlots } from './Chart/InitializePlot';
+import { InitializePlots } from "./Chart/InitializePlot";
 
-import { SelectAllSolvers } from './Solvers/SelectAllSolvers';
+import { SelectAllSolvers } from "./Solvers/SelectAllSolvers";
 
-import { CreateUserConfiguration, GetUserConfiguration, DeleteUserConfiguration } from './UserConfiguration/UserConfiguration';
+import {
+  CreateUserConfiguration,
+  GetUserConfiguration,
+  DeleteUserConfiguration,
+} from "./UserConfiguration/UserConfiguration";
 
-import { FileInput, ImportDataButton, SelectAllButton, ViewAllResultsButton, ViewPlotsButton, FilterSelectionButton, SaveLocalStorageButton, DownloadCSVButton, InstanceDataInput, ImportInstanceDataButton, InputSearch, DeleteLocalStorageButton } from './Elements/Elements';
+import {
+  FileInput,
+  ImportDataButton,
+  SelectAllButton,
+  ViewAllResultsButton,
+  ViewPlotsButton,
+  FilterSelectionButton,
+  SaveLocalStorageButton,
+  DownloadCSVButton,
+  InstanceDataInput,
+  ImportInstanceDataButton,
+  DeleteLocalStorageButton,
+} from "./Elements/Elements";
 //#endregion
 
 /**
@@ -26,10 +60,10 @@ import { FileInput, ImportDataButton, SelectAllButton, ViewAllResultsButton, Vie
  * @param RawData Raw data of the imported benchmark results.
  * @param FileExtensionType Type of file extension for the imported data.
  */
-FileInput.value = '';
-InstanceDataInput.value = '';
+FileInput.value = "";
+InstanceDataInput.value = "";
 let RawData = [];
-let FileExtensionType = '';
+let FileExtensionType = "";
 let RawInstanceInfoData = [];
 let InstanceInfoData = [];
 
@@ -61,9 +95,9 @@ ImportDataButton.addEventListener("click", () => {
 });
 
 /**
- * Sort the benchmark results file and display the relevant elements per page. 
+ * Sort the benchmark results file and display the relevant elements per page.
  */
-function ManageData() {
+function ManageData(): void {
   /**
    * Setting the benchmark results file data.
    */
@@ -74,11 +108,11 @@ function ManageData() {
    * First row of the benchmark results file.
    * @param Instance The column where the instance is located. Instance is at index 0.
    * @param Solvers The columns where the solvers are located. Solvers are in the rest of the indices.
-   * 
+   *
    * Second row of the benchmark results file.
    * @param DataLabels The data labels.
    * @param InstanceLabels The instance categories.
-   * 
+   *
    * Problems and the results kept separate.
    * @param ProblemList List of the problems.
    * @param ResultsData List of results.
@@ -89,7 +123,7 @@ function ManageData() {
   let InstanceLabels: string[];
   let ProblemList = [];
   let ResultsData = [];
-  
+
   let ProblemListFiltered = [];
   let ResultsDataFiltered = [];
 
@@ -113,9 +147,9 @@ function ManageData() {
     ResultsData = GetResults(RawData);
 
     TableFilters(Solvers, "Solvers");
-  }
-  else if (FileExtensionType === "trc") {
+  } else if (FileExtensionType === "trc") {
     TrcData = ExtractTrcData(RawData);
+    ProblemList = GetTrcDataCategory(TrcData, "filename");
     console.log("Content of .trc file: ", TrcData);
 
     /**
@@ -143,9 +177,15 @@ function ManageData() {
      */
     ViewAllResultsButton.addEventListener("click", () => {
       if (FileExtensionType === "txt") {
-        TableDisplay(Instance, Solvers, InstanceLabels, DataLabels, ProblemList, ResultsData);
-      }
-      else if (FileExtensionType === "trc") {
+        TableDisplay(
+          Instance,
+          Solvers,
+          InstanceLabels,
+          DataLabels,
+          ProblemList,
+          ResultsData
+        );
+      } else if (FileExtensionType === "trc") {
         /**
          * Check if instancedata.csv is provided.
          * If not, use regular display data
@@ -153,7 +193,7 @@ function ManageData() {
         if (InstanceInfoData.length === 0) {
           TableDisplayTrc(TrcData);
         } else {
-          let MergedData = MergeData(TrcData, InstanceInfoData);
+          const MergedData = MergeData(TrcData, InstanceInfoData);
           TableDisplayTrc(MergedData);
         }
       }
@@ -163,19 +203,25 @@ function ManageData() {
      * Shows the selected problems by modifying the ProblemList and ResultsData.
      */
     FilterSelectionButton.addEventListener("click", () => {
-
       FilterSelectionButton.disabled = true;
       if (FileExtensionType === "txt") {
         ProblemListFiltered = UpdateProblemList();
         ResultsDataFiltered = UpdateResultsData();
-        
+
         console.log("ProblemListFiltered: ", ProblemListFiltered);
         console.log("ResultsDataFiltered: ", ResultsDataFiltered);
 
-        TableDisplay(Instance, Solvers, InstanceLabels, DataLabels, ProblemListFiltered, ResultsDataFiltered);
+        TableDisplay(
+          Instance,
+          Solvers,
+          InstanceLabels,
+          DataLabels,
+          ProblemListFiltered,
+          ResultsDataFiltered
+        );
       } else if (FileExtensionType === "trc") {
         TrcDataFiltered = UpdateResultsTrc();
-        
+
         console.log("TrcData Filtered: ", TrcDataFiltered);
 
         TableDisplayTrc(TrcDataFiltered);
@@ -187,7 +233,14 @@ function ManageData() {
      */
     SaveLocalStorageButton.addEventListener("click", () => {
       if (FileExtensionType === "txt") {
-        CreateData(Instance, Solvers, InstanceLabels, DataLabels, ProblemListFiltered, ResultsDataFiltered);
+        CreateData(
+          Instance,
+          Solvers,
+          InstanceLabels,
+          DataLabels,
+          ProblemListFiltered,
+          ResultsDataFiltered
+        );
         CreateUserConfiguration(RawData, FileExtensionType);
       } else if (FileExtensionType === "trc") {
         /**
@@ -196,14 +249,13 @@ function ManageData() {
         let NewRawData = [];
         if (TrcDataFiltered.length === 0) {
           NewRawData = CreateDataTrc(TrcData);
-        }
-        else {
+        } else {
           NewRawData = CreateDataTrc(TrcDataFiltered);
         }
         CreateUserConfiguration(NewRawData, FileExtensionType);
       }
       console.log("Saved benchmarks.");
-    })
+    });
 
     /**
      * Download the currently displayed table as a CSV.
@@ -224,14 +276,14 @@ function ManageData() {
      */
     ImportInstanceDataButton.addEventListener("click", () => {
       InstanceInfoData = GetInstanceInformation(RawInstanceInfoData);
-    })
+    });
 
     /**
      * Delete stored data in local storage.
      */
     DeleteLocalStorageButton.addEventListener("click", () => {
       DeleteUserConfiguration();
-    })
+    });
   }
 
   /**
