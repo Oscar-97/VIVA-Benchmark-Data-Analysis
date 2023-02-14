@@ -4,7 +4,8 @@
     "rootDir": "./Src/.",
     "allowJs": true,
     "target": "es6",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "./Src/**/*"
