@@ -6,12 +6,13 @@ import {
   InstanceDataInput,
   ImportDataButton,
   SelectAllButton,
+  FilterSelectionButton,
   ViewAllResultsButton,
   ViewPlotsButton,
 } from "../Elements/Elements";
 import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
 
-export function ImportDataEvents(message: string): void {
+export function ImportDataEvents(Message: string, FileExtensionType: string): void {
   /**
    * Remove existing Solvers and datatable after uploading a new result file.
    * Set the file upload value to empty.
@@ -31,15 +32,25 @@ export function ImportDataEvents(message: string): void {
   /**
    * Change the statuses of the buttons after uploading the data.
    */
-  SelectAllButton.disabled = false;
+
   if (document.title == "Report") {
     ViewAllResultsButton.disabled = false;
   } else if (document.title == "Plots") {
     ViewPlotsButton.disabled = false;
   }
-  ImportDataButton.disabled = true;
-  InstanceDataInput.disabled = false;
+
+  if (FileExtensionType === "txt") {
+    SelectAllButton.disabled = false;
+    FilterSelectionButton.disabled = true;
+    ImportDataButton.disabled = true;
+    InstanceDataInput.disabled = false;
+  } else if (FileExtensionType === "trc" || FileExtensionType === "json") {
+    SelectAllButton.disabled = true;
+    FilterSelectionButton.disabled = true;
+    ImportDataButton.disabled = true;
+    InstanceDataInput.disabled = false;
+  }
 
   // Display alert with message.
-  DisplayAlertNotification(message);
+  DisplayAlertNotification(Message);
 }
