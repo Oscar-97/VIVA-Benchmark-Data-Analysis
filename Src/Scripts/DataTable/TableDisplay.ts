@@ -13,6 +13,7 @@ import {
   SelectAllButton,
   FilterSelectionButton,
   SaveLocalStorageButton,
+  DownloadConfigurationButtonLayer,
   DownloadCSVButtonLayer,
 } from "../Elements/Elements";
 
@@ -58,6 +59,7 @@ export function TableDisplay(
     SelectAllButton.disabled = false;
     FilterSelectionButton.disabled = false;
     SaveLocalStorageButton.disabled = false;
+    DownloadConfigurationButtonLayer.disabled = false;
     DownloadCSVButtonLayer.disabled = false;
   }, 500);
 }
@@ -83,6 +85,7 @@ export function TableDisplayTrc(TrcData: string[]): void {
     SelectAllButton.disabled = false;
     FilterSelectionButton.disabled = false;
     SaveLocalStorageButton.disabled = false;
+    DownloadConfigurationButtonLayer.disabled = false;
     DownloadCSVButtonLayer.disabled = false;
   }, 500);
 }
