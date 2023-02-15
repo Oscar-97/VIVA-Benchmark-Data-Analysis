@@ -7,7 +7,7 @@ import "datatables.net-select-bs5";
 import "datatables.net-fixedcolumns-bs5";
 
 import { GetCheckedSolvers, GetComparisonArray } from "../Solvers/UsedSolvers";
-import { TableData, TableDataTrc } from "./TableData";
+import { TableData, TableDataTrc } from "./DataTableBase";
 
 import {
   SelectAllButton,
