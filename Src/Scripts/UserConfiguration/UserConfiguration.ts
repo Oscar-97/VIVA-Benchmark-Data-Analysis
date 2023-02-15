@@ -1,4 +1,9 @@
-import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
+import {
+  DisplayAlertNotification,
+  DisplayWarningNotification,
+  DisplayErrorNotification,
+} from "../Elements/DisplayAlertNotification";
+import { DownloadConfigurationButton } from "../Elements/Elements";
 
 const UserData = {
   dataSet: [],
@@ -29,5 +34,18 @@ export function GetUserConfiguration(): [string[], string] {
 
 export function DeleteUserConfiguration(): void {
   localStorage.removeItem("UserConfiguration");
-  DisplayAlertNotification("Deleted configuration.");
+  DisplayWarningNotification("Deleted configuration.");
+}
+
+export function DownloadUserConfiguration(): void {
+  const UserConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
+  if (UserConfig) {
+    const DownloadAbleFile = JSON.stringify(UserConfig);
+    const blob = new Blob([DownloadAbleFile], { type: "application/json" });
+
+    DownloadConfigurationButton.href = window.URL.createObjectURL(blob);
+    DownloadConfigurationButton.download = "UserConfiguration.json";
+  } else {
+    DisplayErrorNotification("No saved configuration found!");
+  }
 }
