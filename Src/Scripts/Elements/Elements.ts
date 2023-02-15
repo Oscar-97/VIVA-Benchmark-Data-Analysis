@@ -35,11 +35,18 @@ export const FilterSelectionButton = document.getElementById(
 
 /**
  * @param SaveLocalStorageButton Save current table data to the local storage.
+ * @param DownloadConfigurationButton Download current configuration.
  * @param DownloadCSVButton Download link the currently displayed table.
  * @param DownloadCSVButtonLayer Button element layer for the link.
  */
 export const SaveLocalStorageButton = document.getElementById(
   "saveLocalStorageButton"
+) as HTMLButtonElement;
+export const DownloadConfigurationButton = document.getElementById(
+  "downloadConfigurationButton"
+) as HTMLAnchorElement;
+export const DownloadConfigurationButtonLayer = document.getElementById(
+  "downloadConfigurationButtonLayer"
 ) as HTMLButtonElement;
 export const DownloadCSVButton = document.getElementById(
   "downloadCSVButton"
@@ -75,7 +82,7 @@ export const InputSearch = document.getElementById(
   "tableSearch"
 ) as HTMLInputElement;
 export const SolverAndProblemsHeader = document.getElementById(
-  "SolverAndProblemsHeader"
+  "solverAndProblemsHeader"
 ) as HTMLSpanElement;
 
 /**
