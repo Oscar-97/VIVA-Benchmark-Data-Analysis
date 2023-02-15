@@ -17,7 +17,11 @@ export function ReadData(RawData: string[]): string[] {
     const FileExtension = FileName.split(".").pop();
 
     Reader.addEventListener("load", function () {
-      if (
+      if (FileExtension === "json") {
+        const JSON_Data = <string>Reader.result;
+        localStorage.setItem("UserConfiguration", JSON_Data);
+        console.log("Stored uploaded UserConfiguration.");
+      } else if (
         FileExtension === "txt" ||
         FileExtension === "trc" ||
         FileExtension === "csv"
