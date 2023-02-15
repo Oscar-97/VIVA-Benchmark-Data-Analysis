@@ -14,21 +14,15 @@ a {
     margin-right: 1rem;
 }
 
-#saveButtonsField {
-    padding-top: 1rem;
-}
-
-#uploadExtraFilesFieldd {
-    padding-top: 2rem;
+#buttonContainer,
+#solverAndProblemsHeader,
+#tableFilters {
+    margin-left: 1rem;
 }
 
 #instancedataInput {
     margin-top: 1rem;
     width: 20rem;
-}
-
-#deleteButtonsField {
-    margin-top: 1rem;
 }
 
 #dataTable {
@@ -48,12 +42,6 @@ a {
     justify-content: flex-start;
 }
 
-#tableSearch {
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
-    width: auto;
-}
-
 #axesValues {
     margin-top: 1rem;
 }
@@ -66,7 +54,7 @@ a {
 }
 
 hr {
-    margin-left: 0rem;
+    margin-left: 1rem;
     margin-right: 1rem;
 }
 
