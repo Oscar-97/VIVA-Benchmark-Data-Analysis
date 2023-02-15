@@ -1,12 +1,12 @@
 //#region Imports
-import { TableFilters } from "./Table/TableFilters";
-import { TableDisplay, TableDisplayTrc } from "./Table/TableDisplay";
+import { TableFilters } from "./DataTable/DataTableFilters";
+import { TableDisplay, TableDisplayTrc } from "./DataTable/DataTableWrapper";
 import {
   UpdateProblemList,
   UpdateResultsData,
   UpdateResultsTrc,
-} from "./Table/TableSaveSelection";
-import { TableDownloadCSV } from "./Table/TableDownloadCSV";
+} from "./DataTable/UpdateResults";
+import { TableDownloadCSV } from "./DataTable/DownloadCSV";
 
 import { CreateData, CreateDataTrc } from "./DataProcessing/CreateData";
 import { ImportDataEvents } from "./DataProcessing/ImportDataEvents";
@@ -38,6 +38,7 @@ import {
   CreateUserConfiguration,
   GetUserConfiguration,
   DeleteUserConfiguration,
+  DownloadUserConfiguration,
 } from "./UserConfiguration/UserConfiguration";
 
 import {
@@ -48,6 +49,7 @@ import {
   ViewPlotsButton,
   FilterSelectionButton,
   SaveLocalStorageButton,
+  DownloadConfigurationButton,
   DownloadCSVButton,
   InstanceDataInput,
   ImportInstanceDataButton,
@@ -68,11 +70,16 @@ let RawInstanceInfoData = [];
 let InstanceInfoData = [];
 
 /**
+ * TODO:
+ * Set all button status from new method after refreshing.
+ */
+
+/**
  * Try to retrieve stored config/data/state.
  */
 try {
   [RawData, FileExtensionType] = GetUserConfiguration();
-  ImportDataEvents("Found cached benchmark file!");
+  ImportDataEvents("Found cached benchmark file!", FileExtensionType);
   ManageData();
 } catch (err) {
   console.log("No data found in local storage: ", err);
@@ -90,7 +97,7 @@ FileInput.addEventListener("change", () => {
  * Click on the upload data button to start the process.
  */
 ImportDataButton.addEventListener("click", () => {
-  ImportDataEvents("Benchmark file succesfully loaded!");
+  ImportDataEvents("Benchmark file succesfully loaded!", FileExtensionType);
   ManageData();
 });
 
@@ -196,6 +203,11 @@ function ManageData(): void {
           const MergedData = MergeData(TrcData, InstanceInfoData);
           TableDisplayTrc(MergedData);
         }
+      } else if (FileExtensionType === "json") {
+        console.log("Clicked view all results after uploading json file.");
+        [RawData, FileExtensionType] = GetUserConfiguration();
+        TrcData = ExtractTrcData(RawData);
+        TableDisplayTrc(TrcData);
       }
     });
 
@@ -242,7 +254,7 @@ function ManageData(): void {
           ResultsDataFiltered
         );
         CreateUserConfiguration(RawData, FileExtensionType);
-      } else if (FileExtensionType === "trc") {
+      } else if (FileExtensionType === "trc" || FileExtensionType === "json") {
         /**
          * Save the modified NewRawData as user configuration.
          */
@@ -255,6 +267,13 @@ function ManageData(): void {
         CreateUserConfiguration(NewRawData, FileExtensionType);
       }
       console.log("Saved benchmarks.");
+    });
+
+    /**
+     * Download the current configuration.
+     */
+    DownloadConfigurationButton.addEventListener("click", () => {
+      DownloadUserConfiguration();
     });
 
     /**
