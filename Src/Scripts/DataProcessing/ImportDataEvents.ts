@@ -12,7 +12,10 @@ import {
 } from "../Elements/Elements";
 import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
 
-export function ImportDataEvents(Message: string, FileExtensionType: string): void {
+export function ImportDataEvents(
+  Message: string,
+  FileExtensionType: string
+): void {
   /**
    * Remove existing Solvers and datatable after uploading a new result file.
    * Set the file upload value to empty.
