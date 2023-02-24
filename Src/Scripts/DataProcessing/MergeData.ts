@@ -20,7 +20,7 @@ export function MergeData(TrcData: any[], InstanceData: any[]): string[] {
   console.log("MergedData", MergedData);
 
   if (MergedData.length === 0) {
-    throw new Error("No matching filenames found in both arrays.");
+    console.log("No matching filenames found in both arrays.");
   }
   return MergedData;
 }
