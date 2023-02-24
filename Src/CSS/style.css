@@ -58,9 +58,9 @@ hr {
     margin-right: 1rem;
 }
 
-tr:hover {
+/* tr:hover {
     background-color: #0d6efd;
-}
+} */
 
 table.dataTable tr.odd {
     background-color: #cccccc;
