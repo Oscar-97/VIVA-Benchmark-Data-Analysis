@@ -1,5 +1,5 @@
 # Dynamic Report Tool for MINLP Benchmarks
-This is a project in progress for creating a dynamic reporting system, in a HTML format, based on benchmark results from solved mathemathical optimization problems. The main goal of this project is to visualize specific results, making it easier for end users to understand and interpret the benchmarks.
+This is a project in **progress** for creating a dynamic reporting system, in a portable HTML format, based on benchmark results from mathemathical optimization problems and their solvers. The main goal of this project is to enable the end user to be able to interact with the benchmark data in a tabular format and visualize specific results by using different plots, making it easier for them to understand and interpret the data.
 
 <div style="text-align:left;">
   <img src="./Images/OverView.png" width="100%">
@@ -15,66 +15,73 @@ Once you have selected a file, click on the View All Results button to get a tab
 
 ## .trc
 
+See: https://www.gamsworld.org/performance/trace.htm
 The following header structure and order should be used in conjunction with .trc files:
 
-`"filename"`,
-`"modeltype"`,
-`"solvername"`,
-`"NLP def"`,
-`"MIP def"`,
-`"juliantoday"`,
-`"direction"`,
-`"equnum"`,
-`"varnum"`,
-`"dvarnum"`,
-`"nz"`,
-`"nlnz"`,
-`"optfile"`,
-`"modelstatus"`,
-`"solvestatus"`,
-`"obj"`,
-`"objest"`,    
-`"res used"`,
-`"iter used"`,
-`"dom used"`,
-`"nodes used"`,
-`"user1"`,
+      "InputFileName",
+      "ModelType",
+      "SolverName",
+      "NLP",
+      "MIP",
+      "JulianDate",
+      "Dir",
+      "Equs",
+      "Vars",
+      "Disc",
+      "NumberOfNonZeros",
+      "NumberOfNonlinearNonZeros",
+      "OptionFile",
+      "ModelStatus",
+      "TermStatus",
+      "PrimalBoundSolver",
+      "DualBoundSolver",
+      "Time[s]",
+      "NumberOfIterations",
+      "NumberOfDomainViolations",
+      "Nodes[i]",
+      "UserComment",
 
 ## .txt 
 
 The following header structure and order should be used in conjunction with .txt files, where the instance should feature
     
-`name`,
-`#Vars`,
-`#Disc`,
-`#Equs`,
-`Dir`,
-`Dual`,
-`bound`,
-`Primal`,
-`bound I`,
+    name,
+    #Vars,
+    #Disc,
+    #Equs,
+    Dir,
+    Dual bound,
+    Primal bound I,
 
 and each solver should have 
 
-`TermStatus`,
-`Dual bound`,
-`DualGap`,
-`Primal bound`,
-`PrimGap Gap[%]`,
-`Time[s]`,
-`Nodes I`
+    TermStatus
+    Dual bound,
+    DualGap,
+    Primal bound,
+    PrimGap Gap[%],
+    Time[s],
+    Nodes I
+
+## .json
+The file should include a `dataSet`, containing result data from a .trc file in an array format and a `fileExtensionType`.
 
 --- 
 
 # Features to Implement
 ## General
-- [x] Add support for saving checked Solvers in configuration file.
+- [ ] Add support for saving checked Solvers in configuration file.
+- [ ] Display alert notifications for error when processing files.
 
 ## Table Page
 - [ ] Calculate new columns for .trc files.
-- [ ] Hover on problem/display hidden columns to get more in-depth details.
+    - Dual Gap
+    - Primal Gap
+    - Dual Bound
+    - Primal bound
 
 ## Plot Page
+- [ ] Implement support for .trc files.
 - [ ] Add support for custom X/Y values.
 - [ ] Add more plotting types. (Selected from navbar -> plots -> type)
 - [ ] Export plot data as csv.
