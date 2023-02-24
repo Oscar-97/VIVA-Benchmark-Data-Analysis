@@ -13,13 +13,17 @@ import { ImportDataEvents } from "./DataProcessing/ImportDataEvents";
 import {
   ReadData,
   ReadInstanceInformationData,
-  GetFileType,
+  ReadSoluData,
+  GetDataFileType,
 } from "./DataProcessing/ReadData";
 import {
   ExtractTrcData,
   GetTrcDataCategory,
 } from "./DataProcessing/FilterDataTrc";
-import { GetInstanceInformation } from "./DataProcessing/FilterDataTrcInfo";
+import {
+  GetInstanceInformation,
+  GetInstancePrimalDualbounds,
+} from "./DataProcessing/GetInstanceInformation";
 import {
   GetInstance,
   GetSolvers,
@@ -55,12 +59,17 @@ import {
   ImportInstanceDataButton,
   DeleteLocalStorageButton,
 } from "./Elements/Elements";
+import { DisplayErrorNotification } from "./Elements/DisplayAlertNotification";
 //#endregion
 
 /**
  * Set the filename to be empty and declare an array to store the benchmarks in.
  * @param RawData Raw data of the imported benchmark results.
  * @param FileExtensionType Type of file extension for the imported data.
+ * @param RawInstanceInfoData Unprocessed instanceinfo.csv containing properties.
+ * @param InstanceInfoData Properties for instances.
+ * @param RawSoluData Unprocessed minlplib.solu.
+ * @param SoluData Best known primal and dual bounds for each instance.
  */
 FileInput.value = "";
 InstanceDataInput.value = "";
@@ -68,6 +77,8 @@ let RawData = [];
 let FileExtensionType = "";
 let RawInstanceInfoData = [];
 let InstanceInfoData = [];
+const RawSoluData = [];
+const SoluData = [];
 
 /**
  * TODO:
@@ -75,7 +86,7 @@ let InstanceInfoData = [];
  */
 
 /**
- * Try to retrieve stored config/data/state.
+ * Try to retrieve stored config/data/state when arriving to or refreshing the page.
  */
 try {
   [RawData, FileExtensionType] = GetUserConfiguration();
@@ -89,15 +100,38 @@ try {
  * Read the data from the input file and set the file extension type.
  */
 FileInput.addEventListener("change", () => {
-  RawData = ReadData(RawData);
-  FileExtensionType = GetFileType();
+  FileExtensionType = GetDataFileType();
+  // if (FileExtensionType === "txt" || FileExtensionType === "trc" || FileExtensionType === "json") {
+  //   RawData = ReadData(RawData);
+  // } else if (FileExtensionType === "csv") {
+  //   RawInstanceInfoData = ReadInstanceInformationData(RawInstanceInfoData);
+  // } else if (FileExtensionType === "solu") {
+  //   RawSoluData = ReadSoluData(RawSoluData);
+  // } else {
+  //   DisplayErrorNotification(
+  //     "Invalid file extension. Please use a .trc or .txt file for results. Use a .csv file for instance data information and .solu file for best known primal and dual bounds for each instance."
+  //   );
+  // }
+  ReadData(RawData, RawInstanceInfoData, RawSoluData);
+  console.log("RawData: ", RawData);
+  console.log("RawInstanceInfoData: ", RawInstanceInfoData);
+  console.log("RawSoluData: ", RawSoluData);
 });
 
 /**
- * Click on the upload data button to start the process.
+ * Click on the upload data button to continue the process.
  */
 ImportDataButton.addEventListener("click", () => {
+  // if (FileExtensionType === "txt" || FileExtensionType === "trc" || FileExtensionType === "json") {
+  //   ImportDataEvents("Benchmark file succesfully loaded!", FileExtensionType);
+  //   ManageData();
+  // // } else if (FileExtensionType === "csv") {
+  // //   InstanceInfoData = GetInstanceInformation(RawInstanceInfoData);
+  // } else if (FileExtensionType === "solu") {
+  //   SoluData = GetInstancePrimalDualbounds(RawSoluData);
+  // }
   ImportDataEvents("Benchmark file succesfully loaded!", FileExtensionType);
+  console.log(FileExtensionType, "is the filetype.");
   ManageData();
 });
 
@@ -158,7 +192,9 @@ function ManageData(): void {
     TrcData = ExtractTrcData(RawData);
     ProblemList = GetTrcDataCategory(TrcData, "filename");
     console.log("Content of .trc file: ", TrcData);
-
+    if (RawInstanceInfoData.length !== 0) {
+      InstanceInfoData = GetInstanceInformation(RawInstanceInfoData);
+    }
     /**
      * Create the filters for problems.
      * TODO: Add functionality for this.
@@ -200,8 +236,12 @@ function ManageData(): void {
         if (InstanceInfoData.length === 0) {
           TableDisplayTrc(TrcData);
         } else {
-          const MergedData = MergeData(TrcData, InstanceInfoData);
-          TableDisplayTrc(MergedData);
+          const MergedData: string[] = MergeData(TrcData, InstanceInfoData);
+          if (MergedData.length === 0) {
+            TableDisplayTrc(TrcData);
+          } else {
+            TableDisplayTrc(MergedData);
+          }
         }
       } else if (FileExtensionType === "json") {
         console.log("Clicked view all results after uploading json file.");
