@@ -70,16 +70,19 @@ export function TableDisplay(
  */
 export function TableDisplayTrc(TrcData: string[]): void {
   setTimeout(() => {
+    const CheckedSolvers = GetCheckedSolvers();
+
     /**
      * Create the table with the trc data.
      */
-    TableDataTrc(TrcData);
+    TableDataTrc(TrcData, CheckedSolvers);
 
     /**
      * Apply the DataTables plugin. Applied as a layer over the generated table.
      */
     jq(document).ready(function () {
       DataTablesConfiguration();
+      ("#dataTableGenerated_wrapper");
     });
 
     SelectAllButton.disabled = false;
