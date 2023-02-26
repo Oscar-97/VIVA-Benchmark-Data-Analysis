@@ -1,9 +1,4 @@
-import {
-  FileInput,
-  ImportDataButton,
-  InstanceDataInput,
-  ImportInstanceDataButton,
-} from "../Elements/Elements";
+import { FileInput, ImportDataButton } from "../Elements/Elements";
 import { DisplayErrorNotification } from "../Elements/DisplayAlertNotification";
 
 export function GetDataFileType(): string {
@@ -102,52 +97,4 @@ export function ReadData(
   }
 
   return { RawData, RawInstanceInfoData, RawSoluData };
-}
-
-export function ReadInstanceInformationData(
-  RawInstanceInfoData: string[]
-): string[] {
-  RawInstanceInfoData = [];
-  ImportInstanceDataButton.disabled = false;
-
-  const Reader = new FileReader();
-  const File = InstanceDataInput.files[0];
-
-  Reader.addEventListener("load", function () {
-    // Split the file's content into an array of lines.
-    // Line ending \n for .csv file.
-    const lines = (<string>Reader.result).split("\n");
-    // Iterate over the lines array and process each line as needed.
-    for (let i = 0; i <= lines.length - 1; i++) {
-      const line = lines[i];
-      RawInstanceInfoData.push(line);
-    }
-  });
-
-  // Read the file as text.
-  Reader.readAsText(File);
-  return RawInstanceInfoData;
-}
-
-export function ReadSoluData(RawSoluData: string[]): string[] {
-  RawSoluData = [];
-  ImportDataButton.disabled = false;
-
-  const Reader = new FileReader[0]();
-  const File = InstanceDataInput.files;
-
-  Reader.addEventListener("load", function () {
-    // Split the file's content into an array of lines.
-    // Line ending "\r\n" for .solu file.
-    const lines = (<string>Reader.result).split("\r\n");
-    // Iterate over the lines array and process each line as needed.
-    for (let i = 0; i <= lines.length - 1; i++) {
-      const line = lines[i];
-      RawSoluData.push(line);
-    }
-  });
-
-  // Read the file as text.
-  Reader.readAsText(File);
-  return RawSoluData;
 }
