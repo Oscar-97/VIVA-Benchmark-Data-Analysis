@@ -10,12 +10,7 @@ import { TableDownloadCSV } from "./DataTable/DownloadCSV";
 
 import { CreateData, CreateDataTrc } from "./DataProcessing/CreateData";
 import { ImportDataEvents } from "./DataProcessing/ImportDataEvents";
-import {
-  ReadData,
-  ReadInstanceInformationData,
-  ReadSoluData,
-  GetDataFileType,
-} from "./DataProcessing/ReadData";
+import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
 import {
   ExtractTrcData,
   GetTrcDataCategory,
@@ -32,7 +27,7 @@ import {
   GetProblems,
   GetResults,
 } from "./DataProcessing/FilterDataTxt";
-import { MergeData } from "./DataProcessing/MergeData";
+import { MergeInstanceData, MergeSoluData } from "./DataProcessing/MergeData";
 
 import { InitializePlots } from "./Chart/InitializePlot";
 
@@ -55,11 +50,8 @@ import {
   SaveLocalStorageButton,
   DownloadConfigurationButton,
   DownloadCSVButton,
-  InstanceDataInput,
-  ImportInstanceDataButton,
   DeleteLocalStorageButton,
 } from "./Elements/Elements";
-import { DisplayErrorNotification } from "./Elements/DisplayAlertNotification";
 //#endregion
 
 /**
@@ -72,13 +64,12 @@ import { DisplayErrorNotification } from "./Elements/DisplayAlertNotification";
  * @param SoluData Best known primal and dual bounds for each instance.
  */
 FileInput.value = "";
-InstanceDataInput.value = "";
 let RawData = [];
 let FileExtensionType = "";
-let RawInstanceInfoData = [];
+const RawInstanceInfoData = [];
 let InstanceInfoData = [];
 const RawSoluData = [];
-const SoluData = [];
+let SoluData = [];
 
 /**
  * TODO:
@@ -101,37 +92,14 @@ try {
  */
 FileInput.addEventListener("change", () => {
   FileExtensionType = GetDataFileType();
-  // if (FileExtensionType === "txt" || FileExtensionType === "trc" || FileExtensionType === "json") {
-  //   RawData = ReadData(RawData);
-  // } else if (FileExtensionType === "csv") {
-  //   RawInstanceInfoData = ReadInstanceInformationData(RawInstanceInfoData);
-  // } else if (FileExtensionType === "solu") {
-  //   RawSoluData = ReadSoluData(RawSoluData);
-  // } else {
-  //   DisplayErrorNotification(
-  //     "Invalid file extension. Please use a .trc or .txt file for results. Use a .csv file for instance data information and .solu file for best known primal and dual bounds for each instance."
-  //   );
-  // }
   ReadData(RawData, RawInstanceInfoData, RawSoluData);
-  console.log("RawData: ", RawData);
-  console.log("RawInstanceInfoData: ", RawInstanceInfoData);
-  console.log("RawSoluData: ", RawSoluData);
 });
 
 /**
  * Click on the upload data button to continue the process.
  */
 ImportDataButton.addEventListener("click", () => {
-  // if (FileExtensionType === "txt" || FileExtensionType === "trc" || FileExtensionType === "json") {
-  //   ImportDataEvents("Benchmark file succesfully loaded!", FileExtensionType);
-  //   ManageData();
-  // // } else if (FileExtensionType === "csv") {
-  // //   InstanceInfoData = GetInstanceInformation(RawInstanceInfoData);
-  // } else if (FileExtensionType === "solu") {
-  //   SoluData = GetInstancePrimalDualbounds(RawSoluData);
-  // }
   ImportDataEvents("Benchmark file succesfully loaded!", FileExtensionType);
-  console.log(FileExtensionType, "is the filetype.");
   ManageData();
 });
 
@@ -139,12 +107,6 @@ ImportDataButton.addEventListener("click", () => {
  * Sort the benchmark results file and display the relevant elements per page.
  */
 function ManageData(): void {
-  /**
-   * Setting the benchmark results file data.
-   */
-  console.log("The RawData: ", RawData);
-  console.log("File extension: ", FileExtensionType);
-
   /**
    * First row of the benchmark results file.
    * @param Instance The column where the instance is located. Instance is at index 0.
@@ -190,18 +152,16 @@ function ManageData(): void {
     TableFilters(Solvers, "Solvers");
   } else if (FileExtensionType === "trc") {
     TrcData = ExtractTrcData(RawData);
-    ProblemList = GetTrcDataCategory(TrcData, "filename");
-    console.log("Content of .trc file: ", TrcData);
     if (RawInstanceInfoData.length !== 0) {
       InstanceInfoData = GetInstanceInformation(RawInstanceInfoData);
+      TrcData = MergeInstanceData(TrcData, InstanceInfoData);
     }
-    /**
-     * Create the filters for problems.
-     * TODO: Add functionality for this.
-     * Only displayed at the moment.
-     */
-    //ProblemList = GetTrcDataCategory(TrcData, "filename");
-    //TableFilters(ProblemList, "Problems");
+    if (RawSoluData.length !== 0) {
+      SoluData = GetInstancePrimalDualbounds(RawSoluData);
+      TrcData = MergeSoluData(TrcData, SoluData);
+    }
+    Solvers = GetTrcDataCategory(TrcData, "SolverName");
+    TableFilters(Solvers, "Solvers");
   }
 
   /**
@@ -212,7 +172,7 @@ function ManageData(): void {
   });
 
   /**
-   * Check if the user us is on the Report page.
+   * Check if the user is on the Report page.
    */
   if (document.title == "Report") {
     /**
@@ -229,22 +189,8 @@ function ManageData(): void {
           ResultsData
         );
       } else if (FileExtensionType === "trc") {
-        /**
-         * Check if instancedata.csv is provided.
-         * If not, use regular display data
-         */
-        if (InstanceInfoData.length === 0) {
-          TableDisplayTrc(TrcData);
-        } else {
-          const MergedData: string[] = MergeData(TrcData, InstanceInfoData);
-          if (MergedData.length === 0) {
-            TableDisplayTrc(TrcData);
-          } else {
-            TableDisplayTrc(MergedData);
-          }
-        }
+        TableDisplayTrc(TrcData);
       } else if (FileExtensionType === "json") {
-        console.log("Clicked view all results after uploading json file.");
         [RawData, FileExtensionType] = GetUserConfiguration();
         TrcData = ExtractTrcData(RawData);
         TableDisplayTrc(TrcData);
@@ -324,25 +270,16 @@ function ManageData(): void {
     });
 
     /**
-     * Import information regarding the problems from an 'instancedata.csv' file.
-     */
-    InstanceDataInput.addEventListener("change", () => {
-      RawInstanceInfoData = ReadInstanceInformationData(RawInstanceInfoData);
-    });
-
-    /**
-     * Convert instance information to objects.
-     */
-    ImportInstanceDataButton.addEventListener("click", () => {
-      InstanceInfoData = GetInstanceInformation(RawInstanceInfoData);
-    });
-
-    /**
      * Delete stored data in local storage.
      */
     DeleteLocalStorageButton.addEventListener("click", () => {
       DeleteUserConfiguration();
     });
+
+    /**
+     * TODO:
+     * Clear table action.
+     */
   }
 
   /**
