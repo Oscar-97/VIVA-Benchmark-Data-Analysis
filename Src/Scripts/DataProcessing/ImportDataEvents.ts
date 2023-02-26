@@ -3,7 +3,6 @@
  */
 import {
   FileInput,
-  InstanceDataInput,
   ImportDataButton,
   SelectAllButton,
   FilterSelectionButton,
@@ -46,12 +45,10 @@ export function ImportDataEvents(
     SelectAllButton.disabled = false;
     FilterSelectionButton.disabled = true;
     ImportDataButton.disabled = true;
-    InstanceDataInput.disabled = false;
   } else if (FileExtensionType === "trc" || FileExtensionType === "json") {
     SelectAllButton.disabled = true;
     FilterSelectionButton.disabled = true;
     ImportDataButton.disabled = true;
-    InstanceDataInput.disabled = false;
   }
 
   // Display alert with message.
