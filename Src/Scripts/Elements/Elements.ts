@@ -56,17 +56,6 @@ export const DownloadCSVButtonLayer = document.getElementById(
 ) as HTMLButtonElement;
 
 /**
- * @param InstanceDataInput Upload instance information.
- * @param ClearTableButtonButton
- */
-export const InstanceDataInput = document.getElementById(
-  "instanceDataInput"
-) as HTMLInputElement;
-export const ImportInstanceDataButton = document.getElementById(
-  "importInstanceDataButton"
-) as HTMLButtonElement;
-
-/**
  * @param DeleteLocalStorageButton Delete current saved table data from local storage.
  * @param ClearTableButton Clear current settings.
  * @param InputSearch Input for searching for problems.
