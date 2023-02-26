@@ -107,7 +107,7 @@ export function TableData(
   DataTableDiv.appendChild(NewDataTable);
 }
 
-export function TableDataTrc(TrcData: string[]): void {
+export function TableDataTrc(TrcData: string[], CheckedSolvers): void {
   /**
    * @param DataTableDiv Div that contains the data table.
    */
@@ -135,12 +135,20 @@ export function TableDataTrc(TrcData: string[]): void {
    */
   let DataTableContent = "<tbody>";
   for (const obj of TrcData) {
-    const Results = Object.values(obj);
-    let ResultRow = "";
-    for (let i = 0; i < Results.length; i++) {
-      ResultRow += "<td>" + Results[i] + "</td>";
+    {
+      for (const Solver of CheckedSolvers) {
+        if (Object.values(obj).includes(Solver)) {
+          const Results = Object.values(obj);
+          let ResultRow = "";
+          for (let i = 0; i < Results.length; i++) {
+            ResultRow += "<td>" + Results[i] + "</td>";
+          }
+          DataTableContent += "<tr>" + ResultRow + "</tr>";
+        } else {
+          continue;
+        }
+      }
     }
-    DataTableContent += "<tr>" + ResultRow + "</tr>";
   }
 
   /**
