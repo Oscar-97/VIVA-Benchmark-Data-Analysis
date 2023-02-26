@@ -8,6 +8,7 @@ export function TableFilters(
   Elements: string | string[],
   BadgeName: string
 ): void {
+  const UsedSolvers = {};
   SolverAndProblemsHeader.hidden = false;
   SolverAndProblemsHeader.innerText = BadgeName;
 
@@ -20,6 +21,12 @@ export function TableFilters(
     .appendChild(FilterCheckboxesContainer);
 
   for (let i = 0; i < Elements.length; i++) {
+    const Solver = Elements[i];
+
+    // Skip if the solver has already been added.
+    if (UsedSolvers[Solver]) {
+      continue;
+    }
     /**
      * @param FilterCheckboxes Filter form div.
      * @param FilterLabels Filter labels.
@@ -32,17 +39,20 @@ export function TableFilters(
     // Create filter labels.
     const FilterLabels = document.createElement("label") as HTMLLabelElement;
     FilterLabels.className = "form-check-label";
-    FilterLabels.innerText = Elements[i];
+    FilterLabels.innerText = Solver;
 
     // Create input buttons.
     const FilterInput = document.createElement("input") as HTMLInputElement;
     FilterInput.className = "form-check-input";
     FilterInput.type = "checkbox";
-    FilterInput.id = Elements[i];
+    FilterInput.id = Solver;
 
     // Append elements.
     FilterCheckboxes.appendChild(FilterInput);
     FilterCheckboxes.appendChild(FilterLabels);
     document.getElementById("checkboxContainer").appendChild(FilterCheckboxes);
+
+    // Add to used list.
+    UsedSolvers[Solver] = true;
   }
 }
