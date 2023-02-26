@@ -28,10 +28,12 @@
       }
     ],
     "indent": [
-      "error",
-      2
+      "off"
     ],
     "@typescript-eslint/no-empty-function": "error",
-    "prettier/prettier": "error"
+    "prettier/prettier": ["error",
+    {
+      "endOfLine": "auto"
+    }]
   }
 }
