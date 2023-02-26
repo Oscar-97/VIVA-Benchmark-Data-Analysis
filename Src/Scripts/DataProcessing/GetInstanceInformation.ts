@@ -23,8 +23,38 @@ export function GetInstanceInformation(
   return InstanceInfo;
 }
 
-export function GetInstancePrimalDualbounds(RawSoluData) {
-  const SoluData = RawSoluData;
-  console.log("To be implemented.");
+export function GetInstancePrimalDualbounds(RawSoluData: any[]): string[] {
+  const SoluData = [];
+  const RegexPattern = /^=(.*?)=\s+(.*?)\s+(.*?)$/;
+
+  for (let i = 0; i < RawSoluData.length; i++) {
+    const Obj = {};
+    const CurrentLine = RawSoluData[i].split("\n");
+    const Match = RegexPattern.exec(CurrentLine);
+    //console.log("Matches: ", Match[1], Match[2], Match[3])
+    if (Match !== null) {
+      Obj["InputFileName"] = Match[2];
+      switch (Match[1]) {
+        case "best":
+          // Value in the third column is primal bound.
+          Obj["PrimalBoundProblem"] = Match[3];
+          Obj["DualBoundProblem"] = "";
+          break;
+        case "bestdual":
+          // Value in the third column is dual bound.
+          Obj["PrimalBoundProblem"] = "";
+          Obj["DualBoundProblem"] = Match[3];
+          break;
+        case "opt":
+          // Value in the third column is both primal and dual bound.
+          Obj["PrimalBoundProblem"] = Match[3];
+          Obj["DualBoundProblem"] = Match[3];
+          break;
+      }
+    }
+    SoluData.push(Obj);
+  }
+
+  console.log("SoluData: ", SoluData);
   return SoluData;
 }
