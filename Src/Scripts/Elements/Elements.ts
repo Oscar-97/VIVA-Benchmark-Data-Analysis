@@ -67,9 +67,6 @@ export const DeleteLocalStorageButton = document.getElementById(
 export const ClearTableButton = document.getElementById(
   "clearTableButton"
 ) as HTMLButtonElement;
-export const InputSearch = document.getElementById(
-  "tableSearch"
-) as HTMLInputElement;
 export const SolverAndProblemsHeader = document.getElementById(
   "solverAndProblemsHeader"
 ) as HTMLSpanElement;
