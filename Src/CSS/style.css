@@ -1,3 +1,7 @@
+.navbar-brand {
+    font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", sans-serif;
+}
+
 a {
     text-decoration: none;
     color: #ffffff;
@@ -10,12 +14,15 @@ a {
     margin-right: 1rem;
 }
 
-#saveButtonsField {
-    padding-top: 1rem;
+#buttonContainer,
+#solverAndProblemsHeader,
+#tableFilters {
+    margin-left: 1rem;
 }
 
-#deleteButtonsField {
-    padding-top: 1rem;
+#instancedataInput {
+    margin-top: 1rem;
+    width: 20rem;
 }
 
 #dataTable {
@@ -35,12 +42,6 @@ a {
     justify-content: flex-start;
 }
 
-#tableSearch {
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
-    width: auto;
-}
-
 #axesValues {
     margin-top: 1rem;
 }
@@ -53,13 +54,13 @@ a {
 }
 
 hr {
-    margin-left: 0rem;
+    margin-left: 1rem;
     margin-right: 1rem;
 }
 
-tr:hover {
+/* tr:hover {
     background-color: #0d6efd;
-}
+} */
 
 table.dataTable tr.odd {
     background-color: #cccccc;
