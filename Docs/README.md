@@ -64,32 +64,26 @@ and each solver should have
     Nodes I
 
 ## .json
-The file should include a `dataSet`, containing result data from a .trc file in an array format and a `fileExtensionType`.
+The file should include `dataSet`, `fileExtensionType` and `checkedSolvers`.
 
 --- 
 
 # Features to Implement
-## General
-- [ ] Add support for saving checked Solvers in configuration file.
-- [ ] Display alert notifications for error when processing files.
 
 ## Table Page
 - [ ] Calculate new columns for .trc files.
-    - Dual Gap
-    - Primal Gap
-    - Dual Bound
-    - Primal bound
+- [ ] SearchBuilder
 
 ## Plot Page
-- [ ] Implement support for .trc files.
+- [ ] Check which plot types are needed.
 - [ ] Add support for custom X/Y values.
-- [ ] Add more plotting types. (Selected from navbar -> plots -> type)
+- [ ] Add more plotting types.
 - [ ] Export plot data as csv.
 - [ ] Fix destruction on Chart.js canvas.
 
 ## Other
 - [ ] Add DocType support.
-- [ ] Update the 'Working with codebase' chapter.
+- [ ] Update the 'Working with codebase' chapter below.
 
 # Working with the Codebase
 ## 1. Prerequisites
