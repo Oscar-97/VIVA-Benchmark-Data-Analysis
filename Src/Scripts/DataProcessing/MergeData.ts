@@ -1,54 +1,33 @@
 /**
- * Merge TrcData and InstanceData, on matching object keys.
+ * Merge data on matching object keys.
  * @param TrcData Results data.
- * @param InstanceData Instance information data.
- * @returns MergedData
+ * @param Data Instance/Solution information data.
+ * @returns MergedData ResultsData with more information.
  */
-export function MergeInstanceData(
-  TrcData: any[],
-  InstanceData: any[]
-): string[] {
+export function MergeData(TrcData: any[], Data: any[]): string[] {
   const MergedData = [];
 
   for (const obj1 of TrcData) {
-    for (const obj2 of InstanceData) {
-      if (obj1.InputFileName === obj2.name) {
-        const MergedObj = Object.assign({}, obj1, obj2);
-        MergedData.push(MergedObj);
-        break;
+    for (const obj2 of Data) {
+      if (obj2.InputFileName) {
+        if (obj1.InputFileName === obj2.InputFileName) {
+          const MergedObj = Object.assign({}, obj1, obj2);
+          MergedData.push(MergedObj);
+          break;
+        }
+      } else if (obj2.name) {
+        if (obj1.InputFileName === obj2.name) {
+          const MergedObj = Object.assign({}, obj1, obj2);
+          MergedData.push(MergedObj);
+          break;
+        }
       }
     }
   }
-  console.log("TrcData with instanceinformation: ", MergedData);
+  console.log("New TrcData: ", MergedData);
 
   if (MergedData.length === 0) {
-    console.log("No matching filenames found in both arrays.");
-  }
-  return MergedData;
-}
-
-/**
- *
- * @param TrcData
- * @param SoluData
- * @returns
- */
-export function MergeSoluData(TrcData: any[], SoluData: any[]): string[] {
-  const MergedData = [];
-
-  for (const obj1 of TrcData) {
-    for (const obj2 of SoluData) {
-      if (obj1.InputFileName === obj2.InputFileName) {
-        const MergedObj = Object.assign({}, obj1, obj2);
-        MergedData.push(MergedObj);
-        break;
-      }
-    }
-  }
-  console.log("TrcData with Solu information: ", MergedData);
-
-  if (MergedData.length === 0) {
-    console.log("No matching filenames found in both arrays.");
+    console.log("No matching objects when merging data.");
   }
   return MergedData;
 }
