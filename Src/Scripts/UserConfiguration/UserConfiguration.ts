@@ -5,38 +5,65 @@ import {
 } from "../Elements/DisplayAlertNotification";
 import { DownloadConfigurationButton } from "../Elements/Elements";
 
+/**
+ * UserData consists of dataset, file extension type and checked solvers.
+ */
 const UserData = {
   dataSet: [],
   fileExtensionType: "",
+  checkedSolvers: [],
 };
 
+/**
+ * Create the user configuration and store it to localStorage.
+ */
 export function CreateUserConfiguration(
   RawData: string[],
-  FileExtensionType: string
+  FileExtensionType: string,
+  CheckedSolvers: string[]
 ): void {
   UserData.dataSet = RawData;
   UserData.fileExtensionType = FileExtensionType;
+  UserData.checkedSolvers = CheckedSolvers;
   localStorage.setItem("UserConfiguration", JSON.stringify(UserData));
   DisplayAlertNotification("Saved configuration.");
 }
 
-export function GetUserConfiguration(): [string[], string] {
+/**
+ * Get the user configuration from localStorage, item is called UserConfiguration.
+ * @returns 
+ */
+export function GetUserConfiguration(): [string[], string, string[]] {
   const UserConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
   const RawData = [];
   UserConfig.dataSet.forEach((value: string[]) => {
     RawData.push(value);
   });
+  
   const FileExtensionType: string = UserConfig.fileExtensionType;
+  
+  const CheckedSolvers = [];
+  UserConfig.checkedSolvers.forEach((value: string[]) => {
+    CheckedSolvers.push(value);
+  });
+
   console.log("RawData fron localStorage: ", RawData);
   console.log("FileType of saved data: ", FileExtensionType);
-  return [RawData, FileExtensionType];
+  console.log("Checked solvers: ", CheckedSolvers);
+  return [RawData, FileExtensionType, CheckedSolvers];
 }
 
+/**
+ * Delete the user configuration.
+ */
 export function DeleteUserConfiguration(): void {
   localStorage.removeItem("UserConfiguration");
   DisplayWarningNotification("Deleted configuration.");
 }
 
+/**
+ * Download user configuration as a .json file. Can be uploaded as a result file.
+ */
 export function DownloadUserConfiguration(): void {
   const UserConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
   if (UserConfig) {
