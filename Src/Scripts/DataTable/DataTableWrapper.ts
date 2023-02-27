@@ -5,17 +5,9 @@ import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-rowreorder-bs5";
 import "datatables.net-select-bs5";
 import "datatables.net-fixedcolumns-bs5";
-
 import { GetCheckedSolvers, GetComparisonArray } from "../Solvers/UsedSolvers";
 import { TableData, TableDataTrc } from "./DataTableBase";
-
-import {
-  SelectAllButton,
-  FilterSelectionButton,
-  SaveLocalStorageButton,
-  DownloadConfigurationButtonLayer,
-  DownloadCSVButtonLayer,
-} from "../Elements/Elements";
+import { ElementStatusWithTable } from "../Elements/ElementStatus";
 
 /**
  * Display the data in the div with the id "dataTable" when clicking on the view all results or selection button.
@@ -56,11 +48,7 @@ export function TableDisplay(
     /**
      * Set the button statuses.
      */
-    SelectAllButton.disabled = false;
-    FilterSelectionButton.disabled = false;
-    SaveLocalStorageButton.disabled = false;
-    DownloadConfigurationButtonLayer.disabled = false;
-    DownloadCSVButtonLayer.disabled = false;
+    ElementStatusWithTable();
   }, 500);
 }
 
@@ -85,11 +73,7 @@ export function TableDisplayTrc(TrcData: string[]): void {
       ("#dataTableGenerated_wrapper");
     });
 
-    SelectAllButton.disabled = false;
-    FilterSelectionButton.disabled = false;
-    SaveLocalStorageButton.disabled = false;
-    DownloadConfigurationButtonLayer.disabled = false;
-    DownloadCSVButtonLayer.disabled = false;
+    ElementStatusWithTable();
   }, 500);
 }
 
@@ -136,4 +120,24 @@ function DataTablesConfiguration(): void {
 
   jq(".dataTables_length select").addClass("custom-select custom-select-sm");
   table.buttons().container().appendTo("#dataTableGenerated_wrapper");
+}
+
+/**
+ * Destroy existing table.
+ */
+export function DestroyDataTable(): void {
+  const table = jq("#dataTableGenerated").DataTable();
+  table.destroy();
+
+  const TableElementWrapper = document.getElementById(
+    "dataTableGenerated_wrapper"
+  );
+  if (TableElementWrapper) {
+    TableElementWrapper.remove();
+  }
+
+  const TableElement = document.getElementById("dataTableGenerated");
+  if (TableElement) {
+    TableElement.remove();
+  }
 }
