@@ -1,6 +1,10 @@
 import { FileInput, ImportDataButton } from "../Elements/Elements";
 import { DisplayErrorNotification } from "../Elements/DisplayAlertNotification";
 
+/**
+ * User should only be able to upload multiple .trc files, and atleast one of the files needs to be a .txt, .trc or .json file.
+ * @returns DataFileType
+ */
 export function GetDataFileType(): string {
   const Files = FileInput.files;
   const Extensions = [];
@@ -37,6 +41,13 @@ export function GetDataFileType(): string {
   return Extensions[0];
 }
 
+/**
+ * Read the raw data.
+ * @param RawData 
+ * @param RawInstanceInfoData 
+ * @param RawSoluData 
+ * @returns 
+ */
 export function ReadData(
   RawData: string[],
   RawInstanceInfoData: string[],
@@ -44,40 +55,38 @@ export function ReadData(
 ): { RawData: string[]; RawInstanceInfoData: string[]; RawSoluData: string[] } {
   ImportDataButton.disabled = false;
 
-  // Input multiple files.
+  /**
+   * Input multiple files.
+   * For instance: trace1.trc, trace2.trc and minlp.solu.
+   */
   for (let i = 0; i < FileInput.files.length; i++) {
     const Reader = new FileReader();
     const File = FileInput.files[i];
     const FileName = File.name;
     const FileExtension = FileName.split(".").pop();
 
+    /**
+     * Split the file's content into an array of lines and iterate over the lines array and process each line as needed.
+     */
     Reader.addEventListener("load", function () {
       if (FileExtension === "json") {
         const JSON_Data = <string>Reader.result;
         localStorage.setItem("UserConfiguration", JSON_Data);
         console.log("Stored uploaded UserConfiguration.");
       } else if (FileExtension === "txt" || FileExtension === "trc") {
-        // Split the file's content into an array of lines.
         const Lines = (<string>Reader.result).split("\r\n");
-        // Iterate over the lines array and process each line as needed.
         for (let i = 0; i <= Lines.length - 1; i++) {
           const Line = Lines[i];
           RawData.push(Line);
         }
       } else if (FileExtension === "csv") {
-        // Split the file's content into an array of lines.
-        // Line ending \n for .csv file.
         const Lines = (<string>Reader.result).split("\n");
-        // Iterate over the lines array and process each line as needed.
         for (let i = 0; i <= Lines.length - 1; i++) {
           const Line = Lines[i];
           RawInstanceInfoData.push(Line);
         }
       } else if (FileExtension === "solu") {
-        // Split the file's content into an array of lines.
-        // Line ending "\r\n" for .solu file.
         const Lines = (<string>Reader.result).split("\r\n");
-        // Iterate over the lines array and process each line as needed.
         for (let i = 0; i <= Lines.length - 1; i++) {
           const Line = Lines[i];
           RawSoluData.push(Line);
@@ -92,7 +101,6 @@ export function ReadData(
       }
     });
 
-    // Read the file as text.
     Reader.readAsText(File);
   }
 
