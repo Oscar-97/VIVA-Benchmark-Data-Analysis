@@ -10,7 +10,7 @@ import { DownloadConfigurationButton } from "../Elements/Elements";
  */
 const UserData = {
   dataSet: [],
-  fileExtensionType: "",
+  dataFileType: "",
   checkedSolvers: [],
 };
 
@@ -19,11 +19,11 @@ const UserData = {
  */
 export function CreateUserConfiguration(
   RawData: string[],
-  FileExtensionType: string,
+  DataFileType: string,
   CheckedSolvers: string[]
 ): void {
   UserData.dataSet = RawData;
-  UserData.fileExtensionType = FileExtensionType;
+  UserData.dataFileType = DataFileType;
   UserData.checkedSolvers = CheckedSolvers;
   localStorage.setItem("UserConfiguration", JSON.stringify(UserData));
   DisplayAlertNotification("Saved configuration.");
@@ -40,7 +40,7 @@ export function GetUserConfiguration(): [string[], string, string[]] {
     RawData.push(value);
   });
   
-  const FileExtensionType: string = UserConfig.fileExtensionType;
+  const DataFileType: string = UserConfig.dataFileType;
   
   const CheckedSolvers = [];
   UserConfig.checkedSolvers.forEach((value: string[]) => {
@@ -48,9 +48,9 @@ export function GetUserConfiguration(): [string[], string, string[]] {
   });
 
   console.log("RawData fron localStorage: ", RawData);
-  console.log("FileType of saved data: ", FileExtensionType);
+  console.log("FileType of saved data: ", DataFileType);
   console.log("Checked solvers: ", CheckedSolvers);
-  return [RawData, FileExtensionType, CheckedSolvers];
+  return [RawData, DataFileType, CheckedSolvers];
 }
 
 /**

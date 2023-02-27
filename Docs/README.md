@@ -64,7 +64,7 @@ and each solver should have
     Nodes I
 
 ## .json
-The file should include `dataSet`, `fileExtensionType` and `checkedSolvers`.
+The file should include `dataSet`, `dataFileType` and `checkedSolvers`.
 
 --- 
 

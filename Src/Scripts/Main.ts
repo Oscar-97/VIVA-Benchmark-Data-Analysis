@@ -65,7 +65,7 @@ import { ElementStatus } from "./Elements/ElementStatus";
  * Set the filename to be empty and declare an array to store the benchmarks in.
  * @param RawData Raw data of the imported benchmark results.
  * @param CheckedSolvers Array containing checked solvers.
- * @param FileExtensionType Type of file extension for the imported data.
+ * @param DataFileType Type of file extension for the imported data.
  * @param RawInstanceInfoData Unprocessed instanceinfo.csv containing properties.
  * @param RawSoluData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
  */
