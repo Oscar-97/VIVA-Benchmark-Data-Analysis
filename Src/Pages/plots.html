@@ -1,26 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- jQuery (Used with DataTables) -->
-    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
-    <!-- Bootstrap -->
-    <link href="../bootstrap-5.2.3-dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Chart.js -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
-      integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
-      crossorigin="anonymous" referrerpolicy="no-referrer">
-      </script> -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Title and icon -->
-    <title id="ReportTitle">Plots</title>
-    <link rel="icon" href="../CSS/tab_icon.png">
-    <!-- Styling -->
-    <link rel="stylesheet" type="text/css" href="../CSS/style.css">
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap -->
+  <link href="../bootstrap-5.2.3-dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Title and icon -->
+  <title id="ReportTitle">Plots</title>
+  <link rel="icon" href="../CSS/tab_icon.png">
+  <!-- Styling -->
+  <link rel="stylesheet" type="text/css" href="../CSS/style.css">
+</head>
 
 <body>
   <nav class="navbar sticky-top navbar-expand-lg bg-light">
@@ -37,8 +31,9 @@
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="../../report.html">Table</a>
           </li>
-         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Plots</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">Plots</a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <li><a class="dropdown-item active">PrimalGap (Absolute Performance Profile)</a></li>
               <li><a class="dropdown-item disabled" href="#">DualGap</a></li>
@@ -48,53 +43,60 @@
           </li>
           <li class="nav-item">
             <div class="input-group">
-              <input type="file" class="form-control" id="fileInput" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-              <button class="btn btn-outline-primary" type="button" id="importDataButton" disabled="true">Upload</button>
+              <input type="file" class="form-control" id="fileInput" aria-describedby="inputGroupFileAddon04"
+                aria-label="Upload" value="" data-toggle="tooltip" data-placement="top"
+                title="Select and upload a .txt or .trc file." multiple>
+              <button class="btn btn-outline-primary" type="button" id="importDataButton" disabled="true"
+                data-toggle="tooltip" data-placement="top"
+                title="Upload the selected file for processing.">Upload</button>
             </div>
+          </li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Docs</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/Oscar-97/SHOT-Data-Visualization" target="_blank">GitHub</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
-  <div class="alert alert-success" role="alert" id="alertNotification"></div>
-  <div id="tableFilters">
-    <button class="btn btn-primary btn-sm" type="submit" id="selectAllButton" disabled="true">Select All Solvers</button>
-    <button class="btn btn-dark btn-sm" type="submit" id="viewPlotsButton" disabled="true">View Plot</button>
-    <div class="input-group input-group-sm mb-3 d-flex" id="axesValues">
-      <div class="row">
-        <div class="input-group-prepend input-group-sm mb-3 col flex-nowrap">
-          <span class="input-group-text">X max</span>
-          <input type="number" class="form-control input-group-sm mb-3 col" id="xMaxInput" value="">
-        </div>
-
-      </div>
-      <div class="row">
-        <div class="input-group-prepend input-group-sm mb-3 col flex-nowrap">
-          <span class="input-group-text">X min</span>
-          <input type="number" class="form-control input-group-sm mb-3 col" id="xMinInput" value="">
-        </div>
-
-      </div>
-      <div class="row">
-        <div class="input-group-prepend input-group-sm mb-3 col flex-nowrap">
-          <span class="input-group-text">Y max</span>
-          <input type="number" class="form-control input-group-sm mb-3 col" id="yMaxInput" value="">
-        </div>
-
-      </div>
-      <div class="row">
-        <div class="input-group-prepend input-group-sm mb-3 col flex-nowrap">
-          <span class="input-group-text">Y min</span>
-          <input type="number" class="form-control input-group-sm mb-3 col" id="yMinInput" value="">
-        </div>
-
-      </div>
+  <div class="alert" role="alert" id="alertNotification"></div>
+  <div id="buttonContainer" class="d-flex flex-wrap justify-content-start gap-2">
+    <div class="col-auto">
+      <button class="btn btn-success btn-sm" type="submit" id="viewPlotsButton">View Plot</button>
     </div>
-    
-    <hr />
-    <span class="badge bg-dark" id="SolverAndProblemsHeader" hidden></span>
-    <!-- Table filters will be created here. -->
+    <div class="col-auto">
+      <button class="btn btn-primary btn-sm" type="none" id="selectAllButton" data-toggle="tooltip" data-placement="top"
+        title="Select all solvers found in the uploaded file.">Select All Solvers</button>
+    </div>
+    <div class="col-auto">
+      <span class="input-group-text">X max</span>
+      <input type="number" class="form-control input-group-sm mb-3 col" id="xMaxInput" value="">
+    </div>
+    <div class="col-auto">
+      <span class="input-group-text">X min</span>
+      <input type="number" class="form-control input-group-sm mb-3 col" id="xMinInput" value="">
+    </div>
+    <div class="col-auto">
+      <span class="input-group-text">Y max</span>
+      <input type="number" class="form-control input-group-sm mb-3 col" id="yMaxInput" value="">
+    </div>
+    <div class="col-auto">
+      <span class="input-group-text">Y min</span>
+      <input type="number" class="form-control input-group-sm mb-3 col" id="yMinInput" value="">
+    </div>
   </div>
+  <hr />
+  <span class="badge bg-dark" id="solverAndProblemsHeader" hidden></span>
+  <div id="tableFilters"></div>
+  <!-- Table filters will be created here. -->
+  <!-- Table search appears after creating a table. -->
+  </div>
+  </div>
+
   <div id="chartContainer">
     <canvas id="myChart" class="chart">
       <!-- Content created with Chart.js will be displayed here. -->
