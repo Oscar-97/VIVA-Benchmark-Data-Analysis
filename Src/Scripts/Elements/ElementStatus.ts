@@ -11,10 +11,11 @@ import {
     DownloadCSVButtonLayer,
     DeleteLocalStorageButton,
     ClearTableButton,
+    ViewPlotsButton,
   } from "./Elements";
 
 /**
- * Input values and button statuses when arriving/reloading to the page.
+ * Input values and button statuses when arriving/reloading to the table page.
  */
 export function ElementStatus(): void {
     FileInput.value = "";
@@ -27,6 +28,14 @@ export function ElementStatus(): void {
     DownloadConfigurationButtonLayer.disabled = true;
     DeleteLocalStorageButton.disabled = true;
     ClearTableButton.disabled = true;
+}
+
+/**
+ * Input values and button statuses when arriving/reloading to the plot page.
+ */
+export function ElementStatusPlots(): void {
+    FileInput.value = "";
+    ViewPlotsButton.disabled = false;
 }
 
 /**

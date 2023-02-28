@@ -58,7 +58,7 @@ import {
   ClearTableButton,
 } from "./Elements/Elements";
 import { GetCheckedSolvers } from "./Solvers/UsedSolvers";
-import { ElementStatus } from "./Elements/ElementStatus";
+import { ElementStatus, ElementStatusPlots } from "./Elements/ElementStatus";
 //#endregion
 
 /**
@@ -78,7 +78,11 @@ const RawSoluData = [];
 /**
  * Set all button status from new method after refreshing.
  */
-ElementStatus();
+if (document.title == "Report") {
+  ElementStatus();
+} else if (document.title === "Plots") {
+  ElementStatusPlots();
+}
 
 /**
  * Try to retrieve stored config/data/state when arriving to the page, or refreshing the page.
