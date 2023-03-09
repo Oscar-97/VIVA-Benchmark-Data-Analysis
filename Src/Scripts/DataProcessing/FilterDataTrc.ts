@@ -3,6 +3,8 @@ import {
   CalculatePrimalBound,
   CalculateDualBound,
   SetTermStatus,
+  CalculateGapSolver,
+  CalculateGapPercentage,
 } from "./CalculateResults";
 
 /**
@@ -15,8 +17,10 @@ export function ExtractTrcData(RawData: string[]): string[] {
   const FirstLine = RawData[0].split(",");
 
   /**
-   * Check if headers are included in the .trc file. If they are found, include them, if not, use the custom headers.
-   * TODO: Skip custom headers overall.
+   * Check if headers are included in the .trc file. 
+   * If they are found, include them, if not, use the custom headers.
+   * 
+   * TODO: Check if custom headers should be supported.
    */
   if (FirstLine[0].startsWith("*")) {
     console.log("Found headers.");
@@ -57,8 +61,8 @@ export function ExtractTrcData(RawData: string[]): string[] {
       "OptionFile",
       "ModelStatus",
       "TermStatus",
-      "PrimalBoundSolver",
-      "DualBoundSolver",
+      "PrimalBound Solver",
+      "DualBound Solver",
       "Time[s]",
       "NumberOfIterations",
       "NumberOfDomainViolations",
@@ -82,34 +86,40 @@ export function ExtractTrcData(RawData: string[]): string[] {
       for (let j = 0; j < DefaultHeaders.length; j++) {
         Obj[DefaultHeaders[j]] = CurrentLine[j];
       }
+      
       /**
        * Modify keys.
+       * https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4
+       * /src/paver/paver.py#L258-L290
        */
-      if ("Dir" in Obj) {
-        const CurrentDirValue = Obj.Dir;
-        const NewDirValue = CalculateDirection(CurrentDirValue);
-        Obj.Dir = NewDirValue;
-      }
 
-      if ("PrimalBoundSolver" in Obj) {
-        const CurrentPrimalBoundValue = Obj.PrimalBoundSolver;
+      // if (Obj["Dir"] === "" || Obj["Dir"] === "NA") {
         const CurrentDirValue = Obj["Dir"];
+        const NewDirValue = CalculateDirection(CurrentDirValue);
+        Obj["Dir"] = NewDirValue;
+      // }
+
+      // if (Obj["PrimalBound Solver"] === "" || Obj["PrimalBound Solver"] === "NA") {
+        const CurrentPrimalBoundValue = Obj["PrimalBound Solver"];
+        //const CurrentDirValue = Obj["Dir"];
         const NewPrimalBoundValue = CalculatePrimalBound(
           CurrentPrimalBoundValue,
-          CurrentDirValue
+          //CurrentDirValue
+          NewDirValue
         );
-        Obj.PrimalBoundSolver = NewPrimalBoundValue;
-      }
+        Obj["PrimalBound Solver"] = NewPrimalBoundValue;
+      // }
 
-      if ("DualBoundSolver" in Obj) {
-        const CurrentDualBoundValue = Obj.DualBoundSolver;
-        const CurrentDirValue = Obj["Dir"];
+      // if (Obj["DualBound Solver"] === "" || Obj["DualBound Solver"] === "NA") {
+        const CurrentDualBoundValue = Obj["DualBound Solver"];
+        //const CurrentDirValue = Obj["Dir"];
         const NewDualBoundValue = CalculateDualBound(
           CurrentDualBoundValue,
-          CurrentDirValue
+          //CurrentDirValue
+          NewDirValue
         );
-        Obj.DualBoundSolver = NewDualBoundValue;
-      }
+        Obj["DualBound Solver"] = NewDualBoundValue;
+      // }
 
       if ("TermStatus" in Obj) {
         const CurrentTermValue = Obj.TermStatus;
@@ -118,8 +128,22 @@ export function ExtractTrcData(RawData: string[]): string[] {
       }
 
       /**
-       * Create new keys for:
+       * New keys.
        */
+      
+      Obj["PrimalBound Problem"] = CalculatePrimalBound(Obj["PrimalBound Solver"], Obj["Dir"]);
+      
+      Obj["DualBound Problem"] = CalculateDualBound(Obj["DualBound Solver"], Obj["Dir"]);
+
+      Obj["PrimalGap Solver"] = CalculateGapSolver(Obj["PrimalBound Solver"], Obj["PrimalBound Problem"]);
+
+      Obj["DualGap Solver"] = CalculateGapSolver(Obj["DualBound Solver"], Obj["DualBound Problem"]);
+
+      Obj["Gap[%] Solver"] = CalculateGapPercentage(Obj["PrimalBound Solver"], Obj["PrimalBound Problem"]);
+
+      // Obj["Gap Solver"] = CalculateGapSolver();
+
+      // Obj["Gap Problem"] = CalculateGapProblem(Obj["DualBound Problem"], Obj["PrimalBound Problem"]);
 
       TrcData.push(Obj);
     }
