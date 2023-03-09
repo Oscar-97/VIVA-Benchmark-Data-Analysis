@@ -1,4 +1,5 @@
 import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
+import { CalculatePrimalBound, CalculateDualBound } from "./CalculateResults";
 
 export function GetInstanceInformation(
   RawInstanceInfoData: string[]
@@ -37,18 +38,18 @@ export function GetInstancePrimalDualbounds(RawSoluData: any[]): string[] {
       switch (Match[1]) {
         case "best":
           // Value in the third column is primal bound.
-          Obj["PrimalBoundProblem"] = Match[3];
-          Obj["DualBoundProblem"] = "";
+          Obj["PrimalBound Problem"] = Match[3];
+          Obj["DualBound Problem"] = CalculateDualBound("", Obj["Dir"]);
           break;
         case "bestdual":
           // Value in the third column is dual bound.
-          Obj["PrimalBoundProblem"] = "";
-          Obj["DualBoundProblem"] = Match[3];
+          Obj["PrimalBound Problem"] = CalculatePrimalBound("", Obj["Dir"]);
+          Obj["DualBound Problem"] = Match[3];
           break;
         case "opt":
           // Value in the third column is both primal and dual bound.
-          Obj["PrimalBoundProblem"] = Match[3];
-          Obj["DualBoundProblem"] = Match[3];
+          Obj["PrimalBound Problem"] = Match[3];
+          Obj["DualBound Problem"] = Match[3];
           break;
       }
     }
