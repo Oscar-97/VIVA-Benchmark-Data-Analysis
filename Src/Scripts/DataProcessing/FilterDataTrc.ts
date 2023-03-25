@@ -17,9 +17,9 @@ export function ExtractTrcData(RawData: string[]): string[] {
   const FirstLine = RawData[0].split(",");
 
   /**
-   * Check if headers are included in the .trc file. 
+   * Check if headers are included in the .trc file.
    * If they are found, include them, if not, use the custom headers.
-   * 
+   *
    * TODO: Check if custom headers should be supported.
    */
   if (FirstLine[0].startsWith("*")) {
@@ -86,7 +86,7 @@ export function ExtractTrcData(RawData: string[]): string[] {
       for (let j = 0; j < DefaultHeaders.length; j++) {
         Obj[DefaultHeaders[j]] = CurrentLine[j];
       }
-      
+
       /**
        * Modify keys.
        * https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4
@@ -94,31 +94,31 @@ export function ExtractTrcData(RawData: string[]): string[] {
        */
 
       // if (Obj["Dir"] === "" || Obj["Dir"] === "NA") {
-        const CurrentDirValue = Obj["Dir"];
-        const NewDirValue = CalculateDirection(CurrentDirValue);
-        Obj["Dir"] = NewDirValue;
+      const CurrentDirValue = Obj["Dir"];
+      const NewDirValue = CalculateDirection(CurrentDirValue);
+      Obj["Dir"] = NewDirValue;
       // }
 
       // if (Obj["PrimalBound Solver"] === "" || Obj["PrimalBound Solver"] === "NA") {
-        const CurrentPrimalBoundValue = Obj["PrimalBound Solver"];
-        //const CurrentDirValue = Obj["Dir"];
-        const NewPrimalBoundValue = CalculatePrimalBound(
-          CurrentPrimalBoundValue,
-          //CurrentDirValue
-          NewDirValue
-        );
-        Obj["PrimalBound Solver"] = NewPrimalBoundValue;
+      const CurrentPrimalBoundValue = Obj["PrimalBound Solver"];
+      //const CurrentDirValue = Obj["Dir"];
+      const NewPrimalBoundValue = CalculatePrimalBound(
+        CurrentPrimalBoundValue,
+        //CurrentDirValue
+        NewDirValue
+      );
+      Obj["PrimalBound Solver"] = NewPrimalBoundValue;
       // }
 
       // if (Obj["DualBound Solver"] === "" || Obj["DualBound Solver"] === "NA") {
-        const CurrentDualBoundValue = Obj["DualBound Solver"];
-        //const CurrentDirValue = Obj["Dir"];
-        const NewDualBoundValue = CalculateDualBound(
-          CurrentDualBoundValue,
-          //CurrentDirValue
-          NewDirValue
-        );
-        Obj["DualBound Solver"] = NewDualBoundValue;
+      const CurrentDualBoundValue = Obj["DualBound Solver"];
+      //const CurrentDirValue = Obj["Dir"];
+      const NewDualBoundValue = CalculateDualBound(
+        CurrentDualBoundValue,
+        //CurrentDirValue
+        NewDirValue
+      );
+      Obj["DualBound Solver"] = NewDualBoundValue;
       // }
 
       if ("TermStatus" in Obj) {
@@ -130,16 +130,31 @@ export function ExtractTrcData(RawData: string[]): string[] {
       /**
        * New keys.
        */
-      
-      Obj["PrimalBound Problem"] = CalculatePrimalBound(Obj["PrimalBound Solver"], Obj["Dir"]);
-      
-      Obj["DualBound Problem"] = CalculateDualBound(Obj["DualBound Solver"], Obj["Dir"]);
 
-      Obj["PrimalGap Solver"] = CalculateGapSolver(Obj["PrimalBound Solver"], Obj["PrimalBound Problem"]);
+      Obj["PrimalBound Problem"] = CalculatePrimalBound(
+        Obj["PrimalBound Solver"],
+        Obj["Dir"]
+      );
 
-      Obj["DualGap Solver"] = CalculateGapSolver(Obj["DualBound Solver"], Obj["DualBound Problem"]);
+      Obj["DualBound Problem"] = CalculateDualBound(
+        Obj["DualBound Solver"],
+        Obj["Dir"]
+      );
 
-      Obj["Gap[%] Solver"] = CalculateGapPercentage(Obj["PrimalBound Solver"], Obj["PrimalBound Problem"]);
+      Obj["PrimalGap Solver"] = CalculateGapSolver(
+        Obj["PrimalBound Solver"],
+        Obj["PrimalBound Problem"]
+      );
+
+      Obj["DualGap Solver"] = CalculateGapSolver(
+        Obj["DualBound Solver"],
+        Obj["DualBound Problem"]
+      );
+
+      Obj["Gap[%] Solver"] = CalculateGapPercentage(
+        Obj["PrimalBound Solver"],
+        Obj["PrimalBound Problem"]
+      );
 
       // Obj["Gap Solver"] = CalculateGapSolver();
 
