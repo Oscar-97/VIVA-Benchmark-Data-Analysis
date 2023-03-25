@@ -37,7 +37,6 @@ export function ImportDataEvents(
       TableElement.remove();
     }
 
-    FileInput.value = "";
   } catch (err) {
     console.log(err);
   }
