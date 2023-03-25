@@ -11,7 +11,10 @@ export function CalculateDirection(Direction) {
 
 // Problem & Solver - Primal Bound
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L275-L282
-export function CalculatePrimalBound(PrimalBound: unknown, Direction: number): any {
+export function CalculatePrimalBound(
+  PrimalBound: unknown,
+  Direction: number
+): any {
   if (PrimalBound === "" || PrimalBound === "NA") {
     PrimalBound = Direction * Infinity;
   }
@@ -85,10 +88,7 @@ export function CalculateGapSolver(
   }
 
   // Compute and return the gap between the values
-  return (
-    (Solver - Problem) /
-    Math.min(Math.abs(Solver), Math.abs(Problem))
-  );
+  return (Solver - Problem) / Math.min(Math.abs(Solver), Math.abs(Problem));
 }
 
 // Solver - Gap[%]
