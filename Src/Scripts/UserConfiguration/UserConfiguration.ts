@@ -31,7 +31,7 @@ export function CreateUserConfiguration(
 
 /**
  * Get the user configuration from localStorage, item is called UserConfiguration.
- * @returns 
+ * @returns
  */
 export function GetUserConfiguration(): [string[], string, string[]] {
   const UserConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
@@ -39,9 +39,9 @@ export function GetUserConfiguration(): [string[], string, string[]] {
   UserConfig.dataSet.forEach((value: string[]) => {
     RawData.push(value);
   });
-  
+
   const DataFileType: string = UserConfig.dataFileType;
-  
+
   const CheckedSolvers = [];
   UserConfig.checkedSolvers.forEach((value: string[]) => {
     CheckedSolvers.push(value);
