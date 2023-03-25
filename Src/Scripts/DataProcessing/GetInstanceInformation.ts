@@ -32,18 +32,15 @@ export function GetInstancePrimalDualbounds(RawSoluData: any[]): string[] {
     const Obj = {};
     const CurrentLine = RawSoluData[i].split("\n");
     const Match = RegexPattern.exec(CurrentLine);
-    //console.log("Matches: ", Match[1], Match[2], Match[3])
     if (Match !== null) {
       Obj["InputFileName"] = Match[2];
       switch (Match[1]) {
         case "best":
           // Value in the third column is primal bound.
           Obj["PrimalBound Problem"] = Match[3];
-          Obj["DualBound Problem"] = CalculateDualBound("", Obj["Dir"]);
           break;
         case "bestdual":
           // Value in the third column is dual bound.
-          Obj["PrimalBound Problem"] = CalculatePrimalBound("", Obj["Dir"]);
           Obj["DualBound Problem"] = Match[3];
           break;
         case "opt":
