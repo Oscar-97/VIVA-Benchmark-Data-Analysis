@@ -30,9 +30,7 @@ import {
   GetProblems,
   GetResults,
 } from "./DataProcessing/FilterDataTxt";
-import {
-  MergeData
-} from "./DataProcessing/MergeData";
+import { MergeData } from "./DataProcessing/MergeData";
 import { InitializePlots } from "./Chart/InitializePlot";
 import {
   ToggleSelection,
@@ -62,7 +60,6 @@ import { ElementStatus, ElementStatusPlots } from "./Elements/ElementStatus";
 //#endregion
 
 /**
- * Set the filename to be empty and declare an array to store the benchmarks in.
  * @param RawData Raw data of the imported benchmark results.
  * @param CheckedSolvers Array containing checked solvers.
  * @param DataFileType Type of file extension for the imported data.
@@ -156,7 +153,7 @@ function ManageData(): void {
     [RawData, DataFileType, CheckedSolvers] = GetUserConfiguration();
   }
 
-   /**
+  /**
    * Check which file format is used, add the data to correct categories and create the solver filters. Select solvers if they are found in localStorage.
    */
   if (DataFileType === "txt") {
@@ -314,7 +311,8 @@ function ManageData(): void {
    */
   if (document.title == "Plots") {
     ViewPlotsButton.addEventListener("click", () => {
-      InitializePlots(Solvers, ResultsData);
+      // Currently only showing average solver time.
+      InitializePlots(TrcData);
     });
   }
 }

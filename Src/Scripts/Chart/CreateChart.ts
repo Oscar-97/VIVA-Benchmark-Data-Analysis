@@ -1,3 +1,4 @@
+import { data } from "jquery";
 import {
   xMaxInput,
   xMinInput,
@@ -5,152 +6,112 @@ import {
   yMinInput,
 } from "../Elements/Elements";
 
+/**
+ * Add a random color for the dataset.
+ * @param PickColor Color picker for the data.
+ * @returns Random different colors for each solver.
+ */
+function PickColor(): string {
+  const Hex = Math.floor(Math.random() * 16777215).toString(16);
+  const Color = "#" + Hex;
+  return Color;
+}
+
+/**
+ * Testing some chart creation.
+ * @param ResultsData 
+ */
 export function CreateChart(
-  Solvers: string | any[],
-  ResultsData: string | any[],
-  ComparisonArray: any[]
+  ResultsData: any[]
 ): void {
-  let myChart: Chart | null = null;
-  const ctx = document.getElementById("myChart") as HTMLCanvasElement;
-  /**
-   * If canvas exist -> update it.
-   */
-  // if (ctx.width != 300) {
-  //     console.log("Canvas already exist. Updating axes values.");
 
-  //     const xMax = parseInt(xMaxInput.value)
-  //     const xMin = parseInt(xMinInput.value)
-  //     const yMax = parseInt(yMaxInput.value)
-  //     const yMin = parseInt(yMinInput.value)
-
-  //     myChart.options.scales = {
-  //         // @ts-ignore
-  //         x: [{
-  //             min: xMin,
-  //             max: xMax
-  //         }],
-  //         y: [{
-  //             min: yMin,
-  //             max: yMax
-  //         }]
-  //     };
-  //     myChart.update();
-
-  // } else {
-  /**
-   * Create the X and Y data for Chart.js.
-   * @param LoopCount
-   * @returns X and Y data.
-   */
-  function CreateXAndYData(LoopCount: number): string[] {
-    const TempData = [];
-    const TempData2 = [];
-    const IndexOfPrimGap = LoopCount * 8 + 10;
-    for (var i = 0; i < ResultsData.length; i++) {
-      TempData.push(ResultsData[i][IndexOfPrimGap]);
+  const groupedData = {};
+  ResultsData.forEach(item => {
+    if (!groupedData[item.SolverName]) {
+      groupedData[item.SolverName] = [];
     }
-    for (var i = 0; i < ResultsData.length; i++) {
-      TempData2.push({ x: TempData[i], y: i });
-    }
-    return TempData2;
-  }
+    const timeValue = item["Time[s]"] !== "" ? parseFloat(item["Time[s]"]) : null;
+    groupedData[item.SolverName].push(timeValue);
+  });
 
-  /**
-   * Add a random color for the dataset.
-   * @param PickColor Color picker for the data.
-   * @returns Random different colors for each solver.
-   */
-  function PickColor(): string {
-    const Hex = Math.floor(Math.random() * 16777215).toString(16);
-    const Color = "#" + Hex;
-    return Color;
-  }
+  // Calculate average time for each group
+  const averageDataArray = Object.keys(groupedData).map(solverName => {
+    const filteredGroupData = groupedData[solverName].filter(item => item !== null);
+    const total = filteredGroupData.reduce((acc, curr) => acc + curr, 0);
+    const average = filteredGroupData.length > 0 ? total / filteredGroupData.length : null;
+    return { SolverName: solverName, AverageTime: average };
+  });
 
-  /**
-   * Fetch data for the selected solvers.
-   */
-  const SelectedSolvers = [];
-  for (let i = 0; i < Solvers.length; i++) {
-    console.log("Status: ", ComparisonArray[i]);
-    // Only run if the solvers are used.
-    if (ComparisonArray[i] === "Used") {
-      console.log("Creating dataset for: ", Solvers[i]);
-      // Push the label and the data to the dataset.
-      SelectedSolvers.push({
-        label: Solvers[i],
-        data: CreateXAndYData(i),
-        backgroundColor: PickColor(),
-      });
-    }
-  }
-  console.log("Dataset content: ", SelectedSolvers);
+  // Create array of objects for chart data
+  const chartDataArray = averageDataArray.map(item => {
+    return { x: item.SolverName, y: item.AverageTime };
+  });
 
-  /**
-   * @param CreatedDataset Dataset to be used in the chart.
-   */
-  const CreatedDataset = {
-    datasets: SelectedSolvers,
-  };
+  // Create array of labels for chart x-axis
+  const labelsArray = averageDataArray.map(item => item.SolverName);
 
+  // Create chart using array of objects
   // @ts-ignore
-  myChart = new Chart(ctx, {
-    type: "scatter",
-    data: CreatedDataset,
-    options: {
-      plugins: {
-        title: {
-          display: true,
-          text: "Absolute performance profile (PrimalGap)",
-        },
-      },
-      scales: {
-        // @ts-ignore
-        x: {
-          type: "linear",
-          position: "bottom",
-          gridLines: {
-            display: true,
-          },
-          title: {
-            display: true,
-            text: "PrimalGap",
-          },
-          ticks: {
-            min: parseInt(xMinInput.value),
-            max: parseInt(xMaxInput.value),
-          },
-        },
-        y: {
-          type: "linear",
-          position: "left",
-          gridLines: {
-            display: true,
-          },
-          title: {
-            display: true,
-            text: "Number of instances.",
-          },
-          ticks: {
-            min: parseInt(yMinInput.value),
-            max: parseInt(yMaxInput.value),
-          },
-        },
-      },
+  const chart = new Chart(document.getElementById('myChart'), {
+    type: 'bar',
+    data: {
+      datasets: [{
+        label: 'Average Time Taken',
+        data: chartDataArray,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
     },
+    options: {
+      scales: {
+        xAxes: [{
+          type: 'category',
+          labels: labelsArray,
+          scaleLabel: {
+            display: true,
+            labelString: 'Solver Name'
+          }
+        }],
+        yAxes: [{
+          type: 'logarithmic', // Use logarithmic scale
+          ticks: {
+            min: 0.001, // Set minimum value to 0.001 instead of 0
+            callback: function (value, index, values) {
+              return value.toLocaleString(); // Format tick labels with commas
+            }
+          },
+          scaleLabel: {
+            display: true,
+            labelString: 'Average Time'
+          }
+        }]
+      }
+    }
   });
 }
-//}
 
-// export function UpdateChartScales(myChart, xMax, xMin, yMax, yMin) {
-//     myChart.options.scales = {
-//         x: {
-//             min: xMin,
-//             max: xMax,
-//         },
-//         y: {
-//             min: yMin,
-//             max: yMax,
-//         }
-//     };
-//     myChart.update();
-// }
+/**
+ * Template for updating scales.
+ */
+function UpdateChartScales() {
+  // Get the input values
+  const xmin = xMinInput.value;
+  const xmax = xMaxInput.value;
+  const ymin = yMinInput.value;
+  const ymax = yMaxInput.value;
+
+  // Update the x and y axis scales
+   // @ts-ignore
+  chart.options.scales.xAxes[0].ticks.min = parseFloat(xmin);
+   // @ts-ignore
+  chart.options.scales.xAxes[0].ticks.max = parseFloat(xmax);
+   // @ts-ignore
+  chart.options.scales.yAxes[0].ticks.min = parseFloat(ymin);
+   // @ts-ignore
+  chart.options.scales.yAxes[0].ticks.max = parseFloat(ymax);
+
+  // Update the chart
+   // @ts-ignore
+  chart.update();
+}

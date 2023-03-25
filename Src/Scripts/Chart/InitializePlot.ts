@@ -1,17 +1,13 @@
-import { GetCheckedSolvers, GetComparisonArray } from "../Solvers/UsedSolvers";
 import { CreateChart } from "./CreateChart";
 import { SelectAllButton } from "../Elements/Elements";
 
 export function InitializePlots(
-  Solvers: string | any[],
-  ResultsData: string | any[]
+  ResultsData: any[]
 ): void {
-  const CheckedSolvers = GetCheckedSolvers();
-  const ComparisonArray = GetComparisonArray(CheckedSolvers, Solvers);
 
   /**
-   * @param CreateChart Filter and display the data in plots when clicking on the view plots button.
+   * @param CreateChart Display the data in a plot when clicking on the view plots button.
    */
-  CreateChart(Solvers, ResultsData, ComparisonArray);
+  CreateChart(ResultsData);
   SelectAllButton.disabled = false;
 }
