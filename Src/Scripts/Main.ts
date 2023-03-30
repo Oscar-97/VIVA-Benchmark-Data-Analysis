@@ -57,6 +57,8 @@ import {
 } from "./Elements/Elements";
 import { GetCheckedSolvers } from "./Solvers/UsedSolvers";
 import { ElementStatus, ElementStatusPlots } from "./Elements/ElementStatus";
+import { StatisticsTable } from "./DataTable/DataTableBase";
+import { SolverTimesData } from "./DataProcessing/CalculateResults";
 //#endregion
 
 /**
@@ -310,9 +312,13 @@ function ManageData(): void {
    * Check if the user us is on the Plots page.
    */
   if (document.title == "Plots") {
+    /**
+     * Create a plot and statistics table.
+     */
     ViewPlotsButton.addEventListener("click", () => {
-      // Currently only showing average solver time.
       InitializePlots(TrcData);
+      const TimesData = SolverTimesData(TrcData);
+      StatisticsTable(TimesData);
     });
   }
 }
