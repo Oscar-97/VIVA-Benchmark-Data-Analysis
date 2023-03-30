@@ -19,8 +19,6 @@ export function ExtractTrcData(RawData: string[]): string[] {
   /**
    * Check if headers are included in the .trc file.
    * If they are found, include them, if not, use the custom headers.
-   *
-   * TODO: Check if custom headers should be supported.
    */
   if (FirstLine[0].startsWith("*")) {
     console.log("Found headers.");
@@ -93,38 +91,27 @@ export function ExtractTrcData(RawData: string[]): string[] {
        * /src/paver/paver.py#L258-L290
        */
 
-      // if (Obj["Dir"] === "" || Obj["Dir"] === "NA") {
-      const CurrentDirValue = Obj["Dir"];
-      const NewDirValue = CalculateDirection(CurrentDirValue);
-      Obj["Dir"] = NewDirValue;
-      // }
+      Obj["Dir"] = CalculateDirection(Obj["Dir"]);
 
-      // if (Obj["PrimalBound Solver"] === "" || Obj["PrimalBound Solver"] === "NA") {
-      const CurrentPrimalBoundValue = Obj["PrimalBound Solver"];
-      //const CurrentDirValue = Obj["Dir"];
-      const NewPrimalBoundValue = CalculatePrimalBound(
-        CurrentPrimalBoundValue,
-        //CurrentDirValue
-        NewDirValue
-      );
-      Obj["PrimalBound Solver"] = NewPrimalBoundValue;
-      // }
+      if (
+        Obj["PrimalBound Solver"] === "" ||
+        Obj["PrimalBound Solver"] === "NA"
+      ) {
+        Obj["PrimalBound Solver"] = CalculatePrimalBound(
+          Obj["PrimalBound Solver"],
+          Obj["Dir"]
+        );
+      }
 
-      // if (Obj["DualBound Solver"] === "" || Obj["DualBound Solver"] === "NA") {
-      const CurrentDualBoundValue = Obj["DualBound Solver"];
-      //const CurrentDirValue = Obj["Dir"];
-      const NewDualBoundValue = CalculateDualBound(
-        CurrentDualBoundValue,
-        //CurrentDirValue
-        NewDirValue
-      );
-      Obj["DualBound Solver"] = NewDualBoundValue;
-      // }
+      if (Obj["DualBound Solver"] === "" || Obj["DualBound Solver"] === "NA") {
+        Obj["DualBound Solver"] = CalculateDualBound(
+          Obj["DualBound Solver"],
+          Obj["Dir"]
+        );
+      }
 
       if ("TermStatus" in Obj) {
-        const CurrentTermValue = Obj.TermStatus;
-        const NewTermValue = SetTermStatus(CurrentTermValue);
-        Obj.TermStatus = NewTermValue;
+        Obj["TermStatus"] = SetTermStatus(Obj["TermStatus"]);
       }
 
       /**
@@ -141,12 +128,17 @@ export function ExtractTrcData(RawData: string[]): string[] {
         Obj["Dir"]
       );
 
-      Obj["PrimalGap Solver"] = CalculateGapSolver(
+      Obj["Gap"] = CalculateGapSolver(
+        Obj["PrimalBound Solver"],
+        Obj["DualBound Solver"]
+      );
+
+      Obj["PrimalGap"] = CalculateGapSolver(
         Obj["PrimalBound Solver"],
         Obj["PrimalBound Problem"]
       );
 
-      Obj["DualGap Solver"] = CalculateGapSolver(
+      Obj["DualGap"] = CalculateGapSolver(
         Obj["DualBound Solver"],
         Obj["DualBound Problem"]
       );
@@ -156,10 +148,7 @@ export function ExtractTrcData(RawData: string[]): string[] {
         Obj["PrimalBound Problem"]
       );
 
-      // Obj["Gap Solver"] = CalculateGapSolver();
-
       // Obj["Gap Problem"] = CalculateGapProblem(Obj["DualBound Problem"], Obj["PrimalBound Problem"]);
-
       TrcData.push(Obj);
     }
   }

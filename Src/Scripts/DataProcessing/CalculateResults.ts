@@ -1,3 +1,4 @@
+import * as math from "mathjs";
 // Problem - Direction
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L261-L262
 export function CalculateDirection(Direction) {
@@ -15,18 +16,14 @@ export function CalculatePrimalBound(
   PrimalBound: unknown,
   Direction: number
 ): any {
-  if (PrimalBound === "" || PrimalBound === "NA") {
-    PrimalBound = Direction * Infinity;
-  }
+  PrimalBound = Direction * Infinity;
   return PrimalBound;
 }
 
 // Problem & Solver - Dual Bound
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L275-L282
 export function CalculateDualBound(DualBound: unknown, Direction: number): any {
-  if (DualBound === "" || DualBound === "NA") {
-    DualBound = -1 * Direction * Infinity;
-  }
+  DualBound = -1 * Direction * Infinity;
   return DualBound;
 }
 
@@ -109,4 +106,56 @@ export function CalculateGapPercentage(PrimalGap, DualGap) {
       Math.max(Math.abs(PrimalGap), Math.abs(DualGap), 1.0);
     return Gap;
   }
+}
+
+export function SolverTimesData(ResultsData: any[]): {
+  [SolverName: string]: {
+    average: number;
+    min: number;
+    max: number;
+    std: number[];
+  };
+} {
+  /**
+   * Get all the [Times[s]] from the results data.
+   */
+  const SolverTimes: { [SolverName: string]: number[] } = ResultsData.reduce(
+    (acc, curr) => {
+      if (!acc[curr.SolverName]) {
+        acc[curr.SolverName] = [];
+      }
+      acc[curr.SolverName].push(curr["Time[s]"]);
+      return acc;
+    },
+    {}
+  );
+
+  /**
+   * Set statistics that need to be calculated.
+   */
+  const SolverTimeStats: {
+    [SolverName: string]: {
+      average: number;
+      min: number;
+      max: number;
+      std: number[];
+    };
+  } = {};
+
+  for (const SolverName in SolverTimes) {
+    if (Object.prototype.hasOwnProperty.call(SolverTimes, SolverName)) {
+      const times = SolverTimes[SolverName];
+      const avgTime = math.mean(times);
+      const minTime = math.min(times);
+      const maxTime = math.max(times);
+      const stdTime = math.std(times);
+      SolverTimeStats[SolverName] = {
+        average: avgTime,
+        min: minTime,
+        max: maxTime,
+        std: stdTime,
+      };
+    }
+  }
+  return SolverTimeStats;
 }
