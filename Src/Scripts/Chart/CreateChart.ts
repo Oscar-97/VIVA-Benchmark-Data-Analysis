@@ -19,75 +19,84 @@ function PickColor(): string {
 
 /**
  * Testing some chart creation.
- * @param ResultsData 
+ * @param ResultsData
  */
-export function CreateChart(
-  ResultsData: any[]
-): void {
-
+export function CreateChart(ResultsData: any[]): void {
   const groupedData = {};
-  ResultsData.forEach(item => {
+  ResultsData.forEach((item) => {
     if (!groupedData[item.SolverName]) {
       groupedData[item.SolverName] = [];
     }
-    const timeValue = item["Time[s]"] !== "" ? parseFloat(item["Time[s]"]) : null;
+    const timeValue =
+      item["Time[s]"] !== "" ? parseFloat(item["Time[s]"]) : null;
     groupedData[item.SolverName].push(timeValue);
   });
 
   // Calculate average time for each group
-  const averageDataArray = Object.keys(groupedData).map(solverName => {
-    const filteredGroupData = groupedData[solverName].filter(item => item !== null);
+  const averageDataArray = Object.keys(groupedData).map((solverName) => {
+    const filteredGroupData = groupedData[solverName].filter(
+      (item) => item !== null
+    );
     const total = filteredGroupData.reduce((acc, curr) => acc + curr, 0);
-    const average = filteredGroupData.length > 0 ? total / filteredGroupData.length : null;
+    const average =
+      filteredGroupData.length > 0 ? total / filteredGroupData.length : null;
     return { SolverName: solverName, AverageTime: average };
   });
 
   // Create array of objects for chart data
-  const chartDataArray = averageDataArray.map(item => {
+  const chartDataArray = averageDataArray.map((item) => {
     return { x: item.SolverName, y: item.AverageTime };
   });
 
   // Create array of labels for chart x-axis
-  const labelsArray = averageDataArray.map(item => item.SolverName);
+  const labelsArray = averageDataArray.map((item) => item.SolverName);
 
   // Create chart using array of objects
   // @ts-ignore
-  const chart = new Chart(document.getElementById('myChart'), {
-    type: 'bar',
+  const chart = new Chart(document.getElementById("myChart"), {
+    type: "bar",
     data: {
-      datasets: [{
-        label: 'Average Time Taken',
-        data: chartDataArray,
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1
-      }]
+      datasets: [
+        {
+          label: "Average Time Taken",
+          data: chartDataArray,
+          backgroundColor: "rgba(255, 99, 132, 0.2)",
+          borderColor: "rgba(255, 99, 132, 1)",
+          borderWidth: 1,
+        },
+      ],
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
-        xAxes: [{
-          type: 'category',
-          labels: labelsArray,
-          scaleLabel: {
-            display: true,
-            labelString: 'Solver Name'
-          }
-        }],
-        yAxes: [{
-          type: 'logarithmic', // Use logarithmic scale
-          ticks: {
-            min: 0.001, // Set minimum value to 0.001 instead of 0
-            callback: function (value, index, values) {
-              return value.toLocaleString(); // Format tick labels with commas
-            }
+        xAxes: [
+          {
+            type: "category",
+            labels: labelsArray,
+            scaleLabel: {
+              display: true,
+              labelString: "Solver Name",
+            },
           },
-          scaleLabel: {
-            display: true,
-            labelString: 'Average Time'
-          }
-        }]
-      }
-    }
+        ],
+        yAxes: [
+          {
+            type: "logarithmic", // Use logarithmic scale
+            ticks: {
+              min: 0.001, // Set minimum value to 0.001 instead of 0
+              callback: function (value, index, values) {
+                return value.toLocaleString(); // Format tick labels with commas
+              },
+            },
+            scaleLabel: {
+              display: true,
+              labelString: "Average Time",
+            },
+          },
+        ],
+      },
+    },
   });
 }
 
@@ -102,16 +111,16 @@ function UpdateChartScales() {
   const ymax = yMaxInput.value;
 
   // Update the x and y axis scales
-   // @ts-ignore
+  // @ts-ignore
   chart.options.scales.xAxes[0].ticks.min = parseFloat(xmin);
-   // @ts-ignore
+  // @ts-ignore
   chart.options.scales.xAxes[0].ticks.max = parseFloat(xmax);
-   // @ts-ignore
+  // @ts-ignore
   chart.options.scales.yAxes[0].ticks.min = parseFloat(ymin);
-   // @ts-ignore
+  // @ts-ignore
   chart.options.scales.yAxes[0].ticks.max = parseFloat(ymax);
 
   // Update the chart
-   // @ts-ignore
+  // @ts-ignore
   chart.update();
 }
