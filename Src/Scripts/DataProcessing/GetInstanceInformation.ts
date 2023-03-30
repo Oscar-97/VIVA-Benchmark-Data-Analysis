@@ -1,5 +1,4 @@
 import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
-import { CalculatePrimalBound, CalculateDualBound } from "./CalculateResults";
 
 export function GetInstanceInformation(
   RawInstanceInfoData: string[]
