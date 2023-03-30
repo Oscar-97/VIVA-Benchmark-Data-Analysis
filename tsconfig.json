@@ -5,7 +5,8 @@
     "allowJs": true,
     "target": "es6",
     "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node"
   },
   "include": [
     "./Src/**/*"
