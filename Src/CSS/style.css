@@ -25,7 +25,7 @@ a {
     width: 20rem;
 }
 
-#dataTable {
+#dataTable, #statisticsTable {
     padding: 1rem;
     padding-top: 1rem;
 }
@@ -57,10 +57,6 @@ hr {
     margin-left: 1rem;
     margin-right: 1rem;
 }
-
-/* tr:hover {
-    background-color: #0d6efd;
-} */
 
 table.dataTable tr.odd {
     background-color: #cccccc;
