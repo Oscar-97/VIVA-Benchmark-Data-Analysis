@@ -5,9 +5,7 @@ import {
   FilterSelectionButton,
   SelectAllButton,
   SaveLocalStorageButton,
-  DownloadConfigurationButton,
   DownloadConfigurationButtonLayer,
-  DownloadCSVButton,
   DownloadCSVButtonLayer,
   DeleteLocalStorageButton,
   ClearTableButton,
@@ -41,7 +39,7 @@ export function ElementStatusPlots(): void {
 /**
  * Button statuses when the table is displayed.
  */
-export function ElementStatusWithTable() {
+export function ElementStatusWithTable(): void {
   SelectAllButton.disabled = false;
   FilterSelectionButton.disabled = false;
   SaveLocalStorageButton.disabled = false;
