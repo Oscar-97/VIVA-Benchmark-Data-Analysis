@@ -1,5 +1,4 @@
 import {
-  FileInput,
   ImportDataButton,
   SelectAllButton,
   FilterSelectionButton,
@@ -36,7 +35,6 @@ export function ImportDataEvents(
     if (TableElement) {
       TableElement.remove();
     }
-
   } catch (err) {
     console.log(err);
   }
