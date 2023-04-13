@@ -199,12 +199,16 @@ export function StatisticsTable(SolverTimeStats: {
   /**
    * Iterate ove each key in the SolverTimeStats and create a new table header element.
    */
+  const UsedCategories: string[] = [];
   for (const ObjKey of Object.keys(SolverTimeStats)) {
     const Keys = Object.keys(SolverTimeStats[ObjKey]);
     Keys.forEach((key) => {
-      const th = document.createElement("th");
-      th.textContent = key;
-      HeaderRow.appendChild(th);
+      if (!UsedCategories.includes(key)) {
+        const th = document.createElement("th");
+        th.textContent = key;
+        HeaderRow.appendChild(th);
+        UsedCategories.push(key);
+      }
     });
   }
 
