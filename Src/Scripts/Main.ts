@@ -115,7 +115,12 @@ function InitializeProgram(): void {
    */
   if (document.title == "Report") {
     ElementStatus();
-  } else if (document.title === "Plots") {
+  } else if (
+    document.title === "Average Solver Time" ||
+    document.title === "Solver Time" ||
+    document.title === "Number of Nodes" ||
+    document.title === "Number of Iterations"
+  ) {
     ElementStatusPlots();
   }
 
@@ -354,9 +359,51 @@ function ManageData(): void {
   }
 
   /**
-   * Check if the user us is on the Plots page.
+   * Check if the user is on the Average Solver Time page.
    */
-  if (document.title == "Plots") {
+  if (document.title == "Average Solver Time") {
+    /**
+     * Create a plot and statistics table.
+     */
+    ViewPlotsButton.addEventListener("click", () => {
+      InitializePlots(TrcData);
+      const TimesData = SolverTimesData(TrcData);
+      StatisticsTable(TimesData);
+    });
+  }
+
+  /**
+   * Check if the user is on the Solver Time page.
+   */
+  if (document.title == "Solver Time") {
+    /**
+     * Create a plot and statistics table.
+     */
+    ViewPlotsButton.addEventListener("click", () => {
+      InitializePlots(TrcData);
+      const TimesData = SolverTimesData(TrcData);
+      StatisticsTable(TimesData);
+    });
+  }
+
+  /**
+   * Check if the user is on the Number of Nodes page.
+   */
+  if (document.title == "Number of Nodes") {
+    /**
+     * Create a plot and statistics table.
+     */
+    ViewPlotsButton.addEventListener("click", () => {
+      InitializePlots(TrcData);
+      const TimesData = SolverTimesData(TrcData);
+      StatisticsTable(TimesData);
+    });
+  }
+
+  /**
+   * Check if the user is on the Number of Iterations page.
+   */
+  if (document.title == "Number of Iterations") {
     /**
      * Create a plot and statistics table.
      */
