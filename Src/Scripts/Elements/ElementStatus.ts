@@ -10,6 +10,7 @@ import {
   DeleteLocalStorageButton,
   ClearTableButton,
   ViewPlotsButton,
+  SolverAndProblemsHeader,
 } from "./Elements";
 
 /**
@@ -21,11 +22,20 @@ export function ElementStatus(): void {
   ViewAllResultsButton.disabled = true;
   FilterSelectionButton.disabled = true;
   SelectAllButton.disabled = true;
+  SelectAllButton.innerText = "Select All Solvers";
   SaveLocalStorageButton.disabled = true;
   DownloadCSVButtonLayer.disabled = true;
   DownloadConfigurationButtonLayer.disabled = true;
   DeleteLocalStorageButton.disabled = true;
   ClearTableButton.disabled = true;
+  SolverAndProblemsHeader.hidden = true;
+  try {
+    const FilterCheckboxesContainer =
+      document.getElementById("checkboxContainer");
+    FilterCheckboxesContainer.remove();
+  } catch (err) {
+    console.log("Could not remove solver checkboxes: ", err);
+  }
 }
 
 /**
