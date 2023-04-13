@@ -45,6 +45,7 @@ export function ImportDataEvents(
   if (document.title == "Report") {
     ViewAllResultsButton.disabled = false;
     SelectAllButton.disabled = false;
+    SelectAllButton.innerText === "Select All Solvers";
     FilterSelectionButton.disabled = true;
     ImportDataButton.disabled = true;
     FilterSelectionButton.disabled = true;
