@@ -1,9 +1,9 @@
 module.exports = {
-  mode: 'production',
-  entry: './Src/Scripts/Main.ts', // The entry point for your code
+  mode: "production",
+  entry: "./Src/Scripts/Main.ts", // The entry point for your code
   output: {
-    filename: 'bundle.js', // The name of the bundled file
-    path: __dirname + '/Dist', // The directory where the bundled file should be saved
+    filename: "bundle.js", // The name of the bundled file
+    path: __dirname + "/Dist", // The directory where the bundled file should be saved
   },
   // Enable sourcemaps for debugging webpack's output.
   devtool: "source-map",
