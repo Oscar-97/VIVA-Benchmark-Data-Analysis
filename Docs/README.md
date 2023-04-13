@@ -1,4 +1,4 @@
-# Dynamic Report Tool for MINLP Benchmarks
+# VIVA: Visualize and Analyze Benchmarking Data for Optimization Solvers
 This is a project in **progress** for creating a dynamic reporting system, in a portable HTML format, based on benchmark results from mathemathical optimization problems and their solvers. The main goal of this project is to enable the end user to be able to interact with the benchmark data in a tabular format and visualize specific results by using different plots, making it easier for them to understand and interpret the data.
 
 <div style="text-align:left;">
@@ -73,10 +73,9 @@ The file should include `dataSet`, `dataFileType` and `checkedSolvers`.
 ## Table Page
 - [ ] Calculate new columns for .trc files.
 - [ ] SearchBuilder
+- [ ] Filter columns
 
 ## Plot Page
-- [ ] Check which plot types are needed.
-- [ ] Add support for custom X/Y values.
 - [ ] Add more plotting types.
 - [ ] Export plot data as csv.
 - [ ] Fix destruction on Chart.js canvas.
