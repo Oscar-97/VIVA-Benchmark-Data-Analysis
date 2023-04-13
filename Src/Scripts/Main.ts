@@ -1,19 +1,17 @@
-//#region Imports
-import { TableFilters } from "./DataTable/DataTableFilters";
-import {
-  TableDisplay,
-  TableDisplayTrc,
-  DestroyDataTable,
-} from "./DataTable/DataTableWrapper";
-import {
-  UpdateProblemList,
-  UpdateResultsData,
-  UpdateResultsTrc,
-} from "./DataTable/UpdateResults";
-import { TableDownloadCSV } from "./DataTable/DownloadCSV";
+// #region Imports
+/**
+ * Chart.
+ */
+import { InitializePlots } from "./Chart/InitializePlot";
+
+/**
+ * Dataprocessing.
+ */
+import { SolverTimesData } from "./DataProcessing/CalculateResults";
 import { CreateData, CreateDataTrc } from "./DataProcessing/CreateData";
 import { ImportDataEvents } from "./Elements/ImportDataEvents";
 import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
+import { MergeData } from "./DataProcessing/MergeData";
 import {
   ExtractTrcData,
   GetTrcDataCategory,
@@ -30,18 +28,28 @@ import {
   GetProblems,
   GetResults,
 } from "./DataProcessing/FilterDataTxt";
-import { MergeData } from "./DataProcessing/MergeData";
-import { InitializePlots } from "./Chart/InitializePlot";
+
+/**
+ * DataTable.
+ */
+import { StatisticsTable } from "./DataTable/DataTableBase";
+import { TableFilters } from "./DataTable/DataTableFilters";
+import { TableDownloadCSV } from "./DataTable/DownloadCSV";
 import {
-  ToggleSelection,
-  SelectSavedSolvers,
-} from "./Solvers/SelectAllSolvers";
+  TableDisplay,
+  TableDisplayTrc,
+  DestroyDataTable,
+} from "./DataTable/DataTableWrapper";
 import {
-  CreateUserConfiguration,
-  GetUserConfiguration,
-  DeleteUserConfiguration,
-  DownloadUserConfiguration,
-} from "./UserConfiguration/UserConfiguration";
+  UpdateProblemList,
+  UpdateResultsData,
+  UpdateResultsTrc,
+} from "./DataTable/UpdateResults";
+
+/**
+ * Elements.
+ */
+import { ElementStatus, ElementStatusPlots } from "./Elements/ElementStatus";
 import {
   FileInput,
   ImportDataButton,
@@ -55,66 +63,96 @@ import {
   DeleteLocalStorageButton,
   ClearTableButton,
 } from "./Elements/Elements";
+
+/**
+ * Solvers.
+ */
 import { GetCheckedSolvers } from "./Solvers/UsedSolvers";
-import { ElementStatus, ElementStatusPlots } from "./Elements/ElementStatus";
-import { StatisticsTable } from "./DataTable/DataTableBase";
-import { SolverTimesData } from "./DataProcessing/CalculateResults";
+import {
+  ToggleSelection,
+  SelectSavedSolvers,
+} from "./Solvers/SelectAllSolvers";
+
+/**
+ * User Configuration.
+ */
+import {
+  CreateUserConfiguration,
+  GetUserConfiguration,
+  DeleteUserConfiguration,
+  DownloadUserConfiguration,
+} from "./UserConfiguration/UserConfiguration";
 //#endregion
 
 /**
+ * @param DataFileType Type of file extension for the imported data.
  * @param RawData Raw data of the imported benchmark results.
  * @param CheckedSolvers Array containing checked solvers.
- * @param DataFileType Type of file extension for the imported data.
  * @param RawInstanceInfoData Unprocessed instanceinfo.csv containing properties.
  * @param RawSoluData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
  */
-let RawData = [];
-let CheckedSolvers = [];
 let DataFileType = "";
-const RawInstanceInfoData = [];
-const RawSoluData = [];
+let RawData: string[] = [];
+let CheckedSolvers: string[] = [];
+let RawInstanceInfoData: string[] = [];
+let RawSoluData: string[] = [];
 
 /**
- * Set all button status from new method after refreshing.
+ * Initializing the methods that are needed to run the system.
  */
-if (document.title == "Report") {
-  ElementStatus();
-} else if (document.title === "Plots") {
-  ElementStatusPlots();
+function InitializeProgram(): void {
+  /**
+   * Values reset after clearing table and running InitializeProgram() again.
+   */
+  RawData = [];
+  CheckedSolvers = [];
+  DataFileType = "";
+  RawInstanceInfoData = [];
+  RawSoluData = [];
+
+  /**
+   * Set all button status from new method after refreshing.
+   */
+  if (document.title == "Report") {
+    ElementStatus();
+  } else if (document.title === "Plots") {
+    ElementStatusPlots();
+  }
+
+  /**
+   * Try to retrieve stored config/data/state when arriving to the page, or refreshing the page.
+   */
+  try {
+    [RawData, DataFileType, CheckedSolvers] = GetUserConfiguration();
+    ImportDataEvents("Found cached benchmark file!", "json");
+    ManageData();
+  } catch (err) {
+    console.log("No data found in local storage: ", err);
+  }
+
+  /**
+   * Read the data from the input file and set the file extension type.
+   */
+  FileInput.addEventListener("change", () => {
+    DataFileType = GetDataFileType();
+    ReadData(RawData, RawInstanceInfoData, RawSoluData);
+  });
+
+  /**
+   * Click on the upload data button to continue the process.
+   */
+  ImportDataButton.addEventListener("click", () => {
+    ImportDataEvents("Benchmark file succesfully loaded!");
+    ManageData();
+  });
 }
-
-/**
- * Try to retrieve stored config/data/state when arriving to the page, or refreshing the page.
- */
-try {
-  [RawData, DataFileType, CheckedSolvers] = GetUserConfiguration();
-  ImportDataEvents("Found cached benchmark file!", "json");
-  ManageData();
-} catch (err) {
-  console.log("No data found in local storage: ", err);
-}
-
-/**
- * Read the data from the input file and set the file extension type.
- */
-FileInput.addEventListener("change", () => {
-  DataFileType = GetDataFileType();
-  ReadData(RawData, RawInstanceInfoData, RawSoluData);
-});
-
-/**
- * Click on the upload data button to continue the process.
- */
-ImportDataButton.addEventListener("click", () => {
-  ImportDataEvents("Benchmark file succesfully loaded!");
-  ManageData();
-});
 
 /**
  * Sort the benchmark results file and display the relevant elements per page.
  */
 function ManageData(): void {
   /**
+   * TXT file.
    * First row of the benchmark results file.
    * @param Instance The column where the instance is located. Instance is at index 0.
    * @param Solvers The columns where the solvers are located. Solvers are in the rest of the indices.
@@ -131,22 +169,27 @@ function ManageData(): void {
   let Solvers: string[] = [];
   let DataLabels: string[];
   let InstanceLabels: string[];
-  let ProblemList = [];
-  let ResultsData = [];
+  let ProblemList: string[] = [];
+  let ResultsData: string[] = [];
 
-  let SoluData = [];
-  let InstanceInfoData = [];
-
-  let ProblemListFiltered = [];
-  let ResultsDataFiltered = [];
+  let ProblemListFiltered: string[] = [];
+  let ResultsDataFiltered: string[] = [];
 
   /**
-   * TrcData results file.
-   * @param TrcData
-   * @param TrcDataFiltered
+   * TRC file.
+   * @param TrcData Trace data results.
+   * @param TrcDataFiltered Filtered trace data results.
    */
   let TrcData = [];
   let TrcDataFiltered = [];
+
+  /**
+   * SOLU and CSV file.
+   * @param InstanceInfoData Instance properties.
+   * @param SoluData Best known primal and dual bounds for each instance.
+   */
+  let InstanceInfoData: Object[] = [];
+  let SoluData: Object[] = [];
 
   /**
    * Run if the uploaded file is json.
@@ -190,6 +233,7 @@ function ManageData(): void {
    * Select all checkboxes button functionality.
    */
   SelectAllButton.addEventListener("click", () => {
+    console.log("Clicked Select All Solvers.");
     ToggleSelection();
   });
 
@@ -305,6 +349,7 @@ function ManageData(): void {
      */
     ClearTableButton.addEventListener("click", () => {
       DestroyDataTable();
+      InitializeProgram();
     });
   }
 
@@ -322,3 +367,8 @@ function ManageData(): void {
     });
   }
 }
+
+/**
+ * Run the program.
+ */
+InitializeProgram();
