@@ -33,7 +33,7 @@ export function CreateUserConfiguration(
  * Get the user configuration from localStorage, item is called UserConfiguration.
  * @returns
  */
-export function GetUserConfiguration(): [string[], string, string[]] {
+export function GetUserConfiguration(): Object[] | string | any[] {
   const UserConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
   const RawData = [];
   UserConfig.dataSet.forEach((value: string[]) => {
