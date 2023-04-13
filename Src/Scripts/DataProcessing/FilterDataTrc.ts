@@ -59,8 +59,8 @@ export function ExtractTrcData(RawData: string[]): string[] {
       "OptionFile",
       "ModelStatus",
       "TermStatus",
-      "PrimalBound Solver",
-      "DualBound Solver",
+      "Obj",
+      "Obj Est",
       "Time[s]",
       "NumberOfIterations",
       "NumberOfDomainViolations",
@@ -93,22 +93,9 @@ export function ExtractTrcData(RawData: string[]): string[] {
 
       Obj["Dir"] = CalculateDirection(Obj["Dir"]);
 
-      if (
-        Obj["PrimalBound Solver"] === "" ||
-        Obj["PrimalBound Solver"] === "NA"
-      ) {
-        Obj["PrimalBound Solver"] = CalculatePrimalBound(
-          Obj["PrimalBound Solver"],
-          Obj["Dir"]
-        );
-      }
+      Obj["PrimalBound Solver"] = CalculatePrimalBound(Obj["Obj"], Obj["Dir"]);
 
-      if (Obj["DualBound Solver"] === "" || Obj["DualBound Solver"] === "NA") {
-        Obj["DualBound Solver"] = CalculateDualBound(
-          Obj["DualBound Solver"],
-          Obj["Dir"]
-        );
-      }
+      Obj["DualBound Solver"] = CalculateDualBound(Obj["Obj Est"], Obj["Dir"]);
 
       if ("TermStatus" in Obj) {
         Obj["TermStatus"] = SetTermStatus(Obj["TermStatus"]);
