@@ -10,7 +10,7 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Title and icon -->
-  <title id="ReportTitle">Plots</title>
+  <title id="ReportTitle">Number of Nodes</title>
   <link rel="icon" href="../CSS/tab_icon.png">
   <!-- Styling -->
   <link rel="stylesheet" type="text/css" href="../CSS/style.css">
@@ -35,10 +35,10 @@
             <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">Plots</a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li><a class="dropdown-item active">SolverTime</a></li>
-              <li><a class="dropdown-item disabled" href="#">DualGap</a></li>
-              <li><a class="dropdown-item disabled" href="#">PrimalBound</a></li>
-              <li><a class="dropdown-item disabled" href="#">DualBound</a></li>
+              <li><a class="dropdown-item" href="../Pages/average_solver_time.html">Average Solver Time</a></li>
+              <li><a class="dropdown-item" href="../Pages/solver_time.html">Solver Time</a></li>
+              <li><a class="dropdown-item active">Number of Nodes</a></li>
+              <li><a class="dropdown-item" href="../Pages/number_of_iterations.html">Number of Iterations</a></li>
             </ul>
           </li>
           <li class="nav-item">
@@ -72,7 +72,7 @@
       <button class="btn btn-primary btn-sm" type="none" id="selectAllButton" data-toggle="tooltip" data-placement="top"
         title="Select all solvers found in the uploaded file.">Select All Solvers</button>
     </div>
-    <div class="col-auto">
+    <!-- <div class="col-auto">
       <span class="input-group-text">X max</span>
       <input type="number" class="form-control input-group-sm mb-3 col" id="xMaxInput" value="">
     </div>
@@ -87,7 +87,7 @@
     <div class="col-auto">
       <span class="input-group-text">Y min</span>
       <input type="number" class="form-control input-group-sm mb-3 col" id="yMinInput" value="">
-    </div>
+    </div> -->
   </div>
   <hr />
   <span class="badge bg-dark" id="solverAndProblemsHeader" hidden></span>
