@@ -43,7 +43,7 @@ export function ElementStatus(): void {
  */
 export function ElementStatusPlots(): void {
   FileInput.value = "";
-  ViewPlotsButton.disabled = false;
+  ViewPlotsButton.disabled = true;
 }
 
 /**
