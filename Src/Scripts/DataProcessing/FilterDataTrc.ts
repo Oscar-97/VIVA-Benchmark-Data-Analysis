@@ -101,10 +101,6 @@ export function ExtractTrcData(RawData: string[]): string[] {
         Obj["TermStatus"] = SetTermStatus(Obj["TermStatus"]);
       }
 
-      /**
-       * New keys.
-       */
-
       Obj["PrimalBound Problem"] = CalculatePrimalBound(
         Obj["PrimalBound Solver"],
         Obj["Dir"]
