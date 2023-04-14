@@ -108,12 +108,13 @@ export function CalculateGapPercentage(PrimalGap, DualGap) {
   }
 }
 
-export function SolverTimesData(ResultsData: any[]): {
+export function SolverTimesData(ResultsData: any[], Category): {
   [SolverName: string]: {
     average: number;
     min: number;
     max: number;
     std: number[];
+    sum: number;
   };
 } {
   /**
@@ -121,10 +122,15 @@ export function SolverTimesData(ResultsData: any[]): {
    */
   const SolverTimes: { [SolverName: string]: number[] } = ResultsData.reduce(
     (acc, curr) => {
-      if (!acc[curr.SolverName]) {
-        acc[curr.SolverName] = [];
+      const parsedValue = parseFloat(curr[Category]);
+  
+      if (!isNaN(parsedValue)) {
+        if (!acc[curr.SolverName]) {
+          acc[curr.SolverName] = [];
+        }
+        acc[curr.SolverName].push(parsedValue);
       }
-      acc[curr.SolverName].push(curr["Time[s]"]);
+  
       return acc;
     },
     {}
@@ -139,6 +145,7 @@ export function SolverTimesData(ResultsData: any[]): {
       min: number;
       max: number;
       std: number[];
+      sum: number;
     };
   } = {};
 
@@ -149,13 +156,30 @@ export function SolverTimesData(ResultsData: any[]): {
       const minTime = math.min(times);
       const maxTime = math.max(times);
       const stdTime = math.std(times);
+      const sumTime = math.sum(times);
       SolverTimeStats[SolverName] = {
         average: avgTime,
         min: minTime,
         max: maxTime,
         std: stdTime,
+        sum: sumTime
       };
     }
   }
   return SolverTimeStats;
+}
+
+export function AllSolverTimes(TrcData) {
+  const result = TrcData.reduce((acc: {[key: string]: number[]}, obj: {[key: string]: any}) => {
+    if (!acc[obj['SolverName']]) {
+      acc[obj['SolverName']] = [];
+    }
+    const time = parseFloat(obj['Time[s]']);
+    if (!isNaN(time)) {
+      acc[obj['SolverName']].push(time);
+    }
+    return acc;
+  }, {});
+  
+  return result;
 }
