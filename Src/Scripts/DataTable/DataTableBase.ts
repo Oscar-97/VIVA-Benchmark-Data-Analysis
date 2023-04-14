@@ -180,7 +180,7 @@ export function StatisticsTable(SolverTimeStats: {
     max: number;
     std: number[];
   };
-}): void {
+}, Title): void {
   /**
    * @param StatisticsTableDiv Div that contains the statistics table.
    */
@@ -193,7 +193,7 @@ export function StatisticsTable(SolverTimeStats: {
 
   const HeaderRow = document.createElement("tr");
   const DataLabel = document.createElement("th");
-  DataLabel.textContent = "Solver Times Summary";
+  DataLabel.textContent = Title + " Summary";
   HeaderRow.appendChild(DataLabel);
 
   /**
