@@ -2,12 +2,12 @@
 /**
  * Chart.
  */
-import { InitializePlots } from "./Chart/InitializePlot";
+import { CreateChart, PickColor } from "./Chart/CreateChart";
 
 /**
  * Dataprocessing.
  */
-import { SolverTimesData } from "./DataProcessing/CalculateResults";
+import { SolverTimesData, AllSolverTimes } from "./DataProcessing/CalculateResults";
 import { CreateData, CreateDataTrc } from "./DataProcessing/CreateData";
 import { ImportDataEvents } from "./Elements/ImportDataEvents";
 import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
@@ -213,7 +213,9 @@ function ManageData(): void {
     InstanceLabels = GetInstanceLabels(DataLabels);
     ProblemList = GetProblems(RawData);
     ResultsData = GetResults(RawData);
-    TableFilters(Solvers, "Solvers");
+    if (document.title == "Report") {
+      TableFilters(Solvers, "Solvers");
+    }
   } else if (DataFileType === "trc") {
     TrcData = ExtractTrcData(RawData);
 
@@ -227,25 +229,27 @@ function ManageData(): void {
       TrcData = MergeData(TrcData, SoluData);
     }
     Solvers = GetTrcDataCategory(TrcData, "SolverName");
-    TableFilters(Solvers, "Solvers");
+    if (document.title == "Report") {
+      TableFilters(Solvers, "Solvers");
+    }
   }
 
-  if (CheckedSolvers.length !== 0) {
+  if (CheckedSolvers.length !== 0 && document.title == "Report") {
     SelectSavedSolvers(CheckedSolvers);
   }
-
-  /**
-   * Select all checkboxes button functionality.
-   */
-  SelectAllButton.addEventListener("click", () => {
-    console.log("Clicked Select All Solvers.");
-    ToggleSelection();
-  });
 
   /**
    * Check if the user is on the Report page.
    */
   if (document.title == "Report") {
+    /**
+     * Select all checkboxes button functionality.
+     */
+    SelectAllButton.addEventListener("click", () => {
+      console.log("Clicked Select All Solvers.");
+      ToggleSelection();
+    });
+
     /**
      * Shows all problems depending on the uploaded file.
      */
@@ -363,12 +367,28 @@ function ManageData(): void {
    */
   if (document.title == "Average Solver Time") {
     /**
-     * Create a plot and statistics table.
+     *  Get the average solver times without any failed results.
      */
+    ViewPlotsButton.disabled = false;
     ViewPlotsButton.addEventListener("click", () => {
-      InitializePlots(TrcData);
-      const TimesData = SolverTimesData(TrcData);
-      StatisticsTable(TimesData);
+      const Category = "Time[s]";
+      const AverageTimesData = SolverTimesData(TrcData, Category);
+      console.log("TimesData: ", AverageTimesData);
+
+      const Type = "bar";
+      const Label = "Time[s].average";
+      const Title = "Average Time Taken (Excluding NA Instances)"
+      const AverageTime = Object.entries(AverageTimesData).map(([key, value]) => (
+        {
+          label: key,
+          data: [value.average],
+          borderColor: PickColor(),
+          backgroundColor: PickColor()
+        }));
+
+      console.log("Data: ", AverageTime);
+      CreateChart(Type, AverageTime, Label, Title);
+      StatisticsTable(AverageTimesData, Title);
     });
   }
 
@@ -377,12 +397,22 @@ function ManageData(): void {
    */
   if (document.title == "Solver Time") {
     /**
-     * Create a plot and statistics table.
+     * Get all the solver times without any failed results.
      */
+    ViewPlotsButton.disabled = false;
     ViewPlotsButton.addEventListener("click", () => {
-      InitializePlots(TrcData);
-      const TimesData = SolverTimesData(TrcData);
-      StatisticsTable(TimesData);
+      const SolverTimes = AllSolverTimes(TrcData);
+      const Data = (Object.entries(SolverTimes) as [string, number[]][]).map(([key, values]) => ({
+        label: key,
+        data: values.map((val, index) => ({x: index, y: val}))
+      }));
+      console.log("Data structure: ", Data);
+      
+      const Type = "scatter";
+      const Label = "";
+      const Title = "Solver Times";
+
+      CreateChart(Type, Data, Label, Title);
     });
   }
 
@@ -391,12 +421,28 @@ function ManageData(): void {
    */
   if (document.title == "Number of Nodes") {
     /**
-     * Create a plot and statistics table.
+     * Get the average number of nodes.
      */
+    ViewPlotsButton.disabled = false;
     ViewPlotsButton.addEventListener("click", () => {
-      InitializePlots(TrcData);
-      const TimesData = SolverTimesData(TrcData);
-      StatisticsTable(TimesData);
+      const Category = "Nodes[i]";
+      const NodesData = SolverTimesData(TrcData, Category);
+      console.log("NodeData: ", NodesData);
+
+      const Type = "bar";
+      const Label = "Nodes[i].average";
+      const Title = "Number of Nodes - Average";
+      const AverageNodes = Object.entries(NodesData).map(([key, value]) => (
+        {
+          label: key,
+          data: [value.average],
+          borderColor: PickColor(),
+          backgroundColor: PickColor()
+        }));
+
+      console.log("Data: ", AverageNodes);
+      CreateChart(Type, AverageNodes, Label, Title);
+      StatisticsTable(NodesData, Title);
     });
   }
 
@@ -405,12 +451,28 @@ function ManageData(): void {
    */
   if (document.title == "Number of Iterations") {
     /**
-     * Create a plot and statistics table.
+     * Get the average number of iterations.
      */
+    ViewPlotsButton.disabled = false;
     ViewPlotsButton.addEventListener("click", () => {
-      InitializePlots(TrcData);
-      const TimesData = SolverTimesData(TrcData);
-      StatisticsTable(TimesData);
+      const Category = "NumberOfIterations";
+      const IterationsData = SolverTimesData(TrcData, Category);
+      console.log("IterationsData: ", IterationsData);
+
+      const Type = "bar";
+      const Label = "NumberOfiterations.average";
+      const Title = "NumberOfiterations - Average"
+      const AverageNbrItr = Object.entries(IterationsData).map(([key, value]) => (
+        {
+          label: key,
+          data: [value.average],
+          borderColor: PickColor(),
+          backgroundColor: PickColor()
+        }));
+
+      console.log("Data: ", AverageNbrItr);
+      CreateChart(Type, AverageNbrItr, Label, Title);
+      StatisticsTable(IterationsData, Title);
     });
   }
 }
