@@ -72,11 +72,12 @@ The file should include `dataSet`, `dataFileType` and `checkedSolvers`.
 
 ## Table Page
 - [ ] Calculate new columns for .trc files.
-- [ ] SearchBuilder
-- [ ] Filter columns
+- [ ] SearchBuilder.
+- [ ] Filter columns.
 
 ## Plot Page
 - [ ] Add more plotting types.
+- [ ] Save data to localStorage.
 - [ ] Export plot data as csv.
 - [ ] Fix destruction on Chart.js canvas.
 
