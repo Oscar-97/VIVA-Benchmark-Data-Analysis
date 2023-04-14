@@ -47,9 +47,8 @@ a {
 }
 
 #chartContainer {
-    height: 50vh; 
+    height: auto; 
     width: 70vw;
-    margin-top: 1rem;
     margin-left: 1rem;
 }
 
