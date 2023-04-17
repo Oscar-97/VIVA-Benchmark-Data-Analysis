@@ -30,7 +30,10 @@ export function CalculatePrimalBound(
 
 // Problem & Solver - Dual Bound
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L275-L282
-export function CalculateDualBound(DualBound: number | string, Direction: number): number {
+export function CalculateDualBound(
+  DualBound: number | string,
+  Direction: number
+): number {
   if (DualBound === "" || DualBound === "NA") {
     DualBound = -1 * Direction * Infinity;
   } else if (typeof DualBound === "string") {
@@ -78,11 +81,7 @@ export function SetTermStatus(TerminationStatus: number | string): string {
 
 // Solver - Primal and Dual Gap
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/utils.py#L46-L59
-export function CalculateGap(
-  a: number,
-  b: number,
-  tol = 1e-9
-): number {
+export function CalculateGap(a: number, b: number, tol = 1e-9): number {
   // Check if the values are equal within tolerance
   if (a === b || Math.abs(a - b) <= tol) {
     return 0.0;
@@ -116,18 +115,18 @@ export function CalculateGapPercentage(a: number, b: number): number {
       return Gap;
     }
   } else {
-    Gap =
-      (a - b) /
-      Math.max(Math.abs(a), Math.abs(b), 1.0);
+    Gap = (a - b) / Math.max(Math.abs(a), Math.abs(b), 1.0);
     return Gap;
   }
 }
 
-
 /**
  * Get the statistics for a selected category.
  */
-export function AnalyzeDataByCategory(ResultsData: any[], Category: string): {
+export function AnalyzeDataByCategory(
+  ResultsData: any[],
+  Category: string
+): {
   [SolverName: string]: {
     average: number;
     min: number;
@@ -147,7 +146,7 @@ export function AnalyzeDataByCategory(ResultsData: any[], Category: string): {
   const SolverTimes: { [SolverName: string]: number[] } = ResultsData.reduce(
     (acc, curr) => {
       const parsedValue = parseFloat(curr[Category]);
-  
+
       if (isFinite(parsedValue)) {
         if (!acc[curr.SolverName]) {
           acc[curr.SolverName] = [];
@@ -157,7 +156,7 @@ export function AnalyzeDataByCategory(ResultsData: any[], Category: string): {
       return acc;
     },
     {}
-  );  
+  );
 
   /**
    * Calculate statistics.
@@ -191,7 +190,6 @@ export function AnalyzeDataByCategory(ResultsData: any[], Category: string): {
       const p75Value = Number(math.quantileSeq(times, 0.75));
       const p90Value = Number(math.quantileSeq(times, 0.9));
 
-      
       SolverTimeStats[SolverName] = {
         average: avgValue,
         min: minValue,
@@ -202,7 +200,7 @@ export function AnalyzeDataByCategory(ResultsData: any[], Category: string): {
         percentile_25: p25Value,
         percentile_50: p50Value,
         percentile_75: p75Value,
-        percentile_90: p90Value
+        percentile_90: p90Value,
       };
     }
   }
@@ -213,16 +211,19 @@ export function AnalyzeDataByCategory(ResultsData: any[], Category: string): {
  * Extract all solver times to a separate array.
  */
 export function ExtractAllSolverTimes(TrcData: Object[]) {
-  const result = TrcData.reduce((acc: {[key: string]: number[]}, obj: {[key: string]: any}) => {
-    if (!acc[obj['SolverName']]) {
-      acc[obj['SolverName']] = [];
-    }
-    const time = parseFloat(obj['Time[s]']);
-    if (!isNaN(time)) {
-      acc[obj['SolverName']].push(time);
-    }
-    return acc;
-  }, {});
-  
+  const result = TrcData.reduce(
+    (acc: { [key: string]: number[] }, obj: { [key: string]: any }) => {
+      if (!acc[obj["SolverName"]]) {
+        acc[obj["SolverName"]] = [];
+      }
+      const time = parseFloat(obj["Time[s]"]);
+      if (!isNaN(time)) {
+        acc[obj["SolverName"]].push(time);
+      }
+      return acc;
+    },
+    {}
+  );
+
   return result;
 }

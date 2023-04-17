@@ -173,20 +173,23 @@ export function TableDataTrc(TrcData: string[], CheckedSolvers): void {
   DataTableDiv.appendChild(NewDataTable);
 }
 
-export function StatisticsTable(SolverTimeStats: {
-  [SolverName: string]: {
-    average: number;
-    min: number;
-    max: number;
-    std: number;
-    sum: number;
-    percentile_10: number;
-    percentile_25: number;
-    percentile_50: number;
-    percentile_75: number;
-    percentile_90: number;
-  };
-}, Title: string): void {
+export function StatisticsTable(
+  SolverTimeStats: {
+    [SolverName: string]: {
+      average: number;
+      min: number;
+      max: number;
+      std: number;
+      sum: number;
+      percentile_10: number;
+      percentile_25: number;
+      percentile_50: number;
+      percentile_75: number;
+      percentile_90: number;
+    };
+  },
+  Title: string
+): void {
   /**
    * @param StatisticsTableDiv Div that contains the statistics table.
    */
@@ -194,21 +197,27 @@ export function StatisticsTable(SolverTimeStats: {
     "statisticsTable"
   ) as HTMLDivElement;
   StatisticsTableDiv.innerHTML = "";
-  
+
   const NewStatisticsTable = document.createElement("table");
-  NewStatisticsTable.classList.add("table", "table-bordered", "table-sm", "border-dark", "border-2");
+  NewStatisticsTable.classList.add(
+    "table",
+    "table-bordered",
+    "table-sm",
+    "border-dark",
+    "border-2"
+  );
 
   const TableCaption = document.createElement("caption");
   TableCaption.textContent = Title + " statistics.";
 
-  const Header = document.createElement("thead")
+  const Header = document.createElement("thead");
   Header.classList.add("table-dark");
-  
+
   const HeaderRow = document.createElement("tr");
   const DataLabel = document.createElement("th");
   DataLabel.textContent = "Summary";
   DataLabel.scope = "col";
-  
+
   Header.appendChild(HeaderRow);
   HeaderRow.appendChild(DataLabel);
 

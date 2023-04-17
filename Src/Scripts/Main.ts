@@ -7,7 +7,10 @@ import { CreateChart, PickColor } from "./Chart/CreateChart";
 /**
  * Dataprocessing.
  */
-import { AnalyzeDataByCategory, ExtractAllSolverTimes } from "./DataProcessing/CalculateResults";
+import {
+  AnalyzeDataByCategory,
+  ExtractAllSolverTimes,
+} from "./DataProcessing/CalculateResults";
 import { CreateData, CreateDataTrc } from "./DataProcessing/CreateData";
 import { ImportDataEvents } from "./Elements/ImportDataEvents";
 import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
@@ -377,14 +380,15 @@ function ManageData(): void {
 
       const Type = "bar";
       const Label = "Time[s].average";
-      const Title = "Average solver time"
-      const AverageTime = Object.entries(AverageTimesData).map(([key, value]) => (
-        {
+      const Title = "Average solver time";
+      const AverageTime = Object.entries(AverageTimesData).map(
+        ([key, value]) => ({
           label: key,
           data: [value.average],
           borderColor: PickColor(),
-          backgroundColor: PickColor()
-        }));
+          backgroundColor: PickColor(),
+        })
+      );
 
       console.log("Data: ", AverageTime);
       CreateChart(Type, AverageTime, Label, Title);
@@ -402,12 +406,14 @@ function ManageData(): void {
     ViewPlotsButton.disabled = false;
     ViewPlotsButton.addEventListener("click", () => {
       const SolverTimes = ExtractAllSolverTimes(TrcData);
-      const Data = (Object.entries(SolverTimes) as [string, number[]][]).map(([key, values]) => ({
-        label: key,
-        data: values.map((val, index) => ({x: index, y: val}))
-      }));
+      const Data = (Object.entries(SolverTimes) as [string, number[]][]).map(
+        ([key, values]) => ({
+          label: key,
+          data: values.map((val, index) => ({ x: index, y: val })),
+        })
+      );
       console.log("Data structure: ", Data);
-      
+
       const Type = "scatter";
       const Label = "";
       const Title = "Solver times";
@@ -432,13 +438,12 @@ function ManageData(): void {
       const Type = "bar";
       const Label = "Nodes[i].average";
       const Title = "Average number of nodes";
-      const AverageNodes = Object.entries(NodesData).map(([key, value]) => (
-        {
-          label: key,
-          data: [value.average],
-          borderColor: PickColor(),
-          backgroundColor: PickColor()
-        }));
+      const AverageNodes = Object.entries(NodesData).map(([key, value]) => ({
+        label: key,
+        data: [value.average],
+        borderColor: PickColor(),
+        backgroundColor: PickColor(),
+      }));
 
       console.log("Data: ", AverageNodes);
       CreateChart(Type, AverageNodes, Label, Title);
@@ -461,14 +466,15 @@ function ManageData(): void {
 
       const Type = "bar";
       const Label = "NumberOfiterations.average";
-      const Title = "Average number if iterations"
-      const AverageNbrItr = Object.entries(IterationsData).map(([key, value]) => (
-        {
+      const Title = "Average number if iterations";
+      const AverageNbrItr = Object.entries(IterationsData).map(
+        ([key, value]) => ({
           label: key,
           data: [value.average],
           borderColor: PickColor(),
-          backgroundColor: PickColor()
-        }));
+          backgroundColor: PickColor(),
+        })
+      );
 
       console.log("Data: ", AverageNbrItr);
       CreateChart(Type, AverageNbrItr, Label, Title);

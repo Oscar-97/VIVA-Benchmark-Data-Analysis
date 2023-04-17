@@ -27,7 +27,7 @@ export function CreateChart(Type, Data, Label, Title): void {
     type: Type,
     data: {
       labels: [Label],
-      datasets: Data
+      datasets: Data,
     },
     options: {
       responsive: true,
@@ -35,10 +35,10 @@ export function CreateChart(Type, Data, Label, Title): void {
         // Add label plugin
         title: {
           display: true,
-          text: Title
-        }
-      }
-    }
+          text: Title,
+        },
+      },
+    },
   });
 }
 
