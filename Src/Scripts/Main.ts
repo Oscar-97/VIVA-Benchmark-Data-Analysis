@@ -7,6 +7,7 @@ import { CreateChart, PickColor } from "./Chart/CreateChart";
 /**
  * Dataprocessing.
  */
+import { AddResultCategories } from "./DataProcessing/AddResultCategories";
 import {
   AnalyzeDataByCategory,
   ExtractAllSolverTimes,
@@ -231,7 +232,10 @@ function ManageData(): void {
       SoluData = GetInstancePrimalDualbounds(RawSoluData);
       TrcData = MergeData(TrcData, SoluData);
     }
+
     Solvers = GetTrcDataCategory(TrcData, "SolverName");
+    AddResultCategories(TrcData);
+
     if (document.title == "Report") {
       TableFilters(Solvers, "Solvers");
     }
