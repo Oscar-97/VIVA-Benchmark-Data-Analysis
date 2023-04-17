@@ -3,7 +3,7 @@ import {
   CalculatePrimalBound,
   CalculateDualBound,
   SetTermStatus,
-  CalculateGapSolver,
+  CalculateGap,
   CalculateGapPercentage,
 } from "./CalculateResults";
 
@@ -93,12 +93,19 @@ export function ExtractTrcData(RawData: string[]): string[] {
 
       Obj["Dir"] = CalculateDirection(Obj["Dir"]);
 
-      Obj["PrimalBound Solver"] = CalculatePrimalBound(Obj["Obj"], Obj["Dir"]);
+      Obj["PrimalBound Solver"] = CalculatePrimalBound(
+        Obj["Obj"], 
+        Obj["Dir"]
+      );
 
-      Obj["DualBound Solver"] = CalculateDualBound(Obj["Obj Est"], Obj["Dir"]);
+      Obj["DualBound Solver"] = CalculateDualBound(
+        Obj["Obj Est"], 
+        Obj["Dir"]
+      );
 
       if ("TermStatus" in Obj) {
-        Obj["TermStatus"] = SetTermStatus(Obj["TermStatus"]);
+        Obj["TermStatus"] = SetTermStatus(
+          Obj["TermStatus"] as string | number);
       }
 
       Obj["PrimalBound Problem"] = CalculatePrimalBound(
@@ -111,27 +118,31 @@ export function ExtractTrcData(RawData: string[]): string[] {
         Obj["Dir"]
       );
 
-      Obj["Gap"] = CalculateGapSolver(
+      Obj["Gap"] = CalculateGap(
         Obj["PrimalBound Solver"],
         Obj["DualBound Solver"]
       );
 
-      Obj["PrimalGap"] = CalculateGapSolver(
+      Obj["PrimalGap"] = CalculateGap(
         Obj["PrimalBound Solver"],
         Obj["PrimalBound Problem"]
       );
 
-      Obj["DualGap"] = CalculateGapSolver(
+      Obj["DualGap"] = CalculateGap(
         Obj["DualBound Solver"],
         Obj["DualBound Problem"]
+      );
+
+      Obj["Gap Problem"] = CalculateGap(
+        Obj["DualBound Problem"], 
+        Obj["PrimalBound Problem"]
       );
 
       Obj["Gap[%] Solver"] = CalculateGapPercentage(
         Obj["PrimalBound Solver"],
         Obj["PrimalBound Problem"]
       );
-
-      // Obj["Gap Problem"] = CalculateGapProblem(Obj["DualBound Problem"], Obj["PrimalBound Problem"]);
+      
       TrcData.push(Obj);
     }
   }
