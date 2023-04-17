@@ -3,6 +3,8 @@ import {
   CalculatePrimalBound,
   CalculateDualBound,
   SetTermStatus,
+  CalculateGap,
+  CalculateGapPercentage,
 } from "./CalculateResults";
 
 /**
@@ -10,13 +12,13 @@ import {
  * @param RawData The provided raw data.
  * @returns TrcData Contains the processed trc results.
  */
-export function ExtractTrcData(RawData: string[]): string[] {
+export function ExtractTrcData(RawData: string[]): object[] {
   const TrcData = [];
   const FirstLine = RawData[0].split(",");
 
   /**
-   * Check if headers are included in the .trc file. If they are found, include them, if not, use the custom headers.
-   * TODO: Skip custom headers overall.
+   * Check if headers are included in the .trc file.
+   * If they are found, include them, if not, use the custom headers.
    */
   if (FirstLine[0].startsWith("*")) {
     console.log("Found headers.");
@@ -57,8 +59,8 @@ export function ExtractTrcData(RawData: string[]): string[] {
       "OptionFile",
       "ModelStatus",
       "TermStatus",
-      "PrimalBoundSolver",
-      "DualBoundSolver",
+      "Obj",
+      "Obj Est",
       "Time[s]",
       "NumberOfIterations",
       "NumberOfDomainViolations",
@@ -82,44 +84,57 @@ export function ExtractTrcData(RawData: string[]): string[] {
       for (let j = 0; j < DefaultHeaders.length; j++) {
         Obj[DefaultHeaders[j]] = CurrentLine[j];
       }
+
       /**
        * Modify keys.
+       * https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4
+       * /src/paver/paver.py#L258-L290
        */
-      if ("Dir" in Obj) {
-        const CurrentDirValue = Obj.Dir;
-        const NewDirValue = CalculateDirection(CurrentDirValue);
-        Obj.Dir = NewDirValue;
-      }
 
-      if ("PrimalBoundSolver" in Obj) {
-        const CurrentPrimalBoundValue = Obj.PrimalBoundSolver;
-        const CurrentDirValue = Obj["Dir"];
-        const NewPrimalBoundValue = CalculatePrimalBound(
-          CurrentPrimalBoundValue,
-          CurrentDirValue
-        );
-        Obj.PrimalBoundSolver = NewPrimalBoundValue;
-      }
+      Obj["Dir"] = CalculateDirection(Obj["Dir"]);
 
-      if ("DualBoundSolver" in Obj) {
-        const CurrentDualBoundValue = Obj.DualBoundSolver;
-        const CurrentDirValue = Obj["Dir"];
-        const NewDualBoundValue = CalculateDualBound(
-          CurrentDualBoundValue,
-          CurrentDirValue
-        );
-        Obj.DualBoundSolver = NewDualBoundValue;
-      }
+      Obj["PrimalBound Solver"] = CalculatePrimalBound(Obj["Obj"], Obj["Dir"]);
+
+      Obj["DualBound Solver"] = CalculateDualBound(Obj["Obj Est"], Obj["Dir"]);
 
       if ("TermStatus" in Obj) {
-        const CurrentTermValue = Obj.TermStatus;
-        const NewTermValue = SetTermStatus(CurrentTermValue);
-        Obj.TermStatus = NewTermValue;
+        Obj["TermStatus"] = SetTermStatus(Obj["TermStatus"] as string | number);
       }
 
-      /**
-       * Create new keys for:
-       */
+      Obj["PrimalBound Problem"] = CalculatePrimalBound(
+        Obj["PrimalBound Solver"],
+        Obj["Dir"]
+      );
+
+      Obj["DualBound Problem"] = CalculateDualBound(
+        Obj["DualBound Solver"],
+        Obj["Dir"]
+      );
+
+      Obj["Gap"] = CalculateGap(
+        Obj["PrimalBound Solver"],
+        Obj["DualBound Solver"]
+      );
+
+      Obj["PrimalGap"] = CalculateGap(
+        Obj["PrimalBound Solver"],
+        Obj["PrimalBound Problem"]
+      );
+
+      Obj["DualGap"] = CalculateGap(
+        Obj["DualBound Solver"],
+        Obj["DualBound Problem"]
+      );
+
+      Obj["Gap Problem"] = CalculateGap(
+        Obj["DualBound Problem"],
+        Obj["PrimalBound Problem"]
+      );
+
+      Obj["Gap[%] Solver"] = CalculateGapPercentage(
+        Obj["PrimalBound Solver"],
+        Obj["PrimalBound Problem"]
+      );
 
       TrcData.push(Obj);
     }
@@ -134,7 +149,7 @@ export function ExtractTrcData(RawData: string[]): string[] {
  * @returns DataCategoryResults The category results that will be returned.
  */
 export function GetTrcDataCategory(
-  TrcData: string[],
+  TrcData: object[],
   DataCategory: string
 ): string[] {
   const DataCategoryResults = [];

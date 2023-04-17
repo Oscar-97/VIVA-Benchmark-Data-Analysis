@@ -5,12 +5,9 @@
     "allowJs": true,
     "target": "es6",
     "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node"
   },
-  "include": [
-    "./Src/**/*"
-  ],
-  "exclude": [
-    "**/node_modules/**"
-  ]
+  "include": ["./Src/**/*"],
+  "exclude": ["**/node_modules/**"]
 }

@@ -4,7 +4,10 @@
  * @param Solvers
  * @returns The ComparisonArray, which contains Used and not Used status on the solvers found in the benchmark results file.
  */
-export function GetComparisonArray(CheckedSolvers, Solvers): string[] {
+export function GetComparisonArray(
+  CheckedSolvers: string[],
+  Solvers: string[]
+): string[] {
   const ComparisonArray = [];
   for (let i = 0; i < Solvers.length; i++) {
     if (CheckedSolvers.includes(Solvers[i])) {

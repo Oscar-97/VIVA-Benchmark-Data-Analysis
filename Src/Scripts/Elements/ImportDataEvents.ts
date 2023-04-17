@@ -1,5 +1,4 @@
 import {
-  FileInput,
   ImportDataButton,
   SelectAllButton,
   FilterSelectionButton,
@@ -36,8 +35,6 @@ export function ImportDataEvents(
     if (TableElement) {
       TableElement.remove();
     }
-
-    FileInput.value = "";
   } catch (err) {
     console.log(err);
   }
@@ -47,18 +44,18 @@ export function ImportDataEvents(
    */
   if (document.title == "Report") {
     ViewAllResultsButton.disabled = false;
+    SelectAllButton.disabled = false;
+    SelectAllButton.innerText === "Select All Solvers";
+    FilterSelectionButton.disabled = true;
+    ImportDataButton.disabled = true;
+    FilterSelectionButton.disabled = true;
+    ImportDataButton.disabled = true;
+    if (FileExtensionType === "json") {
+      DeleteLocalStorageButton.disabled = false;
+    }
   } else if (document.title == "Plots") {
     ViewPlotsButton.disabled = false;
-  }
-
-  SelectAllButton.disabled = false;
-  FilterSelectionButton.disabled = true;
-  ImportDataButton.disabled = true;
-  FilterSelectionButton.disabled = true;
-  ImportDataButton.disabled = true;
-
-  if(FileExtensionType === "json") {
-    DeleteLocalStorageButton.disabled = false;
+    SelectAllButton.disabled = false;
   }
 
   // Display alert with message.

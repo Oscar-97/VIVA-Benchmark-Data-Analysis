@@ -17,7 +17,8 @@
   <!-- DataTables Styling -->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.bootstrap5.min.css">
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/4.2.1/css/fixedColumns.bootstrap5.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/fixedcolumns/4.2.1/css/fixedColumns.bootstrap5.min.css">
 </head>
 
 <body>
@@ -25,7 +26,7 @@
     <div class="container-fluid">
       <a class="navbar-brand">
         <img src="./Src/CSS/tab_icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
-        <b>MINLP Benchmark Tool</b></a>
+        <b>VIVA</b></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -36,18 +37,23 @@
             <a class="nav-link active" aria-current="page">Table</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Plots</a>
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">Plots</a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li><a class="dropdown-item" href="./Src/Pages/plots.html">PrimalGap (Absolute Performance Profile)</a></li>
-              <li><a class="dropdown-item disabled" href="#">DualGap</a></li>
-              <li><a class="dropdown-item disabled" href="#">PrimalBound</a></li>
-              <li><a class="dropdown-item disabled" href="#">DualBound</a></li>
+              <li><a class="dropdown-item" href="./Src/Pages/average_solver_time.html">Average Solver Time</a></li>
+              <li><a class="dropdown-item" href="./Src/Pages/solver_time.html">Solver Time</a></li>
+              <li><a class="dropdown-item" href="./Src/Pages/number_of_nodes.html">Number of Nodes</a></li>
+              <li><a class="dropdown-item" href="./Src/Pages/number_of_iterations.html">Number of Iterations</a></li>
             </ul>
           </li>
           <li class="nav-item">
             <div class="input-group">
-              <input type="file" class="form-control" id="fileInput" aria-describedby="inputGroupFileAddon04" aria-label="Upload" value="" data-toggle="tooltip" data-placement="top" title="Select and upload a .txt or .trc file." multiple>
-              <button class="btn btn-outline-primary" type="button" id="importDataButton" disabled="true" data-toggle="tooltip" data-placement="top" title="Upload the selected file for processing.">Upload</button>
+              <input type="file" class="form-control" id="fileInput" aria-describedby="inputGroupFileAddon04"
+                aria-label="Upload" value="" data-toggle="tooltip" data-placement="top"
+                title="Select and upload a .txt or .trc file." multiple>
+              <button class="btn btn-outline-primary" type="button" id="importDataButton" disabled="true"
+                data-toggle="tooltip" data-placement="top"
+                title="Upload the selected file for processing.">Upload</button>
             </div>
           </li>
         </ul>
@@ -58,52 +64,63 @@
           <li class="nav-item">
             <a class="nav-link" href="https://github.com/Oscar-97/SHOT-Data-Visualization" target="_blank">GitHub</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/Oscar-97/SHOT-Data-Visualization/issues/new" target="_blank">Submit Issue</a>
+          </li>
         </ul>
       </div>
     </div>
   </nav>
-</div>
-<div class="alert" role="alert" id="alertNotification"></div>
-  <div id="buttonContainer" class="d-flex flex-wrap justify-content-start gap-2">
-      <div class="col-auto">
-        <button class="btn btn-success btn-sm" id="viewAllResultsButton" disabled="true" data-toggle="tooltip" data-placement="top" title="View all results found in the uploaded file.">View All Results</button>
-      </div>
-      <div class="col-auto">
-        <button class="btn btn-primary btn-sm" id="filterSelectionButton" disabled="true" data-toggle="tooltip" data-placement="top" title="View problems that have been selected from the table.">View Selected Problems</button>
-      </div>
-      <div class="col-auto">
-        <button class="btn btn-primary btn-sm" type="none" id="selectAllButton" disabled="true" data-toggle="tooltip" data-placement="top" title="Select all solvers found in the uploaded file.">Select All Solvers</button>
-      </div>
-      <div class="col-auto">
-        <button class="btn btn-dark btn-sm" id="saveLocalStorageButton" disabled="true" data-toggle="tooltip" data-placement="top" title="Save current table configuration.">Save Configuration</button>
-      </div>
-      <div class="col-auto">
-        <button class="btn btn-dark btn-sm" type="button" id="downloadConfigurationButtonLayer" disabled="true"><a id="downloadConfigurationButton" data-toggle="tooltip" data-placement="top" title="Download the user configuration.">Download Configuration</a></button>
-      </div>
-      <div class="col-auto">
-        <button class="btn btn-dark btn-sm" type="button" id="downloadCSVButtonLayer" disabled="true"><a id="downloadCSVButton" type="button" data-toggle="tooltip" data-placement="top" title="Download the currently visible table as a CSV file.">Download CSV</a></button> 
-      </div>
-      <div class="col-auto">
-        <button class="btn btn-danger btn-sm" id="deleteLocalStorageButton" data-toggle="tooltip" data-placement="top" title="Delete current table configuration from local storage.">Delete Configuration</button>
-      </div>
-      <div class="col-auto">
-        <button class="btn btn-danger btn-sm" id="clearTableButton" data-toggle="tooltip" data-placement="top" title="Clear current table.">Clear Data Table</button>
-      </div>
   </div>
-  <hr/>
+  <div class="alert" role="alert" id="alertNotification"></div>
+  <div id="buttonContainer" class="d-flex flex-wrap justify-content-start gap-2">
+    <div class="col-auto">
+      <button class="btn btn-success btn-sm" id="viewAllResultsButton" disabled="true" data-toggle="tooltip"
+        data-placement="top" title="View all results found in the uploaded file.">View All Results</button>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-primary btn-sm" id="filterSelectionButton" disabled="true" data-toggle="tooltip"
+        data-placement="top" title="View problems that have been selected from the table.">View Selected
+        Problems</button>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-primary btn-sm" type="none" id="selectAllButton" disabled="true" data-toggle="tooltip"
+        data-placement="top" title="Select all solvers found in the uploaded file.">Select All Solvers</button>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-dark btn-sm" id="saveLocalStorageButton" disabled="true" data-toggle="tooltip"
+        data-placement="top" title="Save current table configuration.">Save Configuration</button>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-dark btn-sm" type="button" id="downloadConfigurationButtonLayer" disabled="true"><a
+          id="downloadConfigurationButton" data-toggle="tooltip" data-placement="top"
+          title="Download the user configuration.">Download Configuration</a></button>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-dark btn-sm" type="button" id="downloadCSVButtonLayer" disabled="true"><a
+          id="downloadCSVButton" type="button" data-toggle="tooltip" data-placement="top"
+          title="Download the currently visible table as a CSV file.">Download CSV</a></button>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-danger btn-sm" id="deleteLocalStorageButton" data-toggle="tooltip" data-placement="top"
+        title="Delete current table configuration from local storage.">Delete Configuration</button>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-danger btn-sm" id="clearTableButton" data-toggle="tooltip" data-placement="top"
+        title="Clear current table.">Clear Data Table</button>
+    </div>
+  </div>
+  <hr />
   <span class="badge bg-dark" id="solverAndProblemsHeader" hidden></span>
   <div id="tableFilters"></div>
-    <!-- Table filters will be created here. -->
-    <!-- Table search appears after creating a table. -->
+  <!-- Table filters will be created here. -->
+  <!-- Table search appears after creating a table. -->
   </div>
-  
   <div id="dataTable">
     <!-- Table element will be created here. -->
   </div>
   <!-- Main script -->
   <script id="MainFunction" src="Dist/bundle.js"></script>
-  <!-- <script id="MainFunction" type="module" src="./Src/Scripts/Main.js"></script> -->
-  <!-- <script id="BootstrapJSImport" src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"crossorigin="anonymous"></script> -->
   <script id="BootstrapJSImport" src="./Src/bootstrap-5.2.3-dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

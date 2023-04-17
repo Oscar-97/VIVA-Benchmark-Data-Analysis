@@ -2,7 +2,7 @@ import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
 
 export function GetInstanceInformation(
   RawInstanceInfoData: string[]
-): string[] {
+): object[] {
   const InstanceInfo = [];
 
   // Set header.
@@ -23,7 +23,7 @@ export function GetInstanceInformation(
   return InstanceInfo;
 }
 
-export function GetInstancePrimalDualbounds(RawSoluData: any[]): string[] {
+export function GetInstancePrimalDualbounds(RawSoluData: any[]): object[] {
   const SoluData = [];
   const RegexPattern = /^=(.*?)=\s+(.*?)\s+(.*?)$/;
 
@@ -31,24 +31,21 @@ export function GetInstancePrimalDualbounds(RawSoluData: any[]): string[] {
     const Obj = {};
     const CurrentLine = RawSoluData[i].split("\n");
     const Match = RegexPattern.exec(CurrentLine);
-    //console.log("Matches: ", Match[1], Match[2], Match[3])
     if (Match !== null) {
       Obj["InputFileName"] = Match[2];
       switch (Match[1]) {
         case "best":
           // Value in the third column is primal bound.
-          Obj["PrimalBoundProblem"] = Match[3];
-          Obj["DualBoundProblem"] = "";
+          Obj["PrimalBound Problem"] = Match[3];
           break;
         case "bestdual":
           // Value in the third column is dual bound.
-          Obj["PrimalBoundProblem"] = "";
-          Obj["DualBoundProblem"] = Match[3];
+          Obj["DualBound Problem"] = Match[3];
           break;
         case "opt":
           // Value in the third column is both primal and dual bound.
-          Obj["PrimalBoundProblem"] = Match[3];
-          Obj["DualBoundProblem"] = Match[3];
+          Obj["PrimalBound Problem"] = Match[3];
+          Obj["DualBound Problem"] = Match[3];
           break;
       }
     }

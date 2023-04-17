@@ -58,7 +58,7 @@ export function UpdateResultsData(): string[] {
  * Update the trc data with the selected rows.
  * @returns TrcData
  */
-export function UpdateResultsTrc(): string[] {
+export function UpdateResultsTrc(): object[] {
   /**
    * Create the keys from the table headers.
    */

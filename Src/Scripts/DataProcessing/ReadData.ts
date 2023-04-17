@@ -43,10 +43,10 @@ export function GetDataFileType(): string {
 
 /**
  * Read the raw data.
- * @param RawData 
- * @param RawInstanceInfoData 
- * @param RawSoluData 
- * @returns 
+ * @param RawData
+ * @param RawInstanceInfoData
+ * @param RawSoluData
+ * @returns
  */
 export function ReadData(
   RawData: string[],

@@ -4,7 +4,14 @@
  * @param Data Instance/Solution information data.
  * @returns MergedData ResultsData with more information.
  */
-export function MergeData(TrcData: any[], Data: any[]): string[] {
+interface CategoriesObj {
+  InputFileName?: string;
+  name?: string;
+}
+export function MergeData(
+  TrcData: CategoriesObj[],
+  Data: CategoriesObj[]
+): object[] {
   const MergedData = [];
 
   for (const obj1 of TrcData) {

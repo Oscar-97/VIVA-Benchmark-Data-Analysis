@@ -19,7 +19,7 @@ export function CreateData(
   return output;
 }
 
-export function CreateDataTrc(TrcData: string[]): string[] {
+export function CreateDataTrc(TrcData: object[]): string[] {
   console.clear();
   console.log("Data to exported: ", TrcData);
   const ExportData: string[] = [];

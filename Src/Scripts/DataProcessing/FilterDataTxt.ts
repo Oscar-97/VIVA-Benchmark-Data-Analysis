@@ -29,7 +29,7 @@ export function GetInstanceLabels(DataLabels: string[]): string[] {
  * Get DataLabels
  */
 export function GetDataLabels(SolvedData: string[]): string[] {
-  // Get the solver names.
+  // Get the solver categories.
   let DataLabels = SolvedData[1].split(" ");
   // Remove extra 'bound' in array when splitting.
   const TempData = DataLabels.filter(function (value) {

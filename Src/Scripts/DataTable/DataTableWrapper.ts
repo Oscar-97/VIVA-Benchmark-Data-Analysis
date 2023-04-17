@@ -56,7 +56,7 @@ export function TableDisplay(
  * Display the data in the div with the id "dataTable" when clicking on the view all results or selection button.
  * @param TrcData
  */
-export function TableDisplayTrc(TrcData: string[]): void {
+export function TableDisplayTrc(TrcData: object[]): void {
   setTimeout(() => {
     const CheckedSolvers = GetCheckedSolvers();
 
@@ -84,11 +84,6 @@ function DataTablesConfiguration(): void {
   const table = jq("#dataTableGenerated").DataTable({
     destroy: true,
     stateSave: true,
-    stateSaveKey: "DataTableSession",
-    stateLoadCallback: function() {
-      let customState = localStorage.getItem("DataTableSession");
-      return customState ? JSON.parse(customState) : null;
-    },
     dom:
       "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
       "<'row'<'col-sm-12'tr>>" +

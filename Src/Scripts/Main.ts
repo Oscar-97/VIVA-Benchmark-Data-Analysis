@@ -1,19 +1,20 @@
-//#region Imports
-import { TableFilters } from "./DataTable/DataTableFilters";
+// #region Imports
+/**
+ * Chart.
+ */
+import { CreateChart, PickColor } from "./Chart/CreateChart";
+
+/**
+ * Dataprocessing.
+ */
 import {
-  TableDisplay,
-  TableDisplayTrc,
-  DestroyDataTable,
-} from "./DataTable/DataTableWrapper";
-import {
-  UpdateProblemList,
-  UpdateResultsData,
-  UpdateResultsTrc,
-} from "./DataTable/UpdateResults";
-import { TableDownloadCSV } from "./DataTable/DownloadCSV";
+  AnalyzeDataByCategory,
+  ExtractAllSolverTimes,
+} from "./DataProcessing/CalculateResults";
 import { CreateData, CreateDataTrc } from "./DataProcessing/CreateData";
 import { ImportDataEvents } from "./Elements/ImportDataEvents";
 import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
+import { MergeData } from "./DataProcessing/MergeData";
 import {
   ExtractTrcData,
   GetTrcDataCategory,
@@ -30,20 +31,28 @@ import {
   GetProblems,
   GetResults,
 } from "./DataProcessing/FilterDataTxt";
+
+/**
+ * DataTable.
+ */
+import { StatisticsTable } from "./DataTable/DataTableBase";
+import { TableFilters } from "./DataTable/DataTableFilters";
+import { TableDownloadCSV } from "./DataTable/DownloadCSV";
 import {
-  MergeData
-} from "./DataProcessing/MergeData";
-import { InitializePlots } from "./Chart/InitializePlot";
+  TableDisplay,
+  TableDisplayTrc,
+  DestroyDataTable,
+} from "./DataTable/DataTableWrapper";
 import {
-  ToggleSelection,
-  SelectSavedSolvers,
-} from "./Solvers/SelectAllSolvers";
-import {
-  CreateUserConfiguration,
-  GetUserConfiguration,
-  DeleteUserConfiguration,
-  DownloadUserConfiguration,
-} from "./UserConfiguration/UserConfiguration";
+  UpdateProblemList,
+  UpdateResultsData,
+  UpdateResultsTrc,
+} from "./DataTable/UpdateResults";
+
+/**
+ * Elements.
+ */
+import { ElementStatus, ElementStatusPlots } from "./Elements/ElementStatus";
 import {
   FileInput,
   ImportDataButton,
@@ -57,61 +66,101 @@ import {
   DeleteLocalStorageButton,
   ClearTableButton,
 } from "./Elements/Elements";
+
+/**
+ * Solvers.
+ */
 import { GetCheckedSolvers } from "./Solvers/UsedSolvers";
-import { ElementStatus } from "./Elements/ElementStatus";
+import {
+  ToggleSelection,
+  SelectSavedSolvers,
+} from "./Solvers/SelectAllSolvers";
+
+/**
+ * User Configuration.
+ */
+import {
+  CreateUserConfiguration,
+  GetUserConfiguration,
+  DeleteUserConfiguration,
+  DownloadUserConfiguration,
+} from "./UserConfiguration/UserConfiguration";
 //#endregion
 
 /**
- * Set the filename to be empty and declare an array to store the benchmarks in.
+ * @param DataFileType Type of file extension for the imported data.
  * @param RawData Raw data of the imported benchmark results.
  * @param CheckedSolvers Array containing checked solvers.
- * @param DataFileType Type of file extension for the imported data.
  * @param RawInstanceInfoData Unprocessed instanceinfo.csv containing properties.
  * @param RawSoluData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
  */
-let RawData = [];
-let CheckedSolvers = [];
 let DataFileType = "";
-const RawInstanceInfoData = [];
-const RawSoluData = [];
+let RawData: string[] = [];
+let CheckedSolvers: string[] = [];
+let RawInstanceInfoData: string[] = [];
+let RawSoluData: string[] = [];
 
 /**
- * Set all button status from new method after refreshing.
+ * Initializing the methods that are needed to run the system.
  */
-ElementStatus();
+function InitializeProgram(): void {
+  /**
+   * Values reset after clearing table and running InitializeProgram() again.
+   */
+  RawData = [];
+  CheckedSolvers = [];
+  DataFileType = "";
+  RawInstanceInfoData = [];
+  RawSoluData = [];
 
-/**
- * Try to retrieve stored config/data/state when arriving to the page, or refreshing the page.
- */
-try {
-  [RawData, DataFileType, CheckedSolvers] = GetUserConfiguration();
-  ImportDataEvents("Found cached benchmark file!", "json");
-  ManageData();
-} catch (err) {
-  console.log("No data found in local storage: ", err);
+  /**
+   * Set all button status from new method after refreshing.
+   */
+  if (document.title == "Report") {
+    ElementStatus();
+  } else if (
+    document.title === "Average Solver Time" ||
+    document.title === "Solver Time" ||
+    document.title === "Number of Nodes" ||
+    document.title === "Number of Iterations"
+  ) {
+    ElementStatusPlots();
+  }
+
+  /**
+   * Try to retrieve stored config/data/state when arriving to the page, or refreshing the page.
+   */
+  try {
+    [RawData, DataFileType, CheckedSolvers] = GetUserConfiguration();
+    ImportDataEvents("Found cached benchmark file!", "json");
+    ManageData();
+  } catch (err) {
+    console.log("No data found in local storage: ", err);
+  }
+
+  /**
+   * Read the data from the input file and set the file extension type.
+   */
+  FileInput.addEventListener("change", () => {
+    DataFileType = GetDataFileType();
+    ReadData(RawData, RawInstanceInfoData, RawSoluData);
+  });
+
+  /**
+   * Click on the upload data button to continue the process.
+   */
+  ImportDataButton.addEventListener("click", () => {
+    ImportDataEvents("Benchmark file succesfully loaded!");
+    ManageData();
+  });
 }
-
-/**
- * Read the data from the input file and set the file extension type.
- */
-FileInput.addEventListener("change", () => {
-  DataFileType = GetDataFileType();
-  ReadData(RawData, RawInstanceInfoData, RawSoluData);
-});
-
-/**
- * Click on the upload data button to continue the process.
- */
-ImportDataButton.addEventListener("click", () => {
-  ImportDataEvents("Benchmark file succesfully loaded!");
-  ManageData();
-});
 
 /**
  * Sort the benchmark results file and display the relevant elements per page.
  */
 function ManageData(): void {
   /**
+   * TXT file.
    * First row of the benchmark results file.
    * @param Instance The column where the instance is located. Instance is at index 0.
    * @param Solvers The columns where the solvers are located. Solvers are in the rest of the indices.
@@ -128,22 +177,27 @@ function ManageData(): void {
   let Solvers: string[] = [];
   let DataLabels: string[];
   let InstanceLabels: string[];
-  let ProblemList = [];
-  let ResultsData = [];
+  let ProblemList: string[] = [];
+  let ResultsData: string[] = [];
 
-  let SoluData = [];
-  let InstanceInfoData = [];
-
-  let ProblemListFiltered = [];
-  let ResultsDataFiltered = [];
+  let ProblemListFiltered: string[] = [];
+  let ResultsDataFiltered: string[] = [];
 
   /**
-   * TrcData results file.
-   * @param TrcData
-   * @param TrcDataFiltered
+   * TRC file.
+   * @param TrcData Trace data results.
+   * @param TrcDataFiltered Filtered trace data results.
    */
-  let TrcData = [];
-  let TrcDataFiltered = [];
+  let TrcData: object[] = [];
+  let TrcDataFiltered: object[] = [];
+
+  /**
+   * SOLU and CSV file.
+   * @param InstanceInfoData Instance properties.
+   * @param SoluData Best known primal and dual bounds for each instance.
+   */
+  let InstanceInfoData: object[] = [];
+  let SoluData: object[] = [];
 
   /**
    * Run if the uploaded file is json.
@@ -152,7 +206,7 @@ function ManageData(): void {
     [RawData, DataFileType, CheckedSolvers] = GetUserConfiguration();
   }
 
-   /**
+  /**
    * Check which file format is used, add the data to correct categories and create the solver filters. Select solvers if they are found in localStorage.
    */
   if (DataFileType === "txt") {
@@ -162,7 +216,9 @@ function ManageData(): void {
     InstanceLabels = GetInstanceLabels(DataLabels);
     ProblemList = GetProblems(RawData);
     ResultsData = GetResults(RawData);
-    TableFilters(Solvers, "Solvers");
+    if (document.title == "Report") {
+      TableFilters(Solvers, "Solvers");
+    }
   } else if (DataFileType === "trc") {
     TrcData = ExtractTrcData(RawData);
 
@@ -176,24 +232,27 @@ function ManageData(): void {
       TrcData = MergeData(TrcData, SoluData);
     }
     Solvers = GetTrcDataCategory(TrcData, "SolverName");
-    TableFilters(Solvers, "Solvers");
+    if (document.title == "Report") {
+      TableFilters(Solvers, "Solvers");
+    }
   }
 
-  if (CheckedSolvers.length !== 0) {
+  if (CheckedSolvers.length !== 0 && document.title == "Report") {
     SelectSavedSolvers(CheckedSolvers);
   }
-
-  /**
-   * Select all checkboxes button functionality.
-   */
-  SelectAllButton.addEventListener("click", () => {
-    ToggleSelection();
-  });
 
   /**
    * Check if the user is on the Report page.
    */
   if (document.title == "Report") {
+    /**
+     * Select all checkboxes button functionality.
+     */
+    SelectAllButton.addEventListener("click", () => {
+      console.log("Clicked Select All Solvers.");
+      ToggleSelection();
+    });
+
     /**
      * Shows all problems depending on the uploaded file.
      */
@@ -302,15 +361,129 @@ function ManageData(): void {
      */
     ClearTableButton.addEventListener("click", () => {
       DestroyDataTable();
+      InitializeProgram();
     });
   }
 
   /**
-   * Check if the user us is on the Plots page.
+   * Check if the user is on the Average Solver Time page.
    */
-  if (document.title == "Plots") {
+  if (document.title == "Average Solver Time") {
+    /**
+     *  Get the average solver times without any failed results.
+     */
+    ViewPlotsButton.disabled = false;
     ViewPlotsButton.addEventListener("click", () => {
-      InitializePlots(Solvers, ResultsData);
+      const Category = "Time[s]";
+      const AverageTimesData = AnalyzeDataByCategory(TrcData, Category);
+      console.log("TimesData: ", AverageTimesData);
+
+      const Type = "bar";
+      const Label = "Time[s].average";
+      const Title = "Average solver time";
+      const AverageTime = Object.entries(AverageTimesData).map(
+        ([key, value]) => ({
+          label: key,
+          data: [value.average],
+          borderColor: PickColor(),
+          backgroundColor: PickColor(),
+        })
+      );
+
+      console.log("Data: ", AverageTime);
+      CreateChart(Type, AverageTime, Label, Title);
+      StatisticsTable(AverageTimesData, Title);
+    });
+  }
+
+  /**
+   * Check if the user is on the Solver Time page.
+   */
+  if (document.title == "Solver Time") {
+    /**
+     * Get all the solver times without any failed results.
+     */
+    ViewPlotsButton.disabled = false;
+    ViewPlotsButton.addEventListener("click", () => {
+      const SolverTimes = ExtractAllSolverTimes(TrcData);
+      const Data = (Object.entries(SolverTimes) as [string, number[]][]).map(
+        ([key, values]) => ({
+          label: key,
+          data: values.map((val, index) => ({ x: index, y: val })),
+        })
+      );
+      console.log("Data structure: ", Data);
+
+      const Type = "scatter";
+      const Label = "";
+      const Title = "Solver times";
+
+      CreateChart(Type, Data, Label, Title);
+    });
+  }
+
+  /**
+   * Check if the user is on the Number of Nodes page.
+   */
+  if (document.title == "Number of Nodes") {
+    /**
+     * Get the average number of nodes.
+     */
+    ViewPlotsButton.disabled = false;
+    ViewPlotsButton.addEventListener("click", () => {
+      const Category = "Nodes[i]";
+      const NodesData = AnalyzeDataByCategory(TrcData, Category);
+      console.log("NodeData: ", NodesData);
+
+      const Type = "bar";
+      const Label = "Nodes[i].average";
+      const Title = "Average number of nodes";
+      const AverageNodes = Object.entries(NodesData).map(([key, value]) => ({
+        label: key,
+        data: [value.average],
+        borderColor: PickColor(),
+        backgroundColor: PickColor(),
+      }));
+
+      console.log("Data: ", AverageNodes);
+      CreateChart(Type, AverageNodes, Label, Title);
+      StatisticsTable(NodesData, Title);
+    });
+  }
+
+  /**
+   * Check if the user is on the Number of Iterations page.
+   */
+  if (document.title == "Number of Iterations") {
+    /**
+     * Get the average number of iterations.
+     */
+    ViewPlotsButton.disabled = false;
+    ViewPlotsButton.addEventListener("click", () => {
+      const Category = "NumberOfIterations";
+      const IterationsData = AnalyzeDataByCategory(TrcData, Category);
+      console.log("IterationsData: ", IterationsData);
+
+      const Type = "bar";
+      const Label = "NumberOfiterations.average";
+      const Title = "Average number if iterations";
+      const AverageNbrItr = Object.entries(IterationsData).map(
+        ([key, value]) => ({
+          label: key,
+          data: [value.average],
+          borderColor: PickColor(),
+          backgroundColor: PickColor(),
+        })
+      );
+
+      console.log("Data: ", AverageNbrItr);
+      CreateChart(Type, AverageNbrItr, Label, Title);
+      StatisticsTable(IterationsData, Title);
     });
   }
 }
+
+/**
+ * Run the program.
+ */
+InitializeProgram();

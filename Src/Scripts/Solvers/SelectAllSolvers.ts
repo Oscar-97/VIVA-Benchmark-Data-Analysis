@@ -3,13 +3,13 @@ import { SelectAllButton } from "../Elements/Elements";
 /**
  * Toggle the select and unselect all solvers button.
  */
-let SelectAllStatus = true;
 export function ToggleSelection(): void {
-  SelectAllStatus = !SelectAllStatus;
-  if (SelectAllStatus) {
+  if (SelectAllButton.innerText === "Select All Solvers") {
     SelectAllSolvers();
-  } else {
+    SelectAllButton.innerText = "Unselect All Solvers";
+  } else if (SelectAllButton.innerText === "Unselect All Solvers") {
     UnselectAllSolvers();
+    SelectAllButton.innerText = "Select All Solvers";
   }
 }
 
@@ -23,10 +23,13 @@ function SelectAllSolvers(): void {
   const FilterSolvers = CheckboxContainer.getElementsByTagName("input");
   for (const Solver of FilterSolvers) {
     if (!Solver.checked) {
-      Solver.click();
+      try {
+        Solver.click();
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
-  SelectAllButton.innerText = "Unselect All Solvers";
 }
 
 /**
@@ -39,10 +42,13 @@ function UnselectAllSolvers(): void {
   const FilterSolvers = CheckboxContainer.getElementsByTagName("input");
   for (const Solver of FilterSolvers) {
     if (Solver.checked) {
-      Solver.click();
+      try {
+        Solver.click();
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
-  SelectAllButton.innerText = "Select All Solvers";
 }
 
 /**
