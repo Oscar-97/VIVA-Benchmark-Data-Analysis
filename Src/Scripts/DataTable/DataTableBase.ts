@@ -178,9 +178,15 @@ export function StatisticsTable(SolverTimeStats: {
     average: number;
     min: number;
     max: number;
-    std: number[];
+    std: number;
+    sum: number;
+    percentile_10: number;
+    percentile_25: number;
+    percentile_50: number;
+    percentile_75: number;
+    percentile_90: number;
   };
-}, Title): void {
+}, Title: string): void {
   /**
    * @param StatisticsTableDiv Div that contains the statistics table.
    */
@@ -188,13 +194,21 @@ export function StatisticsTable(SolverTimeStats: {
     "statisticsTable"
   ) as HTMLDivElement;
   StatisticsTableDiv.innerHTML = "";
+  
   const NewStatisticsTable = document.createElement("table");
-  NewStatisticsTable.className = "table table-bordered table-sm";
+  NewStatisticsTable.classList.add("table", "table-bordered", "table-sm", "border-dark", "border-2");
 
+  const Header = document.createElement("thead")
+  Header.classList.add("table-dark");
+  
   const HeaderRow = document.createElement("tr");
   const DataLabel = document.createElement("th");
   DataLabel.textContent = Title + " Summary";
+  DataLabel.scope = "col";
+  
+  Header.appendChild(HeaderRow);
   HeaderRow.appendChild(DataLabel);
+  NewStatisticsTable.appendChild(Header);
 
   /**
    * Iterate ove each key in the SolverTimeStats and create a new table header element.
@@ -206,13 +220,12 @@ export function StatisticsTable(SolverTimeStats: {
       if (!UsedCategories.includes(key)) {
         const th = document.createElement("th");
         th.textContent = key;
+        th.scope = "col";
         HeaderRow.appendChild(th);
         UsedCategories.push(key);
       }
     });
   }
-
-  NewStatisticsTable.appendChild(HeaderRow);
 
   /**
    * Create value table rows.
@@ -220,7 +233,8 @@ export function StatisticsTable(SolverTimeStats: {
   const DataKeys = Object.keys(SolverTimeStats);
   DataKeys.forEach((dataKey) => {
     const ValuesRow = document.createElement("tr");
-    const DataType = document.createElement("td");
+    const DataType = document.createElement("th");
+    DataType.scope = "row";
     DataType.textContent = dataKey;
     ValuesRow.appendChild(DataType);
     const DataValues = Object.values(SolverTimeStats[dataKey]);
@@ -233,7 +247,7 @@ export function StatisticsTable(SolverTimeStats: {
   });
 
   /**
-   * Add the table to the div.
+   * Add the final table to the div.
    */
   StatisticsTableDiv.appendChild(NewStatisticsTable);
 }
