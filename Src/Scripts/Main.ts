@@ -7,7 +7,7 @@ import { CreateChart, PickColor } from "./Chart/CreateChart";
 /**
  * Dataprocessing.
  */
-import { SolverTimesData, AllSolverTimes } from "./DataProcessing/CalculateResults";
+import { AnalyzeDataByCategory, ExtractAllSolverTimes } from "./DataProcessing/CalculateResults";
 import { CreateData, CreateDataTrc } from "./DataProcessing/CreateData";
 import { ImportDataEvents } from "./Elements/ImportDataEvents";
 import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
@@ -372,12 +372,12 @@ function ManageData(): void {
     ViewPlotsButton.disabled = false;
     ViewPlotsButton.addEventListener("click", () => {
       const Category = "Time[s]";
-      const AverageTimesData = SolverTimesData(TrcData, Category);
+      const AverageTimesData = AnalyzeDataByCategory(TrcData, Category);
       console.log("TimesData: ", AverageTimesData);
 
       const Type = "bar";
       const Label = "Time[s].average";
-      const Title = "Average Time Taken (Excluding NA Instances)"
+      const Title = "Average solver time"
       const AverageTime = Object.entries(AverageTimesData).map(([key, value]) => (
         {
           label: key,
@@ -401,7 +401,7 @@ function ManageData(): void {
      */
     ViewPlotsButton.disabled = false;
     ViewPlotsButton.addEventListener("click", () => {
-      const SolverTimes = AllSolverTimes(TrcData);
+      const SolverTimes = ExtractAllSolverTimes(TrcData);
       const Data = (Object.entries(SolverTimes) as [string, number[]][]).map(([key, values]) => ({
         label: key,
         data: values.map((val, index) => ({x: index, y: val}))
@@ -410,7 +410,7 @@ function ManageData(): void {
       
       const Type = "scatter";
       const Label = "";
-      const Title = "Solver Times";
+      const Title = "Solver times";
 
       CreateChart(Type, Data, Label, Title);
     });
@@ -426,12 +426,12 @@ function ManageData(): void {
     ViewPlotsButton.disabled = false;
     ViewPlotsButton.addEventListener("click", () => {
       const Category = "Nodes[i]";
-      const NodesData = SolverTimesData(TrcData, Category);
+      const NodesData = AnalyzeDataByCategory(TrcData, Category);
       console.log("NodeData: ", NodesData);
 
       const Type = "bar";
       const Label = "Nodes[i].average";
-      const Title = "Number of Nodes - Average";
+      const Title = "Average number of nodes";
       const AverageNodes = Object.entries(NodesData).map(([key, value]) => (
         {
           label: key,
@@ -456,12 +456,12 @@ function ManageData(): void {
     ViewPlotsButton.disabled = false;
     ViewPlotsButton.addEventListener("click", () => {
       const Category = "NumberOfIterations";
-      const IterationsData = SolverTimesData(TrcData, Category);
+      const IterationsData = AnalyzeDataByCategory(TrcData, Category);
       console.log("IterationsData: ", IterationsData);
 
       const Type = "bar";
       const Label = "NumberOfiterations.average";
-      const Title = "NumberOfiterations - Average"
+      const Title = "Average number if iterations"
       const AverageNbrItr = Object.entries(IterationsData).map(([key, value]) => (
         {
           label: key,
