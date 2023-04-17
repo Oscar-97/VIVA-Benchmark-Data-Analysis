@@ -1,11 +1,15 @@
 import * as math from "mathjs";
 // Problem - Direction
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L261-L262
-export function CalculateDirection(Direction) {
+export function CalculateDirection(Direction: number | string): number {
   if (Direction === "" || Direction === "NA") {
     Direction = 1;
   } else {
-    Direction = 1 - 2 * parseInt(Direction);
+    if (typeof Direction === "number") {
+      Direction = 1 - 2 * Direction;
+    } else if (typeof Direction === "string") {
+      Direction = 1 - 2 * parseFloat(Direction);
+    }
   }
   return Direction;
 }
@@ -13,45 +17,56 @@ export function CalculateDirection(Direction) {
 // Problem & Solver - Primal Bound
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L275-L282
 export function CalculatePrimalBound(
-  PrimalBound: unknown,
+  PrimalBound: number | string,
   Direction: number
-): any {
-  PrimalBound = Direction * Infinity;
+): number {
+  if (PrimalBound === "" || PrimalBound === "NA") {
+    PrimalBound = Direction * Infinity;
+  } else if (typeof PrimalBound === "string") {
+    PrimalBound = parseFloat(PrimalBound);
+  }
   return PrimalBound;
 }
 
 // Problem & Solver - Dual Bound
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L275-L282
-export function CalculateDualBound(DualBound: unknown, Direction: number): any {
-  DualBound = -1 * Direction * Infinity;
+export function CalculateDualBound(DualBound: number | string, Direction: number): number {
+  if (DualBound === "" || DualBound === "NA") {
+    DualBound = -1 * Direction * Infinity;
+  } else if (typeof DualBound === "string") {
+    DualBound = parseFloat(DualBound);
+  }
   return DualBound;
 }
 
 // Solver- Termstatus
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L90-L103
-export function SetTermStatus(TerminationStatus): any {
+export function SetTermStatus(TerminationStatus: number | string): string {
+  if (typeof TerminationStatus === "string") {
+    TerminationStatus = parseInt(TerminationStatus);
+  }
   switch (TerminationStatus) {
-    case "1":
+    case 1:
       TerminationStatus = "Normal";
       break;
-    case "2":
+    case 2:
       TerminationStatus = "IterationLimit";
       break;
-    case "3":
+    case 3:
       TerminationStatus = "TimeLimit";
       break;
-    case "4":
-    case "7":
-    case "12":
+    case 4:
+    case 7:
+    case 12:
       TerminationStatus = "Other";
       break;
-    case "5":
+    case 5:
       TerminationStatus = "OtherLimit";
       break;
-    case "6":
+    case 6:
       TerminationStatus = "CapabilityProblem";
       break;
-    case "8":
+    case 8:
       TerminationStatus = "UserInterrupt";
       break;
     default:
@@ -63,58 +78,67 @@ export function SetTermStatus(TerminationStatus): any {
 
 // Solver - Primal and Dual Gap
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/utils.py#L46-L59
-export function CalculateGapSolver(
-  Solver: number,
-  Problem: number,
+export function CalculateGap(
+  a: number,
+  b: number,
   tol = 1e-9
-) {
+): number {
   // Check if the values are equal within tolerance
-  if (Problem === Solver || Math.abs(Solver - Problem) <= tol) {
+  if (a === b || Math.abs(a - b) <= tol) {
     return 0.0;
   }
 
   // Check if either value is close to zero or infinity, or if the values have opposite signs
   if (
-    Math.abs(Solver) <= tol ||
-    Math.abs(Problem) <= tol ||
-    Math.abs(Solver) >= Infinity ||
-    Math.abs(Problem) >= Infinity ||
-    Solver * Problem < 0.0
+    Math.abs(a) <= tol ||
+    Math.abs(b) <= tol ||
+    Math.abs(a) >= Infinity ||
+    Math.abs(b) >= Infinity ||
+    a * b < 0.0
   ) {
     return Infinity;
   }
 
   // Compute and return the gap between the values
-  return (Solver - Problem) / Math.min(Math.abs(Solver), Math.abs(Problem));
+  return (a - b) / Math.min(Math.abs(a), Math.abs(b));
 }
 
 // Solver - Gap[%]
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/utils.py#L21-L39
-export function CalculateGapPercentage(PrimalGap, DualGap) {
+export function CalculateGapPercentage(a: number, b: number): number {
   let Gap: number;
-  if (Math.abs(PrimalGap) >= Infinity || Math.abs(DualGap) >= Infinity) {
-    if (PrimalGap === DualGap) {
+  if (Math.abs(a) >= Infinity || Math.abs(b) >= Infinity) {
+    if (a === b) {
       Gap = 0.0;
       return Gap;
     } else {
-      Gap = PrimalGap - DualGap;
+      Gap = a - b;
       return Gap;
     }
   } else {
     Gap =
-      (PrimalGap - DualGap) /
-      Math.max(Math.abs(PrimalGap), Math.abs(DualGap), 1.0);
+      (a - b) /
+      Math.max(Math.abs(a), Math.abs(b), 1.0);
     return Gap;
   }
 }
 
-export function SolverTimesData(ResultsData: any[], Category): {
+
+/**
+ * Get the statistics for a selected category.
+ */
+export function AnalyzeDataByCategory(ResultsData: any[], Category: string): {
   [SolverName: string]: {
     average: number;
     min: number;
     max: number;
-    std: number[];
+    std: number;
     sum: number;
+    percentile_10: number;
+    percentile_25: number;
+    percentile_50: number;
+    percentile_75: number;
+    percentile_90: number;
   };
 } {
   /**
@@ -124,52 +148,71 @@ export function SolverTimesData(ResultsData: any[], Category): {
     (acc, curr) => {
       const parsedValue = parseFloat(curr[Category]);
   
-      if (!isNaN(parsedValue)) {
+      if (isFinite(parsedValue)) {
         if (!acc[curr.SolverName]) {
           acc[curr.SolverName] = [];
         }
         acc[curr.SolverName].push(parsedValue);
       }
-  
       return acc;
     },
     {}
-  );
+  );  
 
   /**
-   * Set statistics that need to be calculated.
+   * Calculate statistics.
    */
   const SolverTimeStats: {
     [SolverName: string]: {
       average: number;
       min: number;
       max: number;
-      std: number[];
+      std: number;
       sum: number;
+      percentile_10: number;
+      percentile_25: number;
+      percentile_50: number;
+      percentile_75: number;
+      percentile_90: number;
     };
   } = {};
 
   for (const SolverName in SolverTimes) {
     if (Object.prototype.hasOwnProperty.call(SolverTimes, SolverName)) {
       const times = SolverTimes[SolverName];
-      const avgTime = math.mean(times);
-      const minTime = math.min(times);
-      const maxTime = math.max(times);
-      const stdTime = math.std(times);
-      const sumTime = math.sum(times);
+      const avgValue = math.mean(times);
+      const minValue = math.min(times);
+      const maxValue = math.max(times);
+      const stdValue = Number(math.std(times));
+      const sumValue = math.sum(times);
+      const p10Value = Number(math.quantileSeq(times, 0.1));
+      const p25Value = Number(math.quantileSeq(times, 0.25));
+      const p50Value = Number(math.quantileSeq(times, 0.5));
+      const p75Value = Number(math.quantileSeq(times, 0.75));
+      const p90Value = Number(math.quantileSeq(times, 0.9));
+
+      
       SolverTimeStats[SolverName] = {
-        average: avgTime,
-        min: minTime,
-        max: maxTime,
-        std: stdTime,
-        sum: sumTime
+        average: avgValue,
+        min: minValue,
+        max: maxValue,
+        std: stdValue,
+        sum: sumValue,
+        percentile_10: p10Value,
+        percentile_25: p25Value,
+        percentile_50: p50Value,
+        percentile_75: p75Value,
+        percentile_90: p90Value
       };
     }
   }
   return SolverTimeStats;
 }
 
-export function AllSolverTimes(TrcData) {
+/**
+ * Extract all solver times to a separate array.
+ */
+export function ExtractAllSolverTimes(TrcData: Object[]) {
   const result = TrcData.reduce((acc: {[key: string]: number[]}, obj: {[key: string]: any}) => {
     if (!acc[obj['SolverName']]) {
       acc[obj['SolverName']] = [];
