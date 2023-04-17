@@ -198,16 +198,21 @@ export function StatisticsTable(SolverTimeStats: {
   const NewStatisticsTable = document.createElement("table");
   NewStatisticsTable.classList.add("table", "table-bordered", "table-sm", "border-dark", "border-2");
 
+  const TableCaption = document.createElement("caption");
+  TableCaption.textContent = Title + " statistics.";
+
   const Header = document.createElement("thead")
   Header.classList.add("table-dark");
   
   const HeaderRow = document.createElement("tr");
   const DataLabel = document.createElement("th");
-  DataLabel.textContent = Title + " Summary";
+  DataLabel.textContent = "Summary";
   DataLabel.scope = "col";
   
   Header.appendChild(HeaderRow);
   HeaderRow.appendChild(DataLabel);
+
+  NewStatisticsTable.appendChild(TableCaption);
   NewStatisticsTable.appendChild(Header);
 
   /**
