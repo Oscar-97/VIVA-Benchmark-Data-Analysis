@@ -210,7 +210,7 @@ export function AnalyzeDataByCategory(
 /**
  * Extract all solver times to a separate array.
  */
-export function ExtractAllSolverTimes(TrcData: Object[]) {
+export function ExtractAllSolverTimes(TrcData: object[]) {
   const result = TrcData.reduce(
     (acc: { [key: string]: number[] }, obj: { [key: string]: any }) => {
       if (!acc[obj["SolverName"]]) {

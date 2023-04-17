@@ -2,7 +2,7 @@ import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
 
 export function GetInstanceInformation(
   RawInstanceInfoData: string[]
-): string[] {
+): object[] {
   const InstanceInfo = [];
 
   // Set header.
@@ -23,7 +23,7 @@ export function GetInstanceInformation(
   return InstanceInfo;
 }
 
-export function GetInstancePrimalDualbounds(RawSoluData: any[]): string[] {
+export function GetInstancePrimalDualbounds(RawSoluData: any[]): object[] {
   const SoluData = [];
   const RegexPattern = /^=(.*?)=\s+(.*?)\s+(.*?)$/;
 

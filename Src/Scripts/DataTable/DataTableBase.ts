@@ -115,7 +115,10 @@ export function TableData(
   DataTableDiv.appendChild(NewDataTable);
 }
 
-export function TableDataTrc(TrcData: string[], CheckedSolvers): void {
+export function TableDataTrc(
+  TrcData: object[],
+  CheckedSolvers: string[]
+): void {
   /**
    * @param DataTableDiv Div that contains the data table.
    */

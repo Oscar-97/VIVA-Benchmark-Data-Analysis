@@ -56,7 +56,7 @@ export function TableDisplay(
  * Display the data in the div with the id "dataTable" when clicking on the view all results or selection button.
  * @param TrcData
  */
-export function TableDisplayTrc(TrcData: string[]): void {
+export function TableDisplayTrc(TrcData: object[]): void {
   setTimeout(() => {
     const CheckedSolvers = GetCheckedSolvers();
 

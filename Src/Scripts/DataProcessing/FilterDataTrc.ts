@@ -12,7 +12,7 @@ import {
  * @param RawData The provided raw data.
  * @returns TrcData Contains the processed trc results.
  */
-export function ExtractTrcData(RawData: string[]): string[] {
+export function ExtractTrcData(RawData: string[]): object[] {
   const TrcData = [];
   const FirstLine = RawData[0].split(",");
 
@@ -149,7 +149,7 @@ export function ExtractTrcData(RawData: string[]): string[] {
  * @returns DataCategoryResults The category results that will be returned.
  */
 export function GetTrcDataCategory(
-  TrcData: string[],
+  TrcData: object[],
   DataCategory: string
 ): string[] {
   const DataCategoryResults = [];

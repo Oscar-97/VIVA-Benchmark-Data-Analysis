@@ -188,16 +188,16 @@ function ManageData(): void {
    * @param TrcData Trace data results.
    * @param TrcDataFiltered Filtered trace data results.
    */
-  let TrcData = [];
-  let TrcDataFiltered = [];
+  let TrcData: object[] = [];
+  let TrcDataFiltered: object[] = [];
 
   /**
    * SOLU and CSV file.
    * @param InstanceInfoData Instance properties.
    * @param SoluData Best known primal and dual bounds for each instance.
    */
-  let InstanceInfoData: Object[] = [];
-  let SoluData: Object[] = [];
+  let InstanceInfoData: object[] = [];
+  let SoluData: object[] = [];
 
   /**
    * Run if the uploaded file is json.
