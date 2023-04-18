@@ -24,14 +24,13 @@ export function GetInstanceInformation(
   return InstanceInfo;
 }
 
-export function GetInstancePrimalDualbounds(RawSoluData: any[]): object[] {
+export function GetInstancePrimalDualbounds(RawSoluData: string[]): object[] {
   const SoluData = [];
   const RegexPattern = /^=(.*?)=\s+(.*?)\s+(.*?)$/;
 
   for (let i = 0; i < RawSoluData.length; i++) {
     const Obj = {};
-    const CurrentLine = RawSoluData[i].split("\n");
-    const Match = RegexPattern.exec(CurrentLine);
+    const Match = RegexPattern.exec(RawSoluData[i]);
     if (Match !== null) {
       Obj["InputFileName"] = Match[2];
       switch (Match[1]) {
