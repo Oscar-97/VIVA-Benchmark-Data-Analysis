@@ -59,14 +59,18 @@ export function UpdateResultsData(): string[] {
  * @returns TrcData
  */
 export function UpdateResultsTrc(): object[] {
-  const Headers = Array.from(document.querySelectorAll(".thead-dark th")).map(header => header.textContent);
-  
-  const TrcData = Array.from(document.querySelectorAll(".row-selected-problems")).map(row =>
+  const Headers = Array.from(document.querySelectorAll(".thead-dark th")).map(
+    (header) => header.textContent
+  );
+
+  const TrcData = Array.from(
+    document.querySelectorAll(".row-selected-problems")
+  ).map((row) =>
     Array.from(row.querySelectorAll("td")).reduce((Obj, cell, j) => {
       Obj[Headers[j]] = cell.textContent;
       return Obj;
     }, {})
   );
-  
+
   return TrcData;
 }

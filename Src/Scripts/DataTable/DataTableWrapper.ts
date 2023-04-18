@@ -5,7 +5,7 @@ import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-rowreorder-bs5";
 import "datatables.net-select-bs5";
 import "datatables.net-fixedcolumns-bs5";
-import "datatables.net-searchpanes-bs5"
+import "datatables.net-searchpanes-bs5";
 import { GetCheckedSolvers, GetComparisonArray } from "../Solvers/UsedSolvers";
 import { TableData, TableDataTrc } from "./DataTableBase";
 import { ElementStatusWithTable } from "../Elements/ElementStatus";
@@ -86,7 +86,7 @@ function DataTablesConfiguration(): void {
     destroy: true,
     stateSave: true,
     searchPanes: {
-      layout: 'auto'
+      layout: "auto",
     },
     dom:
       "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
@@ -121,11 +121,11 @@ function DataTablesConfiguration(): void {
     fixedColumns: true,
     columnDefs: [
       {
-          searchPanes: {
-              show: true
-          },
-          targets: [0, 2]
-      }
+        searchPanes: {
+          show: true,
+        },
+        targets: [0, 2],
+      },
     ],
     buttons: ["colvis"],
   });
