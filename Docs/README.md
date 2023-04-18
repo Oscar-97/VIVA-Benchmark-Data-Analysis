@@ -71,9 +71,7 @@ The file should include `dataSet`, `dataFileType` and `checkedSolvers`.
 # Features to Implement
 
 ## Table Page
-- [ ] Calculate new columns for .trc files.
 - [ ] SearchBuilder.
-- [ ] Filter columns.
 
 ## Plot Page
 - [ ] Add more plotting types.
