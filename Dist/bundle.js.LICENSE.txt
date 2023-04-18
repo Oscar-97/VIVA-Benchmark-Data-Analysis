@@ -36,6 +36,10 @@
  * Date: 2022-12-20T21:28Z
  */
 
+/*! Bootstrap 5 integration for DataTables' SearchPanes
+ * © SpryMedia Ltd - datatables.net/license
+ */
+
 /*! Bootstrap integration for DataTables' Buttons
  * ©2016 SpryMedia Ltd - datatables.net/license
  */
@@ -54,6 +58,14 @@
 
 /*! FixedColumns 4.2.1
  * 2019-2022 SpryMedia Ltd - datatables.net/license
+ */
+
+/*! SearchPanes 2.1.2
+     * © SpryMedia Ltd - datatables.net/license
+     */
+
+/*! SearchPanes 2.1.2
+ * © SpryMedia Ltd - datatables.net/license
  */
 
 /*! Select for DataTables 1.5.0

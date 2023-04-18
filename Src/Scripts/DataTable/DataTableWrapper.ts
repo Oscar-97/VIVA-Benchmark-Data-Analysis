@@ -5,6 +5,7 @@ import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-rowreorder-bs5";
 import "datatables.net-select-bs5";
 import "datatables.net-fixedcolumns-bs5";
+import "datatables.net-searchpanes-bs5"
 import { GetCheckedSolvers, GetComparisonArray } from "../Solvers/UsedSolvers";
 import { TableData, TableDataTrc } from "./DataTableBase";
 import { ElementStatusWithTable } from "../Elements/ElementStatus";
@@ -84,6 +85,9 @@ function DataTablesConfiguration(): void {
   const table = jq("#dataTableGenerated").DataTable({
     destroy: true,
     stateSave: true,
+    searchPanes: {
+      layout: 'auto'
+    },
     dom:
       "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
       "<'row'<'col-sm-12'tr>>" +
@@ -115,11 +119,21 @@ function DataTablesConfiguration(): void {
     scrollCollapse: true,
     paging: true,
     fixedColumns: true,
+    columnDefs: [
+      {
+          searchPanes: {
+              show: true
+          },
+          targets: [0, 2]
+      }
+    ],
     buttons: ["colvis"],
   });
 
   jq(".dataTables_length select").addClass("custom-select custom-select-sm");
   table.buttons().container().appendTo("#dataTableGenerated_wrapper");
+  table.searchPanes.container().prependTo(table.table().container());
+  table.searchPanes.resizePanes();
 }
 
 /**
