@@ -19,9 +19,18 @@ export function CalculatePrimalBound(
   PrimalBound: number | string,
   Direction: number
 ): number {
-  if (PrimalBound === "" || PrimalBound === "NA") {
+  if (
+    PrimalBound === "" ||
+    PrimalBound === "NA" ||
+    PrimalBound === "nan" ||
+    PrimalBound === "-nan"
+  ) {
     PrimalBound = Direction * Infinity;
-  } else {
+  } else if (PrimalBound === "inf") {
+    PrimalBound = Infinity;
+  } else if (PrimalBound === "-inf") {
+    PrimalBound = -1 * Infinity;
+  } else if (typeof PrimalBound === "string") {
     PrimalBound = math.bignumber(PrimalBound).toNumber();
   }
   return PrimalBound;
@@ -33,8 +42,17 @@ export function CalculateDualBound(
   DualBound: number | string,
   Direction: number
 ): number {
-  if (DualBound === "" || DualBound === "NA") {
+  if (
+    DualBound === "" ||
+    DualBound === "NA" ||
+    DualBound === "nan" ||
+    DualBound === "-nan"
+  ) {
     DualBound = -1 * Direction * Infinity;
+  } else if (DualBound === "inf") {
+    DualBound = Infinity;
+  } else if (DualBound === "-inf") {
+    DualBound = -1 * Infinity;
   } else if (typeof DualBound === "string") {
     DualBound = math.bignumber(DualBound).toNumber();
   }
@@ -87,14 +105,20 @@ export function CalculateGap(a: number, b: number, tol = 1e-9): number {
   }
 
   // Check if either value is close to zero or infinity, or if the values have opposite signs
-  if (
-    math.abs(a) <= tol ||
-    math.abs(b) <= tol ||
-    math.abs(a) >= Infinity ||
-    math.abs(b) >= Infinity ||
-    a * b < 0.0
-  ) {
-    return Infinity;
+  try {
+    if (
+      math.abs(a) <= tol ||
+      math.abs(b) <= tol ||
+      math.abs(a) >= Infinity ||
+      math.abs(b) >= Infinity ||
+      a * b < 0.0
+    ) {
+      return Infinity;
+    }
+  }
+  catch (e) {
+    console.log("A ", a, " B ", b);
+    console.log(e)
   }
 
   // Compute and return the gap between the values
@@ -122,6 +146,7 @@ export function CalculateGapPercentage(a: number, b: number): number {
 /**
  * Get the statistics for a selected category.
  */
+
 export function AnalyzeDataByCategory(
   ResultsData: any[],
   Category: string
@@ -144,7 +169,7 @@ export function AnalyzeDataByCategory(
    */
   const SolverTimes: { [SolverName: string]: number[] } = ResultsData.reduce(
     (acc, curr) => {
-      const parsedValue = math.bignumber(curr[Category]);
+      const parsedValue = Number(curr[Category]);
 
       if (isFinite(parsedValue)) {
         if (!acc[curr.SolverName]) {
@@ -207,17 +232,24 @@ export function AnalyzeDataByCategory(
 }
 
 /**
- * Extract all solver times to a separate array.
+ * Extract all solver times from each object per solver into an object.
+ * Skip those Time[s] that are "NA" and NaN.
  */
-export function ExtractAllSolverTimes(TrcData: object[]) {
+
+export function ExtractAllSolverTimes(TrcData: object[]): object {
   const result = TrcData.reduce(
-    (acc: { [key: string]: number[] }, obj: { [key: string]: any }) => {
-      if (!acc[obj["SolverName"]]) {
-        acc[obj["SolverName"]] = [];
+    (
+      acc: { [key: string]: number[] },
+      obj: any
+    ): { [key: string]: number[] } => {
+      if (!acc[obj.SolverName]) {
+        acc[obj.SolverName] = [];
       }
-      const time = math.bignumber(obj["Time[s]"]).toNumber();
-      if (!isNaN(time)) {
-        acc[obj["SolverName"]].push(time);
+      if (obj["Time[s]"] !== "NA") {
+        const time = math.bignumber(obj["Time[s]"]).toNumber();
+        if (!isNaN(time)) {
+          acc[obj.SolverName].push(time);
+        }
       }
       return acc;
     },
