@@ -16,7 +16,6 @@ export function GetComparisonArray(
       ComparisonArray[i] = "NotUsed";
     }
   }
-  console.log(ComparisonArray);
   return ComparisonArray;
 }
 
@@ -31,6 +30,5 @@ export function GetCheckedSolvers(): string[] {
       CheckedSolvers.push(Solver.id);
     }
   }
-  console.log(CheckedSolvers);
   return CheckedSolvers;
 }
