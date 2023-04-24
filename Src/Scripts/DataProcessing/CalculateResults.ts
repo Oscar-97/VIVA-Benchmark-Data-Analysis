@@ -19,19 +19,21 @@ export function CalculatePrimalBound(
   PrimalBound: number | string,
   Direction: number
 ): number {
-  if (
-    PrimalBound === "" ||
-    PrimalBound === "NA" ||
-    PrimalBound === "nan" ||
-    PrimalBound === "-nan"
-  ) {
-    PrimalBound = Direction * Infinity;
-  } else if (PrimalBound === "inf") {
-    PrimalBound = Infinity;
-  } else if (PrimalBound === "-inf") {
-    PrimalBound = -1 * Infinity;
-  } else if (typeof PrimalBound === "string") {
-    PrimalBound = math.bignumber(PrimalBound).toNumber();
+  if (typeof PrimalBound === "string") {
+    if (
+      PrimalBound === "" ||
+      PrimalBound === "NA" ||
+      PrimalBound === "nan" ||
+      PrimalBound === "-nan"
+    ) {
+      PrimalBound = Direction * Infinity;
+    } else if (PrimalBound.toLowerCase() === "inf" || PrimalBound.toLowerCase() === "+inf") {
+      PrimalBound = Infinity;
+    } else if (PrimalBound.toLocaleLowerCase() === "-inf") {
+      PrimalBound = -1 * Infinity;
+    } else {
+      PrimalBound = math.bignumber(PrimalBound).toNumber();
+    }
   }
   return PrimalBound;
 }
@@ -42,19 +44,21 @@ export function CalculateDualBound(
   DualBound: number | string,
   Direction: number
 ): number {
-  if (
-    DualBound === "" ||
-    DualBound === "NA" ||
-    DualBound === "nan" ||
-    DualBound === "-nan"
-  ) {
-    DualBound = -1 * Direction * Infinity;
-  } else if (DualBound === "inf") {
-    DualBound = Infinity;
-  } else if (DualBound === "-inf") {
-    DualBound = -1 * Infinity;
-  } else if (typeof DualBound === "string") {
-    DualBound = math.bignumber(DualBound).toNumber();
+  if (typeof DualBound === "string") {
+    if (
+      DualBound === "" ||
+      DualBound === "NA" ||
+      DualBound === "nan" ||
+      DualBound === "-nan"
+    ) {
+      DualBound = -1 * Direction * Infinity;
+    } else if (DualBound.toLowerCase() === "inf" || DualBound.toLowerCase() === "+inf") {
+      DualBound = Infinity;
+    } else if (DualBound.toLowerCase() === "-inf") {
+      DualBound = -1 * Infinity;
+    } else {
+      DualBound = math.bignumber(DualBound).toNumber();
+    }
   }
   return DualBound;
 }
@@ -115,10 +119,9 @@ export function CalculateGap(a: number, b: number, tol = 1e-9): number {
     ) {
       return Infinity;
     }
-  }
-  catch (e) {
+  } catch (e) {
     console.log("A ", a, " B ", b);
-    console.log(e)
+    console.log(e);
   }
 
   // Compute and return the gap between the values
