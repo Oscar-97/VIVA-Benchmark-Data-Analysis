@@ -44,6 +44,7 @@ export function ElementStatus(): void {
 export function ElementStatusPlots(): void {
   FileInput.value = "";
   ViewPlotsButton.disabled = true;
+  DeleteLocalStorageButton.disabled = true;
 }
 
 /**

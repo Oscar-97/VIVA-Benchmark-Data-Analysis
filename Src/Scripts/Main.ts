@@ -131,6 +131,7 @@ function InitializeProgram(): void {
   try {
     [RawData, DataFileType, CheckedSolvers] = GetUserConfiguration();
     ImportDataEvents("Found cached benchmark file!", "json");
+    DeleteLocalStorageButton.disabled = false;
     ManageData();
   } catch (err) {
     console.log("No data found in local storage: ", err);
@@ -230,6 +231,13 @@ function ManageData(): void {
     Solvers = GetTrcDataCategory(TrcData, "SolverName");
     AddResultCategories(TrcData);
   }
+
+  /**
+   * Delete stored data in local storage.
+   */
+  DeleteLocalStorageButton.addEventListener("click", () => {
+    DeleteUserConfiguration();
+  });
 
   /**
    * Check if the user is on the Report page.
@@ -336,13 +344,6 @@ function ManageData(): void {
      */
     DownloadCSVButton.addEventListener("click", () => {
       TableDownloadCSV();
-    });
-
-    /**
-     * Delete stored data in local storage.
-     */
-    DeleteLocalStorageButton.addEventListener("click", () => {
-      DeleteUserConfiguration();
     });
 
     /**
