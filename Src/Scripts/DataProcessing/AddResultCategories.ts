@@ -37,22 +37,26 @@ export function AddResultCategories(TrcData: object[]): void {
 
     Obj["Gap"] = CalculateGap(
       Obj["PrimalBound Solver"],
-      Obj["DualBound Solver"]
+      Obj["DualBound Solver"],
+      Obj["Dir"]
     );
 
     Obj["PrimalGap"] = CalculateGap(
       Obj["PrimalBound Solver"],
-      Obj["PrimalBound Problem"]
+      Obj["PrimalBound Problem"],
+      Obj["Dir"]
     );
 
     Obj["DualGap"] = CalculateGap(
       Obj["DualBound Solver"],
-      Obj["DualBound Problem"]
+      Obj["DualBound Problem"],
+      Obj["Dir"]
     );
 
     Obj["Gap Problem"] = CalculateGap(
       Obj["DualBound Problem"],
-      Obj["PrimalBound Problem"]
+      Obj["PrimalBound Problem"],
+      Obj["Dir"]
     );
 
     Obj["Gap[%] Solver"] = CalculateGapPercentage(

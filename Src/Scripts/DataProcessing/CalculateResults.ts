@@ -3,10 +3,13 @@ import * as math from "mathjs";
 
 // Problem - Direction
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L261-L262
-export function CalculateDirection(Direction: number | string): number {
+export function CalculateDirection(Direction: number | string): number | string {
   if (Direction === "" || Direction === "NA") {
-    return 1;
-  } else {
+    return "min";
+  } else if (Direction === -1) {
+    return "max";
+  }
+  else {
     const bigDirection = math.bignumber(Direction);
     const result = math.bignumber(1).minus(bigDirection.times(2));
     return result.toNumber();
@@ -102,7 +105,13 @@ export function SetTermStatus(TerminationStatus: number | string): string {
 
 // Solver - Primal and Dual Gap
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/utils.py#L46-L59
-export function CalculateGap(a: number, b: number, tol = 1e-9): number {
+export function CalculateGap(a: number, b: number, dir: number, tol = 1e-9): number {
+  // If dir is negative, switch the values.
+  if (dir === -1) {
+    a === b;
+    b === a;
+  }
+  
   // Check if the values are equal within tolerance
   if (a === b || math.abs(a - b) <= tol) {
     return 0.0;
