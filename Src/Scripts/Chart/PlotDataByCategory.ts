@@ -48,14 +48,22 @@ export function PlotAllSolverTimes(TrcData: object[]): void {
   ViewPlotsButton.disabled = false;
   ViewPlotsButton.addEventListener("click", () => {
     const SolverTimes = ExtractAllSolverTimes(TrcData);
-    const Data = (Object.entries(SolverTimes) as [string, number[]][]).map(
-      ([key, values]) => ({
-        label: key,
-        data: values.map((val, index) => ({ x: index, y: val })),
-      })
-    );
+    const Data = (
+      Object.entries(SolverTimes) as [
+        string,
+        { time: number; InputFileName: string }[]
+      ][]
+    ).map(([key, values]) => ({
+      label: key,
+      data: values.map(({ time, InputFileName }) => ({
+        x: InputFileName,
+        y: time,
+      })),
+      showLine: false,
+    }));
 
     console.log("Data structure: ", Data);
-    CreateChart("scatter", Data, "", "Solver times");
+
+    CreateChart("line", Data, "InputFileName", "Solver times"); // Pass "InputFileName" as the x-axis label
   });
 }
