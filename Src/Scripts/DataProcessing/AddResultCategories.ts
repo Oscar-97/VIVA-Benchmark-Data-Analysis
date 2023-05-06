@@ -3,6 +3,7 @@ import {
   CalculatePrimalBound,
   CalculateDualBound,
   SetTermStatus,
+  CalculateDifference,
   CalculateGap,
   CalculateGapPercentage,
 } from "./CalculateResults";
@@ -14,10 +15,20 @@ import {
  */
 export function AddResultCategories(TrcData: object[]): void {
   for (const Obj of TrcData) {
+    console.log(Obj["InputFileName"]);
+    console.log("Dir before: ", Obj["Dir"]);
     Obj["Dir"] = CalculateDirection(Obj["Dir"]);
+    console.log("Dir after: ", Obj["Dir"]);
 
-    Obj["PrimalBound Solver"] = CalculatePrimalBound(Obj["Obj"], Obj["Dir"]);
-    Obj["DualBound Solver"] = CalculateDualBound(Obj["Obj Est"], Obj["Dir"]);
+    Obj["PrimalBound Solver"] = CalculatePrimalBound(
+      Obj["Obj"], 
+      Obj["Dir"]
+    );
+
+    Obj["DualBound Solver"] = CalculateDualBound(
+      Obj["Obj Est"], 
+      Obj["Dir"]
+    );
 
     Obj["TermStatus"] = SetTermStatus(Obj["TermStatus"] as string | number);
 
@@ -35,33 +46,32 @@ export function AddResultCategories(TrcData: object[]): void {
       );
     }
 
-    Obj["Gap"] = CalculateGap(
+    Obj["Gap Solver"] = CalculateGap(
       Obj["PrimalBound Solver"],
       Obj["DualBound Solver"],
-      Obj["Dir"]
-    );
-
-    Obj["PrimalGap"] = CalculateGap(
-      Obj["PrimalBound Solver"],
-      Obj["PrimalBound Problem"],
-      Obj["Dir"]
-    );
-
-    Obj["DualGap"] = CalculateGap(
-      Obj["DualBound Solver"],
-      Obj["DualBound Problem"],
       Obj["Dir"]
     );
 
     Obj["Gap Problem"] = CalculateGap(
-      Obj["DualBound Problem"],
       Obj["PrimalBound Problem"],
+      Obj["DualBound Problem"],
       Obj["Dir"]
+    );
+
+    Obj["PrimalGap"] = CalculateDifference(
+      Obj["PrimalBound Solver"],
+      Obj["PrimalBound Problem"]
+    );
+
+    Obj["DualGap"] = CalculateDifference(
+      Obj["DualBound Solver"],
+      Obj["DualBound Problem"]
     );
 
     Obj["Gap[%] Solver"] = CalculateGapPercentage(
       Obj["PrimalBound Solver"],
-      Obj["PrimalBound Problem"]
+      Obj["PrimalBound Problem"],
+      Obj["Dir"]
     );
   }
 }
