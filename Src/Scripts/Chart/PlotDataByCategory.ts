@@ -62,8 +62,6 @@ export function PlotAllSolverTimes(TrcData: object[]): void {
       showLine: false,
     }));
 
-    console.log("Data structure: ", Data);
-
-    CreateChart("line", Data, "InputFileName", "Solver times"); // Pass "InputFileName" as the x-axis label
+    CreateChart("line", Data, "InputFileName", "Solver times");
   });
 }
