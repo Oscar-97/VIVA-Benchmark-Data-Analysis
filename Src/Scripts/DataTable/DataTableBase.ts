@@ -228,7 +228,7 @@ export function StatisticsTable(
   NewStatisticsTable.appendChild(Header);
 
   /**
-   * Iterate ove each key in the SolverTimeStats and create a new table header element.
+   * Iterate over each key in the SolverTimeStats and create a new table header element.
    */
   const UsedCategories: string[] = [];
   for (const ObjKey of Object.keys(SolverTimeStats)) {
