@@ -59,12 +59,13 @@ export function TableDisplay(
  */
 export function TableDisplayTrc(TrcData: object[]): void {
   setTimeout(() => {
-    const CheckedSolvers = GetCheckedSolvers();
+    //const CheckedSolvers = GetCheckedSolvers();
 
     /**
      * Create the table with the trc data.
      */
-    TableDataTrc(TrcData, CheckedSolvers);
+    //TableDataTrc(TrcData, CheckedSolvers);
+    TableDataTrc(TrcData);
 
     /**
      * Apply the DataTables plugin. Applied as a layer over the generated table.

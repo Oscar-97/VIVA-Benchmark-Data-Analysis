@@ -22,6 +22,7 @@ export function ElementStatus(): void {
   ViewAllResultsButton.disabled = true;
   FilterSelectionButton.disabled = true;
   SelectAllButton.disabled = true;
+  SelectAllButton.hidden = true;
   SelectAllButton.innerText = "Select All Solvers";
   SaveLocalStorageButton.disabled = true;
   DownloadCSVButtonLayer.disabled = true;

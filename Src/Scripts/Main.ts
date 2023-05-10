@@ -215,6 +215,8 @@ function ManageData(): void {
     InstanceLabels = GetInstanceLabels(DataLabels);
     ProblemList = GetProblems(RawData);
     ResultsData = GetResults(RawData);
+    
+    SelectAllButton.hidden = false;
   } else if (DataFileType === "trc") {
     TrcData = ExtractTrcData(RawData);
 
@@ -243,10 +245,12 @@ function ManageData(): void {
    * Check if the user is on the Report page.
    */
   if (document.title == "Report") {
-    TableFilters(Solvers, "Solvers");
+    if (DataFileType === "txt") {
+      TableFilters(Solvers, "Solvers");
 
-    if (CheckedSolvers.length !== 0) {
-      SelectSavedSolvers(CheckedSolvers);
+      if (CheckedSolvers.length !== 0) {
+        SelectSavedSolvers(CheckedSolvers);
+      }
     }
 
     /**
@@ -326,7 +330,7 @@ function ManageData(): void {
         } else {
           NewRawData = CreateDataTrc(TrcDataFiltered);
         }
-        CheckedSolvers = GetCheckedSolvers();
+        // CheckedSolvers = GetCheckedSolvers();
         CreateUserConfiguration(NewRawData, DataFileType, CheckedSolvers);
       }
       console.log("Saved benchmarks.");
