@@ -74,7 +74,9 @@ export function ReadData(
         localStorage.setItem("UserConfiguration", JSON_Data);
         console.log("Stored uploaded UserConfiguration.");
       } else if (FileExtension === "txt" || FileExtension === "trc") {
-        const Lines = (<string>Reader.result).split("\r\n");
+        const Lines = (<string>Reader.result)
+          .split(/\r?\n/)
+          .map((line) => line.trim());
         for (let i = 0; i <= Lines.length - 1; i++) {
           const Line = Lines[i];
           RawData.push(Line);

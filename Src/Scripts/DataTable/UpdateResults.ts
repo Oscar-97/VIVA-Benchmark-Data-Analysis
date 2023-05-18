@@ -59,28 +59,18 @@ export function UpdateResultsData(): string[] {
  * @returns TrcData
  */
 export function UpdateResultsTrc(): object[] {
-  /**
-   * Create the keys from the table headers.
-   */
-  const Headers = document.querySelectorAll("th");
-  const ResultData = {};
-  for (let i = 0; i < Headers.length; i++) {
-    ResultData[Headers[i].innerText] = "";
-  }
+  const Headers = Array.from(document.querySelectorAll(".thead-dark th")).map(
+    (header) => header.textContent
+  );
 
-  /**
-   * Set the values as the selected rows.
-   */
-  const Rows = document.querySelectorAll(".row-selected-problems");
-  const TrcData = [];
+  const TrcData = Array.from(
+    document.querySelectorAll(".row-selected-problems")
+  ).map((row) =>
+    Array.from(row.querySelectorAll("td")).reduce((Obj, cell, j) => {
+      Obj[Headers[j]] = cell.textContent;
+      return Obj;
+    }, {})
+  );
 
-  Rows.forEach(function (row) {
-    const Obj = Object.assign({}, ResultData);
-    const Cells = row.querySelectorAll("td");
-    Cells.forEach((cell, j) => {
-      Obj[Headers[j].innerText] = cell.innerText;
-    });
-    TrcData.push(Obj);
-  });
   return TrcData;
 }

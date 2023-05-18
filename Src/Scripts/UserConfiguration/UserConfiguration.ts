@@ -20,11 +20,13 @@ const UserData = {
 export function CreateUserConfiguration(
   RawData: string[],
   DataFileType: string,
-  CheckedSolvers: string[]
+  CheckedSolvers?: string[]
 ): void {
   UserData.dataSet = RawData;
   UserData.dataFileType = DataFileType;
-  UserData.checkedSolvers = CheckedSolvers;
+  if (CheckedSolvers) {
+    UserData.checkedSolvers = CheckedSolvers;
+  }
   localStorage.setItem("UserConfiguration", JSON.stringify(UserData));
   DisplayAlertNotification("Saved configuration.");
 }
@@ -43,9 +45,11 @@ export function GetUserConfiguration(): [string[], string, string[]] {
   const DataFileType: string = UserConfig.dataFileType;
 
   const CheckedSolvers = [];
-  UserConfig.checkedSolvers.forEach((value: string[]) => {
-    CheckedSolvers.push(value);
-  });
+  if (UserConfig.checkedSolvers) {
+    UserConfig.checkedSolvers.forEach((value: string[]) => {
+      CheckedSolvers.push(value);
+    });
+  }
 
   console.log("RawData fron localStorage: ", RawData);
   console.log("FileType of saved data: ", DataFileType);

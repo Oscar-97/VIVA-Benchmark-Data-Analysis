@@ -2,6 +2,12 @@
     font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", sans-serif;
 }
 
+.vertical-separator {
+    border-left: 1px solid #ccc;
+    height: auto;
+    margin: 0 5px;
+}
+
 a {
     text-decoration: none;
     color: #ffffff;
@@ -48,7 +54,7 @@ a {
 
 #chartContainer {
     height: auto; 
-    width: 70vw;
+    width: auto;
     margin-left: 1rem;
 }
 

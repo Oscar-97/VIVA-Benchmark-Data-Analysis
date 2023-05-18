@@ -5,6 +5,7 @@ import {
   ViewAllResultsButton,
   ViewPlotsButton,
   DeleteLocalStorageButton,
+  SaveLocalStorageButton,
 } from "./Elements";
 import { DisplayAlertNotification } from "./DisplayAlertNotification";
 
@@ -53,9 +54,9 @@ export function ImportDataEvents(
     if (FileExtensionType === "json") {
       DeleteLocalStorageButton.disabled = false;
     }
-  } else if (document.title == "Plots") {
+  } else if (document.title != "Report") {
     ViewPlotsButton.disabled = false;
-    SelectAllButton.disabled = false;
+    SaveLocalStorageButton.disabled = false;
   }
 
   // Display alert with message.

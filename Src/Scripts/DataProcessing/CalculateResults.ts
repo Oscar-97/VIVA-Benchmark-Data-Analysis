@@ -1,29 +1,46 @@
 import * as math from "mathjs";
+
 // Problem - Direction
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L261-L262
-export function CalculateDirection(Direction: number | string): number {
-  if (Direction === "" || Direction === "NA") {
-    Direction = 1;
+export function CalculateDirection(Direction: number | string): string {
+  Direction = 1 - 2 * Number(Direction);
+  if (Direction == -1) {
+    Direction = "max";
+    return Direction;
   } else {
-    if (typeof Direction === "number") {
-      Direction = 1 - 2 * Direction;
-    } else if (typeof Direction === "string") {
-      Direction = 1 - 2 * parseFloat(Direction);
-    }
+    Direction = "min";
+    return Direction;
   }
-  return Direction;
 }
 
 // Problem & Solver - Primal Bound
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L275-L282
 export function CalculatePrimalBound(
   PrimalBound: number | string,
-  Direction: number
-): number {
-  if (PrimalBound === "" || PrimalBound === "NA") {
-    PrimalBound = Direction * Infinity;
-  } else if (typeof PrimalBound === "string") {
-    PrimalBound = parseFloat(PrimalBound);
+  Direction: string
+): number | string {
+  if (typeof PrimalBound === "string") {
+    if (
+      PrimalBound === "" ||
+      PrimalBound === "NA" ||
+      PrimalBound === "nan" ||
+      PrimalBound === "-nan"
+    ) {
+      if (Direction === "max") {
+        PrimalBound = -1 * Infinity;
+      } else if (Direction === "min") {
+        PrimalBound = Infinity;
+      }
+    } else if (
+      PrimalBound.toLowerCase() === "inf" ||
+      PrimalBound.toLowerCase() === "+inf"
+    ) {
+      PrimalBound = Infinity;
+    } else if (PrimalBound.toLocaleLowerCase() === "-inf") {
+      PrimalBound = -1 * Infinity;
+    } else {
+      PrimalBound = math.bignumber(PrimalBound).toNumber();
+    }
   }
   return PrimalBound;
 }
@@ -32,12 +49,30 @@ export function CalculatePrimalBound(
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L275-L282
 export function CalculateDualBound(
   DualBound: number | string,
-  Direction: number
-): number {
-  if (DualBound === "" || DualBound === "NA") {
-    DualBound = -1 * Direction * Infinity;
-  } else if (typeof DualBound === "string") {
-    DualBound = parseFloat(DualBound);
+  Direction: string
+): number | string {
+  if (typeof DualBound === "string") {
+    if (
+      DualBound === "" ||
+      DualBound === "NA" ||
+      DualBound === "nan" ||
+      DualBound === "-nan"
+    ) {
+      if (Direction === "max") {
+        DualBound = Infinity;
+      } else if (Direction === "min") {
+        DualBound = -1 * Infinity;
+      }
+    } else if (
+      DualBound.toLowerCase() === "inf" ||
+      DualBound.toLowerCase() === "+inf"
+    ) {
+      DualBound = Infinity;
+    } else if (DualBound.toLowerCase() === "-inf") {
+      DualBound = -1 * Infinity;
+    } else {
+      DualBound = math.bignumber(DualBound).toNumber();
+    }
   }
   return DualBound;
 }
@@ -81,42 +116,72 @@ export function SetTermStatus(TerminationStatus: number | string): string {
 
 // Solver - Primal and Dual Gap
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/utils.py#L46-L59
-export function CalculateGap(a: number, b: number, tol = 1e-9): number {
+export function CalculateGap(
+  a: number,
+  b: number,
+  dir: string,
+  tol = 1e-9
+): number {
+  // If dir is negative, switch the values to do DualBound - PrimalBound.
+  if (dir === "max") {
+    [a, b] = [b, a];
+  }
+
   // Check if the values are equal within tolerance
-  if (a === b || Math.abs(a - b) <= tol) {
+  if (math.abs(a - b) < tol) {
     return 0.0;
   }
 
-  // Check if either value is close to zero or infinity, or if the values have opposite signs
-  if (
-    Math.abs(a) <= tol ||
-    Math.abs(b) <= tol ||
-    Math.abs(a) >= Infinity ||
-    Math.abs(b) >= Infinity ||
-    a * b < 0.0
-  ) {
+  if (math.min(math.abs(a), math.abs(b)) < tol) {
+    return Infinity;
+  }
+
+  if (math.max(math.abs(a), math.abs(b)) > Infinity) {
+    return Infinity;
+  }
+
+    // If either a or b is Infinity, return Infinity
+  if (a === Infinity || b === Infinity) {
+    return Infinity;
+  }
+
+  if (a * b < 0) {
     return Infinity;
   }
 
   // Compute and return the gap between the values
-  return (a - b) / Math.min(Math.abs(a), Math.abs(b));
+  const result = (a - b) / math.min(math.abs(a), math.abs(b));
+  return result;
+}
+
+// Absolute difference.
+export function CalculateDifference(a: number, b: number): number {
+  const Higher = Math.max(a, b);
+  const Lower = Math.min(a, b);
+  return Higher - Lower;
 }
 
 // Solver - Gap[%]
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/utils.py#L21-L39
-export function CalculateGapPercentage(a: number, b: number): number {
-  let Gap: number;
-  if (Math.abs(a) >= Infinity || Math.abs(b) >= Infinity) {
+export function CalculateGapPercentage(
+  a: number,
+  b: number,
+  dir: string
+): number {
+  // If dir is negative, switch the values to do DualBound - PrimalBound.
+  if (dir === "max") {
+    [a, b] = [b, a];
+  }
+
+  // Every number in JavaScript is less than Infinity, hence using equality operator.
+  if (a === Infinity || b === Infinity) {
     if (a === b) {
-      Gap = 0.0;
-      return Gap;
+      return 0.0;
     } else {
-      Gap = a - b;
-      return Gap;
+      return a - b;
     }
   } else {
-    Gap = (a - b) / Math.max(Math.abs(a), Math.abs(b), 1.0);
-    return Gap;
+    return (a - b) / math.max(math.abs(a), math.abs(b), 1.0);
   }
 }
 
@@ -145,7 +210,7 @@ export function AnalyzeDataByCategory(
    */
   const SolverTimes: { [SolverName: string]: number[] } = ResultsData.reduce(
     (acc, curr) => {
-      const parsedValue = parseFloat(curr[Category]);
+      const parsedValue = Number(curr[Category]);
 
       if (isFinite(parsedValue)) {
         if (!acc[curr.SolverName]) {
@@ -208,22 +273,29 @@ export function AnalyzeDataByCategory(
 }
 
 /**
- * Extract all solver times to a separate array.
+ * Extract all solver times from each object per solver into an object.
+ * Skip those Time[s] that are "NA" and NaN.
  */
-export function ExtractAllSolverTimes(TrcData: object[]) {
-  const result = TrcData.reduce(
-    (acc: { [key: string]: number[] }, obj: { [key: string]: any }) => {
-      if (!acc[obj["SolverName"]]) {
-        acc[obj["SolverName"]] = [];
+export function ExtractAllSolverTimes(TrcData: object[]): object {
+  const Result = TrcData.reduce(
+    (
+      acc: { [key: string]: { time: number; InputFileName: string }[] },
+      obj: any
+    ): { [key: string]: { time: number; InputFileName: string }[] } => {
+      if (!acc[obj.SolverName]) {
+        acc[obj.SolverName] = [];
       }
-      const time = parseFloat(obj["Time[s]"]);
-      if (!isNaN(time)) {
-        acc[obj["SolverName"]].push(time);
+      if (obj["Time[s]"] !== "NA") {
+        const time = math.bignumber(obj["Time[s]"]).toNumber();
+        if (!isNaN(time)) {
+          const InputFileName = obj["InputFileName"];
+          acc[obj.SolverName].push({ time, InputFileName });
+        }
       }
       return acc;
     },
     {}
   );
 
-  return result;
+  return Result;
 }

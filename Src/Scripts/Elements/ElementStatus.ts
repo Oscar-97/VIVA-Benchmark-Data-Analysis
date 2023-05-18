@@ -22,6 +22,7 @@ export function ElementStatus(): void {
   ViewAllResultsButton.disabled = true;
   FilterSelectionButton.disabled = true;
   SelectAllButton.disabled = true;
+  SelectAllButton.hidden = true;
   SelectAllButton.innerText = "Select All Solvers";
   SaveLocalStorageButton.disabled = true;
   DownloadCSVButtonLayer.disabled = true;
@@ -44,6 +45,9 @@ export function ElementStatus(): void {
 export function ElementStatusPlots(): void {
   FileInput.value = "";
   ViewPlotsButton.disabled = true;
+  SaveLocalStorageButton.disabled = true;
+  DownloadConfigurationButtonLayer.disabled = true;
+  DeleteLocalStorageButton.disabled = true;
 }
 
 /**

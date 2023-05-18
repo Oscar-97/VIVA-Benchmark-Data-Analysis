@@ -1,12 +1,3 @@
-import {
-  CalculateDirection,
-  CalculatePrimalBound,
-  CalculateDualBound,
-  SetTermStatus,
-  CalculateGap,
-  CalculateGapPercentage,
-} from "./CalculateResults";
-
 /**
  * Extract the data from the trc file.
  * @param RawData The provided raw data.
@@ -84,58 +75,6 @@ export function ExtractTrcData(RawData: string[]): object[] {
       for (let j = 0; j < DefaultHeaders.length; j++) {
         Obj[DefaultHeaders[j]] = CurrentLine[j];
       }
-
-      /**
-       * Modify keys.
-       * https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4
-       * /src/paver/paver.py#L258-L290
-       */
-
-      Obj["Dir"] = CalculateDirection(Obj["Dir"]);
-
-      Obj["PrimalBound Solver"] = CalculatePrimalBound(Obj["Obj"], Obj["Dir"]);
-
-      Obj["DualBound Solver"] = CalculateDualBound(Obj["Obj Est"], Obj["Dir"]);
-
-      if ("TermStatus" in Obj) {
-        Obj["TermStatus"] = SetTermStatus(Obj["TermStatus"] as string | number);
-      }
-
-      Obj["PrimalBound Problem"] = CalculatePrimalBound(
-        Obj["PrimalBound Solver"],
-        Obj["Dir"]
-      );
-
-      Obj["DualBound Problem"] = CalculateDualBound(
-        Obj["DualBound Solver"],
-        Obj["Dir"]
-      );
-
-      Obj["Gap"] = CalculateGap(
-        Obj["PrimalBound Solver"],
-        Obj["DualBound Solver"]
-      );
-
-      Obj["PrimalGap"] = CalculateGap(
-        Obj["PrimalBound Solver"],
-        Obj["PrimalBound Problem"]
-      );
-
-      Obj["DualGap"] = CalculateGap(
-        Obj["DualBound Solver"],
-        Obj["DualBound Problem"]
-      );
-
-      Obj["Gap Problem"] = CalculateGap(
-        Obj["DualBound Problem"],
-        Obj["PrimalBound Problem"]
-      );
-
-      Obj["Gap[%] Solver"] = CalculateGapPercentage(
-        Obj["PrimalBound Solver"],
-        Obj["PrimalBound Problem"]
-      );
-
       TrcData.push(Obj);
     }
   }

@@ -117,7 +117,7 @@ export function TableData(
 
 export function TableDataTrc(
   TrcData: object[],
-  CheckedSolvers: string[]
+  // CheckedSolvers: string[]
 ): void {
   /**
    * @param DataTableDiv Div that contains the data table.
@@ -147,8 +147,8 @@ export function TableDataTrc(
    */
   const DataTableContent = document.createElement("tbody");
   for (const obj of TrcData) {
-    for (const Solver of CheckedSolvers) {
-      if (Object.values(obj).includes(Solver)) {
+    //for (const Solver of CheckedSolvers) {
+      //if (Object.values(obj).includes(Solver)) {
         const Results = Object.values(obj);
         const resultRow = document.createElement("tr");
         for (let i = 0; i < Results.length; i++) {
@@ -157,8 +157,8 @@ export function TableDataTrc(
           resultRow.appendChild(td);
         }
         DataTableContent.appendChild(resultRow);
-      }
-    }
+      //}
+    //}
   }
 
   /**
@@ -228,7 +228,7 @@ export function StatisticsTable(
   NewStatisticsTable.appendChild(Header);
 
   /**
-   * Iterate ove each key in the SolverTimeStats and create a new table header element.
+   * Iterate over each key in the SolverTimeStats and create a new table header element.
    */
   const UsedCategories: string[] = [];
   for (const ObjKey of Object.keys(SolverTimeStats)) {

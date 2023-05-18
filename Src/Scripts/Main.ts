@@ -2,15 +2,15 @@
 /**
  * Chart.
  */
-import { CreateChart, PickColor } from "./Chart/CreateChart";
+import {
+  PlotDataByCategory,
+  PlotAllSolverTimes,
+} from "./Chart/PlotDataByCategory";
 
 /**
  * Dataprocessing.
  */
-import {
-  AnalyzeDataByCategory,
-  ExtractAllSolverTimes,
-} from "./DataProcessing/CalculateResults";
+import { AddResultCategories } from "./DataProcessing/AddResultCategories";
 import { CreateData, CreateDataTrc } from "./DataProcessing/CreateData";
 import { ImportDataEvents } from "./Elements/ImportDataEvents";
 import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
@@ -35,7 +35,6 @@ import {
 /**
  * DataTable.
  */
-import { StatisticsTable } from "./DataTable/DataTableBase";
 import { TableFilters } from "./DataTable/DataTableFilters";
 import { TableDownloadCSV } from "./DataTable/DownloadCSV";
 import {
@@ -58,13 +57,13 @@ import {
   ImportDataButton,
   SelectAllButton,
   ViewAllResultsButton,
-  ViewPlotsButton,
   FilterSelectionButton,
   SaveLocalStorageButton,
   DownloadConfigurationButton,
   DownloadCSVButton,
   DeleteLocalStorageButton,
   ClearTableButton,
+  DownloadConfigurationButtonLayer,
 } from "./Elements/Elements";
 
 /**
@@ -133,6 +132,8 @@ function InitializeProgram(): void {
   try {
     [RawData, DataFileType, CheckedSolvers] = GetUserConfiguration();
     ImportDataEvents("Found cached benchmark file!", "json");
+    DeleteLocalStorageButton.disabled = false;
+    DownloadConfigurationButtonLayer.disabled = false;
     ManageData();
   } catch (err) {
     console.log("No data found in local storage: ", err);
@@ -216,9 +217,8 @@ function ManageData(): void {
     InstanceLabels = GetInstanceLabels(DataLabels);
     ProblemList = GetProblems(RawData);
     ResultsData = GetResults(RawData);
-    if (document.title == "Report") {
-      TableFilters(Solvers, "Solvers");
-    }
+    
+    SelectAllButton.hidden = false;
   } else if (DataFileType === "trc") {
     TrcData = ExtractTrcData(RawData);
 
@@ -231,25 +231,43 @@ function ManageData(): void {
       SoluData = GetInstancePrimalDualbounds(RawSoluData);
       TrcData = MergeData(TrcData, SoluData);
     }
+
     Solvers = GetTrcDataCategory(TrcData, "SolverName");
-    if (document.title == "Report") {
-      TableFilters(Solvers, "Solvers");
-    }
+    AddResultCategories(TrcData);
   }
 
-  if (CheckedSolvers.length !== 0 && document.title == "Report") {
-    SelectSavedSolvers(CheckedSolvers);
-  }
+  /**
+  * Download the current configuration.
+  */
+  DownloadConfigurationButton.addEventListener("click", () => {
+    DownloadUserConfiguration();
+  });
+
+  /**
+   * Delete stored data in local storage.
+   */
+  DeleteLocalStorageButton.addEventListener("click", () => {
+    DeleteUserConfiguration();
+    DeleteLocalStorageButton.disabled = true;
+    DownloadConfigurationButtonLayer.disabled = true;
+  });
 
   /**
    * Check if the user is on the Report page.
    */
   if (document.title == "Report") {
+    if (DataFileType === "txt") {
+      TableFilters(Solvers, "Solvers");
+
+      if (CheckedSolvers.length !== 0) {
+        SelectSavedSolvers(CheckedSolvers);
+      }
+    }
+
     /**
      * Select all checkboxes button functionality.
      */
     SelectAllButton.addEventListener("click", () => {
-      console.log("Clicked Select All Solvers.");
       ToggleSelection();
     });
 
@@ -297,9 +315,6 @@ function ManageData(): void {
         );
       } else if (DataFileType === "trc") {
         TrcDataFiltered = UpdateResultsTrc();
-
-        console.log("TrcData Filtered: ", TrcDataFiltered);
-
         TableDisplayTrc(TrcDataFiltered);
       }
     });
@@ -320,26 +335,16 @@ function ManageData(): void {
         CheckedSolvers = GetCheckedSolvers();
         CreateUserConfiguration(RawData, DataFileType, CheckedSolvers);
       } else if (DataFileType === "trc" || DataFileType === "json") {
-        /**
-         * Save the modified NewRawData as user configuration.
-         */
         let NewRawData = [];
         if (TrcDataFiltered.length === 0) {
           NewRawData = CreateDataTrc(TrcData);
         } else {
           NewRawData = CreateDataTrc(TrcDataFiltered);
         }
-        CheckedSolvers = GetCheckedSolvers();
+        // CheckedSolvers = GetCheckedSolvers();
         CreateUserConfiguration(NewRawData, DataFileType, CheckedSolvers);
       }
       console.log("Saved benchmarks.");
-    });
-
-    /**
-     * Download the current configuration.
-     */
-    DownloadConfigurationButton.addEventListener("click", () => {
-      DownloadUserConfiguration();
     });
 
     /**
@@ -347,13 +352,6 @@ function ManageData(): void {
      */
     DownloadCSVButton.addEventListener("click", () => {
       TableDownloadCSV();
-    });
-
-    /**
-     * Delete stored data in local storage.
-     */
-    DeleteLocalStorageButton.addEventListener("click", () => {
-      DeleteUserConfiguration();
     });
 
     /**
@@ -366,120 +364,69 @@ function ManageData(): void {
   }
 
   /**
+   * Save to local storage functionality on the plot pages.
+   */
+  if (document.title != "Report") {
+    /**
+     * Save to local storage when clicking on the relevant button.
+     */
+    SaveLocalStorageButton.addEventListener("click", () => {
+      if (DataFileType === "trc" || DataFileType === "json") {
+        let NewRawData = [];
+        NewRawData = CreateDataTrc(TrcData);
+
+        CreateUserConfiguration(NewRawData, DataFileType);
+      }
+      console.log("Saved benchmarks.");
+      DeleteLocalStorageButton.disabled = false;
+      DownloadConfigurationButtonLayer.disabled = false;
+    });
+  }
+
+  /**
    * Check if the user is on the Average Solver Time page.
    */
   if (document.title == "Average Solver Time") {
-    /**
-     *  Get the average solver times without any failed results.
-     */
-    ViewPlotsButton.disabled = false;
-    ViewPlotsButton.addEventListener("click", () => {
-      const Category = "Time[s]";
-      const AverageTimesData = AnalyzeDataByCategory(TrcData, Category);
-      console.log("TimesData: ", AverageTimesData);
-
-      const Type = "bar";
-      const Label = "Time[s].average";
-      const Title = "Average solver time";
-      const AverageTime = Object.entries(AverageTimesData).map(
-        ([key, value]) => ({
-          label: key,
-          data: [value.average],
-          borderColor: PickColor(),
-          backgroundColor: PickColor(),
-        })
-      );
-
-      console.log("Data: ", AverageTime);
-      CreateChart(Type, AverageTime, Label, Title);
-      StatisticsTable(AverageTimesData, Title);
-    });
+    PlotDataByCategory(
+      TrcData,
+      "bar",
+      "Time[s]",
+      "Time[s].average",
+      "Average solver time"
+    );
   }
 
   /**
    * Check if the user is on the Solver Time page.
    */
   if (document.title == "Solver Time") {
-    /**
-     * Get all the solver times without any failed results.
-     */
-    ViewPlotsButton.disabled = false;
-    ViewPlotsButton.addEventListener("click", () => {
-      const SolverTimes = ExtractAllSolverTimes(TrcData);
-      const Data = (Object.entries(SolverTimes) as [string, number[]][]).map(
-        ([key, values]) => ({
-          label: key,
-          data: values.map((val, index) => ({ x: index, y: val })),
-        })
-      );
-      console.log("Data structure: ", Data);
-
-      const Type = "scatter";
-      const Label = "";
-      const Title = "Solver times";
-
-      CreateChart(Type, Data, Label, Title);
-    });
+    PlotAllSolverTimes(TrcData);
   }
 
   /**
    * Check if the user is on the Number of Nodes page.
    */
   if (document.title == "Number of Nodes") {
-    /**
-     * Get the average number of nodes.
-     */
-    ViewPlotsButton.disabled = false;
-    ViewPlotsButton.addEventListener("click", () => {
-      const Category = "Nodes[i]";
-      const NodesData = AnalyzeDataByCategory(TrcData, Category);
-      console.log("NodeData: ", NodesData);
-
-      const Type = "bar";
-      const Label = "Nodes[i].average";
-      const Title = "Average number of nodes";
-      const AverageNodes = Object.entries(NodesData).map(([key, value]) => ({
-        label: key,
-        data: [value.average],
-        borderColor: PickColor(),
-        backgroundColor: PickColor(),
-      }));
-
-      console.log("Data: ", AverageNodes);
-      CreateChart(Type, AverageNodes, Label, Title);
-      StatisticsTable(NodesData, Title);
-    });
+    PlotDataByCategory(
+      TrcData,
+      "bar",
+      "Nodes[i]",
+      "Nodes[i].average",
+      "Average number of nodes"
+    );
   }
 
   /**
    * Check if the user is on the Number of Iterations page.
    */
   if (document.title == "Number of Iterations") {
-    /**
-     * Get the average number of iterations.
-     */
-    ViewPlotsButton.disabled = false;
-    ViewPlotsButton.addEventListener("click", () => {
-      const Category = "NumberOfIterations";
-      const IterationsData = AnalyzeDataByCategory(TrcData, Category);
-      console.log("IterationsData: ", IterationsData);
-
-      const Type = "bar";
-      const Label = "NumberOfiterations.average";
-      const Title = "Average number if iterations";
-      const AverageNbrItr = Object.entries(IterationsData).map(
-        ([key, value]) => ({
-          label: key,
-          data: [value.average],
-          borderColor: PickColor(),
-          backgroundColor: PickColor(),
-        })
-      );
-
-      console.log("Data: ", AverageNbrItr);
-      CreateChart(Type, AverageNbrItr, Label, Title);
-      StatisticsTable(IterationsData, Title);
-    });
+    PlotDataByCategory(
+      TrcData,
+      "bar",
+      "NumberOfIterations",
+      "NumberOfiterations.average",
+      "Average number of iterations"
+    );
   }
 }
 

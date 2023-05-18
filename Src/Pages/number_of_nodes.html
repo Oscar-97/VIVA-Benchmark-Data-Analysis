@@ -54,7 +54,7 @@
         </ul>
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#">Docs</a>
+            <a class="nav-link" href="../../Docs/index.html" target="_blank">Docs</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="https://github.com/Oscar-97/SHOT-Data-Visualization" target="_blank">GitHub</a>
@@ -68,22 +68,21 @@
     <div class="col-auto">
       <button class="btn btn-success btn-sm" type="submit" id="viewPlotsButton">View Plot</button>
     </div>
-    <!-- <div class="col-auto">
-      <span class="input-group-text">X max</span>
-      <input type="number" class="form-control input-group-sm mb-3 col" id="xMaxInput" value="">
-    </div>
     <div class="col-auto">
-      <span class="input-group-text">X min</span>
-      <input type="number" class="form-control input-group-sm mb-3 col" id="xMinInput" value="">
+      <button class="btn btn-primary btn-sm" id="saveLocalStorageButton" disabled="true" data-toggle="tooltip"
+        data-placement="top" title="Save current table configuration to local storage.">Save Data</button>
     </div>
+    <div class="col-auto vertical-separator"></div>
     <div class="col-auto">
-      <span class="input-group-text">Y max</span>
-      <input type="number" class="form-control input-group-sm mb-3 col" id="yMaxInput" value="">
+      <button class="btn btn-dark btn-sm" type="button" id="downloadConfigurationButtonLayer" disabled="true"><a
+          id="downloadConfigurationButton" data-toggle="tooltip" data-placement="top"
+          title="Download the user configuration.">Download Saved Data</a></button>
     </div>
+    <div class="col-auto vertical-separator"></div>
     <div class="col-auto">
-      <span class="input-group-text">Y min</span>
-      <input type="number" class="form-control input-group-sm mb-3 col" id="yMinInput" value="">
-    </div> -->
+      <button class="btn btn-danger btn-sm" id="deleteLocalStorageButton" data-toggle="tooltip" data-placement="top"
+        title="Delete current table configuration from local storage.">Delete Configuration</button>
+    </div>
   </div>
   <hr />
   <span class="badge bg-dark" id="solverAndProblemsHeader" hidden></span>

@@ -5,8 +5,8 @@ export function CreateData(
   DataLabels: string[],
   ProblemList: string[],
   ResultsData: string[]
-): string[] {
-  const output: any[] = [];
+): object[] {
+  const output: object[] = [];
   const delimiter = " ";
   output.push([Instance].concat(Solvers));
   output.push([InstanceLabels.join(delimiter)].concat(DataLabels));
