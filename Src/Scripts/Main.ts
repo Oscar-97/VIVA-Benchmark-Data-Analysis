@@ -63,6 +63,7 @@ import {
   DownloadCSVButton,
   DeleteLocalStorageButton,
   ClearTableButton,
+  DownloadConfigurationButtonLayer,
 } from "./Elements/Elements";
 
 /**
@@ -132,6 +133,7 @@ function InitializeProgram(): void {
     [RawData, DataFileType, CheckedSolvers] = GetUserConfiguration();
     ImportDataEvents("Found cached benchmark file!", "json");
     DeleteLocalStorageButton.disabled = false;
+    DownloadConfigurationButtonLayer.disabled = false;
     ManageData();
   } catch (err) {
     console.log("No data found in local storage: ", err);
@@ -235,10 +237,19 @@ function ManageData(): void {
   }
 
   /**
+  * Download the current configuration.
+  */
+  DownloadConfigurationButton.addEventListener("click", () => {
+    DownloadUserConfiguration();
+  });
+
+  /**
    * Delete stored data in local storage.
    */
   DeleteLocalStorageButton.addEventListener("click", () => {
     DeleteUserConfiguration();
+    DeleteLocalStorageButton.disabled = true;
+    DownloadConfigurationButtonLayer.disabled = true;
   });
 
   /**
@@ -337,13 +348,6 @@ function ManageData(): void {
     });
 
     /**
-     * Download the current configuration.
-     */
-    DownloadConfigurationButton.addEventListener("click", () => {
-      DownloadUserConfiguration();
-    });
-
-    /**
      * Download the currently displayed table as a CSV.
      */
     DownloadCSVButton.addEventListener("click", () => {
@@ -356,6 +360,26 @@ function ManageData(): void {
     ClearTableButton.addEventListener("click", () => {
       DestroyDataTable();
       InitializeProgram();
+    });
+  }
+
+  /**
+   * Save to local storage functionality on the plot pages.
+   */
+  if (document.title != "Report") {
+    /**
+     * Save to local storage when clicking on the relevant button.
+     */
+    SaveLocalStorageButton.addEventListener("click", () => {
+      if (DataFileType === "trc" || DataFileType === "json") {
+        let NewRawData = [];
+        NewRawData = CreateDataTrc(TrcData);
+
+        CreateUserConfiguration(NewRawData, DataFileType);
+      }
+      console.log("Saved benchmarks.");
+      DeleteLocalStorageButton.disabled = false;
+      DownloadConfigurationButtonLayer.disabled = false;
     });
   }
 
