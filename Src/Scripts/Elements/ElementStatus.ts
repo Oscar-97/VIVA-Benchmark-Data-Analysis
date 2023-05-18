@@ -45,6 +45,8 @@ export function ElementStatus(): void {
 export function ElementStatusPlots(): void {
   FileInput.value = "";
   ViewPlotsButton.disabled = true;
+  SaveLocalStorageButton.disabled = true;
+  DownloadConfigurationButtonLayer.disabled = true;
   DeleteLocalStorageButton.disabled = true;
 }
 
