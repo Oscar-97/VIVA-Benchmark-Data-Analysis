@@ -1,16 +1,30 @@
-# VIVA: Visualize, Interact, Verify and Analyze: Benchmarking Data for Optimization Solvers
-This is a project in **progress** for creating a dynamic reporting system, in a portable HTML format, based on benchmark results from mathemathical optimization problems and their solvers. The main goal of this project is to enable the end user to be able to interact with the benchmark data in a tabular format and visualize specific results by using different plots, making it easier for them to understand and interpret the data.
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white) ![Bootstrap](https://img.shields.io/badge/bootstrap-%23563D7C.svg?style=flat&logo=bootstrap&logoColor=white) ![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=flat&logo=webpack&logoColor=black) ![Chart.js](https://img.shields.io/badge/chart.js-F5788D.svg?style=flat&logo=chart.js&logoColor=white)
+
+# VIVA
+## Visualize, Interact, Verify, and Analyze Benchmarking Data for Optimization Solvers
+The main goal of this project is to allow end users to interact with their own uploaded benchmark data from mathematical optimization problems and their solvers. The data is presented in a tabular format, with the added ability to visualize specific results through various plots, making it easier to understand and interpret the data. This project is developed using TypeScript, DataTables.js, Chart.js and Webpack. Bootstrap is used for styling. Importantly, the application can run without a live server, as Webpack is used to bundle files into static assets.
 
 <div style="text-align:left;">
-  <img src="./Images/OverView_System.png" width="100%">
+  <img src="./Images/OverView_system.png" width="100%">
 </div>
 
 ---
-# Instructions for 
+# Instructions for using the system
+- To get started with the project, either download or clone the repository and open the `report.html` file in a web browser. 
+- Click the "Browse" button to upload the results and select either:
+    - one or more results file in a `.trc` format.
+    - or a single `.txt` based on the PAVER format.
+    - or a single `UserConfiguration.json` (Which can be created from this application).
+- Once you have selected a file, click on upload.
+- Click on the View All Results/View Plot button to get a table or plot with the benchmark results, depending on the currently active page.
+- On the table page, View Selected Problems filters the table and only shows selected problems.
+- Save Data stores the currently uploaded data to local storage, if the above mentioned filtering has been applied, then that currently visible table will be stored.
+- The stored data can be downloaded as a `UserConfiguration.json` by clicking on the Download Saved Data button.
+- Download Table as CSV downloads the currently visible table in a csv format.
+- Delete Data removes all stored data from the local storage.
+- Clear Data Table clears the currently visible table.
+- The filter options on the table page can be collapsed and expanded.
 
-## Using the System
-To get started with the project, clone the repository and open the `report.html` file in a web browser. Select a `traceresult.trc` or `solvedata.txt`, `UserConfiguration.json` file from your computer by clicking the "Browse" button and selecting a file from the file picker that appears.
-Once you have selected a file, click on the View All Results button to get a table with the benchmark results.
 ## Supported Formats
 
 ## .trc
@@ -18,32 +32,32 @@ Once you have selected a file, click on the View All Results button to get a tab
 See: https://www.gamsworld.org/performance/trace.htm
 The following header structure and order should be used in conjunction with .trc files:
 
-      "InputFileName",
-      "ModelType",
-      "SolverName",
-      "NLP",
-      "MIP",
-      "JulianDate",
-      "Dir",
-      "Equs",
-      "Vars",
-      "Disc",
-      "NumberOfNonZeros",
-      "NumberOfNonlinearNonZeros",
-      "OptionFile",
-      "ModelStatus",
-      "TermStatus",
-      "PrimalBoundSolver",
-      "DualBoundSolver",
-      "Time[s]",
-      "NumberOfIterations",
-      "NumberOfDomainViolations",
-      "Nodes[i]",
-      "UserComment",
+    "InputFileName",
+    "ModelType",
+    "SolverName",
+    "NLP",
+    "MIP",
+    "JulianDate",
+    "Dir",
+    "Equs",
+    "Vars",
+    "Disc",
+    "NumberOfNonZeros",
+    "NumberOfNonlinearNonZeros",
+    "OptionFile",
+    "ModelStatus",
+    "TermStatus",
+    "PrimalBoundSolver",
+    "DualBoundSolver",
+    "Time[s]",
+    "NumberOfIterations",
+    "NumberOfDomainViolations",
+    "Nodes[i]",
+    "UserComment",
 
 ## .txt 
 
-The following header structure and order should be used in conjunction with .txt files, where the instance should feature
+The following header structure and order should be used in conjunction with .txt files, where the instance should feature:
     
     name,
     #Vars,
@@ -53,7 +67,7 @@ The following header structure and order should be used in conjunction with .txt
     Dual bound,
     Primal bound I,
 
-and each solver should have 
+and each solver should have:
 
     TermStatus
     Dual bound,
@@ -64,24 +78,24 @@ and each solver should have
     Nodes I
 
 ## .json
-The file should include `dataSet`, `dataFileType` and `checkedSolvers`.
+The file should include `dataSet` and `dataFileType`, it is optionally to have a `checkedSolvers`.
+
+```json
+{
+    "dataSet": [
+        "alan,MINLP,shot,NONE,CPLEX,43381.77804,min,8,9,4,24,3,1,8,Normal,2.925,2.925,0.041120867,0,0,0,#,2.925,2.925,2.925,2.925,0,0,0,0,0"
+    ],
+    "dataFileType": "trc",
+    "checkedSolvers": []
+}
+```
 
 --- 
 
 # Features to Implement
 
-## Table Page
 - [ ] SearchBuilder.
-
-## Plot Page
-- [ ] Save data to localStorage.
 - [ ] Export plot data as csv.
-- [ ] Fix destruction on Chart.js canvas.
-
-## Other
-- [ ] Add DocType support.
-- [ ] Update instruction section.
-- [ ] Update the 'Working with codebase' chapter below.
 
 # Working with the Codebase
 ## 1. Prerequisites
