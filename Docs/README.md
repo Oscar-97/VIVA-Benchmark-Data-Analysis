@@ -1,8 +1,8 @@
-# VIVA: Visualize and Analyze Benchmarking Data for Optimization Solvers
+# VIVA: Visualize, Interact, Verify and Analyze: Benchmarking Data for Optimization Solvers
 This is a project in **progress** for creating a dynamic reporting system, in a portable HTML format, based on benchmark results from mathemathical optimization problems and their solvers. The main goal of this project is to enable the end user to be able to interact with the benchmark data in a tabular format and visualize specific results by using different plots, making it easier for them to understand and interpret the data.
 
 <div style="text-align:left;">
-  <img src="./Images/OverView.png" width="100%">
+  <img src="./Images/OverView_System.png" width="100%">
 </div>
 
 ---
@@ -74,13 +74,13 @@ The file should include `dataSet`, `dataFileType` and `checkedSolvers`.
 - [ ] SearchBuilder.
 
 ## Plot Page
-- [ ] Add more plotting types.
 - [ ] Save data to localStorage.
 - [ ] Export plot data as csv.
 - [ ] Fix destruction on Chart.js canvas.
 
 ## Other
 - [ ] Add DocType support.
+- [ ] Update instruction section.
 - [ ] Update the 'Working with codebase' chapter below.
 
 # Working with the Codebase
