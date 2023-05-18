@@ -70,7 +70,7 @@ export function AddResultCategories(TrcData: object[]): void {
 
     Obj["Gap[%] Solver"] = CalculateGapPercentage(
       Obj["PrimalBound Solver"],
-      Obj["PrimalBound Problem"],
+      Obj["DualBound Solver"],
       Obj["Dir"]
     );
   }
