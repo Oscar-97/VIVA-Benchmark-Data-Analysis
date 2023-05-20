@@ -140,7 +140,7 @@ export function CalculateGap(
     return Infinity;
   }
 
-    // If either a or b is Infinity, return Infinity
+  // If either a or b is Infinity, return Infinity
   if (a === Infinity || b === Infinity) {
     return Infinity;
   }

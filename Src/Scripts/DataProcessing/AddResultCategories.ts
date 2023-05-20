@@ -20,15 +20,9 @@ export function AddResultCategories(TrcData: object[]): void {
     Obj["Dir"] = CalculateDirection(Obj["Dir"]);
     console.log("Dir after: ", Obj["Dir"]);
 
-    Obj["PrimalBound Solver"] = CalculatePrimalBound(
-      Obj["Obj"], 
-      Obj["Dir"]
-    );
+    Obj["PrimalBound Solver"] = CalculatePrimalBound(Obj["Obj"], Obj["Dir"]);
 
-    Obj["DualBound Solver"] = CalculateDualBound(
-      Obj["Obj Est"], 
-      Obj["Dir"]
-    );
+    Obj["DualBound Solver"] = CalculateDualBound(Obj["Obj Est"], Obj["Dir"]);
 
     Obj["TermStatus"] = SetTermStatus(Obj["TermStatus"] as string | number);
 

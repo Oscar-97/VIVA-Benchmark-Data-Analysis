@@ -16,10 +16,9 @@ export function PickColor(): string {
  * @param ResultsData
  */
 export function CreateChart(Type, Data, Label, Title): void {
-
-/**
- * Destroy the chart if it already exist.
- */
+  /**
+   * Destroy the chart if it already exist.
+   */
   if (myChart) {
     myChart.destroy();
   }

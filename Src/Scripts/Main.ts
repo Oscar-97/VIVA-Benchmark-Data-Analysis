@@ -217,7 +217,7 @@ function ManageData(): void {
     InstanceLabels = GetInstanceLabels(DataLabels);
     ProblemList = GetProblems(RawData);
     ResultsData = GetResults(RawData);
-    
+
     SelectAllButton.hidden = false;
   } else if (DataFileType === "trc") {
     TrcData = ExtractTrcData(RawData);
@@ -237,8 +237,8 @@ function ManageData(): void {
   }
 
   /**
-  * Download the current configuration.
-  */
+   * Download the current configuration.
+   */
   DownloadConfigurationButton.addEventListener("click", () => {
     DownloadUserConfiguration();
   });

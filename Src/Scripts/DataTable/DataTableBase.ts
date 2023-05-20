@@ -116,7 +116,7 @@ export function TableData(
 }
 
 export function TableDataTrc(
-  TrcData: object[],
+  TrcData: object[]
   // CheckedSolvers: string[]
 ): void {
   /**
@@ -147,18 +147,14 @@ export function TableDataTrc(
    */
   const DataTableContent = document.createElement("tbody");
   for (const obj of TrcData) {
-    //for (const Solver of CheckedSolvers) {
-      //if (Object.values(obj).includes(Solver)) {
-        const Results = Object.values(obj);
-        const resultRow = document.createElement("tr");
-        for (let i = 0; i < Results.length; i++) {
-          const td = document.createElement("td");
-          td.textContent = Results[i];
-          resultRow.appendChild(td);
-        }
-        DataTableContent.appendChild(resultRow);
-      //}
-    //}
+    const Results = Object.values(obj);
+    const resultRow = document.createElement("tr");
+    for (let i = 0; i < Results.length; i++) {
+      const td = document.createElement("td");
+      td.textContent = Results[i];
+      resultRow.appendChild(td);
+    }
+    DataTableContent.appendChild(resultRow);
   }
 
   /**
