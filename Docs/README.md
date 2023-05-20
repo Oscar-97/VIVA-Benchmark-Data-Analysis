@@ -13,6 +13,7 @@ The main goal of this project is to allow end users to interact with their own u
 - To get started with the project, either download or clone the repository and open the `report.html` file in a web browser. 
 - Click the "Browse" button to upload the results and select either:
     - one or more results file in a `.trc` format.
+        - .solu (best known primal and dual bounds for each instance) and .csv (instance properties) can be uploaded in conjugation to get additional information.
     - or a single `.txt` based on the PAVER format.
     - or a single `UserConfiguration.json` (Which can be created from this application).
 - Once you have selected a file, click on upload.
