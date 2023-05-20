@@ -1,24 +1,3 @@
-export function CreateData(
-  Instance: string,
-  Solvers: string[],
-  InstanceLabels: string[],
-  DataLabels: string[],
-  ProblemList: string[],
-  ResultsData: string[]
-): object[] {
-  const output: object[] = [];
-  const delimiter = " ";
-  output.push([Instance].concat(Solvers));
-  output.push([InstanceLabels.join(delimiter)].concat(DataLabels));
-  console.log("Output: ", output);
-  console.log("Add problemlist and data....");
-  /**
-   * TODO:
-   * Add problemlist and results.
-   */
-  return output;
-}
-
 export function CreateDataTrc(TrcData: object[]): string[] {
   console.clear();
   console.log("Data to exported: ", TrcData);

@@ -11,7 +11,7 @@ import {
  * Dataprocessing.
  */
 import { AddResultCategories } from "./DataProcessing/AddResultCategories";
-import { CreateData, CreateDataTrc } from "./DataProcessing/CreateData";
+import { CreateDataTrc } from "./DataProcessing/CreateData";
 import { ImportDataEvents } from "./Elements/ImportDataEvents";
 import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
 import { MergeData } from "./DataProcessing/MergeData";
@@ -324,14 +324,6 @@ function ManageData(): void {
      */
     SaveLocalStorageButton.addEventListener("click", () => {
       if (DataFileType === "txt") {
-        CreateData(
-          Instance,
-          Solvers,
-          InstanceLabels,
-          DataLabels,
-          ProblemListFiltered,
-          ResultsDataFiltered
-        );
         CheckedSolvers = GetCheckedSolvers();
         CreateUserConfiguration(RawData, DataFileType, CheckedSolvers);
       } else if (DataFileType === "trc" || DataFileType === "json") {
