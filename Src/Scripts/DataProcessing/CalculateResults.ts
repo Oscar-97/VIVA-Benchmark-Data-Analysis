@@ -244,16 +244,26 @@ export function AnalyzeDataByCategory(
   for (const SolverName in SolverTimes) {
     if (Object.prototype.hasOwnProperty.call(SolverTimes, SolverName)) {
       const times = SolverTimes[SolverName];
-      const avgValue = Number(math.format(math.mean(times), {precision: 7}));
-      const minValue = Number(math.format(math.min(times), {precision: 7}));
-      const maxValue = Number(math.format(math.max(times), {precision: 7}));
-      const stdValue = Number(math.format(math.std(times), {precision: 7}));
-      const sumValue = Number(math.format(math.sum(times), {precision: 7}));
-      const p10Value = Number(math.format(math.quantileSeq(times, 0.1), {precision: 7}));
-      const p25Value = Number(math.format(math.quantileSeq(times, 0.25), {precision: 7}));
-      const p50Value = Number(math.format(math.quantileSeq(times, 0.5), {precision: 7}));
-      const p75Value = Number(math.format(math.quantileSeq(times, 0.75), {precision: 7}));
-      const p90Value = Number(math.format(math.quantileSeq(times, 0.9), {precision: 7}));
+      const avgValue = Number(math.format(math.mean(times), { precision: 7 }));
+      const minValue = Number(math.format(math.min(times), { precision: 7 }));
+      const maxValue = Number(math.format(math.max(times), { precision: 7 }));
+      const stdValue = Number(math.format(math.std(times), { precision: 7 }));
+      const sumValue = Number(math.format(math.sum(times), { precision: 7 }));
+      const p10Value = Number(
+        math.format(math.quantileSeq(times, 0.1), { precision: 7 })
+      );
+      const p25Value = Number(
+        math.format(math.quantileSeq(times, 0.25), { precision: 7 })
+      );
+      const p50Value = Number(
+        math.format(math.quantileSeq(times, 0.5), { precision: 7 })
+      );
+      const p75Value = Number(
+        math.format(math.quantileSeq(times, 0.75), { precision: 7 })
+      );
+      const p90Value = Number(
+        math.format(math.quantileSeq(times, 0.9), { precision: 7 })
+      );
 
       SolverTimeStats[SolverName] = {
         average: avgValue,
