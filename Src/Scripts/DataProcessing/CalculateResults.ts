@@ -150,15 +150,14 @@ export function CalculateGap(
   }
 
   // Compute and return the gap between the values
-  const result = (a - b) / math.min(math.abs(a), math.abs(b));
-  return result;
+  return Number(((a - b) / math.min(math.abs(a), math.abs(b))).toFixed(7));
 }
 
 // Absolute difference.
 export function CalculateDifference(a: number, b: number): number {
   const Higher = Math.max(a, b);
   const Lower = Math.min(a, b);
-  return Higher - Lower;
+  return Number((Higher - Lower).toFixed(7));
 }
 
 // Solver - Gap[%]
@@ -178,10 +177,10 @@ export function CalculateGapPercentage(
     if (a === b) {
       return 0.0;
     } else {
-      return a - b;
+      return Number((a - b * 100).toFixed(7));
     }
   } else {
-    return (a - b) / math.max(math.abs(a), math.abs(b), 1.0);
+    return Number(((a - b) / math.max(math.abs(a), math.abs(b), 1.0) * 100).toFixed(7));
   }
 }
 
