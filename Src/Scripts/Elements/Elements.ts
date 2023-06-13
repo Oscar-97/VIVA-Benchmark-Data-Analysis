@@ -4,10 +4,10 @@
  * @param ImportDataButton Allows the user to upload the selected file, located at the top of the page.
  */
 export const FileInput = document.getElementById(
-  "fileInput"
+	"fileInput"
 ) as HTMLInputElement;
 export const ImportDataButton = document.getElementById(
-  "importDataButton"
+	"importDataButton"
 ) as HTMLButtonElement;
 
 /**
@@ -15,10 +15,10 @@ export const ImportDataButton = document.getElementById(
  * @param SelectAllButton Selects all solvers from the benchmark results file.
  */
 export const AlertNotification = document.getElementById(
-  "alertNotification"
+	"alertNotification"
 ) as HTMLDivElement;
 export const SelectAllButton = document.getElementById(
-  "selectAllButton"
+	"selectAllButton"
 ) as HTMLButtonElement;
 
 /**
@@ -27,10 +27,10 @@ export const SelectAllButton = document.getElementById(
  * @param FilterSelectionButton Saves the currently marked rows.
  */
 export const ViewAllResultsButton = document.getElementById(
-  "viewAllResultsButton"
+	"viewAllResultsButton"
 ) as HTMLButtonElement;
 export const FilterSelectionButton = document.getElementById(
-  "filterSelectionButton"
+	"filterSelectionButton"
 ) as HTMLButtonElement;
 
 /**
@@ -40,19 +40,19 @@ export const FilterSelectionButton = document.getElementById(
  * @param DownloadCSVButtonLayer Button element layer for the link.
  */
 export const SaveLocalStorageButton = document.getElementById(
-  "saveLocalStorageButton"
+	"saveLocalStorageButton"
 ) as HTMLButtonElement;
 export const DownloadConfigurationButton = document.getElementById(
-  "downloadConfigurationButton"
+	"downloadConfigurationButton"
 ) as HTMLAnchorElement;
 export const DownloadConfigurationButtonLayer = document.getElementById(
-  "downloadConfigurationButtonLayer"
+	"downloadConfigurationButtonLayer"
 ) as HTMLButtonElement;
 export const DownloadCSVButton = document.getElementById(
-  "downloadCSVButton"
+	"downloadCSVButton"
 ) as HTMLAnchorElement;
 export const DownloadCSVButtonLayer = document.getElementById(
-  "downloadCSVButtonLayer"
+	"downloadCSVButtonLayer"
 ) as HTMLButtonElement;
 
 /**
@@ -62,13 +62,13 @@ export const DownloadCSVButtonLayer = document.getElementById(
  * @param SolverAndProblemsHeader Badge with the text Solvers or Problems.
  */
 export const DeleteLocalStorageButton = document.getElementById(
-  "deleteLocalStorageButton"
+	"deleteLocalStorageButton"
 ) as HTMLButtonElement;
 export const ClearTableButton = document.getElementById(
-  "clearTableButton"
+	"clearTableButton"
 ) as HTMLButtonElement;
 export const SolverAndProblemsHeader = document.getElementById(
-  "solverAndProblemsHeader"
+	"solverAndProblemsHeader"
 ) as HTMLSpanElement;
 
 /**
@@ -80,17 +80,17 @@ export const SolverAndProblemsHeader = document.getElementById(
  * @param yMinInput Min y value.
  */
 export const ViewPlotsButton = document.getElementById(
-  "viewPlotsButton"
+	"viewPlotsButton"
 ) as HTMLButtonElement;
 export const xMaxInput = document.getElementById(
-  "xMaxInput"
+	"xMaxInput"
 ) as HTMLInputElement;
 export const xMinInput = document.getElementById(
-  "xMinInput"
+	"xMinInput"
 ) as HTMLInputElement;
 export const yMaxInput = document.getElementById(
-  "yMaxInput"
+	"yMaxInput"
 ) as HTMLInputElement;
 export const yMinInput = document.getElementById(
-  "yMinInput"
+	"yMinInput"
 ) as HTMLInputElement;
