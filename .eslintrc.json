@@ -9,20 +9,22 @@
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-non-null-assertion": "error",
     "@typescript-eslint/explicit-function-return-type": "error",
-    "quotes": ["error", "double"],
-    "semi": ["error", "always"],
+    "@typescript-eslint/no-empty-function": "error",
     "complexity": [
       "error",
       {
         "max": 12
       }
     ],
-    "indent": ["off"],
-    "@typescript-eslint/no-empty-function": "error",
     "prettier/prettier": [
       "error",
       {
-        "endOfLine": "auto"
+        "endOfLine": "auto",
+        "printWidth": 80,
+        "useTabs": true,
+        "semi": true,
+        "singleQuote": false,
+        "trailingComma": "none"
       }
     ]
   }
