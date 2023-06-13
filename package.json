@@ -7,7 +7,6 @@
     "test": "jest",
     "lint": "eslint . --ext .ts,.tsx,.html",
     "lint:fix": "eslint . --ext .ts,.tsx,.html --fix",
-    "format": "prettier --ignore-path .eslintignore --write \"**/*.+(js|ts|json)\"",
     "build": "webpack --config webpack.config.js",
     "build-docs": "typedoc --options typedoc.json"
   },
