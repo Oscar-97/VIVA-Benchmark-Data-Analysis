@@ -180,7 +180,9 @@ export function CalculateGapPercentage(
       return Number((a - b * 100).toFixed(7));
     }
   } else {
-    return Number(((a - b) / math.max(math.abs(a), math.abs(b), 1.0) * 100).toFixed(7));
+    return Number(
+      (((a - b) / math.max(math.abs(a), math.abs(b), 1.0)) * 100).toFixed(7)
+    );
   }
 }
 
