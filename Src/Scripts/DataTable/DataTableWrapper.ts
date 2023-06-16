@@ -1,10 +1,11 @@
 const jq = require("jquery");
 import "datatables.net-bs5";
 import "datatables.net-buttons-bs5";
-import "datatables.net-buttons/js/buttons.colVis.js";
-import "datatables.net-select-bs5";
 import "datatables.net-fixedcolumns-bs5";
 import "datatables.net-searchpanes-bs5";
+import "datatables.net-buttons/js/buttons.colVis.js";
+import "datatables.net-select-bs5";
+
 import { GetCheckedSolvers, GetComparisonArray } from "../Solvers/UsedSolvers";
 import { TableData, TableDataTrc } from "./DataTableBase";
 import { ElementStatusWithTable } from "../Elements/ElementStatus";
