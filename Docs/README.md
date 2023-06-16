@@ -1,15 +1,17 @@
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white) ![Bootstrap](https://img.shields.io/badge/bootstrap-%23563D7C.svg?style=flat&logo=bootstrap&logoColor=white) ![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=flat&logo=webpack&logoColor=black) ![Chart.js](https://img.shields.io/badge/chart.js-F5788D.svg?style=flat&logo=chart.js&logoColor=white)
 
-# VIVA
-## Visualize, Interact, Verify, and Analyze Benchmarking Data for Optimization Solvers
-The main goal of this project is to allow end users to interact with their own uploaded benchmark data from mathematical optimization problems and their solvers. The data is presented in a tabular format, with the added ability to visualize specific results through various plots, making it easier to understand and interpret the data. This project is developed using TypeScript, DataTables.js, Chart.js and Webpack. Bootstrap is used for styling. Importantly, the application can run without a live server, as Webpack is used to bundle files into static assets.
+# VIVA: Visualize, Interact, Verify, and Analyze Benchmarking Data for Optimization Solvers
+---
+
+Building on the concept and implementation of [PAVER 2.0](https://github.com/coin-or/paver), the main goal of this project is to allow end users to interact with their own uploaded benchmark data from mathematical optimization problems and their solvers. The data is presented in a tabular format, with the added ability to visualize specific results through various plots, making it easier to understand and interpret the data. 
+
+This project is developed using TypeScript, DataTables.js, Chart.js and Webpack. Bootstrap is used for styling.  Notably, the application can be run without a live server since Webpack is responsible for bundling the files.
 
 <div style="text-align:left;">
   <img src="./Images/OverView_system.png" width="100%">
 </div>
 
----
-# Instructions for using the system
+## Instructions for using the system
 - To get started with the project, either download or clone the repository and open the `report.html` file in a web browser. 
 - Click the "Browse" button to upload the results and select either:
     - one or more results file in a `.trc` format.
@@ -26,11 +28,11 @@ The main goal of this project is to allow end users to interact with their own u
 - Clear Data Table clears the currently visible table.
 - The filter options on the table page can be collapsed and expanded.
 
-## Supported Formats
+### Supported Formats
 
-## .trc
+### .trc
 
-See: https://www.gamsworld.org/performance/trace.htm
+See: Gamshttps://www.gamsworld.org/performance/trace.htm
 The following header structure and order should be used in conjunction with .trc files:
 
     "InputFileName",
@@ -56,7 +58,7 @@ The following header structure and order should be used in conjunction with .trc
     "Nodes[i]",
     "UserComment",
 
-## .txt 
+### .txt 
 
 The following header structure and order should be used in conjunction with .txt files, where the instance should feature:
     
@@ -78,7 +80,7 @@ and each solver should have:
     Time[s],
     Nodes I
 
-## .json
+### .json
 The file should include `dataSet` and `dataFileType`, it is optionally to have a `checkedSolvers`.
 
 ```json
@@ -93,13 +95,8 @@ The file should include `dataSet` and `dataFileType`, it is optionally to have a
 
 --- 
 
-# Features to Implement
-
-- [ ] SearchBuilder.
-- [ ] Export plot data as csv.
-
-# Working with the Codebase
-## 1. Prerequisites
+## Working with the Codebase
+### 1. Prerequisites
 
 Before getting started, make sure you have the following software installed on your machine:
 
@@ -111,14 +108,14 @@ Install the required packages by running:
     
     npm install
 
-## 2. Compiling
+### 2. Compiling
 Navigate to the project directory in your terminal and run:
 
     npm run build
 
 This runs the command "webpack --config webpack.config.js", which will build the application using webpack and the configuration file 'webpack.config.js'.
 
-## 3. Other Scripts
+### 3. Other Scripts
     npm run build-docs
 Runs the command "typedoc --options typedoc.json", which will generate documentation for the project using typedoc and the configuration file 'typedoc.json'. The produced documentation is located in the Docs folder.
 
