@@ -31,7 +31,6 @@ export function MergeData(
 			}
 		}
 	}
-	console.log("New TrcData: ", MergedData);
 
 	if (MergedData.length === 0) {
 		console.log("No matching objects when merging data.");

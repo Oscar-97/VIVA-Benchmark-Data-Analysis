@@ -1,6 +1,4 @@
 export function CreateDataTrc(TrcData: object[]): string[] {
-	console.clear();
-	console.log("Data to exported: ", TrcData);
 	const ExportData: string[] = [];
 	/**
 	 * Create headers line based on existing keys, then add the rest of the objects.
@@ -14,7 +12,6 @@ export function CreateDataTrc(TrcData: object[]): string[] {
 		const currentString = Object.values(currentObject).join(",");
 		ExportData.push(currentString);
 	}
-
-	console.log("Exported Data: ", ExportData);
+	
 	return ExportData;
 }

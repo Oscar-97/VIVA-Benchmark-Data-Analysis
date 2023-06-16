@@ -40,11 +40,9 @@ export function TableData(
 			}
 		}
 	});
-	console.log("Columns to use: ", ColumnsToUse);
 	const NewResultsData = ResultsData.map((r: string) =>
 		ColumnsToUse.map((i) => r[i])
 	);
-	console.log("NewResultsData after modifications: ", NewResultsData);
 
 	/**
 	 * @param DataTableDiv Div that contains the data table.

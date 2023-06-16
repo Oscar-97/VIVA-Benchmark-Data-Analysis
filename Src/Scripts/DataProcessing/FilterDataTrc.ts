@@ -12,14 +12,12 @@ export function ExtractTrcData(RawData: string[]): object[] {
 	 * If they are found, include them, if not, use the custom headers.
 	 */
 	if (FirstLine[0].startsWith("*")) {
-		console.log("Found headers.");
 		/**
 		 * Remove "* " from InputFileName.
 		 */
 		const Header = FirstLine.map((element: string) =>
 			element.replace(/^[\*]/, "").trim()
 		);
-		console.log("Header: ", Header);
 
 		for (let i = 1; i < RawData.length; i++) {
 			const Obj = {};

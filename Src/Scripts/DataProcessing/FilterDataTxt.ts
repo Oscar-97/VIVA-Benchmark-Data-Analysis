@@ -3,7 +3,6 @@
  */
 export function GetInstance(SolvedData: string[]): string {
 	const Instance = ExtractInstanceAndSolvers(SolvedData[0]).shift();
-	console.log("Instance: \n", Instance);
 	return Instance;
 }
 
@@ -12,7 +11,6 @@ export function GetInstance(SolvedData: string[]): string {
  */
 export function GetSolvers(SolvedData: string[]): string[] {
 	const Solvers = ExtractInstanceAndSolvers(SolvedData[0]).slice(1);
-	console.log("Solvers: \n", Solvers);
 	return Solvers;
 }
 
@@ -21,7 +19,6 @@ export function GetSolvers(SolvedData: string[]): string[] {
  */
 export function GetInstanceLabels(DataLabels: string[]): string[] {
 	const InstanceLabels = DataLabels.splice(0, 7);
-	console.log("Instance labels: \n", InstanceLabels);
 	return InstanceLabels;
 }
 
@@ -52,12 +49,6 @@ export function GetDataLabels(SolvedData: string[]): string[] {
 			TempData3[i] = "Nodes I";
 		}
 	DataLabels = TempData3;
-	console.log(
-		"Number of data labels: ",
-		DataLabels.length,
-		" and data labels: ",
-		DataLabels
-	);
 	return DataLabels;
 }
 
@@ -70,7 +61,6 @@ export function GetProblems(SolvedData: string[]): string[] {
 	for (let i = 3; i < SolvedData.length; i++) {
 		ProblemList.push(ExtractProblemsAndResults(SolvedData[i])[0]);
 	}
-	console.log("All problems: \n", ProblemList);
 	return ProblemList;
 }
 
@@ -84,7 +74,6 @@ export function GetResults(SolvedData: string[]): string[] {
 		ResultsData.push(ExtractProblemsAndResults(SolvedData[i]).slice(1));
 	}
 
-	console.log("All results: \n", ResultsData);
 	return ResultsData;
 }
 

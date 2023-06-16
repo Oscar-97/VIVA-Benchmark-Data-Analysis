@@ -26,7 +26,7 @@ function SelectAllSolvers(): void {
 			try {
 				Solver.click();
 			} catch (err) {
-				console.log(err);
+				console.log("Could not select solvers: ", err);
 			}
 		}
 	}
@@ -45,7 +45,7 @@ function UnselectAllSolvers(): void {
 			try {
 				Solver.click();
 			} catch (err) {
-				console.log(err);
+				console.log("Could not unselect solvers: ", err);
 			}
 		}
 	}

@@ -282,7 +282,6 @@ function ManageData(): void {
 
 				CreateUserConfiguration(NewRawData, DataFileType);
 			}
-			console.log("Saved benchmarks.");
 			DeleteLocalStorageButton.disabled = false;
 			DownloadConfigurationButtonLayer.disabled = false;
 		});
@@ -352,9 +351,6 @@ function HandleReportPage(
 			ProblemListFiltered = UpdateProblemList();
 			ResultsDataFiltered = UpdateResultsData();
 
-			console.log("ProblemListFiltered: ", ProblemListFiltered);
-			console.log("ResultsDataFiltered: ", ResultsDataFiltered);
-
 			TableDisplay(
 				Instance,
 				Solvers,
@@ -385,7 +381,6 @@ function HandleReportPage(
 			}
 			CreateUserConfiguration(NewRawData, DataFileType, CheckedSolvers);
 		}
-		console.log("Saved benchmarks.");
 	});
 
 	/**
@@ -422,7 +417,6 @@ function HandlePlotPages(TrcData: object[]): void {
 
 				CreateUserConfiguration(NewRawData, DataFileType);
 			}
-			console.log("Saved benchmarks.");
 			DeleteLocalStorageButton.disabled = false;
 			DownloadConfigurationButtonLayer.disabled = false;
 		});

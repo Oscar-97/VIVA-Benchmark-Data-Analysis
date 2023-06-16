@@ -127,7 +127,6 @@ function DataTablesConfiguration(): void {
 		buttons: ["colvis"],
 		initComplete: function () {
 			jq("#dataTable").css("visibility", "visible");
-			console.log("Test");
 		}
 	});
 

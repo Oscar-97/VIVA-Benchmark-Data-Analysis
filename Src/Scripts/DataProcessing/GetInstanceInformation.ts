@@ -5,10 +5,7 @@ export function GetInstanceInformation(
 	RawInstanceInfoData: string[]
 ): object[] {
 	const InstanceInfo = [];
-
-	// Set header.
 	const Header = RawInstanceInfoData[0].split(";");
-	console.log("Header: ", Header);
 
 	for (let i = 1; i < RawInstanceInfoData.length; i++) {
 		const Obj = {};
@@ -20,7 +17,6 @@ export function GetInstanceInformation(
 		InstanceInfo.push(Obj);
 	}
 	DisplayAlertNotification("Instance information succesfully loaded!");
-	console.log("Instance info: ", InstanceInfo);
 	return InstanceInfo;
 }
 
@@ -52,6 +48,5 @@ export function GetInstancePrimalDualbounds(RawSoluData: string[]): object[] {
 		SoluData.push(Obj);
 	}
 
-	console.log("SoluData: ", SoluData);
 	return SoluData;
 }

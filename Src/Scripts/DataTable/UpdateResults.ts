@@ -9,7 +9,6 @@ export function UpdateProblemList(): string[] {
 	 */
 	//
 	const Rows = document.querySelectorAll(".row-selected-problems");
-	console.log("Rows ProblemList: ", Rows);
 	const ProblemList: string[] = [];
 
 	for (let i = 0; i < Rows.length; i++) {
@@ -35,7 +34,6 @@ export function UpdateResultsData(): string[] {
 	 * @params data Store the data for the selected rows.
 	 */
 	const Rows = document.querySelectorAll(".row-selected-problems");
-	console.log("Rows ResultsData: ", Rows);
 	const ResultsData = [];
 
 	for (let i = 0; i < Rows.length; i++) {

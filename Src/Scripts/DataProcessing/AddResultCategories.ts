@@ -15,10 +15,7 @@ import {
  */
 export function AddResultCategories(TrcData: object[]): void {
 	for (const Obj of TrcData) {
-		console.log(Obj["InputFileName"]);
-		console.log("Dir before: ", Obj["Dir"]);
 		Obj["Dir"] = CalculateDirection(Obj["Dir"]);
-		console.log("Dir after: ", Obj["Dir"]);
 
 		Obj["PrimalBound Solver"] = CalculatePrimalBound(Obj["Obj"], Obj["Dir"]);
 

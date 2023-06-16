@@ -37,7 +37,7 @@ export function ImportDataEvents(
 			TableElement.remove();
 		}
 	} catch (err) {
-		console.log(err);
+		console.log("Could not remove elements: ", err);
 	}
 
 	/**
@@ -59,6 +59,5 @@ export function ImportDataEvents(
 		SaveLocalStorageButton.disabled = false;
 	}
 
-	// Display alert with message.
 	DisplayAlertNotification(Message);
 }

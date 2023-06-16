@@ -12,8 +12,7 @@ export function PickColor(): string {
 }
 
 /**
- * Testing some chart creation.
- * @param ResultsData
+ * Chart creation with Chart.js
  */
 export function CreateChart(Type, Data, Label, Title): void {
 	/**
