@@ -2,7 +2,6 @@ const jq = require("jquery");
 import "datatables.net-bs5";
 import "datatables.net-buttons-bs5";
 import "datatables.net-buttons/js/buttons.colVis.js";
-import "datatables.net-rowreorder-bs5";
 import "datatables.net-select-bs5";
 import "datatables.net-fixedcolumns-bs5";
 import "datatables.net-searchpanes-bs5";
@@ -59,12 +58,9 @@ export function TableDisplay(
  */
 export function TableDisplayTrc(TrcData: object[]): void {
 	setTimeout(() => {
-		//const CheckedSolvers = GetCheckedSolvers();
-
 		/**
 		 * Create the table with the trc data.
 		 */
-		//TableDataTrc(TrcData, CheckedSolvers);
 		TableDataTrc(TrcData);
 
 		/**
@@ -128,7 +124,11 @@ function DataTablesConfiguration(): void {
 				targets: [0, 2]
 			}
 		],
-		buttons: ["colvis"]
+		buttons: ["colvis"],
+		initComplete: function () {
+			jq("#dataTable").css("visibility", "visible");
+			console.log("Test");
+		}
 	});
 
 	jq(".dataTables_length select").addClass("custom-select custom-select-sm");
