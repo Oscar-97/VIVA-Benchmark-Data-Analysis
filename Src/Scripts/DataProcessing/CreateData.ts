@@ -12,6 +12,6 @@ export function CreateDataTrc(TrcData: object[]): string[] {
 		const currentString = Object.values(currentObject).join(",");
 		ExportData.push(currentString);
 	}
-	
+
 	return ExportData;
 }
