@@ -8,7 +8,7 @@ Building on the concept and implementation of [PAVER 2.0](https://github.com/coi
 This project is developed using TypeScript, DataTables.js, Chart.js and Webpack. Bootstrap is used for styling.  Notably, the application can be run without a live server since Webpack is responsible for bundling the files.
 
 <div style="text-align:left;">
-  <img src="./Images/OverView_system.png" width="100%">
+  <img src="./Images/OverView_system_new.png" width="100%">
 </div>
 
 ## Instructions for using the system
