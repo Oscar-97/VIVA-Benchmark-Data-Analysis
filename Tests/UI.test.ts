@@ -7,7 +7,7 @@ describe("UI tests", () => {
 	let page: Page;
 
 	beforeAll(async () => {
-		browser = await chromium.launch();
+		browser = await chromium.launch({ headless: true });
 		context = await browser.newContext();
 		page = await context.newPage();
 	});
@@ -38,8 +38,8 @@ describe("UI tests", () => {
 		page: Page,
 		selector: string,
 		expectedText: string
-	) {
-		await page.waitForSelector(selector, { state: "visible", timeout: 5000 });
+	): Promise<void> {
+		await page.waitForSelector(selector, { state: "visible", timeout: 3000 });
 
 		const notificationElement = await page.$(selector);
 
@@ -50,7 +50,7 @@ describe("UI tests", () => {
 		expect(notificationText).toBe(expectedText);
 	}
 
-	async function uploadFile(page: Page, fileNames: string[]) {
+	async function uploadFile(page: Page, fileNames: string[]): Promise<void> {
 		await page.waitForSelector("#fileInput");
 		await page.click("#fileInput");
 		await page.waitForSelector('input[type="file"]');
@@ -70,25 +70,39 @@ describe("UI tests", () => {
 				expect(tableTitle).toBe("Report");
 				await page.screenshot({ path: "TestScreenshots/reportpage.png" });
 
+				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
 				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[1]/a");
 				await page.waitForTimeout(2000);
 				const averageSolverTimeTitle = await page.title();
 				expect(averageSolverTimeTitle).toBe("Average Solver Time");
+				await page.screenshot({
+					path: "TestScreenshots/averagesolvertimepage.png"
+				});
 
+				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
 				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[2]/a");
 				await page.waitForTimeout(2000);
 				const solverTimeTitle = await page.title();
 				expect(solverTimeTitle).toBe("Solver Time");
+				await page.screenshot({ path: "TestScreenshots/solvertimepage.png" });
 
+				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
 				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[3]/a");
 				await page.waitForTimeout(2000);
 				const numberOfNodesTitle = await page.title();
 				expect(numberOfNodesTitle).toBe("Number of Nodes");
+				await page.screenshot({
+					path: "TestScreenshots/numberofnodespage.png"
+				});
 
+				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
 				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[4]/a");
 				await page.waitForTimeout(2000);
 				const numberOfIterationsTitle = await page.title();
 				expect(numberOfIterationsTitle).toBe("Number of Iterations");
+				await page.screenshot({
+					path: "TestScreenshots/numberofiterations.png"
+				});
 
 				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[1]/a");
 				await page.waitForTimeout(2000);
@@ -113,7 +127,6 @@ describe("UI tests", () => {
 					"./solvedata/TraceFiles/scipALL.trc",
 					"./solvedata/TraceFiles/pavitoALL.trc"
 				]);
-				await page.screenshot({ path: "TestScreenshots/multiplefiles1.png" });
 				await checkNotification(
 					page,
 					"#alertNotification",
@@ -123,7 +136,7 @@ describe("UI tests", () => {
 
 				await page.waitForSelector("#dataTableGenerated_wrapper", {
 					state: "visible",
-					timeout: 5000
+					timeout: 10000
 				});
 			} catch (error) {
 				console.error(error);
@@ -139,7 +152,6 @@ describe("UI tests", () => {
 					"./solvedata/TraceFiles/minlp.solu",
 					"./solvedata/TraceFiles/instancedata.csv"
 				]);
-				await page.screenshot({ path: "TestScreenshots/multiplefiles2.png" });
 				await checkNotification(
 					page,
 					"#alertNotification",
@@ -149,35 +161,33 @@ describe("UI tests", () => {
 
 				await page.waitForSelector("#dataTableGenerated_wrapper", {
 					state: "visible",
-					timeout: 5000
+					timeout: 10000
 				});
 			} catch (error) {
 				console.error(error);
 				throw error;
 			}
-		}),
-			30000;
+		}, 30000),
+			test("Handle JSON-file", async () => {
+				try {
+					await page.goto(fileUrl);
+					await uploadFile(page, ["./solvedata/UserConfiguration.json"]);
+					await checkNotification(
+						page,
+						"#alertNotification",
+						"Benchmark file succesfully loaded!"
+					);
+					await waitForElementAndClick(page, "#viewAllResultsButton");
 
-		test("Handle JSON-file", async () => {
-			try {
-				await page.goto(fileUrl);
-				await uploadFile(page, ["./solvedata/UserConfiguration.json"]);
-				await checkNotification(
-					page,
-					"#alertNotification",
-					"Benchmark file succesfully loaded!"
-				);
-				await waitForElementAndClick(page, "#viewAllResultsButton");
-
-				await page.waitForSelector("#dataTableGenerated_wrapper", {
-					state: "visible",
-					timeout: 5000
-				});
-			} catch (error) {
-				console.error(error);
-				throw error;
-			}
-		}, 30000);
+					await page.waitForSelector("#dataTableGenerated_wrapper", {
+						state: "visible",
+						timeout: 5000
+					});
+				} catch (error) {
+					console.error(error);
+					throw error;
+				}
+			}, 30000);
 
 		test("Handle text file", async () => {
 			try {
@@ -213,17 +223,20 @@ describe("UI tests", () => {
 		test("Loading wrong file format", async () => {
 			try {
 				await page.goto(fileUrl);
-				await uploadFile(page, ["./solvedata/error.png"]);
+				await page.waitForSelector("#fileInput");
+				await page.click("#fileInput");
+				await page.waitForSelector('input[type="file"]');
+				await page.setInputFiles('input[type="file"]', "./solvedata/error.png");
 				await checkNotification(
 					page,
 					"#alertNotification",
 					"No .txt, .trc or .json files found."
 				);
 			} catch (error) {
-				console.error(error);
+				console.log(error);
 				throw error;
 			}
-		}, 30000);
+		}, 10000);
 
 		test("Interacting with filters", async () => {
 			try {
@@ -262,19 +275,43 @@ describe("UI tests", () => {
 
 	describe("Plot Pages", () => {
 		describe("Average Solver Time Page", () => {
-			test("", async () => {}, 20000);
+			const filePath = "../Src/Pages/average_solver_time.html";
+			const absoluteFilePath: string = path.resolve(__dirname, filePath);
+			const fileUrl = `file://${absoluteFilePath}`;
+
+			test("", async () => {
+
+			}, 20000);
 		});
 
 		describe("Solver Time Page", () => {
-			test("", async () => {}, 20000);
+			const filePath = "../Src/Pages/solver_time.html";
+			const absoluteFilePath: string = path.resolve(__dirname, filePath);
+			const fileUrl = `file://${absoluteFilePath}`;
+
+			test("", async () => {
+
+			}, 20000);
 		});
 
 		describe("Number of Nodes Page", () => {
-			test("", async () => {}, 20000);
+			const filePath = "../Src/Pages/number_of_nodes.html";
+			const absoluteFilePath: string = path.resolve(__dirname, filePath);
+			const fileUrl = `file://${absoluteFilePath}`;
+
+			test("", async () => {
+
+			}, 20000);
 		});
 
 		describe("Number of Iterations Page", () => {
-			test("", async () => {}, 20000);
+			const filePath = "../Src/Pages/number_of_iterations.html";
+			const absoluteFilePath: string = path.resolve(__dirname, filePath);
+			const fileUrl = `file://${absoluteFilePath}`;
+
+			test("", async () => {
+
+			}, 20000);
 		});
 	});
 });
