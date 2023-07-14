@@ -1,3 +1,4 @@
+import Chart from 'chart.js/auto';
 let myChart = null;
 
 /**
@@ -38,22 +39,22 @@ export function CreateChart(Type, Data, Label, Title): void {
 					display: true,
 					text: Title
 				}
-			}
-		},
-		tooltips: {
-			callbacks: {
-				label: function (tooltipItem, data) {
-					const datasetIndex = tooltipItem.datasetIndex;
-					const dataIndex = tooltipItem.index;
-					const dataset = data.datasets[datasetIndex];
-					const dataPoint = dataset.data[dataIndex];
-					const xLabel = data.labels[dataIndex];
-					const yLabel = dataPoint;
-					const InputFileName =
-						Data[datasetIndex].data[dataIndex].InputFileName;
-					return `x: ${xLabel}, y: ${yLabel}\nInputFileName: ${InputFileName}`;
+			},
+			tooltips: {
+				callbacks: {
+					label: function (tooltipItem, data) {
+						const datasetIndex = tooltipItem.datasetIndex;
+						const dataIndex = tooltipItem.index;
+						const dataset = data.datasets[datasetIndex];
+						const dataPoint = dataset.data[dataIndex];
+						const xLabel = data.labels[dataIndex];
+						const yLabel = dataPoint;
+						const InputFileName =
+							Data[datasetIndex].data[dataIndex].InputFileName;
+						return `x: ${xLabel}, y: ${yLabel}\nInputFileName: ${InputFileName}`;
+					}
 				}
 			}
-		}
+		},
 	});
 }

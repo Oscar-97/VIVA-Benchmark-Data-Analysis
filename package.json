@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "test:unit": "jest Function.test.ts",
-    "test:ui": "jest UI.test.ts", 
+    "test:ui": "jest UI.test.ts",
     "lint": "eslint . --ext .ts,.tsx,.html",
     "lint:fix": "eslint . --ext .ts,.tsx,.html --fix",
     "build": "webpack --config webpack.config.js",
@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@types/chart.js": "^2.9.37",
+    "chart.js": "^4.3.0",
     "datatables.net-bs5": "^1.13.1",
     "datatables.net-buttons-bs5": "^2.3.3",
     "datatables.net-fixedcolumns-bs5": "^4.2.1",
