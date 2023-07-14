@@ -19,4 +19,7 @@ module.exports = {
       { test: /\.js$/, loader: "source-map-loader" },
     ],
   },
+  optimization: {
+    minimize: true
+  },
 };
