@@ -1,4 +1,4 @@
-import Chart from 'chart.js/auto';
+import Chart from "chart.js/auto";
 let myChart = null;
 
 /**
@@ -24,8 +24,8 @@ export function CreateChart(Type, Data, Label, Title): void {
 	}
 
 	// Create chart using array of objects
-	// @ts-ignore
-	myChart = new Chart(document.getElementById("myChart"), {
+	const chartCanvas = document.getElementById("myChart") as HTMLCanvasElement;
+	myChart = new Chart(chartCanvas, {
 		type: Type,
 		data: {
 			labels: [Label],
@@ -42,7 +42,7 @@ export function CreateChart(Type, Data, Label, Title): void {
 			},
 			tooltips: {
 				callbacks: {
-					label: function (tooltipItem, data) {
+					label: function (tooltipItem, data): string {
 						const datasetIndex = tooltipItem.datasetIndex;
 						const dataIndex = tooltipItem.index;
 						const dataset = data.datasets[datasetIndex];
@@ -55,6 +55,6 @@ export function CreateChart(Type, Data, Label, Title): void {
 					}
 				}
 			}
-		},
+		}
 	});
 }
