@@ -34,7 +34,6 @@ export function CreateChart(Type, Data, Label, Title): void {
 		options: {
 			responsive: true,
 			plugins: {
-				// Add label plugin
 				title: {
 					display: true,
 					text: Title
