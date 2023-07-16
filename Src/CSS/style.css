@@ -34,7 +34,7 @@ a {
 #dataTable, #statisticsTable {
     visibility: hidden;
     padding: 1rem;
-    padding-top: 1rem;
+    padding-top: 0rem;
 }
 
 #statisticsTable {
@@ -75,12 +75,12 @@ hr {
     height: 40px;
 }
 
-tbody tr.even td.dtfc-fixed-left.sorting_1 {
+tbody tr.even td.dtfc-fixed-left {
     background-color: #f2f2f2  !important;
     /* z-index: 2; */
 }
 
-tbody tr.odd td.dtfc-fixed-left.sorting_1 {
+tbody tr.odd td.dtfc-fixed-left {
     background-color: #d9d9d9  !important;
     /* z-index: 2; */
 }
