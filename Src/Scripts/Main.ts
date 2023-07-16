@@ -7,7 +7,7 @@ import "datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css";
 import "datatables.net-fixedcolumns-bs5/css/fixedColumns.bootstrap5.min.css";
 import "datatables.net-searchpanes-bs5/css/searchPanes.bootstrap5.min.css";
 import "datatables.net-select-bs5/css/select.bootstrap5.min.css";
-import "datatables.net-searchbuilder-bs5/css/searchBuilder.bootstrap5.css"
+import "datatables.net-searchbuilder-bs5/css/searchBuilder.bootstrap5.css";
 
 import "../css/style.css";
 

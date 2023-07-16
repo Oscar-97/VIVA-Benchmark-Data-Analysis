@@ -364,7 +364,8 @@ describe("UI tests", () => {
 				});
 			}, 10000);
 
-			test.todo("Save Plot as Image" //, async () => {
+			test.todo(
+				"Save Plot as Image" //, async () => {
 				// await page.goto(fileUrl);
 				// await uploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
 				// await checkNotification(
@@ -377,7 +378,7 @@ describe("UI tests", () => {
 				// 	state: "visible",
 				// 	timeout: 3000
 				// });
-			//}, 10000
+				//}, 10000
 			);
 		});
 

@@ -3,11 +3,11 @@ import "datatables.net-bs5";
 import "datatables.net-fixedcolumns-bs5";
 import "datatables.net-searchpanes-bs5";
 import "datatables.net-select-bs5";
-import "datatables.net-searchbuilder-bs5"
+import "datatables.net-searchbuilder-bs5";
 import "datatables.net-buttons-bs5";
 import "datatables.net-buttons/js/buttons.colVis.js";
-import 'datatables.net-buttons/js/buttons.html5.mjs';
-import 'datatables.net-buttons/js/buttons.print.mjs';
+import "datatables.net-buttons/js/buttons.html5.mjs";
+import "datatables.net-buttons/js/buttons.print.mjs";
 
 import { GetCheckedSolvers, GetComparisonArray } from "../Solvers/UsedSolvers";
 import { TableData, TableDataTrc } from "./DataTableBase";
@@ -130,7 +130,7 @@ function DataTablesConfiguration(): void {
 		],
 		buttons: [
 			{
-				text: 'Toggle Filters',
+				text: "Toggle Filters",
 				action: function () {
 					table.searchPanes.container().toggle();
 				}
@@ -141,8 +141,7 @@ function DataTablesConfiguration(): void {
 			},
 			"colvis",
 			"print",
-			"copy",
-
+			"copy"
 		],
 		initComplete: function () {
 			jq("#dataTable").css("visibility", "visible");
