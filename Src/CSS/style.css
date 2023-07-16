@@ -48,6 +48,10 @@ a {
     padding-top: 1rem;
 }
 
+#tableFilters:empty {
+    padding: 0;
+}
+
 #checkboxContainer {
     display: flex;
     flex-wrap: wrap;
