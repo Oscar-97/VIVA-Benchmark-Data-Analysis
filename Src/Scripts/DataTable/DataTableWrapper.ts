@@ -1,10 +1,13 @@
 const jq = require("jquery");
 import "datatables.net-bs5";
-import "datatables.net-buttons-bs5";
 import "datatables.net-fixedcolumns-bs5";
 import "datatables.net-searchpanes-bs5";
-import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-select-bs5";
+import "datatables.net-searchbuilder-bs5"
+import "datatables.net-buttons-bs5";
+import "datatables.net-buttons/js/buttons.colVis.js";
+import 'datatables.net-buttons/js/buttons.html5.mjs';
+import 'datatables.net-buttons/js/buttons.print.mjs';
 
 import { GetCheckedSolvers, GetComparisonArray } from "../Solvers/UsedSolvers";
 import { TableData, TableDataTrc } from "./DataTableBase";
@@ -125,7 +128,22 @@ function DataTablesConfiguration(): void {
 				targets: [0, 2]
 			}
 		],
-		buttons: ["colvis"],
+		buttons: [
+			{
+				text: 'Toggle Filters',
+				action: function () {
+					table.searchPanes.container().toggle();
+				}
+			},
+			{
+				extend: "searchBuilder",
+				text: "Search Builder"
+			},
+			"colvis",
+			"print",
+			"copy",
+
+		],
 		initComplete: function () {
 			jq("#dataTable").css("visibility", "visible");
 		}
@@ -134,6 +152,7 @@ function DataTablesConfiguration(): void {
 	jq(".dataTables_length select").addClass("custom-select custom-select-sm");
 	table.searchPanes.container().prependTo(table.table().container());
 	table.searchPanes.resizePanes();
+	table.searchPanes.container().toggle();
 }
 
 /**
