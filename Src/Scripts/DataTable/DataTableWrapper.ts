@@ -131,7 +131,7 @@ function DataTablesConfiguration(): void {
 		buttons: [
 			{
 				text: "Toggle Filters",
-				action: function () {
+				action: function (): void {
 					table.searchPanes.container().toggle();
 				}
 			},
