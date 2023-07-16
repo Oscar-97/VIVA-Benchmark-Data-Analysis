@@ -64,53 +64,48 @@ describe("UI tests", () => {
 		const fileUrl = `file://${absoluteFilePath}`;
 
 		test("Check that navigation works and the titles are correct", async () => {
-			try {
-				await page.goto(fileUrl);
-				const tableTitle = await page.title();
-				expect(tableTitle).toBe("Report");
-				await page.screenshot({ path: "TestScreenshots/reportpage.png" });
+			await page.goto(fileUrl);
+			const tableTitle = await page.title();
+			expect(tableTitle).toBe("Report");
+			await page.screenshot({ path: "TestScreenshots/reportpage.png" });
 
-				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
-				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[1]/a");
-				await page.waitForTimeout(2000);
-				const averageSolverTimeTitle = await page.title();
-				expect(averageSolverTimeTitle).toBe("Average Solver Time");
-				await page.screenshot({
-					path: "TestScreenshots/averagesolvertimepage.png"
-				});
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[1]/a");
+			await page.waitForTimeout(2000);
+			const averageSolverTimeTitle = await page.title();
+			expect(averageSolverTimeTitle).toBe("Average Solver Time");
+			await page.screenshot({
+				path: "TestScreenshots/averagesolvertimepage.png"
+			});
 
-				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
-				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[2]/a");
-				await page.waitForTimeout(2000);
-				const solverTimeTitle = await page.title();
-				expect(solverTimeTitle).toBe("Solver Time");
-				await page.screenshot({ path: "TestScreenshots/solvertimepage.png" });
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[2]/a");
+			await page.waitForTimeout(2000);
+			const solverTimeTitle = await page.title();
+			expect(solverTimeTitle).toBe("Solver Time");
+			await page.screenshot({ path: "TestScreenshots/solvertimepage.png" });
 
-				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
-				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[3]/a");
-				await page.waitForTimeout(2000);
-				const numberOfNodesTitle = await page.title();
-				expect(numberOfNodesTitle).toBe("Number of Nodes");
-				await page.screenshot({
-					path: "TestScreenshots/numberofnodespage.png"
-				});
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[3]/a");
+			await page.waitForTimeout(2000);
+			const numberOfNodesTitle = await page.title();
+			expect(numberOfNodesTitle).toBe("Number of Nodes");
+			await page.screenshot({
+				path: "TestScreenshots/numberofnodespage.png"
+			});
 
-				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
-				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[4]/a");
-				await page.waitForTimeout(2000);
-				const numberOfIterationsTitle = await page.title();
-				expect(numberOfIterationsTitle).toBe("Number of Iterations");
-				await page.screenshot({
-					path: "TestScreenshots/numberofiterations.png"
-				});
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[4]/a");
+			await page.waitForTimeout(2000);
+			const numberOfIterationsTitle = await page.title();
+			expect(numberOfIterationsTitle).toBe("Number of Iterations");
+			await page.screenshot({
+				path: "TestScreenshots/numberofiterations.png"
+			});
 
-				await page.click("xpath=/html/body/nav/div/div/ul[1]/li[1]/a");
-				await page.waitForTimeout(2000);
-				expect(tableTitle).toBe("Report");
-			} catch (error) {
-				console.error(error);
-				throw error;
-			}
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[1]/a");
+			await page.waitForTimeout(2000);
+			expect(tableTitle).toBe("Report");
 		}, 30000);
 	});
 
@@ -120,168 +115,233 @@ describe("UI tests", () => {
 		const fileUrl = `file://${absoluteFilePath}`;
 
 		test("Handle multiple trace files", async () => {
-			try {
-				await page.goto(fileUrl);
-				await uploadFile(page, [
-					"./solvedata/TraceFiles/shotALL.trc",
-					"./solvedata/TraceFiles/scipALL.trc",
-					"./solvedata/TraceFiles/pavitoALL.trc"
-				]);
-				await checkNotification(
-					page,
-					"#alertNotification",
-					"Benchmark file succesfully loaded!"
-				);
-				await waitForElementAndClick(page, "#viewAllResultsButton");
+			await page.goto(fileUrl);
+			await uploadFile(page, [
+				"./solvedata/TraceFiles/shotALL.trc",
+				"./solvedata/TraceFiles/scipALL.trc",
+				"./solvedata/TraceFiles/pavitoALL.trc"
+			]);
+			await checkNotification(
+				page,
+				"#alertNotification",
+				"Benchmark file succesfully loaded!"
+			);
+			await waitForElementAndClick(page, "#viewAllResultsButton");
 
-				await page.waitForSelector("#dataTableGenerated_wrapper", {
-					state: "visible",
-					timeout: 10000
-				});
-			} catch (error) {
-				console.error(error);
-				throw error;
-			}
-		}, 30000);
+			await page.waitForSelector("#dataTableGenerated_wrapper", {
+				state: "visible",
+				timeout: 10000
+			});
+		}, 20000);
 
 		test("Instance information and best known bound values files", async () => {
-			try {
-				await page.goto(fileUrl);
-				await uploadFile(page, [
-					"./solvedata/TraceFiles/shotALL.trc",
-					"./solvedata/TraceFiles/minlp.solu",
-					"./solvedata/TraceFiles/instancedata.csv"
-				]);
-				await checkNotification(
-					page,
-					"#alertNotification",
-					"Instance information succesfully loaded!"
-				);
-				await waitForElementAndClick(page, "#viewAllResultsButton");
+			await page.goto(fileUrl);
+			await uploadFile(page, [
+				"./solvedata/TraceFiles/shotALL.trc",
+				"./solvedata/TraceFiles/minlp.solu",
+				"./solvedata/TraceFiles/instancedata.csv"
+			]);
+			await checkNotification(
+				page,
+				"#alertNotification",
+				"Instance information succesfully loaded!"
+			);
+			await waitForElementAndClick(page, "#viewAllResultsButton");
 
-				await page.waitForSelector("#dataTableGenerated_wrapper", {
-					state: "visible",
-					timeout: 10000
-				});
-			} catch (error) {
-				console.error(error);
-				throw error;
-			}
-		}, 30000),
-			test("Handle JSON-file", async () => {
-				try {
-					await page.goto(fileUrl);
-					await uploadFile(page, ["./solvedata/UserConfiguration.json"]);
-					await checkNotification(
-						page,
-						"#alertNotification",
-						"Benchmark file succesfully loaded!"
-					);
-					await waitForElementAndClick(page, "#viewAllResultsButton");
+			await page.waitForSelector("#dataTableGenerated_wrapper", {
+				state: "visible",
+				timeout: 10000
+			});
+		}, 20000);
 
-					await page.waitForSelector("#dataTableGenerated_wrapper", {
-						state: "visible",
-						timeout: 5000
-					});
-				} catch (error) {
-					console.error(error);
-					throw error;
-				}
-			}, 30000);
+		test("Handle JSON-file", async () => {
+			await page.goto(fileUrl);
+			await uploadFile(page, ["./solvedata/UserConfiguration.json"]);
+			await checkNotification(
+				page,
+				"#alertNotification",
+				"Benchmark file succesfully loaded!"
+			);
+			await waitForElementAndClick(page, "#viewAllResultsButton");
+
+			await page.waitForSelector("#dataTableGenerated_wrapper", {
+				state: "visible",
+				timeout: 5000
+			});
+		}, 10000);
 
 		test("Handle text file", async () => {
-			try {
-				await page.goto(fileUrl);
-				await uploadFile(page, ["./solvedata/solvedata.txt"]);
-				await checkNotification(
-					page,
-					"#alertNotification",
-					"Benchmark file succesfully loaded!"
-				);
-				await waitForElementAndClick(page, "#viewAllResultsButton");
+			await page.goto(fileUrl);
+			await uploadFile(page, ["./solvedata/solvedata.txt"]);
+			await checkNotification(
+				page,
+				"#alertNotification",
+				"Benchmark file succesfully loaded!"
+			);
+			await waitForElementAndClick(page, "#viewAllResultsButton");
 
-				await page.waitForSelector("#dataTableGenerated_wrapper", {
-					state: "visible",
-					timeout: 5000
-				});
-			} catch (error) {
-				console.error(error);
-				throw error;
-			}
-		}, 30000);
+			await page.waitForSelector("#dataTableGenerated_wrapper", {
+				state: "visible",
+				timeout: 5000
+			});
+		}, 10000);
 
-		test("Saving to and loading from local storage ", async () => {
-			try {
-				await page.goto(fileUrl);
-				// TODO: Test local storage.
-			} catch (error) {
-				console.error(error);
-				throw error;
+		test("Save to, load from and remove local storage ", async () => {
+			await page.goto(fileUrl);
+			await page.evaluate(() => {
+				localStorage.clear();
+			});
+			await uploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
+			await checkNotification(
+				page,
+				"#alertNotification",
+				"Benchmark file succesfully loaded!"
+			);
+			await waitForElementAndClick(page, "#viewAllResultsButton");
+
+			await page.waitForSelector("#dataTableGenerated_wrapper", {
+				state: "visible",
+				timeout: 10000
+			});
+			await waitForElementAndClick(page, "#saveLocalStorageButton");
+			await page.reload();
+			await page.waitForTimeout(500);
+			await checkNotification(
+				page,
+				"#alertNotification",
+				"Found cached benchmark file!"
+			);
+			const buttonIDs = [
+				"#viewAllResultsButton",
+				"#downloadConfigurationButtonLayer",
+				"#deleteLocalStorageButton"
+			];
+			for (const selector of buttonIDs) {
+				const button = await page.waitForSelector(selector);
+				await button.waitForElementState("visible");
+				const isEnabled = await button.isEnabled();
+				expect(isEnabled).toBeTruthy();
 			}
-		}, 30000);
+			await page.waitForTimeout(3000);
+			const deleteLocalStorageButton = await page.$(buttonIDs[2]);
+			await deleteLocalStorageButton?.click();
+			await page.waitForTimeout(500);
+			await checkNotification(
+				page,
+				"#alertNotification",
+				"Deleted configuration."
+			);
+		}, 20000);
 
 		test("Loading wrong file format", async () => {
-			try {
-				await page.goto(fileUrl);
-				await page.waitForSelector("#fileInput");
-				await page.click("#fileInput");
-				await page.waitForSelector('input[type="file"]');
-				await page.setInputFiles('input[type="file"]', "./solvedata/error.png");
-				await checkNotification(
-					page,
-					"#alertNotification",
-					"No .txt, .trc or .json files found."
-				);
-			} catch (error) {
-				console.log(error);
-				throw error;
-			}
+			await page.goto(fileUrl);
+			await page.waitForSelector("#fileInput");
+			await page.click("#fileInput");
+			await page.waitForSelector('input[type="file"]');
+			await page.setInputFiles('input[type="file"]', "./solvedata/error.png");
+			await checkNotification(
+				page,
+				"#alertNotification",
+				"No .txt, .trc or .json files found."
+			);
 		}, 10000);
 
 		test("Interacting with filters", async () => {
-			try {
-				await page.goto(fileUrl);
-				await uploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
-				await checkNotification(
-					page,
-					"#alertNotification",
-					"Benchmark file succesfully loaded!"
-				);
-				await waitForElementAndClick(page, "#viewAllResultsButton");
-				// TODO: Test filtering.
-			} catch (error) {
-				console.error(error);
-				throw error;
+			await page.goto(fileUrl);
+			await uploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
+			await checkNotification(
+				page,
+				"#alertNotification",
+				"Benchmark file succesfully loaded!"
+			);
+			await waitForElementAndClick(page, "#viewAllResultsButton");
+			await page.waitForSelector("#dataTableGenerated_wrapper", {
+				state: "visible",
+				timeout: 10000
+			});
+			const rowSelectors = [
+				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[1]",
+				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]",
+				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[3]"
+			];
+			await page.keyboard.down("Control");
+			for (const selector of rowSelectors) {
+				const row = await page.waitForSelector(selector);
+				await row.click();
 			}
-		}, 30000);
+			await page.waitForTimeout(5000);
+			waitForElementAndClick(page, "#filterSelectionButton");
+			await page.waitForTimeout(5000);
+			await page.waitForSelector("#dataTableGenerated_wrapper", {
+				state: "visible",
+				timeout: 10000
+			});
+			await page.keyboard.up("Control");
 
-		test("Button functionality", async () => {
-			try {
-				await page.goto(fileUrl);
-				await uploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
-				await checkNotification(
-					page,
-					"#alertNotification",
-					"Benchmark file succesfully loaded!"
-				);
-				await waitForElementAndClick(page, "#viewAllResultsButton");
-				// TODO: Test all buttons on tabel page
-			} catch (error) {
-				console.error(error);
-				throw error;
+			const rowCount = await page.$$eval(
+				"table#dataTableGenerated" + " > tbody > tr",
+				(rows) => rows.length
+			);
+			const expectedRowCount = 3;
+			expect(rowCount).toBe(expectedRowCount);
+		}, 20000);
+
+		test("Button status after viewing a table", async () => {
+			await page.goto(fileUrl);
+			await uploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
+			await checkNotification(
+				page,
+				"#alertNotification",
+				"Benchmark file succesfully loaded!"
+			);
+			await waitForElementAndClick(page, "#viewAllResultsButton");
+			await page.waitForSelector("#dataTableGenerated_wrapper", {
+				state: "visible",
+				timeout: 10000
+			});
+			await page.waitForTimeout(5000);
+			const buttonIDs = [
+				"#viewAllResultsButton",
+				"#filterSelectionButton",
+				"#saveLocalStorageButton",
+				"#downloadConfigurationButtonLayer",
+				"#downloadCSVButtonLayer",
+				"#deleteLocalStorageButton",
+				"#clearTableButton"
+			];
+			for (const selector of buttonIDs) {
+				const button = await page.waitForSelector(selector);
+				await button.waitForElementState("visible");
+				const isEnabled = await button.isEnabled();
+				expect(isEnabled).toBeTruthy();
 			}
-		}, 30000);
+		}, 20000);
 	});
 
-	describe("Plot Pages", () => {
+	describe.only("Plot Pages", () => {
 		describe("Average Solver Time Page", () => {
 			const filePath = "../Src/Pages/average_solver_time.html";
 			const absoluteFilePath: string = path.resolve(__dirname, filePath);
 			const fileUrl = `file://${absoluteFilePath}`;
 
-			test("", async () => {
-
-			}, 20000);
+			test("Average Solver Time Bar Chart", async () => {
+				await page.goto(fileUrl);
+				await uploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
+				await checkNotification(
+					page,
+					"#alertNotification",
+					"Benchmark file succesfully loaded!"
+				);
+				await waitForElementAndClick(page, "#viewPlotsButton");
+				await page.waitForSelector("#myChart", {
+					state: "visible",
+					timeout: 3000
+				});
+				await page.waitForSelector("#statisticsTable", {
+					state: "visible",
+					timeout: 3000
+				});
+			}, 10000);
 		});
 
 		describe("Solver Time Page", () => {
@@ -289,9 +349,36 @@ describe("UI tests", () => {
 			const absoluteFilePath: string = path.resolve(__dirname, filePath);
 			const fileUrl = `file://${absoluteFilePath}`;
 
-			test("", async () => {
+			test("Solver Time Line Plot", async () => {
+				await page.goto(fileUrl);
+				await uploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
+				await checkNotification(
+					page,
+					"#alertNotification",
+					"Benchmark file succesfully loaded!"
+				);
+				await waitForElementAndClick(page, "#viewPlotsButton");
+				await page.waitForSelector("#myChart", {
+					state: "visible",
+					timeout: 3000
+				});
+			}, 10000);
 
-			}, 20000);
+			test.todo("Save Plot as Image" //, async () => {
+				// await page.goto(fileUrl);
+				// await uploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
+				// await checkNotification(
+				// 	page,
+				// 	"#alertNotification",
+				// 	"Benchmark file succesfully loaded!"
+				// );
+				// await waitForElementAndClick(page, "#viewPlotsButton");
+				// await page.waitForSelector("#myChart", {
+				// 	state: "visible",
+				// 	timeout: 3000
+				// });
+			//}, 10000
+			);
 		});
 
 		describe("Number of Nodes Page", () => {
@@ -299,9 +386,24 @@ describe("UI tests", () => {
 			const absoluteFilePath: string = path.resolve(__dirname, filePath);
 			const fileUrl = `file://${absoluteFilePath}`;
 
-			test("", async () => {
-
-			}, 20000);
+			test("Number of Nodes Bar Chart", async () => {
+				await page.goto(fileUrl);
+				await uploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
+				await checkNotification(
+					page,
+					"#alertNotification",
+					"Benchmark file succesfully loaded!"
+				);
+				await waitForElementAndClick(page, "#viewPlotsButton");
+				await page.waitForSelector("#myChart", {
+					state: "visible",
+					timeout: 3000
+				});
+				await page.waitForSelector("#statisticsTable", {
+					state: "visible",
+					timeout: 3000
+				});
+			}, 10000);
 		});
 
 		describe("Number of Iterations Page", () => {
@@ -309,9 +411,24 @@ describe("UI tests", () => {
 			const absoluteFilePath: string = path.resolve(__dirname, filePath);
 			const fileUrl = `file://${absoluteFilePath}`;
 
-			test("", async () => {
-
-			}, 20000);
+			test("Number of Iterations Bar Chart", async () => {
+				await page.goto(fileUrl);
+				await uploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
+				await checkNotification(
+					page,
+					"#alertNotification",
+					"Benchmark file succesfully loaded!"
+				);
+				await waitForElementAndClick(page, "#viewPlotsButton");
+				await page.waitForSelector("#myChart", {
+					state: "visible",
+					timeout: 3000
+				});
+				await page.waitForSelector("#statisticsTable", {
+					state: "visible",
+					timeout: 3000
+				});
+			}, 10000);
 		});
 	});
 });
