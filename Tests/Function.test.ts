@@ -4,7 +4,9 @@ import {
 	CalculateDualBound,
 	CalculateGap,
 	CalculateDifference,
-	CalculateGapPercentage
+	CalculateGapPercentage,
+	AnalyzeDataByCategory,
+	ExtractAllSolverTimes
 } from "../Src/Scripts/DataProcessing/CalculateResults";
 
 jest.doMock("../Src/Scripts/DataProcessing/GetInstanceInformation", () => ({
@@ -182,5 +184,97 @@ describe("CalculateGapPercentage", () => {
 		expect(CalculateGapPercentage(1, 2, "min")).toBeCloseTo(100.0, 7);
 		expect(CalculateGapPercentage(2, 1, "max")).toBeCloseTo(100.0, 7);
 		expect(CalculateGapPercentage(2, 1, "min")).toBeCloseTo(-100.0, 7);
+	});
+});
+
+describe("ExtractAllSolverTimes", () => {
+	it("Extracts solver times correctly.", () => {
+		const TrcData = [
+			{ SolverName: "shot", "Time[s]": "0.041120867", InputFileName: "alan", UserComment: "This is will get filtered."},
+			{ SolverName: "shot", "Time[s]": "0.560621249", InputFileName: "ball_mk2_10", UserComment: "This is will get filtered."},
+			{ SolverName: "bbb", "Time[s]": "900.971", InputFileName: "ball_mk2_30", UserComment: "This is will get filtered."},
+			{ SolverName: "bbb", "Time[s]": "5.922", InputFileName: "ball_mk3_10", UserComment: "This is will get filtered."},
+		];
+
+		const result = ExtractAllSolverTimes(TrcData);
+
+		expect((result as { [key: string]: { time: number; InputFileName: string }[] }).shot).toHaveLength(2);
+		expect((result as { [key: string]: { time: number; InputFileName: string }[] }).shot[0]).toHaveProperty("time", 0.041120867);
+		expect((result as { [key: string]: { time: number; InputFileName: string }[] }).shot[0]).toHaveProperty("InputFileName", "alan");
+		expect((result as { [key: string]: { time: number; InputFileName: string }[] }).shot[1]).toHaveProperty("time", 0.560621249);
+		expect((result as { [key: string]: { time: number; InputFileName: string }[] }).shot[1]).toHaveProperty("InputFileName", "ball_mk2_10");
+		
+		expect((result as { [key: string]: { time: number; InputFileName: string }[] }).bbb).toHaveLength(2);
+		expect((result as { [key: string]: { time: number; InputFileName: string }[] }).bbb[0]).toHaveProperty("time", 900.971);
+		expect((result as { [key: string]: { time: number; InputFileName: string }[] }).bbb[0]).toHaveProperty("InputFileName", "ball_mk2_30");
+		expect((result as { [key: string]: { time: number; InputFileName: string }[] }).bbb[1]).toHaveProperty("time", 5.922);
+		expect((result as { [key: string]: { time: number; InputFileName: string }[] }).bbb[1]).toHaveProperty("InputFileName", "ball_mk3_10");
+	});
+});
+
+describe("AnalyzeDataByCategory", () => {
+	const TrcData = [
+		{ SolverName: "shot", "Time[s]": "0.041120867", InputFileName: "alan", UserComment: "This is will get filtered."},
+		{ SolverName: "shot", "Time[s]": "0.560621249", InputFileName: "ball_mk2_10", UserComment: "This is will get filtered."},
+		{ SolverName: "bbb", "Time[s]": "900.971", InputFileName: "ball_mk2_30", UserComment: "This is will get filtered."},
+		{ SolverName: "bbb", "Time[s]": "5.922", InputFileName: "ball_mk3_10", UserComment: "This is will get filtered."},
+	];
+	const Category = "Time[s]";
+
+	it("Calculate the statistics table correctly.", () => {
+		const result = AnalyzeDataByCategory(TrcData, Category);
+
+		expect(result).toEqual({
+			shot: {
+				average: expect.any(Number),
+				min: expect.any(Number),
+				max: expect.any(Number),
+				std: expect.any(Number),
+				sum: expect.any(Number),
+				percentile_10: expect.any(Number),
+				percentile_25: expect.any(Number),
+				percentile_50: expect.any(Number),
+				percentile_75: expect.any(Number),
+				percentile_90: expect.any(Number)
+			},
+			bbb: {
+				average: expect.any(Number),
+				min: expect.any(Number),
+				max: expect.any(Number),
+				std: expect.any(Number),
+				sum: expect.any(Number),
+				percentile_10: expect.any(Number),
+				percentile_25: expect.any(Number),
+				percentile_50: expect.any(Number),
+				percentile_75: expect.any(Number),
+				percentile_90: expect.any(Number)
+			}
+		});
+
+		expect(result.shot).toEqual({
+			average: 0.3008711,
+			min: 0.04112087,
+			max: 0.5606212,
+			std: 0.3673422,
+			sum: 0.6017421,
+			percentile_10: 0.09307091,
+			percentile_25: 0.170996,
+			percentile_50: 0.3008711,
+			percentile_75: 0.4307462,
+			percentile_90: 0.5086712
+		  });
+		  
+		expect(result.bbb).toEqual({
+			average: 453.4465,
+			min: 5.922,
+			max: 900.971,
+			std: 632.8952,
+			sum: 906.893,
+			percentile_10: 95.4269,
+			percentile_25: 229.6843,
+			percentile_50: 453.4465,
+			percentile_75: 677.2088,
+			percentile_90: 811.4661
+		  });
 	});
 });
