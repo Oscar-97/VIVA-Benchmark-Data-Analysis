@@ -92,7 +92,7 @@ function DataTablesConfiguration(): void {
 		dom:
 			"<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'i>>" +
 			"<'row mb-3'<'col-sm-12'tr>>" +
-			"<'row'<'col-sm-6'B><'col-sm-6'p>>",
+			"<'row'<'col-4 col-md-6'B><'col-4 col-md-6'p>>",
 		lengthChange: true,
 		lengthMenu: [
 			[10, 25, 50, 100, -1],
@@ -139,9 +139,21 @@ function DataTablesConfiguration(): void {
 				extend: "searchBuilder",
 				text: "Search Builder"
 			},
-			"colvis",
-			"print",
-			"copy"
+			{
+				extend: "colvis",
+				columnText: function ( dt: any, idx: number, title: string ) {
+					return (idx+1)+': '+title;
+				}
+			},
+			{
+				extend: "collection",
+				text: "Export",
+				buttons: [
+					"print",
+					"copy",
+					"csv"
+				]
+			}
 		],
 		initComplete: function () {
 			jq("#dataTable").css("visibility", "visible");
