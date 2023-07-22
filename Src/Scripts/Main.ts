@@ -105,7 +105,7 @@ import {
  * @param RawInstanceInfoData Unprocessed instanceinfo.csv containing properties.
  * @param RawSoluData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
  */
-let DataFileType = "";
+let DataFileType: string = "";
 let RawData: string[] = [];
 let CheckedSolvers: string[] = [];
 let RawInstanceInfoData: string[] = [];
