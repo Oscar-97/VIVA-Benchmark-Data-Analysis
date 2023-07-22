@@ -81,6 +81,12 @@
  * 2020 SpryMedia Ltd - datatables.net/license
  */
 
+/*! DateTime picker for DataTables.net v1.5.0
+ *
+ * © SpryMedia Ltd, all rights reserved.
+ * License: MIT datatables.net/license/mit
+ */
+
 /*! FixedColumns 4.2.1
      * 2019-2022 SpryMedia Ltd - datatables.net/license
      */
