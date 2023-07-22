@@ -8,6 +8,7 @@ import "datatables.net-buttons-bs5";
 import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-buttons/js/buttons.html5.mjs";
 import "datatables.net-buttons/js/buttons.print.mjs";
+import "datatables.net-datetime";
 
 import { GetCheckedSolvers, GetComparisonArray } from "../Solvers/UsedSolvers";
 import { TableData, TableDataTrc } from "./DataTableBase";
