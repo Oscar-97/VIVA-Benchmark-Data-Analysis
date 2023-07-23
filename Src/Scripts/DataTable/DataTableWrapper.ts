@@ -142,18 +142,13 @@ function DataTablesConfiguration(): void {
 			},
 			{
 				extend: "colvis",
-				columnText: function ( dt: any, idx: number, title: string ) {
-					return (idx+1)+': '+title;
-				}
+				columnText: (dt: any, idx: number, title: string): string =>
+					idx + 1 + ": " + title
 			},
 			{
 				extend: "collection",
 				text: "Export",
-				buttons: [
-					"print",
-					"copy",
-					"csv"
-				]
+				buttons: ["print", "copy", "csv"]
 			}
 		],
 		initComplete: function () {

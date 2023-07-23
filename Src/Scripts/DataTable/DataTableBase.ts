@@ -113,9 +113,7 @@ export function TableData(
 	DataTableDiv.appendChild(NewDataTable);
 }
 
-export function TableDataTrc(
-	TrcData: object[]
-): void {
+export function TableDataTrc(TrcData: object[]): void {
 	/**
 	 * @param DataTableDiv Div that contains the data table.
 	 */
