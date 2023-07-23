@@ -1,0 +1,16 @@
+{
+    "name": "VIVA",
+    "description": "Benchmark data analysis for optimization solvers.",
+    "icons": [
+      {
+        "src": "Src/CSS/tab_icon.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ],
+    "start_url": "report.html",
+    "display": "minimal-ui",
+    "theme-color": "white",
+    "background_color": "white"
+  }
+  

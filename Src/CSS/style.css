@@ -32,6 +32,13 @@ a {
 }
 
 #dataTable, #statisticsTable {
+    visibility: hidden;
+    padding: 1rem;
+    padding-top: 0rem;
+}
+
+#statisticsTable {
+    visibility: visible;
     padding: 1rem;
     padding-top: 1rem;
 }
@@ -39,6 +46,10 @@ a {
 #tableFilters {
     padding-left: 1rem;
     padding-top: 1rem;
+}
+
+#tableFilters:empty {
+    padding: 0;
 }
 
 #checkboxContainer {
@@ -63,26 +74,47 @@ hr {
     margin-right: 1rem;
 }
 
-table.dataTable tr.odd {
-    background-color: #cccccc;
-}
-
-table.dataTable tr.odd .sorting_1 {
-    background-color: #cccccc;
-}
-
 .form-check {
     width: 150px;
     height: 40px;
 }
 
+tbody tr.even td.dtfc-fixed-left {
+    background-color: #f2f2f2  !important;
+    /* z-index: 2; */
+}
+
+tbody tr.odd td.dtfc-fixed-left {
+    background-color: #d9d9d9  !important;
+    /* z-index: 2; */
+}
+
+tr.even td,
+tr.even th {
+    background-color: rgba(0, 0, 0, .05) !important;
+}
+
+tr.odd td,
+tr.odd th{
+    background-color: rgba(0, 0, 0, .15) !important;
+}
+
 tr.even.bg-primary.row-selected-problems,
-tr.odd.bg-primary.row-selected-problems,
-tr.even.bg-primary.row-selected-problems td.sorting_1.dtfc-fixed-left,
-tr.odd.bg-primary.row-selected-problems td.sorting_1.dtfc-fixed-left,
-tr.odd.bg-primary.row-selected-problems th.sorting_1.dtfc-fixed-left,
-tr.even.bg-primary.row-selected-problems th.sorting_1.dtfc-fixed-left {
+tr.odd.bg-primary.row-selected-problems {
     background-color: #0d6efd;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+tr.even.bg-primary.row-selected-problems td,
+tr.odd.bg-primary.row-selected-problems td,
+tr.even.bg-primary.row-selected-problems th,
+tr.odd.bg-primary.row-selected-problems th,
+tr.even.bg-primary.row-selected-problems td.dtfc-fixed-left.sorting_1,
+tr.even.bg-primary.row-selected-problems th.dtfc-fixed-left.sorting_1,
+tr.odd.bg-primary.row-selected-problems td.dtfc-fixed-left.sorting_1,
+tr.odd.bg-primary.row-selected-problems th.dtfc-fixed-left.sorting_1 {
+    background-color: #0d6efd !important; 
     color: #ffffff;
     font-weight: bold;
 }

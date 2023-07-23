@@ -1,15 +1,16 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 module.exports = {
   mode: "production",
-  entry: "./Src/Scripts/Main.ts", // The entry point for your code
+  entry: "./Src/Scripts/Main.ts",
   output: {
-    filename: "bundle.js", // The name of the bundled file
-    path: __dirname + "/Dist", // The directory where the bundled file should be saved
+    filename: "bundle.js",
+    path: __dirname + "/Dist", 
   },
-  // Enable sourcemaps for debugging webpack's output.
   devtool: "source-map",
   resolve: {
     // Add '.ts' and '.tsx' as resolvable extensions.
-    extensions: ["", ".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
+    extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
   },
   module: {
     rules: [
@@ -17,6 +18,23 @@ module.exports = {
       { test: /\.tsx?$/, loader: "ts-loader" },
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
       { test: /\.js$/, loader: "source-map-loader" },
+      // CSS handled by plugin.
+      {
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader, // We use MiniCssExtractPlugin.loader instead of 'style-loader' to extract CSS into a separate file
+          'css-loader',
+        ],
+      },
     ],
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[id].css',
+    }),
+  ],
+  optimization: {
+    minimize: true
   },
 };
