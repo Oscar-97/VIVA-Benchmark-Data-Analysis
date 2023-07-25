@@ -27,7 +27,7 @@ export function PlotDataByCategory(
 		console.log("Data for category", Category, ": ", data);
 
 		const type = Type;
-		const colors = [PickColor(), PickColor(), PickColor()];
+		const colors = PickColor(20);
 		const chartData = Object.entries(data).map(([key, value], index) => ({
 			label: key,
 			data: [value.average],

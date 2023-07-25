@@ -6,10 +6,14 @@ let myChart = null;
  * @param PickColor Color picker for the data.
  * @returns Random different colors for each solver.
  */
-export function PickColor(): string {
-	const Hex = Math.floor(Math.random() * 16777215).toString(16);
-	const Color = "#" + Hex;
-	return Color;
+export function PickColor(NumberOfColors: number): string[] {
+	const Colors: string[] = [];
+	for (let i = 0; i < NumberOfColors; i++) {
+		const Hex = Math.floor(Math.random() * 16777215).toString(16);
+		const Color = "#" + Hex;
+		Colors.push(Color);
+	}
+	return Colors;
 }
 
 /**
