@@ -1,7 +1,13 @@
 // #region Imports
+/**
+ * Bootstrap.
+ */
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
+/**
+ * DataTables and extensions.
+ */
 import "datatables.net-bs5/css/dataTables.bootstrap5.min.css";
 import "datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css";
 import "datatables.net-fixedcolumns-bs5/css/fixedColumns.bootstrap5.min.css";
@@ -10,7 +16,15 @@ import "datatables.net-select-bs5/css/select.bootstrap5.min.css";
 import "datatables.net-searchbuilder-bs5/css/searchBuilder.bootstrap5.css";
 import "datatables.net-datetime/dist/dataTables.dateTime.min.css";
 
+/**
+ * CSS.
+ */
 import "../css/style.css";
+
+/**
+ * PWA Setup.
+ */
+import { RegisterServiceWorker } from "./PWA_Setup";
 
 /**
  * Chart.
@@ -100,13 +114,18 @@ import {
 //#endregion
 
 /**
+ * Register service worker for PWA offline support.
+ */
+RegisterServiceWorker();
+
+/**
  * @param DataFileType Type of file extension for the imported data.
  * @param RawData Raw data of the imported benchmark results.
  * @param CheckedSolvers Array containing checked solvers.
  * @param RawInstanceInfoData Unprocessed instanceinfo.csv containing properties.
  * @param RawSoluData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
  */
-let DataFileType: string = "";
+let DataFileType = "";
 let RawData: string[] = [];
 let CheckedSolvers: string[] = [];
 let RawInstanceInfoData: string[] = [];
