@@ -91,9 +91,9 @@ function DataTablesConfiguration(): void {
 			layout: "auto"
 		},
 		dom:
-			"<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'i>>" +
-			"<'row mb-3'<'col-sm-12'tr>>" +
-			"<'row'<'col-4 col-md-6'B><'col-4 col-md-6'p>>",
+			"<'row'<'col-12 col-sm-6 col-md-6'i><'col-12 col-sm-6 col-md-6 text-end'f>>" +
+			"<'row'<'col-sm-12'tr>>" +
+			"<'row'<'col-12 col-lg-6'B><'col-12 col-lg-6 text-end'p>>",
 		lengthChange: true,
 		lengthMenu: [
 			[10, 25, 50, 100, -1],
@@ -131,28 +131,75 @@ function DataTablesConfiguration(): void {
 		],
 		buttons: [
 			{
-				text: "Toggle Filters",
-				action: function (): void {
-					table.searchPanes.container().toggle();
-				}
-			},
-			{
-				extend: "searchBuilder",
-				text: "Search Builder"
+				extend: "pageLength",
+				className: "rounded-start btn-sm"
 			},
 			{
 				extend: "colvis",
+				className: "rounded-end btn-sm",
 				columnText: (dt: any, idx: number, title: string): string =>
 					idx + 1 + ": " + title
 			},
+			"spacer",
+			{
+				text: "Toggle Filters",
+				action: function (): void {
+					table.searchPanes.container().toggle();
+				},
+				className: "rounded btn-sm"
+			},
+			"spacer",
+			{
+				extend: "searchBuilder",
+				text: "Search Builder",
+				className: "rounded btn-sm"
+			},
+			"spacer",
 			{
 				extend: "collection",
 				text: "Export",
+				className: "rounded btn-sm",
 				buttons: ["print", "copy", "csv"]
-			}
+			},
 		],
 		initComplete: function () {
 			jq("#dataTable").css("visibility", "visible");
+			var columnNamesToShow = [
+				"InputFileName",
+				"name",
+				"SolverName",
+				"Dir",
+				"ModelType",
+				"conscurvature",
+				"convex",
+				"objsense",
+				"objtype",
+				"ModelStatus",
+				"TermStatus",
+				"Time[s]",
+				"Obj",
+				"Obj Est",
+				"PrimalBound Problem",
+				"DualBound Problem",
+				"dualbound",
+				"primalbound",
+				"Gap",
+				"gap",
+				"objcurvature",
+				"probtype",
+				"PrimalBound Solver",
+				"DualBound Solver",
+				"Gap[%] Solver",
+				"PrimalGap",
+				"DualGap",
+				"Gap Problem",
+			];
+			this.api().columns().every(function () {
+				var columnName = this.header().textContent;
+				if (!columnNamesToShow.includes(columnName)) {
+					this.visible(false);
+				}
+			});
 		}
 	});
 
