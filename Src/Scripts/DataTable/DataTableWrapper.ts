@@ -92,8 +92,8 @@ function DataTablesConfiguration(): void {
 		},
 		dom:
 			"<'row'<'col-12 col-sm-6 col-md-6'i><'col-12 col-sm-6 col-md-6 text-end'f>>" +
-			"<'row'<'col-sm-12'tr>>" +
-			"<'row'<'col-12 col-lg-6'B><'col-12 col-lg-6 text-end'p>>",
+			"<'row'<'col-12'tr>>" +
+			"<'row'<'col-12 col-lg-6 mt-4'B><'col-12 col-lg-6 mt-4 text-end'p>>",
 		lengthChange: true,
 		lengthMenu: [
 			[10, 25, 50, 100, -1],
@@ -160,11 +160,11 @@ function DataTablesConfiguration(): void {
 				text: "Export",
 				className: "rounded btn-sm",
 				buttons: ["print", "copy", "csv"]
-			},
+			}
 		],
 		initComplete: function () {
 			jq("#dataTable").css("visibility", "visible");
-			var columnNamesToShow = [
+			const columnNamesToShow = [
 				"InputFileName",
 				"name",
 				"SolverName",
@@ -177,6 +177,8 @@ function DataTablesConfiguration(): void {
 				"ModelStatus",
 				"TermStatus",
 				"Time[s]",
+				"NumberOfIterations",
+				"Nodes[i]",
 				"Obj",
 				"Obj Est",
 				"PrimalBound Problem",
@@ -192,14 +194,16 @@ function DataTablesConfiguration(): void {
 				"Gap[%] Solver",
 				"PrimalGap",
 				"DualGap",
-				"Gap Problem",
+				"Gap Problem"
 			];
-			this.api().columns().every(function () {
-				var columnName = this.header().textContent;
-				if (!columnNamesToShow.includes(columnName)) {
-					this.visible(false);
-				}
-			});
+			this.api()
+				.columns()
+				.every(function () {
+					const columnName = this.header().textContent;
+					if (!columnNamesToShow.includes(columnName)) {
+						this.visible(false);
+					}
+				});
 		}
 	});
 
