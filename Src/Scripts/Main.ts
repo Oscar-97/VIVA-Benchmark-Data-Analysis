@@ -119,11 +119,10 @@ import {
 } from "./UserConfiguration/UserConfiguration";
 //#endregion
 
-jq(document).ready(function() {
+jq(document).ready(function () {
 	jq("body > :not(nav)").css("opacity", "1");
-    jq("hr").css("opacity", "0.25");
+	jq("hr").css("opacity", "0.25");
 });
-
 
 /**
  * Register service worker for PWA offline support.
