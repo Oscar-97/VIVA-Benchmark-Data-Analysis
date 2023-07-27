@@ -132,20 +132,16 @@ export function CalculateGap(
 		return 0.0;
 	}
 
-	if (math.min(math.abs(a), math.abs(b)) < tol) {
+	if (
+		math.min(math.abs(a), math.abs(b)) < tol ||
+		a === Infinity ||
+		b === Infinity ||
+		a * b < 0
+	) {
 		return Infinity;
 	}
 
-	if (math.max(math.abs(a), math.abs(b)) > Infinity) {
-		return Infinity;
-	}
-
-	// If either a or b is Infinity, return Infinity
-	if (a === Infinity || b === Infinity) {
-		return Infinity;
-	}
-
-	if (a * b < 0) {
+	if (isNaN(a) || isNaN(b)) {
 		return Infinity;
 	}
 
@@ -172,8 +168,7 @@ export function CalculateGapPercentage(
 		[a, b] = [b, a];
 	}
 
-	// Every number in JavaScript is less than Infinity, hence using equality operator.
-	if (a === Infinity || b === Infinity) {
+	if (Math.abs(a) === Infinity || Math.abs(b) === Infinity) {
 		if (a === b) {
 			return 0.0;
 		} else {
