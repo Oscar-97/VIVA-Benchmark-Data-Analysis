@@ -345,7 +345,7 @@ describe("UI tests", () => {
 	});
 
 	describe("Plot Pages", () => {
-		async function RunPlotOperations(filePath: string) {
+		async function RunPlotOperations(filePath: string): Promise<void> {
 			const absoluteFilePath: string = path.resolve(__dirname, filePath);
 			const fileUrl = `file://${absoluteFilePath}`;
 
