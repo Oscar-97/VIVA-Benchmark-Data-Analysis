@@ -72,6 +72,14 @@ export const SolverAndProblemsHeader = document.getElementById(
 ) as HTMLSpanElement;
 
 /**
+ * @param Loading animation container.
+ */
+export const LoaderContainer = document.getElementById(
+	"loaderContainer"
+) as HTMLDivElement;
+export const DataTable = document.getElementById("dataTable") as HTMLDivElement;
+
+/**
  * Plots page.
  * @param ViewPlotsButton Displays a plot with the currently selected solvers.
  * @param xMaxInput Max x value.
@@ -82,15 +90,3 @@ export const SolverAndProblemsHeader = document.getElementById(
 export const ViewPlotsButton = document.getElementById(
 	"viewPlotsButton"
 ) as HTMLButtonElement;
-export const xMaxInput = document.getElementById(
-	"xMaxInput"
-) as HTMLInputElement;
-export const xMinInput = document.getElementById(
-	"xMinInput"
-) as HTMLInputElement;
-export const yMaxInput = document.getElementById(
-	"yMaxInput"
-) as HTMLInputElement;
-export const yMinInput = document.getElementById(
-	"yMinInput"
-) as HTMLInputElement;

@@ -4,6 +4,26 @@
     }
 }
 
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loader {
+    margin-top: 1rem;
+    border: 16px solid #ccc; 
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 80px;
+    height: 80px;
+    animation: spinner 2s linear infinite;
+}
+
+#loaderContainer {
+    display: none;
+  }
+
 .navbar-brand {
     font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", sans-serif;
 }
@@ -37,8 +57,7 @@ a {
     width: 20rem;
 }
 
-#dataTable,
-#statisticsTable {
+#dataTable {
     visibility: hidden;
     padding: 1rem;
     padding-top: 0rem;

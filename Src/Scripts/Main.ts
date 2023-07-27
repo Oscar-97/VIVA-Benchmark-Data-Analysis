@@ -92,6 +92,7 @@ import {
 	ClearTableButton,
 	DownloadConfigurationButtonLayer
 } from "./Elements/Elements";
+import { LoadingAnimation } from "./Elements/LoadingAnimation";
 
 /**
  * Solvers.
@@ -356,6 +357,7 @@ function HandleReportPage(
 	 * Shows all problems depending on the uploaded file.
 	 */
 	ViewAllResultsButton.addEventListener("click", () => {
+		LoadingAnimation();
 		if (DataFileType === "txt") {
 			TableDisplay(
 				Instance,

@@ -10,13 +10,17 @@ import {
 	DeleteLocalStorageButton,
 	ClearTableButton,
 	ViewPlotsButton,
-	SolverAndProblemsHeader
+	SolverAndProblemsHeader,
+	LoaderContainer,
+	DataTable
 } from "./Elements";
 
 /**
  * Input values and button statuses when arriving/reloading to the table page.
  */
 export function ElementStatus(): void {
+	LoaderContainer.innerHTML = "";
+	DataTable.style.visibility = "hidden";
 	FileInput.value = "";
 	ImportDataButton.disabled = true;
 	ViewAllResultsButton.disabled = true;

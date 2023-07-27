@@ -163,6 +163,8 @@ function DataTablesConfiguration(): void {
 			}
 		],
 		initComplete: function () {
+			jq("#loaderContainer").css("display", "none");
+			jq("#loaderContainer").hide();
 			jq("#dataTable").css("visibility", "visible");
 			const columnNamesToShow = [
 				"InputFileName",
