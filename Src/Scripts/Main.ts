@@ -1,5 +1,10 @@
 // #region Imports
 /**
+ * jQuery (Fade in animation)
+ */
+const jq = require("jquery");
+
+/**
  * Bootstrap.
  */
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -113,6 +118,12 @@ import {
 	DownloadUserConfiguration
 } from "./UserConfiguration/UserConfiguration";
 //#endregion
+
+jq(document).ready(function() {
+	jq("body > :not(nav)").css("opacity", "1");
+    jq("hr").css("opacity", "0.25");
+});
+
 
 /**
  * Register service worker for PWA offline support.

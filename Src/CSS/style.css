@@ -1,8 +1,29 @@
+body > :not(nav, hr) {
+    opacity: 0;
+    visibility: visible;
+    transition: opacity 1s;
+}
+
 @media (max-width: 1250px) {
     .dt-buttons button {
         margin-bottom: 5px;
     }
 }
+
+/* @keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+} */
 
 @keyframes spinner {
     to {
@@ -22,6 +43,10 @@
 
 #loaderContainer {
     display: none;
+    /* opacity: 0; */
+    /* display: flex; */
+    /* transition: opacity 0.2s ease-in-out; */
+    /* animation: fadeInOut 3s ease-in-out; */
   }
 
 .navbar-brand {
@@ -61,6 +86,8 @@ a {
     visibility: hidden;
     padding: 1rem;
     padding-top: 0rem;
+    /* opacity: 0;
+    transition: opacity 1s; */
 }
 
 #statisticsTable {
@@ -98,6 +125,9 @@ a {
 hr {
     margin-left: 1rem;
     margin-right: 1rem;
+    opacity: 0;
+    visibility: visible;
+    transition: opacity 1s;
 }
 
 .form-check {
