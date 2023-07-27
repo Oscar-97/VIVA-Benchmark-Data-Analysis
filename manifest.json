@@ -10,6 +10,7 @@
     ],
     "start_url": "report.html",
     "display": "minimal-ui",
+    "orientation": "landscape",
     "theme-color": "white",
     "background_color": "white"
   }
