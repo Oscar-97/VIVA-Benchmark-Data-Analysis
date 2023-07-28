@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff"/>
+  <meta name="description" content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers.">
   <!-- Manifest for PWA -->
   <link rel="manifest" href="manifest.json" />
   <!-- Title and icon -->
@@ -17,9 +19,9 @@
 <body>
   <nav class="navbar sticky-top navbar-expand-lg bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand">
-        <img src="./Src/CSS/tab_icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
-        <b>VIVA</b></a>
+      <span class="navbar-brand">
+        <img src="./Src/CSS/tab_icon.png" width="30" height="30" class="d-inline-block align-top" alt="VIVA logo">
+        <b>VIVA</b></span>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -27,10 +29,10 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page">Table</a>
+            <span class="nav-link active" aria-current="page">Table</span>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">Plots</a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <li><a class="dropdown-item" href="./Src/Pages/average_solver_time.html">Average Solver Time</a></li>
