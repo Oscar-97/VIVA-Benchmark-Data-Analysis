@@ -10,21 +10,6 @@ body > :not(nav, hr) {
     }
 }
 
-/* @keyframes fadeInOut {
-    0% {
-        opacity: 0;
-    }
-    20% {
-        opacity: 1;
-    }
-    80% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-} */
-
 @keyframes spinner {
     to {
         transform: rotate(360deg);
@@ -43,10 +28,6 @@ body > :not(nav, hr) {
 
 #loaderContainer {
     display: none;
-    /* opacity: 0; */
-    /* display: flex; */
-    /* transition: opacity 0.2s ease-in-out; */
-    /* animation: fadeInOut 3s ease-in-out; */
   }
 
 .navbar-brand {
@@ -86,8 +67,6 @@ a {
     visibility: hidden;
     padding: 1rem;
     padding-top: 0rem;
-    /* opacity: 0;
-    transition: opacity 1s; */
 }
 
 #statisticsTable {
@@ -137,12 +116,10 @@ hr {
 
 tbody tr.even td.dtfc-fixed-left {
     background-color: #f2f2f2 !important;
-    /* z-index: 2; */
 }
 
 tbody tr.odd td.dtfc-fixed-left {
     background-color: #d9d9d9 !important;
-    /* z-index: 2; */
 }
 
 tr.even td,
