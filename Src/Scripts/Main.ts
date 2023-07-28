@@ -2,7 +2,7 @@
 /**
  * jQuery (Fade in animation)
  */
-const jq = require("jquery");
+import $ from "jquery";
 
 /**
  * Bootstrap.
@@ -85,17 +85,17 @@ import {
  */
 import { ElementStatus, ElementStatusPlots } from "./Elements/ElementStatus";
 import {
-	FileInput,
-	ImportDataButton,
-	SelectAllButton,
-	ViewAllResultsButton,
-	FilterSelectionButton,
-	SaveLocalStorageButton,
-	DownloadConfigurationButton,
-	DownloadCSVButton,
-	DeleteLocalStorageButton,
-	ClearTableButton,
-	DownloadConfigurationButtonLayer
+	fileInput,
+	importDataButton,
+	selectAllButton,
+	viewAllResultsButton,
+	filterSelectionButton,
+	saveLocalStorageButton,
+	downloadConfigurationButton,
+	downloadCSVButton,
+	deleteLocalStorageButton,
+	clearTableButton,
+	downloadConfigurationButtonLayer
 } from "./Elements/Elements";
 import { LoadingAnimation } from "./Elements/LoadingAnimation";
 
@@ -119,9 +119,9 @@ import {
 } from "./UserConfiguration/UserConfiguration";
 //#endregion
 
-jq(document).ready(function () {
-	jq("body > :not(nav)").css("opacity", "1");
-	jq("hr").css("opacity", "0.25");
+$(function () {
+	$("body > :not(nav)").css("opacity", "1");
+	$("hr").css("opacity", "0.25");
 });
 
 /**
@@ -136,11 +136,11 @@ RegisterServiceWorker();
  * @param RawInstanceInfoData Unprocessed instanceinfo.csv containing properties.
  * @param RawSoluData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
  */
-let DataFileType = "";
-let RawData: string[] = [];
-let CheckedSolvers: string[] = [];
-let RawInstanceInfoData: string[] = [];
-let RawSoluData: string[] = [];
+let dataFileType = "";
+let rawData: string[] = [];
+let checkedSolvers: string[] = [];
+let rawInstanceInfoData: string[] = [];
+let rawSoluData: string[] = [];
 
 /**
  * Initializing the methods that are needed to run the system.
@@ -149,11 +149,11 @@ function InitializeProgram(): void {
 	/**
 	 * Values reset after clearing table and running InitializeProgram() again.
 	 */
-	DataFileType = "";
-	RawData = [];
-	CheckedSolvers = [];
-	RawInstanceInfoData = [];
-	RawSoluData = [];
+	dataFileType = "";
+	rawData = [];
+	checkedSolvers = [];
+	rawInstanceInfoData = [];
+	rawSoluData = [];
 
 	/**
 	 * Set all button status from new method after refreshing.
@@ -168,10 +168,10 @@ function InitializeProgram(): void {
 	 * Try to retrieve stored config/data/state when arriving to the page, or refreshing the page.
 	 */
 	try {
-		[RawData, DataFileType, CheckedSolvers] = GetUserConfiguration();
+		[rawData, dataFileType, checkedSolvers] = GetUserConfiguration();
 		ImportDataEvents("Found cached benchmark file!", "json");
-		DeleteLocalStorageButton.disabled = false;
-		DownloadConfigurationButtonLayer.disabled = false;
+		deleteLocalStorageButton.disabled = false;
+		downloadConfigurationButtonLayer.disabled = false;
 		ManageData();
 	} catch (err) {
 		console.log("No data found in local storage: ", err);
@@ -180,15 +180,15 @@ function InitializeProgram(): void {
 	/**
 	 * Read the data from the input file and set the file extension type.
 	 */
-	FileInput.addEventListener("change", () => {
-		DataFileType = GetDataFileType();
-		ReadData(RawData, RawInstanceInfoData, RawSoluData);
+	fileInput.addEventListener("change", () => {
+		dataFileType = GetDataFileType();
+		ReadData(rawData, rawInstanceInfoData, rawSoluData);
 	});
 
 	/**
 	 * Click on the upload data button to continue the process.
 	 */
-	ImportDataButton.addEventListener("click", () => {
+	importDataButton.addEventListener("click", () => {
 		ImportDataEvents("Benchmark file succesfully loaded!");
 		ManageData();
 	});
@@ -203,16 +203,16 @@ function ManageData(): void {
 	 * @param TrcData Trace data results.
 	 * @param TrcDataFiltered Filtered trace data results.
 	 */
-	let TrcData: object[] = [];
-	const TrcDataFiltered: object[] = [];
+	let traceData: object[] = [];
+	const traceDataFiltered: object[] = [];
 
 	/**
 	 * SOLU and CSV file.
 	 * @param InstanceInfoData Instance properties.
 	 * @param SoluData Best known primal and dual bounds for each instance.
 	 */
-	let InstanceInfoData: object[] = [];
-	let SoluData: object[] = [];
+	let instanceInfoData: object[] = [];
+	let soluData: object[] = [];
 
 	/**
 	 * TXT file.
@@ -228,72 +228,72 @@ function ManageData(): void {
 	 * @param ProblemList List of the problems.
 	 * @param ResultsData List of results.
 	 */
-	let Instance: string;
-	let Solvers: string[] = [];
-	let DataLabels: string[];
-	let InstanceLabels: string[];
-	let ProblemList: string[] = [];
-	let ResultsData: string[] = [];
+	let instance: string;
+	let solvers: string[] = [];
+	let dataLabels: string[];
+	let instanceLabels: string[];
+	let problemList: string[] = [];
+	let resultsData: string[] = [];
 
-	const ProblemListFiltered: string[] = [];
-	const ResultsDataFiltered: string[] = [];
+	const problemListFiltered: string[] = [];
+	const resultsDataFiltered: string[] = [];
 
 	/**
 	 * Run if the uploaded file is json.
 	 */
-	if (DataFileType == "json") {
-		[RawData, DataFileType, CheckedSolvers] = GetUserConfiguration();
+	if (dataFileType == "json") {
+		[rawData, dataFileType, checkedSolvers] = GetUserConfiguration();
 	}
 
 	/**
 	 * Check which file format is used, add the data to correct categories and create the solver filters. Select solvers if they are found in localStorage.
 	 */
-	if (DataFileType === "trc") {
-		TrcData = ExtractTrcData(RawData);
+	if (dataFileType === "trc") {
+		traceData = ExtractTrcData(rawData);
 
-		if (RawInstanceInfoData.length !== 0) {
-			InstanceInfoData = GetInstanceInformation(RawInstanceInfoData);
-			TrcData = MergeData(TrcData, InstanceInfoData);
+		if (rawInstanceInfoData.length !== 0) {
+			instanceInfoData = GetInstanceInformation(rawInstanceInfoData);
+			traceData = MergeData(traceData, instanceInfoData);
 		}
 
-		if (RawSoluData.length !== 0) {
-			SoluData = GetInstancePrimalDualbounds(RawSoluData);
-			TrcData = MergeData(TrcData, SoluData);
+		if (rawSoluData.length !== 0) {
+			soluData = GetInstancePrimalDualbounds(rawSoluData);
+			traceData = MergeData(traceData, soluData);
 		}
 
-		Solvers = GetTrcDataCategory(TrcData, "SolverName");
-		AddResultCategories(TrcData);
+		solvers = GetTrcDataCategory(traceData, "SolverName");
+		AddResultCategories(traceData);
 	}
 
-	if (DataFileType === "txt") {
-		Instance = GetInstance(RawData);
-		Solvers = GetSolvers(RawData);
-		DataLabels = GetDataLabels(RawData);
-		InstanceLabels = GetInstanceLabels(DataLabels);
-		ProblemList = GetProblems(RawData);
-		ResultsData = GetResults(RawData);
+	if (dataFileType === "txt") {
+		instance = GetInstance(rawData);
+		solvers = GetSolvers(rawData);
+		dataLabels = GetDataLabels(rawData);
+		instanceLabels = GetInstanceLabels(dataLabels);
+		problemList = GetProblems(rawData);
+		resultsData = GetResults(rawData);
 
-		SelectAllButton.hidden = false;
+		selectAllButton.hidden = false;
 
-		if (CheckedSolvers.length !== 0) {
-			SelectSavedSolvers(CheckedSolvers);
+		if (checkedSolvers.length !== 0) {
+			SelectSavedSolvers(checkedSolvers);
 		}
 	}
 
 	/**
 	 * Download the current configuration.
 	 */
-	DownloadConfigurationButton.addEventListener("click", () => {
+	downloadConfigurationButton.addEventListener("click", () => {
 		DownloadUserConfiguration();
 	});
 
 	/**
 	 * Delete stored data in local storage.
 	 */
-	DeleteLocalStorageButton.addEventListener("click", () => {
+	deleteLocalStorageButton.addEventListener("click", () => {
 		DeleteUserConfiguration();
-		DeleteLocalStorageButton.disabled = true;
-		DownloadConfigurationButtonLayer.disabled = true;
+		deleteLocalStorageButton.disabled = true;
+		downloadConfigurationButtonLayer.disabled = true;
 	});
 
 	/**
@@ -301,16 +301,16 @@ function ManageData(): void {
 	 */
 	if (document.title == "Report") {
 		HandleReportPage(
-			Solvers,
-			Instance,
-			InstanceLabels,
-			DataLabels,
-			ProblemList,
-			ResultsData,
-			ProblemListFiltered,
-			ResultsDataFiltered,
-			TrcData,
-			TrcDataFiltered
+			solvers,
+			instance,
+			instanceLabels,
+			dataLabels,
+			problemList,
+			resultsData,
+			problemListFiltered,
+			resultsDataFiltered,
+			traceData,
+			traceDataFiltered
 		);
 	}
 
@@ -318,18 +318,18 @@ function ManageData(): void {
 	 * Save to local storage functionality on the plot pages.
 	 */
 	if (document.title != "Report") {
-		SaveLocalStorageButton.addEventListener("click", () => {
-			if (DataFileType === "trc" || DataFileType === "json") {
-				let NewRawData = [];
-				NewRawData = CreateDataTrc(TrcData);
+		saveLocalStorageButton.addEventListener("click", () => {
+			if (dataFileType === "trc" || dataFileType === "json") {
+				let newRawData = [];
+				newRawData = CreateDataTrc(traceData);
 
-				CreateUserConfiguration(NewRawData, DataFileType);
+				CreateUserConfiguration(newRawData, dataFileType);
 			}
-			DeleteLocalStorageButton.disabled = false;
-			DownloadConfigurationButtonLayer.disabled = false;
+			deleteLocalStorageButton.disabled = false;
+			downloadConfigurationButtonLayer.disabled = false;
 		});
 
-		HandlePlotPages(TrcData);
+		HandlePlotPages(traceData);
 	}
 }
 
@@ -337,107 +337,107 @@ function ManageData(): void {
  * Handle report(table) page button functions.
  */
 function HandleReportPage(
-	Solvers,
-	Instance,
-	InstanceLabels,
-	DataLabels,
-	ProblemList,
-	ResultsData,
-	ProblemListFiltered,
-	ResultsDataFiltered,
-	TrcData,
-	TrcDataFiltered
+	solvers,
+	instance,
+	instanceLabels,
+	dataLabels,
+	problemList,
+	resultsData,
+	problemListFiltered,
+	resultsDataFiltered,
+	traceData,
+	traceDataFiltered
 ): void {
-	if (DataFileType === "txt") {
-		TableFilters(Solvers, "Solvers");
+	if (dataFileType === "txt") {
+		TableFilters(solvers, "Solvers");
 
-		if (CheckedSolvers.length !== 0) {
-			SelectSavedSolvers(CheckedSolvers);
+		if (checkedSolvers.length !== 0) {
+			SelectSavedSolvers(checkedSolvers);
 		}
 	}
 
 	/**
 	 * Select all checkboxes button functionality.
 	 */
-	SelectAllButton.addEventListener("click", () => {
+	selectAllButton.addEventListener("click", () => {
 		ToggleSelection();
 	});
 
 	/**
 	 * Shows all problems depending on the uploaded file.
 	 */
-	ViewAllResultsButton.addEventListener("click", () => {
+	viewAllResultsButton.addEventListener("click", () => {
 		LoadingAnimation();
-		if (DataFileType === "txt") {
+		if (dataFileType === "txt") {
 			TableDisplay(
-				Instance,
-				Solvers,
-				InstanceLabels,
-				DataLabels,
-				ProblemList,
-				ResultsData
+				instance,
+				solvers,
+				instanceLabels,
+				dataLabels,
+				problemList,
+				resultsData
 			);
-		} else if (DataFileType === "trc") {
-			TableDisplayTrc(TrcData);
-		} else if (DataFileType === "json") {
-			[RawData, DataFileType] = GetUserConfiguration();
-			TrcData = ExtractTrcData(RawData);
-			TableDisplayTrc(TrcData);
+		} else if (dataFileType === "trc") {
+			TableDisplayTrc(traceData);
+		} else if (dataFileType === "json") {
+			[rawData, dataFileType] = GetUserConfiguration();
+			traceData = ExtractTrcData(rawData);
+			TableDisplayTrc(traceData);
 		}
 	});
 
 	/**
 	 * Shows the selected problems by modifying the ProblemList and ResultsData.
 	 */
-	FilterSelectionButton.addEventListener("click", () => {
-		FilterSelectionButton.disabled = true;
-		if (DataFileType === "txt") {
-			ProblemListFiltered = UpdateProblemList();
-			ResultsDataFiltered = UpdateResultsData();
+	filterSelectionButton.addEventListener("click", () => {
+		filterSelectionButton.disabled = true;
+		if (dataFileType === "txt") {
+			problemListFiltered = UpdateProblemList();
+			resultsDataFiltered = UpdateResultsData();
 
 			TableDisplay(
-				Instance,
-				Solvers,
-				InstanceLabels,
-				DataLabels,
-				ProblemListFiltered,
-				ResultsDataFiltered
+				instance,
+				solvers,
+				instanceLabels,
+				dataLabels,
+				problemListFiltered,
+				resultsDataFiltered
 			);
-		} else if (DataFileType === "trc") {
-			TrcDataFiltered = UpdateResultsTrc();
-			TableDisplayTrc(TrcDataFiltered);
+		} else if (dataFileType === "trc") {
+			traceDataFiltered = UpdateResultsTrc();
+			TableDisplayTrc(traceDataFiltered);
 		}
 	});
 
 	/**
 	 * Save to local storage when clicking on the relevant button.
 	 */
-	SaveLocalStorageButton.addEventListener("click", () => {
-		if (DataFileType === "txt") {
-			CheckedSolvers = GetCheckedSolvers();
-			CreateUserConfiguration(RawData, DataFileType, CheckedSolvers);
-		} else if (DataFileType === "trc" || DataFileType === "json") {
-			let NewRawData = [];
-			if (TrcDataFiltered.length === 0) {
-				NewRawData = CreateDataTrc(TrcData);
+	saveLocalStorageButton.addEventListener("click", () => {
+		if (dataFileType === "txt") {
+			checkedSolvers = GetCheckedSolvers();
+			CreateUserConfiguration(rawData, dataFileType, checkedSolvers);
+		} else if (dataFileType === "trc" || dataFileType === "json") {
+			let newRawData = [];
+			if (traceDataFiltered.length === 0) {
+				newRawData = CreateDataTrc(traceData);
 			} else {
-				NewRawData = CreateDataTrc(TrcDataFiltered);
+				newRawData = CreateDataTrc(traceDataFiltered);
 			}
-			CreateUserConfiguration(NewRawData, DataFileType, CheckedSolvers);
+			CreateUserConfiguration(newRawData, dataFileType, checkedSolvers);
 		}
 	});
 
 	/**
 	 * Download the currently displayed table as a CSV.
 	 */
-	DownloadCSVButton.addEventListener("click", () => {
+	downloadCSVButton.addEventListener("click", () => {
 		TableDownloadCSV();
 	});
 
 	/**
 	 * Clear table action.
 	 */
-	ClearTableButton.addEventListener("click", () => {
+	clearTableButton.addEventListener("click", () => {
 		DestroyDataTable();
 		InitializeProgram();
 	});
@@ -446,7 +446,7 @@ function HandleReportPage(
 /**
  * Hande plot pages button functions.
  */
-function HandlePlotPages(TrcData: object[]): void {
+function HandlePlotPages(traceData: object[]): void {
 	/**
 	 * Save to local storage functionality on the plot pages.
 	 */
@@ -454,15 +454,15 @@ function HandlePlotPages(TrcData: object[]): void {
 		/**
 		 * Save to local storage when clicking on the relevant button.
 		 */
-		SaveLocalStorageButton.addEventListener("click", () => {
-			if (DataFileType === "trc" || DataFileType === "json") {
-				let NewRawData = [];
-				NewRawData = CreateDataTrc(TrcData);
+		saveLocalStorageButton.addEventListener("click", () => {
+			if (dataFileType === "trc" || dataFileType === "json") {
+				let newRawData = [];
+				newRawData = CreateDataTrc(traceData);
 
-				CreateUserConfiguration(NewRawData, DataFileType);
+				CreateUserConfiguration(newRawData, dataFileType);
 			}
-			DeleteLocalStorageButton.disabled = false;
-			DownloadConfigurationButtonLayer.disabled = false;
+			deleteLocalStorageButton.disabled = false;
+			downloadConfigurationButtonLayer.disabled = false;
 		});
 	}
 
@@ -471,7 +471,7 @@ function HandlePlotPages(TrcData: object[]): void {
 	 */
 	if (document.title == "Average Solver Time") {
 		PlotDataByCategory(
-			TrcData,
+			traceData,
 			"bar",
 			"Time[s]",
 			"Time[s].average",
@@ -483,7 +483,7 @@ function HandlePlotPages(TrcData: object[]): void {
 	 * Check if the user is on the Solver Time page.
 	 */
 	if (document.title == "Solver Time") {
-		PlotAllSolverTimes(TrcData);
+		PlotAllSolverTimes(traceData);
 	}
 
 	/**
@@ -491,7 +491,7 @@ function HandlePlotPages(TrcData: object[]): void {
 	 */
 	if (document.title == "Number of Nodes") {
 		PlotDataByCategory(
-			TrcData,
+			traceData,
 			"bar",
 			"Nodes[i]",
 			"Nodes[i].average",
@@ -504,7 +504,7 @@ function HandlePlotPages(TrcData: object[]): void {
 	 */
 	if (document.title == "Number of Iterations") {
 		PlotDataByCategory(
-			TrcData,
+			traceData,
 			"bar",
 			"NumberOfIterations",
 			"NumberOfiterations.average",

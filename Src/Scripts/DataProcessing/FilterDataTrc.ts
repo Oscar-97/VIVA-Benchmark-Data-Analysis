@@ -1,38 +1,38 @@
 /**
  * Extract the data from the trc file.
- * @param RawData The provided raw data.
+ * @param rawData The provided raw data.
  * @returns TrcData Contains the processed trc results.
  */
-export function ExtractTrcData(RawData: string[]): object[] {
-	const TrcData = [];
-	const FirstLine = RawData[0].split(",");
+export function ExtractTrcData(rawData: string[]): object[] {
+	const traceData = [];
+	const firstLine = rawData[0].split(",");
 
 	/**
 	 * Check if headers are included in the .trc file.
 	 * If they are found, include them, if not, use the custom headers.
 	 */
-	if (FirstLine[0].startsWith("*")) {
+	if (firstLine[0].startsWith("*")) {
 		/**
 		 * Remove "* " from InputFileName.
 		 */
-		const Header = FirstLine.map((element: string) =>
+		const header = firstLine.map((element: string) =>
 			element.replace(/^[\*]/, "").trim()
 		);
 
-		for (let i = 1; i < RawData.length; i++) {
-			const Obj = {};
-			const CurrentLine = RawData[i].split(",");
-			for (let j = 0; j < Header.length; j++) {
-				Obj[Header[j]] = CurrentLine[j];
+		for (let i = 1; i < rawData.length; i++) {
+			const obj = {};
+			const currentLine = rawData[i].split(",");
+			for (let j = 0; j < header.length; j++) {
+				obj[header[j]] = currentLine[j];
 			}
-			TrcData.push(Obj);
+			traceData.push(obj);
 		}
-	} else if (!FirstLine[0].startsWith("*")) {
+	} else if (!firstLine[0].startsWith("*")) {
 		/**
 		 * Standard order of headers:
 		 * https://www.gamsworld.org/performance/trace.htm
 		 */
-		const DefaultHeaders = [
+		const defaultHeaders = [
 			"InputFileName",
 			"ModelType",
 			"SolverName",
@@ -56,42 +56,42 @@ export function ExtractTrcData(RawData: string[]): object[] {
 			"Nodes[i]",
 			"UserComment"
 		];
-		const PreviousRow = {};
+		const previousRow = {};
 
-		for (let i = 0; i < RawData.length; i++) {
-			const CurrentLine = RawData[i].split(",");
-			const FileName = CurrentLine[0];
-			const SolverName = CurrentLine[2];
+		for (let i = 0; i < rawData.length; i++) {
+			const currentLine = rawData[i].split(",");
+			const fileName = currentLine[0];
+			const solverName = currentLine[2];
 
 			// Check if the combination of filename and solver has been used earlier.
-			if (PreviousRow[FileName] === SolverName) {
+			if (previousRow[fileName] === solverName) {
 				continue;
 			}
-			PreviousRow[FileName] = SolverName;
+			previousRow[fileName] = solverName;
 
-			const Obj = {};
-			for (let j = 0; j < DefaultHeaders.length; j++) {
-				Obj[DefaultHeaders[j]] = CurrentLine[j];
+			const obj = {};
+			for (let j = 0; j < defaultHeaders.length; j++) {
+				obj[defaultHeaders[j]] = currentLine[j];
 			}
-			TrcData.push(Obj);
+			traceData.push(obj);
 		}
 	}
-	return TrcData;
+	return traceData;
 }
 
 /**
  * Get the provided category and the corresponding data.
- * @param TrcData Contains the processed trc results.
- * @param DataCategory The data category to extract values from.
+ * @param traceData Contains the processed trc results.
+ * @param dataCategory The data category to extract values from.
  * @returns DataCategoryResults The category results that will be returned.
  */
 export function GetTrcDataCategory(
-	TrcData: object[],
-	DataCategory: string
+	traceData: object[],
+	dataCategory: string
 ): string[] {
-	const DataCategoryResults = [];
-	for (let i = 0; i < TrcData.length; i++) {
-		DataCategoryResults.push(TrcData[i][DataCategory]);
+	const dataCategoryResults = [];
+	for (let i = 0; i < traceData.length; i++) {
+		dataCategoryResults.push(traceData[i][dataCategory]);
 	}
-	return DataCategoryResults;
+	return dataCategoryResults;
 }

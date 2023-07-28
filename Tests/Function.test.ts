@@ -189,7 +189,7 @@ describe("CalculateGapPercentage", () => {
 
 describe("ExtractAllSolverTimes", () => {
 	it("Extracts solver times correctly.", () => {
-		const TrcData = [
+		const traceData = [
 			{
 				SolverName: "shot",
 				"Time[s]": "0.041120867",
@@ -216,7 +216,7 @@ describe("ExtractAllSolverTimes", () => {
 			}
 		];
 
-		const result = ExtractAllSolverTimes(TrcData);
+		const result = ExtractAllSolverTimes(traceData);
 
 		expect(
 			(result as { [key: string]: { time: number; InputFileName: string }[] })
@@ -263,7 +263,7 @@ describe("ExtractAllSolverTimes", () => {
 });
 
 describe("AnalyzeDataByCategory", () => {
-	const TrcData = [
+	const traceData = [
 		{
 			SolverName: "shot",
 			"Time[s]": "0.041120867",
@@ -289,10 +289,10 @@ describe("AnalyzeDataByCategory", () => {
 			UserComment: "This is will get filtered."
 		}
 	];
-	const Category = "Time[s]";
+	const category = "Time[s]";
 
 	it("Calculate the statistics table correctly.", () => {
-		const result = AnalyzeDataByCategory(TrcData, Category);
+		const result = AnalyzeDataByCategory(traceData, category);
 
 		expect(result).toEqual({
 			shot: {

@@ -6,20 +6,20 @@ let myChart = null;
  * @param PickColor Color picker for the data.
  * @returns Random different colors for each solver.
  */
-export function PickColor(NumberOfColors: number): string[] {
-	const Colors: string[] = [];
-	for (let i = 0; i < NumberOfColors; i++) {
-		const Hex = Math.floor(Math.random() * 16777215).toString(16);
-		const Color = "#" + Hex;
-		Colors.push(Color);
+export function PickColor(numberOfColors: number): string[] {
+	const colors: string[] = [];
+	for (let i = 0; i < numberOfColors; i++) {
+		const hex = Math.floor(Math.random() * 16777215).toString(16);
+		const color = "#" + hex;
+		colors.push(color);
 	}
-	return Colors;
+	return colors;
 }
 
 /**
  * Chart creation with Chart.js
  */
-export function CreateChart(Type, Data, Label, Title): void {
+export function CreateChart(type, data, label, title): void {
 	/**
 	 * Destroy the chart if it already exist.
 	 */
@@ -30,17 +30,17 @@ export function CreateChart(Type, Data, Label, Title): void {
 	// Create chart using array of objects
 	const chartCanvas = document.getElementById("myChart") as HTMLCanvasElement;
 	myChart = new Chart(chartCanvas, {
-		type: Type,
+		type: type,
 		data: {
-			labels: [Label],
-			datasets: Data
+			labels: [label],
+			datasets: data
 		},
 		options: {
 			responsive: true,
 			plugins: {
 				title: {
 					display: true,
-					text: Title
+					text: title
 				}
 			},
 			tooltips: {
@@ -52,9 +52,9 @@ export function CreateChart(Type, Data, Label, Title): void {
 						const dataPoint = dataset.data[dataIndex];
 						const xLabel = data.labels[dataIndex];
 						const yLabel = dataPoint;
-						const InputFileName =
-							Data[datasetIndex].data[dataIndex].InputFileName;
-						return `x: ${xLabel}, y: ${yLabel}\nInputFileName: ${InputFileName}`;
+						const inputFileName =
+							data[datasetIndex].data[dataIndex].InputFileName;
+						return `x: ${xLabel}, y: ${yLabel}\nInputFileName: ${inputFileName}`;
 					}
 				}
 			}

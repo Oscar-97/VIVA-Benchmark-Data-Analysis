@@ -1,43 +1,43 @@
 import {
-	FileInput,
-	ImportDataButton,
-	ViewAllResultsButton,
-	FilterSelectionButton,
-	SelectAllButton,
-	SaveLocalStorageButton,
-	DownloadConfigurationButtonLayer,
-	DownloadCSVButtonLayer,
-	DeleteLocalStorageButton,
-	ClearTableButton,
-	ViewPlotsButton,
-	SolverAndProblemsHeader,
-	LoaderContainer,
-	DataTable
+	fileInput,
+	importDataButton,
+	viewAllResultsButton,
+	filterSelectionButton,
+	selectAllButton,
+	saveLocalStorageButton,
+	downloadConfigurationButtonLayer,
+	downloadCSVButtonLayer,
+	deleteLocalStorageButton,
+	clearTableButton,
+	viewPlotsButton,
+	solverAndProblemsHeader,
+	loaderContainer,
+	dataTable
 } from "./Elements";
 
 /**
  * Input values and button statuses when arriving/reloading to the table page.
  */
 export function ElementStatus(): void {
-	LoaderContainer.innerHTML = "";
-	DataTable.style.visibility = "hidden";
-	FileInput.value = "";
-	ImportDataButton.disabled = true;
-	ViewAllResultsButton.disabled = true;
-	FilterSelectionButton.disabled = true;
-	SelectAllButton.disabled = true;
-	SelectAllButton.hidden = true;
-	SelectAllButton.innerText = "Select All Solvers";
-	SaveLocalStorageButton.disabled = true;
-	DownloadCSVButtonLayer.disabled = true;
-	DownloadConfigurationButtonLayer.disabled = true;
-	DeleteLocalStorageButton.disabled = true;
-	ClearTableButton.disabled = true;
-	SolverAndProblemsHeader.hidden = true;
+	loaderContainer.innerHTML = "";
+	dataTable.style.visibility = "hidden";
+	fileInput.value = "";
+	importDataButton.disabled = true;
+	viewAllResultsButton.disabled = true;
+	filterSelectionButton.disabled = true;
+	selectAllButton.disabled = true;
+	selectAllButton.hidden = true;
+	selectAllButton.innerText = "Select All Solvers";
+	saveLocalStorageButton.disabled = true;
+	downloadCSVButtonLayer.disabled = true;
+	downloadConfigurationButtonLayer.disabled = true;
+	deleteLocalStorageButton.disabled = true;
+	clearTableButton.disabled = true;
+	solverAndProblemsHeader.hidden = true;
 	try {
-		const FilterCheckboxesContainer =
+		const filterCheckboxesContainer =
 			document.getElementById("checkboxContainer");
-		FilterCheckboxesContainer.remove();
+		filterCheckboxesContainer.remove();
 	} catch (err) {
 		console.log("Could not remove solver checkboxes: ", err);
 	}
@@ -47,22 +47,22 @@ export function ElementStatus(): void {
  * Input values and button statuses when arriving/reloading to the plot page.
  */
 export function ElementStatusPlots(): void {
-	FileInput.value = "";
-	ViewPlotsButton.disabled = true;
-	SaveLocalStorageButton.disabled = true;
-	DownloadConfigurationButtonLayer.disabled = true;
-	DeleteLocalStorageButton.disabled = true;
+	fileInput.value = "";
+	viewPlotsButton.disabled = true;
+	saveLocalStorageButton.disabled = true;
+	downloadConfigurationButtonLayer.disabled = true;
+	deleteLocalStorageButton.disabled = true;
 }
 
 /**
  * Button statuses when the table is displayed.
  */
 export function ElementStatusWithTable(): void {
-	SelectAllButton.disabled = false;
-	FilterSelectionButton.disabled = false;
-	SaveLocalStorageButton.disabled = false;
-	DownloadConfigurationButtonLayer.disabled = false;
-	DownloadCSVButtonLayer.disabled = false;
-	DeleteLocalStorageButton.disabled = false;
-	ClearTableButton.disabled = false;
+	selectAllButton.disabled = false;
+	filterSelectionButton.disabled = false;
+	saveLocalStorageButton.disabled = false;
+	downloadConfigurationButtonLayer.disabled = false;
+	downloadCSVButtonLayer.disabled = false;
+	deleteLocalStorageButton.disabled = false;
+	clearTableButton.disabled = false;
 }

@@ -3,12 +3,12 @@ import {
 	DisplayWarningNotification,
 	DisplayErrorNotification
 } from "../Elements/DisplayAlertNotification";
-import { DownloadConfigurationButton } from "../Elements/Elements";
+import { downloadConfigurationButton } from "../Elements/Elements";
 
 /**
  * UserData consists of dataset, file extension type and checked solvers.
  */
-const UserData = {
+const userData = {
 	dataSet: [],
 	dataFileType: "",
 	checkedSolvers: []
@@ -18,16 +18,16 @@ const UserData = {
  * Create the user configuration and store it to localStorage.
  */
 export function CreateUserConfiguration(
-	RawData: string[],
-	DataFileType: string,
-	CheckedSolvers?: string[]
+	rawData: string[],
+	dataFileType: string,
+	checkedSolvers?: string[]
 ): void {
-	UserData.dataSet = RawData;
-	UserData.dataFileType = DataFileType;
-	if (CheckedSolvers) {
-		UserData.checkedSolvers = CheckedSolvers;
+	userData.dataSet = rawData;
+	userData.dataFileType = dataFileType;
+	if (checkedSolvers) {
+		userData.checkedSolvers = checkedSolvers;
 	}
-	localStorage.setItem("UserConfiguration", JSON.stringify(UserData));
+	localStorage.setItem("UserConfiguration", JSON.stringify(userData));
 	DisplayAlertNotification("Saved configuration.");
 }
 
@@ -36,25 +36,25 @@ export function CreateUserConfiguration(
  * @returns
  */
 export function GetUserConfiguration(): [string[], string, string[]] {
-	const UserConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
-	const RawData = [];
-	UserConfig.dataSet.forEach((value: string[]) => {
-		RawData.push(value);
+	const userConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
+	const rawData = [];
+	userConfig.dataSet.forEach((value: string[]) => {
+		rawData.push(value);
 	});
 
-	const DataFileType: string = UserConfig.dataFileType;
+	const dataFileType: string = userConfig.dataFileType;
 
-	const CheckedSolvers = [];
-	if (UserConfig.checkedSolvers) {
-		UserConfig.checkedSolvers.forEach((value: string[]) => {
-			CheckedSolvers.push(value);
+	const checkedSolvers = [];
+	if (userConfig.checkedSolvers) {
+		userConfig.checkedSolvers.forEach((value: string[]) => {
+			checkedSolvers.push(value);
 		});
 	}
 
-	console.log("RawData fron localStorage: ", RawData);
-	console.log("FileType of saved data: ", DataFileType);
-	console.log("Checked solvers: ", CheckedSolvers);
-	return [RawData, DataFileType, CheckedSolvers];
+	console.log("RawData fron localStorage: ", rawData);
+	console.log("FileType of saved data: ", dataFileType);
+	console.log("Checked solvers: ", checkedSolvers);
+	return [rawData, dataFileType, checkedSolvers];
 }
 
 /**
@@ -69,13 +69,13 @@ export function DeleteUserConfiguration(): void {
  * Download user configuration as a .json file. Can be uploaded as a result file.
  */
 export function DownloadUserConfiguration(): void {
-	const UserConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
-	if (UserConfig) {
-		const DownloadAbleFile = JSON.stringify(UserConfig);
-		const blob = new Blob([DownloadAbleFile], { type: "application/json" });
+	const userConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
+	if (userConfig) {
+		const downloadAbleFile = JSON.stringify(userConfig);
+		const blob = new Blob([downloadAbleFile], { type: "application/json" });
 
-		DownloadConfigurationButton.href = window.URL.createObjectURL(blob);
-		DownloadConfigurationButton.download = "UserConfiguration.json";
+		downloadConfigurationButton.href = window.URL.createObjectURL(blob);
+		downloadConfigurationButton.download = "UserConfiguration.json";
 	} else {
 		DisplayErrorNotification("No saved configuration found!");
 	}

@@ -2,116 +2,116 @@ import * as math from "mathjs";
 
 // Problem - Direction
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L261-L262
-export function CalculateDirection(Direction: number | string): string {
-	Direction = 1 - 2 * Number(Direction);
-	if (Direction == -1) {
-		Direction = "max";
-		return Direction;
+export function CalculateDirection(direction: number | string): string {
+	direction = 1 - 2 * Number(direction);
+	if (direction == -1) {
+		direction = "max";
+		return direction;
 	} else {
-		Direction = "min";
-		return Direction;
+		direction = "min";
+		return direction;
 	}
 }
 
 // Problem & Solver - Primal Bound
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L275-L282
 export function CalculatePrimalBound(
-	PrimalBound: number | string,
-	Direction: string
+	primalBound: number | string,
+	direction: string
 ): number | string {
-	if (typeof PrimalBound === "string") {
+	if (typeof primalBound === "string") {
 		if (
-			PrimalBound === "" ||
-			PrimalBound === "NA" ||
-			PrimalBound === "nan" ||
-			PrimalBound === "-nan"
+			primalBound === "" ||
+			primalBound === "NA" ||
+			primalBound === "nan" ||
+			primalBound === "-nan"
 		) {
-			if (Direction === "max") {
-				PrimalBound = -1 * Infinity;
-			} else if (Direction === "min") {
-				PrimalBound = Infinity;
+			if (direction === "max") {
+				primalBound = -1 * Infinity;
+			} else if (direction === "min") {
+				primalBound = Infinity;
 			}
 		} else if (
-			PrimalBound.toLowerCase() === "inf" ||
-			PrimalBound.toLowerCase() === "+inf"
+			primalBound.toLowerCase() === "inf" ||
+			primalBound.toLowerCase() === "+inf"
 		) {
-			PrimalBound = Infinity;
-		} else if (PrimalBound.toLocaleLowerCase() === "-inf") {
-			PrimalBound = -1 * Infinity;
+			primalBound = Infinity;
+		} else if (primalBound.toLocaleLowerCase() === "-inf") {
+			primalBound = -1 * Infinity;
 		} else {
-			PrimalBound = math.bignumber(PrimalBound).toNumber();
+			primalBound = math.bignumber(primalBound).toNumber();
 		}
 	}
-	return PrimalBound;
+	return primalBound;
 }
 
 // Problem & Solver - Dual Bound
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L275-L282
 export function CalculateDualBound(
-	DualBound: number | string,
-	Direction: string
+	dualBound: number | string,
+	direction: string
 ): number | string {
-	if (typeof DualBound === "string") {
+	if (typeof dualBound === "string") {
 		if (
-			DualBound === "" ||
-			DualBound === "NA" ||
-			DualBound === "nan" ||
-			DualBound === "-nan"
+			dualBound === "" ||
+			dualBound === "NA" ||
+			dualBound === "nan" ||
+			dualBound === "-nan"
 		) {
-			if (Direction === "max") {
-				DualBound = Infinity;
-			} else if (Direction === "min") {
-				DualBound = -1 * Infinity;
+			if (direction === "max") {
+				dualBound = Infinity;
+			} else if (direction === "min") {
+				dualBound = -1 * Infinity;
 			}
 		} else if (
-			DualBound.toLowerCase() === "inf" ||
-			DualBound.toLowerCase() === "+inf"
+			dualBound.toLowerCase() === "inf" ||
+			dualBound.toLowerCase() === "+inf"
 		) {
-			DualBound = Infinity;
-		} else if (DualBound.toLowerCase() === "-inf") {
-			DualBound = -1 * Infinity;
+			dualBound = Infinity;
+		} else if (dualBound.toLowerCase() === "-inf") {
+			dualBound = -1 * Infinity;
 		} else {
-			DualBound = math.bignumber(DualBound).toNumber();
+			dualBound = math.bignumber(dualBound).toNumber();
 		}
 	}
-	return DualBound;
+	return dualBound;
 }
 
 // Solver- Termstatus
 // https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L90-L103
-export function SetTermStatus(TerminationStatus: number | string): string {
-	if (typeof TerminationStatus === "string") {
-		TerminationStatus = parseInt(TerminationStatus);
+export function SetTermStatus(terminationStatus: number | string): string {
+	if (typeof terminationStatus === "string") {
+		terminationStatus = parseInt(terminationStatus);
 	}
-	switch (TerminationStatus) {
+	switch (terminationStatus) {
 		case 1:
-			TerminationStatus = "Normal";
+			terminationStatus = "Normal";
 			break;
 		case 2:
-			TerminationStatus = "IterationLimit";
+			terminationStatus = "IterationLimit";
 			break;
 		case 3:
-			TerminationStatus = "TimeLimit";
+			terminationStatus = "TimeLimit";
 			break;
 		case 4:
 		case 7:
 		case 12:
-			TerminationStatus = "Other";
+			terminationStatus = "Other";
 			break;
 		case 5:
-			TerminationStatus = "OtherLimit";
+			terminationStatus = "OtherLimit";
 			break;
 		case 6:
-			TerminationStatus = "CapabilityProblem";
+			terminationStatus = "CapabilityProblem";
 			break;
 		case 8:
-			TerminationStatus = "UserInterrupt";
+			terminationStatus = "UserInterrupt";
 			break;
 		default:
-			TerminationStatus = "Error";
+			terminationStatus = "Error";
 			break;
 	}
-	return TerminationStatus;
+	return terminationStatus;
 }
 
 // Solver - Primal and Dual Gap
@@ -151,9 +151,9 @@ export function CalculateGap(
 
 // Absolute difference.
 export function CalculateDifference(a: number, b: number): number {
-	const Higher = Math.max(a, b);
-	const Lower = Math.min(a, b);
-	return Number((Higher - Lower).toFixed(7));
+	const higher = Math.max(a, b);
+	const lower = Math.min(a, b);
+	return Number((higher - lower).toFixed(7));
 }
 
 // Solver - Gap[%]
@@ -185,8 +185,8 @@ export function CalculateGapPercentage(
  * Get the statistics for a selected category.
  */
 export function AnalyzeDataByCategory(
-	ResultsData: any[],
-	Category: string
+	resultsData: any[],
+	category: string
 ): {
 	[SolverName: string]: {
 		average: number;
@@ -204,9 +204,9 @@ export function AnalyzeDataByCategory(
 	/**
 	 * Get all the [Times[s]] from the results data.
 	 */
-	const SolverTimes: { [SolverName: string]: number[] } = ResultsData.reduce(
+	const solverTimes: { [SolverName: string]: number[] } = resultsData.reduce(
 		(acc, curr) => {
-			const parsedValue = Number(curr[Category]);
+			const parsedValue = Number(curr[category]);
 
 			if (isFinite(parsedValue)) {
 				if (!acc[curr.SolverName]) {
@@ -222,7 +222,7 @@ export function AnalyzeDataByCategory(
 	/**
 	 * Calculate statistics.
 	 */
-	const SolverTimeStats: {
+	const solverTimeStats: {
 		[SolverName: string]: {
 			average: number;
 			min: number;
@@ -237,9 +237,9 @@ export function AnalyzeDataByCategory(
 		};
 	} = {};
 
-	for (const SolverName in SolverTimes) {
-		if (Object.prototype.hasOwnProperty.call(SolverTimes, SolverName)) {
-			const times = SolverTimes[SolverName];
+	for (const solverName in solverTimes) {
+		if (Object.prototype.hasOwnProperty.call(solverTimes, solverName)) {
+			const times = solverTimes[solverName];
 			const avgValue = Number(math.format(math.mean(times), { precision: 7 }));
 			const minValue = Number(math.format(math.min(times), { precision: 7 }));
 			const maxValue = Number(math.format(math.max(times), { precision: 7 }));
@@ -261,7 +261,7 @@ export function AnalyzeDataByCategory(
 				math.format(math.quantileSeq(times, 0.9), { precision: 7 })
 			);
 
-			SolverTimeStats[SolverName] = {
+			solverTimeStats[solverName] = {
 				average: avgValue,
 				min: minValue,
 				max: maxValue,
@@ -275,15 +275,15 @@ export function AnalyzeDataByCategory(
 			};
 		}
 	}
-	return SolverTimeStats;
+	return solverTimeStats;
 }
 
 /**
  * Extract all solver times from each object per solver into an object.
  * Skip those Time[s] that are "NA" and NaN.
  */
-export function ExtractAllSolverTimes(TrcData: object[]): object {
-	const Result = TrcData.reduce(
+export function ExtractAllSolverTimes(traceData: object[]): object {
+	const result = traceData.reduce(
 		(
 			acc: { [key: string]: { time: number; InputFileName: string }[] },
 			obj: any
@@ -294,8 +294,8 @@ export function ExtractAllSolverTimes(TrcData: object[]): object {
 			if (obj["Time[s]"] !== "NA") {
 				const time = math.bignumber(obj["Time[s]"]).toNumber();
 				if (!isNaN(time)) {
-					const InputFileName = obj["InputFileName"];
-					acc[obj.SolverName].push({ time, InputFileName });
+					const inputFileName = obj["InputFileName"];
+					acc[obj.SolverName].push({ time, InputFileName: inputFileName });
 				}
 			}
 			return acc;
@@ -303,5 +303,5 @@ export function ExtractAllSolverTimes(TrcData: object[]): object {
 		{}
 	);
 
-	return Result;
+	return result;
 }

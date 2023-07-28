@@ -1,4 +1,4 @@
-import { ViewPlotsButton } from "../Elements/Elements";
+import { viewPlotsButton } from "../Elements/Elements";
 import {
 	AnalyzeDataByCategory,
 	ExtractAllSolverTimes
@@ -8,25 +8,24 @@ import { StatisticsTable } from "../DataTable/DataTableBase";
 
 /**
  * Plot by result category
- * @param TrcData Current TrcData.
- * @param Type Type of plot.
- * @param Category Name of the category.
- * @param Label Label for the plot.
- * @param Title Title for the plot.
+ * @param traceData Current TrcData.
+ * @param type Type of plot.
+ * @param category Name of the category.
+ * @param label Label for the plot.
+ * @param title Title for the plot.
  */
 export function PlotDataByCategory(
-	TrcData: object[],
-	Type: string,
-	Category: string,
-	Label: string,
-	Title: string
+	traceData: object[],
+	type: string,
+	category: string,
+	label: string,
+	title: string
 ): void {
-	ViewPlotsButton.disabled = false;
-	ViewPlotsButton.addEventListener("click", () => {
-		const data = AnalyzeDataByCategory(TrcData, Category);
-		console.log("Data for category", Category, ": ", data);
+	viewPlotsButton.disabled = false;
+	viewPlotsButton.addEventListener("click", () => {
+		const data = AnalyzeDataByCategory(traceData, category);
+		console.log("Data for category", category, ": ", data);
 
-		const type = Type;
 		const colors = PickColor(20);
 		const chartData = Object.entries(data).map(([key, value], index) => ({
 			label: key,
@@ -35,33 +34,33 @@ export function PlotDataByCategory(
 			backgroundColor: colors[index % colors.length]
 		}));
 
-		console.log("Data for chart", Label, ": ", chartData);
-		CreateChart(type, chartData, Label, Title);
-		StatisticsTable(data, Title);
+		console.log("Data for chart", label, ": ", chartData);
+		CreateChart(type, chartData, label, title);
+		StatisticsTable(data, title);
 	});
 }
 
 /**
  * Plot all the solver times without any failed results.
  */
-export function PlotAllSolverTimes(TrcData: object[]): void {
-	ViewPlotsButton.disabled = false;
-	ViewPlotsButton.addEventListener("click", () => {
-		const SolverTimes = ExtractAllSolverTimes(TrcData);
-		const Data = (
-			Object.entries(SolverTimes) as [
+export function PlotAllSolverTimes(traceData: object[]): void {
+	viewPlotsButton.disabled = false;
+	viewPlotsButton.addEventListener("click", () => {
+		const solverTimes = ExtractAllSolverTimes(traceData);
+		const data = (
+			Object.entries(solverTimes) as [
 				string,
 				{ time: number; InputFileName: string }[]
 			][]
 		).map(([key, values]) => ({
 			label: key,
-			data: values.map(({ time, InputFileName }) => ({
-				x: InputFileName,
+			data: values.map(({ time, InputFileName: inputFileName }) => ({
+				x: inputFileName,
 				y: time
 			})),
 			showLine: false
 		}));
 
-		CreateChart("line", Data, "InputFileName", "Solver times");
+		CreateChart("line", data, "InputFileName", "Solver times");
 	});
 }

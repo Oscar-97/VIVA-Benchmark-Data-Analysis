@@ -8,19 +8,19 @@ export function UpdateProblemList(): string[] {
 	 * @params data Store the data for the selected rows.
 	 */
 	//
-	const Rows = document.querySelectorAll(".row-selected-problems");
-	const ProblemList: string[] = [];
+	const rows = document.querySelectorAll(".row-selected-problems");
+	const problemList: string[] = [];
 
-	for (let i = 0; i < Rows.length; i++) {
-		const row = Rows[i] as HTMLTableRowElement;
+	for (let i = 0; i < rows.length; i++) {
+		const row = rows[i] as HTMLTableRowElement;
 
 		if (row.tagName === "TR") {
 			const cell = row.cells[0];
 			const cellData = cell.textContent;
-			ProblemList.push(cellData);
+			problemList.push(cellData);
 		}
 	}
-	return ProblemList;
+	return problemList;
 }
 
 /**
@@ -33,23 +33,23 @@ export function UpdateResultsData(): string[] {
 	 * @params rows Select all rows with the class "selected".
 	 * @params data Store the data for the selected rows.
 	 */
-	const Rows = document.querySelectorAll(".row-selected-problems");
-	const ResultsData = [];
+	const rows = document.querySelectorAll(".row-selected-problems");
+	const resultsData = [];
 
-	for (let i = 0; i < Rows.length; i++) {
-		const Row = Rows[i] as HTMLTableRowElement;
+	for (let i = 0; i < rows.length; i++) {
+		const row = rows[i] as HTMLTableRowElement;
 
-		if (Row.tagName === "TR") {
-			const Cells = Row.cells as HTMLCollectionOf<HTMLTableCellElement>;
-			const RowData = [];
-			for (let j = 1; j < Cells.length; j++) {
-				const CellData = Cells[j].textContent;
-				RowData.push(CellData);
+		if (row.tagName === "TR") {
+			const cells = row.cells as HTMLCollectionOf<HTMLTableCellElement>;
+			const rowData = [];
+			for (let j = 1; j < cells.length; j++) {
+				const cellData = cells[j].textContent;
+				rowData.push(cellData);
 			}
-			ResultsData.push(RowData);
+			resultsData.push(rowData);
 		}
 	}
-	return ResultsData;
+	return resultsData;
 }
 
 /**
@@ -57,18 +57,18 @@ export function UpdateResultsData(): string[] {
  * @returns TrcData
  */
 export function UpdateResultsTrc(): object[] {
-	const Headers = Array.from(document.querySelectorAll(".thead-dark th")).map(
+	const headers = Array.from(document.querySelectorAll(".thead-dark th")).map(
 		(header) => header.textContent
 	);
 
-	const TrcData = Array.from(
+	const traceData = Array.from(
 		document.querySelectorAll(".row-selected-problems")
 	).map((row) =>
-		Array.from(row.querySelectorAll("td")).reduce((Obj, cell, j) => {
-			Obj[Headers[j]] = cell.textContent;
-			return Obj;
+		Array.from(row.querySelectorAll("td")).reduce((obj, cell, j) => {
+			obj[headers[j]] = cell.textContent;
+			return obj;
 		}, {})
 	);
 
-	return TrcData;
+	return traceData;
 }

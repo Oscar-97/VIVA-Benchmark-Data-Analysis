@@ -2,51 +2,51 @@ import * as math from "mathjs";
 import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
 
 export function GetInstanceInformation(
-	RawInstanceInfoData: string[]
+	rawInstanceInfoData: string[]
 ): object[] {
-	const InstanceInfo = [];
-	const Header = RawInstanceInfoData[0].split(";");
+	const instanceInfo = [];
+	const header = rawInstanceInfoData[0].split(";");
 
-	for (let i = 1; i < RawInstanceInfoData.length; i++) {
-		const Obj = {};
-		const CurrentLine = RawInstanceInfoData[i].split(";");
+	for (let i = 1; i < rawInstanceInfoData.length; i++) {
+		const obj = {};
+		const currentLine = rawInstanceInfoData[i].split(";");
 		// "Set value to empty if it's not existing."
-		for (let j = 0; j < Header.length; j++) {
-			Obj[Header[j]] = CurrentLine[j] || "";
+		for (let j = 0; j < header.length; j++) {
+			obj[header[j]] = currentLine[j] || "";
 		}
-		InstanceInfo.push(Obj);
+		instanceInfo.push(obj);
 	}
 	DisplayAlertNotification("Instance information succesfully loaded!");
-	return InstanceInfo;
+	return instanceInfo;
 }
 
-export function GetInstancePrimalDualbounds(RawSoluData: string[]): object[] {
-	const SoluData = [];
-	const RegexPattern = /^=(.*?)=\s+(.*?)\s+(.*?)$/;
+export function GetInstancePrimalDualbounds(rawSoluData: string[]): object[] {
+	const soluData = [];
+	const regexPattern = /^=(.*?)=\s+(.*?)\s+(.*?)$/;
 
-	for (let i = 0; i < RawSoluData.length; i++) {
-		const Obj = {};
-		const Match = RegexPattern.exec(RawSoluData[i]);
-		if (Match !== null) {
-			Obj["InputFileName"] = Match[2];
-			switch (Match[1]) {
+	for (let i = 0; i < rawSoluData.length; i++) {
+		const obj = {};
+		const match = regexPattern.exec(rawSoluData[i]);
+		if (match !== null) {
+			obj["InputFileName"] = match[2];
+			switch (match[1]) {
 				case "best":
 					// Value in the third column is primal bound.
-					Obj["PrimalBound Problem"] = math.bignumber(Match[3]).toNumber();
+					obj["PrimalBound Problem"] = math.bignumber(match[3]).toNumber();
 					break;
 				case "bestdual":
 					// Value in the third column is dual bound.
-					Obj["DualBound Problem"] = math.bignumber(Match[3]).toNumber();
+					obj["DualBound Problem"] = math.bignumber(match[3]).toNumber();
 					break;
 				case "opt":
 					// Value in the third column is both primal and dual bound.
-					Obj["PrimalBound Problem"] = math.bignumber(Match[3]).toNumber();
-					Obj["DualBound Problem"] = math.bignumber(Match[3]).toNumber();
+					obj["PrimalBound Problem"] = math.bignumber(match[3]).toNumber();
+					obj["DualBound Problem"] = math.bignumber(match[3]).toNumber();
 					break;
 			}
 		}
-		SoluData.push(Obj);
+		soluData.push(obj);
 	}
 
-	return SoluData;
+	return soluData;
 }

@@ -9,31 +9,31 @@ interface CategoriesObj {
 	name?: string;
 }
 export function MergeData(
-	TrcData: CategoriesObj[],
-	Data: CategoriesObj[]
+	traceData: CategoriesObj[],
+	data: CategoriesObj[]
 ): object[] {
-	const MergedData = [];
+	const mergedData = [];
 
-	for (const obj1 of TrcData) {
-		for (const obj2 of Data) {
+	for (const obj1 of traceData) {
+		for (const obj2 of data) {
 			if (obj2.InputFileName) {
 				if (obj1.InputFileName === obj2.InputFileName) {
-					const MergedObj = Object.assign({}, obj1, obj2);
-					MergedData.push(MergedObj);
+					const mergedObj = Object.assign({}, obj1, obj2);
+					mergedData.push(mergedObj);
 					break;
 				}
 			} else if (obj2.name) {
 				if (obj1.InputFileName === obj2.name) {
-					const MergedObj = Object.assign({}, obj1, obj2);
-					MergedData.push(MergedObj);
+					const mergedObj = Object.assign({}, obj1, obj2);
+					mergedData.push(mergedObj);
 					break;
 				}
 			}
 		}
 	}
 
-	if (MergedData.length === 0) {
+	if (mergedData.length === 0) {
 		console.log("No matching objects when merging data.");
 	}
-	return MergedData;
+	return mergedData;
 }

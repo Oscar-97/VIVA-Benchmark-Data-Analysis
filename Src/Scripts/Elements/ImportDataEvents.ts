@@ -1,11 +1,11 @@
 import {
-	ImportDataButton,
-	SelectAllButton,
-	FilterSelectionButton,
-	ViewAllResultsButton,
-	ViewPlotsButton,
-	DeleteLocalStorageButton,
-	SaveLocalStorageButton
+	importDataButton,
+	selectAllButton,
+	filterSelectionButton,
+	viewAllResultsButton,
+	viewPlotsButton,
+	deleteLocalStorageButton,
+	saveLocalStorageButton
 } from "./Elements";
 import { DisplayAlertNotification } from "./DisplayAlertNotification";
 
@@ -13,8 +13,8 @@ import { DisplayAlertNotification } from "./DisplayAlertNotification";
  * Click on the upload data button to start the process.
  */
 export function ImportDataEvents(
-	Message: string,
-	FileExtensionType?: string
+	message: string,
+	fileExtensionType?: string
 ): void {
 	/**
 	 * Remove existing Solvers and datatable after uploading a new result file.
@@ -25,16 +25,16 @@ export function ImportDataEvents(
 			solver.remove();
 		});
 
-		const TableElementWrapper = document.getElementById(
+		const tableElementWrapper = document.getElementById(
 			"dataTableGenerated_wrapper"
 		);
-		if (TableElementWrapper) {
-			TableElementWrapper.remove();
+		if (tableElementWrapper) {
+			tableElementWrapper.remove();
 		}
 
-		const TableElement = document.getElementById("dataTableGenerated");
-		if (TableElement) {
-			TableElement.remove();
+		const tableElement = document.getElementById("dataTableGenerated");
+		if (tableElement) {
+			tableElement.remove();
 		}
 	} catch (err) {
 		console.log("Could not remove elements: ", err);
@@ -44,20 +44,20 @@ export function ImportDataEvents(
 	 * Change the statuses of the buttons after uploading the data.
 	 */
 	if (document.title == "Report") {
-		ViewAllResultsButton.disabled = false;
-		SelectAllButton.disabled = false;
-		SelectAllButton.innerText === "Select All Solvers";
-		FilterSelectionButton.disabled = true;
-		ImportDataButton.disabled = true;
-		FilterSelectionButton.disabled = true;
-		ImportDataButton.disabled = true;
-		if (FileExtensionType === "json") {
-			DeleteLocalStorageButton.disabled = false;
+		viewAllResultsButton.disabled = false;
+		selectAllButton.disabled = false;
+		selectAllButton.innerText === "Select All Solvers";
+		filterSelectionButton.disabled = true;
+		importDataButton.disabled = true;
+		filterSelectionButton.disabled = true;
+		importDataButton.disabled = true;
+		if (fileExtensionType === "json") {
+			deleteLocalStorageButton.disabled = false;
 		}
 	} else if (document.title != "Report") {
-		ViewPlotsButton.disabled = false;
-		SaveLocalStorageButton.disabled = false;
+		viewPlotsButton.disabled = false;
+		saveLocalStorageButton.disabled = false;
 	}
 
-	DisplayAlertNotification(Message);
+	DisplayAlertNotification(message);
 }

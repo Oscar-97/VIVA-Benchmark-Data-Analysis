@@ -1,30 +1,30 @@
-import { SolverAndProblemsHeader } from "../Elements/Elements";
+import { solverAndProblemsHeader } from "../Elements/Elements";
 /**
  * Create the solver filters, displayed in the element with the id: tableFilters.
- * @param Elements Filters for the table.
- * @param BadgeName Name of the badge displayed at the top of the row.
+ * @param elements Filters for the table.
+ * @param badgeName Name of the badge displayed at the top of the row.
  */
 export function TableFilters(
-	Elements: string | string[],
-	BadgeName: string
+	elements: string | string[],
+	badgeName: string
 ): void {
-	const UsedSolvers = {};
-	SolverAndProblemsHeader.hidden = false;
-	SolverAndProblemsHeader.innerText = BadgeName;
+	const usedSolvers = {};
+	solverAndProblemsHeader.hidden = false;
+	solverAndProblemsHeader.innerText = badgeName;
 
-	const FilterCheckboxesContainer = document.createElement(
+	const filterCheckboxesContainer = document.createElement(
 		"div"
 	) as HTMLDivElement;
-	FilterCheckboxesContainer.id = "checkboxContainer";
+	filterCheckboxesContainer.id = "checkboxContainer";
 	document
 		.getElementById("tableFilters")
-		.appendChild(FilterCheckboxesContainer);
+		.appendChild(filterCheckboxesContainer);
 
-	for (let i = 0; i < Elements.length; i++) {
-		const Solver = Elements[i];
+	for (let i = 0; i < elements.length; i++) {
+		const solver = elements[i];
 
 		// Skip if the solver has already been added.
-		if (UsedSolvers[Solver]) {
+		if (usedSolvers[solver]) {
 			continue;
 		}
 		/**
@@ -33,26 +33,26 @@ export function TableFilters(
 		 * @param FilterInput Filter input buttons.
 		 */
 		// Create filter form div.
-		const FilterCheckboxes = document.createElement("div") as HTMLDivElement;
-		FilterCheckboxes.className = "form-check form-check-inline";
+		const filterCheckboxes = document.createElement("div") as HTMLDivElement;
+		filterCheckboxes.className = "form-check form-check-inline";
 
 		// Create filter labels.
-		const FilterLabels = document.createElement("label") as HTMLLabelElement;
-		FilterLabels.className = "form-check-label";
-		FilterLabels.innerText = Solver;
+		const filterLabels = document.createElement("label") as HTMLLabelElement;
+		filterLabels.className = "form-check-label";
+		filterLabels.innerText = solver;
 
 		// Create input buttons.
-		const FilterInput = document.createElement("input") as HTMLInputElement;
-		FilterInput.className = "form-check-input";
-		FilterInput.type = "checkbox";
-		FilterInput.id = Solver;
+		const filterInput = document.createElement("input") as HTMLInputElement;
+		filterInput.className = "form-check-input";
+		filterInput.type = "checkbox";
+		filterInput.id = solver;
 
 		// Append elements.
-		FilterCheckboxes.appendChild(FilterInput);
-		FilterCheckboxes.appendChild(FilterLabels);
-		document.getElementById("checkboxContainer").appendChild(FilterCheckboxes);
+		filterCheckboxes.appendChild(filterInput);
+		filterCheckboxes.appendChild(filterLabels);
+		document.getElementById("checkboxContainer").appendChild(filterCheckboxes);
 
 		// Add to used list.
-		UsedSolvers[Solver] = true;
+		usedSolvers[solver] = true;
 	}
 }

@@ -1,4 +1,4 @@
-import { FileInput, ImportDataButton } from "../Elements/Elements";
+import { fileInput, importDataButton } from "../Elements/Elements";
 import { DisplayErrorNotification } from "../Elements/DisplayAlertNotification";
 
 /**
@@ -6,92 +6,92 @@ import { DisplayErrorNotification } from "../Elements/DisplayAlertNotification";
  * @returns DataFileType
  */
 export function GetDataFileType(): string {
-	const Files = FileInput.files;
-	const Extensions = [];
+	const files = fileInput.files;
+	const extensions = [];
 
 	let txtCount = 0;
 	let jsonCount = 0;
 
-	for (let i = 0; i < Files.length; i++) {
-		const Extension = Files[i].name.split(".").pop();
-		if (Extension === "trc") {
-			Extensions.push(Extension);
-		} else if (Extension === "txt") {
+	for (let i = 0; i < files.length; i++) {
+		const extension = files[i].name.split(".").pop();
+		if (extension === "trc") {
+			extensions.push(extension);
+		} else if (extension === "txt") {
 			txtCount++;
 			if (txtCount > 1) {
 				DisplayErrorNotification("Cannot upload multiple .txt files.");
 				throw new Error("Cannot upload multiple .txt files.");
 			}
-			Extensions.push(Extension);
-		} else if (Extension === "json") {
+			extensions.push(extension);
+		} else if (extension === "json") {
 			jsonCount++;
 			if (jsonCount > 1) {
 				DisplayErrorNotification("Cannot upload multiple .json files.");
 				throw new Error("Cannot upload multiple .json files.");
 			}
-			Extensions.push(Extension);
+			extensions.push(extension);
 		}
 	}
 
-	if (Extensions.length === 0) {
+	if (extensions.length === 0) {
 		DisplayErrorNotification("No .txt, .trc or .json files found.");
 		throw new Error("No .txt, .trc or .json files found.");
 	}
 
-	return Extensions[0];
+	return extensions[0];
 }
 
 /**
  * Read the raw data.
- * @param RawData
- * @param RawInstanceInfoData
- * @param RawSoluData
+ * @param rawData
+ * @param rawInstanceInfoData
+ * @param rawSoluData
  * @returns
  */
 export function ReadData(
-	RawData: string[],
-	RawInstanceInfoData: string[],
-	RawSoluData: string[]
+	rawData: string[],
+	rawInstanceInfoData: string[],
+	rawSoluData: string[]
 ): { RawData: string[]; RawInstanceInfoData: string[]; RawSoluData: string[] } {
-	ImportDataButton.disabled = false;
+	importDataButton.disabled = false;
 
 	/**
 	 * Input multiple files.
 	 * For instance: trace1.trc, trace2.trc and minlp.solu.
 	 */
-	for (let i = 0; i < FileInput.files.length; i++) {
-		const Reader = new FileReader();
-		const File = FileInput.files[i];
-		const FileName = File.name;
-		const FileExtension = FileName.split(".").pop();
+	for (let i = 0; i < fileInput.files.length; i++) {
+		const reader = new FileReader();
+		const file = fileInput.files[i];
+		const fileName = file.name;
+		const fileExtension = fileName.split(".").pop();
 
 		/**
 		 * Split the file's content into an array of lines and iterate over the lines array and process each line as needed.
 		 */
-		Reader.addEventListener("load", function () {
-			if (FileExtension === "json") {
-				const JSON_Data = <string>Reader.result;
-				localStorage.setItem("UserConfiguration", JSON_Data);
+		reader.addEventListener("load", function () {
+			if (fileExtension === "json") {
+				const dataJSON = <string>reader.result;
+				localStorage.setItem("UserConfiguration", dataJSON);
 				console.log("Stored uploaded UserConfiguration.");
-			} else if (FileExtension === "txt" || FileExtension === "trc") {
-				const Lines = (<string>Reader.result)
+			} else if (fileExtension === "txt" || fileExtension === "trc") {
+				const lines = (<string>reader.result)
 					.split(/\r?\n/)
 					.map((line) => line.trim());
-				for (let i = 0; i <= Lines.length - 1; i++) {
-					const Line = Lines[i];
-					RawData.push(Line);
+				for (let i = 0; i <= lines.length - 1; i++) {
+					const line = lines[i];
+					rawData.push(line);
 				}
-			} else if (FileExtension === "csv") {
-				const Lines = (<string>Reader.result).split("\n");
-				for (let i = 0; i <= Lines.length - 1; i++) {
-					const Line = Lines[i];
-					RawInstanceInfoData.push(Line);
+			} else if (fileExtension === "csv") {
+				const lines = (<string>reader.result).split("\n");
+				for (let i = 0; i <= lines.length - 1; i++) {
+					const line = lines[i];
+					rawInstanceInfoData.push(line);
 				}
-			} else if (FileExtension === "solu") {
-				const Lines = (<string>Reader.result).split("\r\n");
-				for (let i = 0; i <= Lines.length - 1; i++) {
-					const Line = Lines[i];
-					RawSoluData.push(Line);
+			} else if (fileExtension === "solu") {
+				const lines = (<string>reader.result).split("\r\n");
+				for (let i = 0; i <= lines.length - 1; i++) {
+					const line = lines[i];
+					rawSoluData.push(line);
 				}
 			} else {
 				DisplayErrorNotification(
@@ -103,8 +103,12 @@ export function ReadData(
 			}
 		});
 
-		Reader.readAsText(File);
+		reader.readAsText(file);
 	}
 
-	return { RawData, RawInstanceInfoData, RawSoluData };
+	return {
+		RawData: rawData,
+		RawInstanceInfoData: rawInstanceInfoData,
+		RawSoluData: rawSoluData
+	};
 }

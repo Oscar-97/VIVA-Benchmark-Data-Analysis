@@ -14,7 +14,7 @@ const filesToCache = [
 	"Src/Pages/average_solver_time.html",
 	"Src/Pages/number_of_iterations.html",
 	"Src/Pages/number_of_nodes.html",
-	"Src/Pages/solver_time.html",
+	"Src/Pages/solver_time.html"
 ];
 
 /**

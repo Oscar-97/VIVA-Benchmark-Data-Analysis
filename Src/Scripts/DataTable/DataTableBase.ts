@@ -1,11 +1,11 @@
 export function TableData(
-	Instance: string,
-	Solvers: string | string[],
-	InstanceLabels: string | string[],
-	DataLabels: string[],
-	Problems: string | string[],
-	ResultsData: string[],
-	ComparisonArray: string[]
+	instance: string,
+	solvers: string | string[],
+	instanceLabels: string | string[],
+	dataLabels: string[],
+	problems: string | string[],
+	resultsData: string[],
+	comparisonArray: string[]
 ): void {
 	/**
 	 * Remove DataLabels that are not used.
@@ -13,15 +13,15 @@ export function TableData(
 	 * @param StartLabel Starting label.
 	 * @param EndLabel Ending label.
 	 */
-	const NewDataLabels = [];
-	ComparisonArray.forEach((element: string, index: number) => {
+	const newDataLabels = [];
+	comparisonArray.forEach((element: string, index: number) => {
 		if (element === "Used") {
-			const StartLabel = index * 8;
-			const EndLabel = index * 8 + 8;
+			const startLabel = index * 8;
+			const endLabel = index * 8 + 8;
 			let tempArray = [];
-			tempArray = DataLabels.slice(StartLabel, EndLabel);
+			tempArray = dataLabels.slice(startLabel, endLabel);
 			tempArray.forEach((element) => {
-				NewDataLabels.push(element);
+				newDataLabels.push(element);
 			});
 		}
 	});
@@ -30,145 +30,145 @@ export function TableData(
 	 * Check which solvers to use.
 	 * @param ColumnsToUse Set the columns to always use the instance data.
 	 */
-	const ColumnsToUse = [0, 1, 2, 3, 4, 5];
-	ComparisonArray.forEach((element: string, index: number) => {
-		const StartValue = index * 8 + 6;
-		const EndValue = index * 8 + 14;
+	const columnsToUse = [0, 1, 2, 3, 4, 5];
+	comparisonArray.forEach((element: string, index: number) => {
+		const startValue = index * 8 + 6;
+		const endValue = index * 8 + 14;
 		if (element === "Used") {
-			for (let i = StartValue; i < EndValue; i++) {
-				ColumnsToUse.push(i);
+			for (let i = startValue; i < endValue; i++) {
+				columnsToUse.push(i);
 			}
 		}
 	});
-	const NewResultsData = ResultsData.map((r: string) =>
-		ColumnsToUse.map((i) => r[i])
+	const newResultsData = resultsData.map((r: string) =>
+		columnsToUse.map((i) => r[i])
 	);
 
 	/**
 	 * @param DataTableDiv Div that contains the data table.
 	 */
-	const DataTableDiv = document.getElementById("dataTable") as HTMLDivElement;
-	DataTableDiv.innerHTML = "";
+	const dataTableDiv = document.getElementById("dataTable") as HTMLDivElement;
+	dataTableDiv.innerHTML = "";
 
 	/**
 	 * @param DataTableHeaders Thead created from instance and solvers on the first row, data labels on the second row.
 	 */
-	const DataTableHeaders = document.createElement("thead");
-	DataTableHeaders.className = "thead-dark";
+	const dataTableHeaders = document.createElement("thead");
+	dataTableHeaders.className = "thead-dark";
 	const tr1 = document.createElement("tr");
-	tr1.innerHTML = "<th colspan='7'>" + Instance + "</th>";
-	for (let i = 0; i < Solvers.length; i++) {
+	tr1.innerHTML = "<th colspan='7'>" + instance + "</th>";
+	for (let i = 0; i < solvers.length; i++) {
 		const th = document.createElement("th");
 		th.colSpan = 8;
-		th.innerHTML = Solvers[i];
+		th.innerHTML = solvers[i];
 		tr1.appendChild(th);
 	}
-	DataTableHeaders.appendChild(tr1);
+	dataTableHeaders.appendChild(tr1);
 
 	const tr2 = document.createElement("tr");
-	for (let i = 0; i < InstanceLabels.length; i++) {
+	for (let i = 0; i < instanceLabels.length; i++) {
 		const th = document.createElement("th");
-		th.innerHTML = InstanceLabels[i];
+		th.innerHTML = instanceLabels[i];
 		tr2.appendChild(th);
 	}
-	for (let i = 0; i < NewDataLabels.length; i++) {
+	for (let i = 0; i < newDataLabels.length; i++) {
 		const th = document.createElement("th");
-		th.innerHTML = NewDataLabels[i];
+		th.innerHTML = newDataLabels[i];
 		tr2.appendChild(th);
 	}
-	DataTableHeaders.appendChild(tr2);
+	dataTableHeaders.appendChild(tr2);
 
 	/**
 	 * @param DataTableContent The content of the data table.
 	 * @param NewResultsData Contains all the result data and the table tags.
 	 */
-	const DataTableContent = document.createElement("tbody");
-	for (let i = 0; i < Problems.length; i++) {
+	const dataTableContent = document.createElement("tbody");
+	for (let i = 0; i < problems.length; i++) {
 		const tr3 = document.createElement("tr");
 		const th3 = document.createElement("th");
 		th3.scope = "row";
-		th3.innerHTML = Problems[i];
+		th3.innerHTML = problems[i];
 		tr3.appendChild(th3);
-		NewResultsData[i].forEach((element: string) => {
+		newResultsData[i].forEach((element: string) => {
 			const td3 = document.createElement("td");
 			td3.innerHTML = element;
 			tr3.appendChild(td3);
 		});
-		DataTableContent.appendChild(tr3);
+		dataTableContent.appendChild(tr3);
 	}
 
 	/**
 	 * Create the table element.
 	 * @param NewDataTable Table element which is will contain all new content.
 	 */
-	const NewDataTable = document.createElement("table") as HTMLTableElement;
-	NewDataTable.className = "table table-bordered table-sm";
-	NewDataTable.id = "dataTableGenerated";
-	NewDataTable.appendChild(DataTableHeaders);
-	NewDataTable.appendChild(DataTableContent);
+	const newDataTable = document.createElement("table") as HTMLTableElement;
+	newDataTable.className = "table table-bordered table-sm";
+	newDataTable.id = "dataTableGenerated";
+	newDataTable.appendChild(dataTableHeaders);
+	newDataTable.appendChild(dataTableContent);
 
 	/**
 	 * Add the table to the div.
 	 */
-	DataTableDiv.appendChild(NewDataTable);
+	dataTableDiv.appendChild(newDataTable);
 }
 
-export function TableDataTrc(TrcData: object[]): void {
+export function TableDataTrc(traceData: object[]): void {
 	/**
 	 * @param DataTableDiv Div that contains the data table.
 	 */
-	const DataTableDiv = document.getElementById("dataTable") as HTMLDivElement;
-	DataTableDiv.innerHTML = "";
+	const dataTableDiv = document.getElementById("dataTable") as HTMLDivElement;
+	dataTableDiv.innerHTML = "";
 
-	const DataTableHeaders = document.createElement("thead");
-	DataTableHeaders.classList.add("thead-dark");
+	const dataTableHeaders = document.createElement("thead");
+	dataTableHeaders.classList.add("thead-dark");
 
 	/**
 	 * @param DataTableHeaders Thead created from the categories.
 	 */
 	const headerRow = document.createElement("tr");
-	for (const key of Object.keys(TrcData[0])) {
+	for (const key of Object.keys(traceData[0])) {
 		if (key !== undefined) {
 			const th = document.createElement("th");
 			th.textContent = key;
 			headerRow.appendChild(th);
 		}
 	}
-	DataTableHeaders.appendChild(headerRow);
+	dataTableHeaders.appendChild(headerRow);
 
 	/**
 	 * Add the results.
 	 * @param DataTableContent The content of the data table.
 	 */
-	const DataTableContent = document.createElement("tbody");
-	for (const obj of TrcData) {
-		const Results = Object.values(obj);
+	const dataTableContent = document.createElement("tbody");
+	for (const obj of traceData) {
+		const results = Object.values(obj);
 		const resultRow = document.createElement("tr");
-		for (let i = 0; i < Results.length; i++) {
+		for (let i = 0; i < results.length; i++) {
 			const td = document.createElement("td");
-			td.textContent = Results[i];
+			td.textContent = results[i];
 			resultRow.appendChild(td);
 		}
-		DataTableContent.appendChild(resultRow);
+		dataTableContent.appendChild(resultRow);
 	}
 
 	/**
 	 * Data table body.
 	 */
-	const NewDataTable = document.createElement("table");
-	NewDataTable.classList.add("table", "table-bordered", "table-sm");
-	NewDataTable.id = "dataTableGenerated";
-	NewDataTable.appendChild(DataTableHeaders);
-	NewDataTable.appendChild(DataTableContent);
+	const newDataTable = document.createElement("table");
+	newDataTable.classList.add("table", "table-bordered", "table-sm");
+	newDataTable.id = "dataTableGenerated";
+	newDataTable.appendChild(dataTableHeaders);
+	newDataTable.appendChild(dataTableContent);
 
 	/**
 	 * Add the table to the div.
 	 */
-	DataTableDiv.appendChild(NewDataTable);
+	dataTableDiv.appendChild(newDataTable);
 }
 
 export function StatisticsTable(
-	SolverTimeStats: {
+	solverTimeStats: {
 		[SolverName: string]: {
 			average: number;
 			min: number;
@@ -182,18 +182,18 @@ export function StatisticsTable(
 			percentile_90: number;
 		};
 	},
-	Title: string
+	title: string
 ): void {
 	/**
 	 * @param StatisticsTableDiv Div that contains the statistics table.
 	 */
-	const StatisticsTableDiv = document.getElementById(
+	const statisticsTableDiv = document.getElementById(
 		"statisticsTable"
 	) as HTMLDivElement;
-	StatisticsTableDiv.innerHTML = "";
+	statisticsTableDiv.innerHTML = "";
 
-	const NewStatisticsTable = document.createElement("table");
-	NewStatisticsTable.classList.add(
+	const newStatisticsTable = document.createElement("table");
+	newStatisticsTable.classList.add(
 		"table",
 		"table-bordered",
 		"table-sm",
@@ -201,36 +201,36 @@ export function StatisticsTable(
 		"border-2"
 	);
 
-	const TableCaption = document.createElement("caption");
-	TableCaption.textContent = Title + " statistics.";
+	const tableCaption = document.createElement("caption");
+	tableCaption.textContent = title + " statistics.";
 
-	const Header = document.createElement("thead");
-	Header.classList.add("table-dark");
+	const header = document.createElement("thead");
+	header.classList.add("table-dark");
 
-	const HeaderRow = document.createElement("tr");
-	const DataLabel = document.createElement("th");
-	DataLabel.textContent = "Summary";
-	DataLabel.scope = "col";
+	const headerRow = document.createElement("tr");
+	const dataLabel = document.createElement("th");
+	dataLabel.textContent = "Summary";
+	dataLabel.scope = "col";
 
-	Header.appendChild(HeaderRow);
-	HeaderRow.appendChild(DataLabel);
+	header.appendChild(headerRow);
+	headerRow.appendChild(dataLabel);
 
-	NewStatisticsTable.appendChild(TableCaption);
-	NewStatisticsTable.appendChild(Header);
+	newStatisticsTable.appendChild(tableCaption);
+	newStatisticsTable.appendChild(header);
 
 	/**
 	 * Iterate over each key in the SolverTimeStats and create a new table header element.
 	 */
-	const UsedCategories: string[] = [];
-	for (const ObjKey of Object.keys(SolverTimeStats)) {
-		const Keys = Object.keys(SolverTimeStats[ObjKey]);
-		Keys.forEach((key) => {
-			if (!UsedCategories.includes(key)) {
+	const usedCategories: string[] = [];
+	for (const objKey of Object.keys(solverTimeStats)) {
+		const keys = Object.keys(solverTimeStats[objKey]);
+		keys.forEach((key) => {
+			if (!usedCategories.includes(key)) {
 				const th = document.createElement("th");
 				th.textContent = key;
 				th.scope = "col";
-				HeaderRow.appendChild(th);
-				UsedCategories.push(key);
+				headerRow.appendChild(th);
+				usedCategories.push(key);
 			}
 		});
 	}
@@ -238,24 +238,24 @@ export function StatisticsTable(
 	/**
 	 * Create value table rows.
 	 */
-	const DataKeys = Object.keys(SolverTimeStats);
-	DataKeys.forEach((dataKey) => {
-		const ValuesRow = document.createElement("tr");
-		const DataType = document.createElement("th");
-		DataType.scope = "row";
-		DataType.textContent = dataKey;
-		ValuesRow.appendChild(DataType);
-		const DataValues = Object.values(SolverTimeStats[dataKey]);
-		DataValues.forEach((dataValue) => {
+	const dataKeys = Object.keys(solverTimeStats);
+	dataKeys.forEach((dataKey) => {
+		const valuesRow = document.createElement("tr");
+		const dataType = document.createElement("th");
+		dataType.scope = "row";
+		dataType.textContent = dataKey;
+		valuesRow.appendChild(dataType);
+		const dataValues = Object.values(solverTimeStats[dataKey]);
+		dataValues.forEach((dataValue) => {
 			const td = document.createElement("td");
 			td.textContent = dataValue.toString();
-			ValuesRow.appendChild(td);
+			valuesRow.appendChild(td);
 		});
-		NewStatisticsTable.appendChild(ValuesRow);
+		newStatisticsTable.appendChild(valuesRow);
 	});
 
 	/**
 	 * Add the final table to the div.
 	 */
-	StatisticsTableDiv.appendChild(NewStatisticsTable);
+	statisticsTableDiv.appendChild(newStatisticsTable);
 }

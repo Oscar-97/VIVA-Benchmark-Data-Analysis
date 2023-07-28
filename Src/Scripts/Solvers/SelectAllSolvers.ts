@@ -1,15 +1,15 @@
-import { SelectAllButton } from "../Elements/Elements";
+import { selectAllButton } from "../Elements/Elements";
 
 /**
  * Toggle the select and unselect all solvers button.
  */
 export function ToggleSelection(): void {
-	if (SelectAllButton.innerText === "Select All Solvers") {
+	if (selectAllButton.innerText === "Select All Solvers") {
 		SelectAllSolvers();
-		SelectAllButton.innerText = "Unselect All Solvers";
-	} else if (SelectAllButton.innerText === "Unselect All Solvers") {
+		selectAllButton.innerText = "Unselect All Solvers";
+	} else if (selectAllButton.innerText === "Unselect All Solvers") {
 		UnselectAllSolvers();
-		SelectAllButton.innerText = "Select All Solvers";
+		selectAllButton.innerText = "Select All Solvers";
 	}
 }
 
@@ -17,14 +17,14 @@ export function ToggleSelection(): void {
  * Select all solvers by clicking on all inputs inside the checkboxContainer.
  */
 function SelectAllSolvers(): void {
-	const CheckboxContainer = document.getElementById(
+	const checkboxContainer = document.getElementById(
 		"checkboxContainer"
 	) as HTMLDivElement;
-	const FilterSolvers = CheckboxContainer.getElementsByTagName("input");
-	for (const Solver of FilterSolvers) {
-		if (!Solver.checked) {
+	const filterSolvers = checkboxContainer.getElementsByTagName("input");
+	for (const solver of filterSolvers) {
+		if (!solver.checked) {
 			try {
-				Solver.click();
+				solver.click();
 			} catch (err) {
 				console.log("Could not select solvers: ", err);
 			}
@@ -36,14 +36,14 @@ function SelectAllSolvers(): void {
  * Unselect all solvers by clicking on the checked input boxes.
  */
 function UnselectAllSolvers(): void {
-	const CheckboxContainer = document.getElementById(
+	const checkboxContainer = document.getElementById(
 		"checkboxContainer"
 	) as HTMLDivElement;
-	const FilterSolvers = CheckboxContainer.getElementsByTagName("input");
-	for (const Solver of FilterSolvers) {
-		if (Solver.checked) {
+	const filterSolvers = checkboxContainer.getElementsByTagName("input");
+	for (const solver of filterSolvers) {
+		if (solver.checked) {
 			try {
-				Solver.click();
+				solver.click();
 			} catch (err) {
 				console.log("Could not unselect solvers: ", err);
 			}
@@ -54,11 +54,11 @@ function UnselectAllSolvers(): void {
 /**
  * Select checked solvers from localStorage by using the ID of the input.
  */
-export function SelectSavedSolvers(CheckedSolvers: string[]): void {
-	CheckedSolvers.forEach((id) => {
-		const SolverCheckbox = document.getElementById(id) as HTMLInputElement;
-		if (SolverCheckbox) {
-			SolverCheckbox.checked = true;
+export function SelectSavedSolvers(checkedSolvers: string[]): void {
+	checkedSolvers.forEach((id) => {
+		const solverCheckbox = document.getElementById(id) as HTMLInputElement;
+		if (solverCheckbox) {
+			solverCheckbox.checked = true;
 		}
 	});
 }

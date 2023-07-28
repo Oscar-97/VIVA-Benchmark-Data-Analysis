@@ -1,17 +1,17 @@
-export function CreateDataTrc(TrcData: object[]): string[] {
-	const ExportData: string[] = [];
+export function CreateDataTrc(traceData: object[]): string[] {
+	const exportData: string[] = [];
 	/**
 	 * Create headers line based on existing keys, then add the rest of the objects.
 	 */
-	const Keys = Object.keys(TrcData[0]);
-	const HeaderString = "* " + Keys.join(",");
-	ExportData.push(HeaderString);
+	const keys = Object.keys(traceData[0]);
+	const headerString = "* " + keys.join(",");
+	exportData.push(headerString);
 
-	for (let i = 0; i < TrcData.length; i++) {
-		const currentObject = TrcData[i];
+	for (let i = 0; i < traceData.length; i++) {
+		const currentObject = traceData[i];
 		const currentString = Object.values(currentObject).join(",");
-		ExportData.push(currentString);
+		exportData.push(currentString);
 	}
 
-	return ExportData;
+	return exportData;
 }

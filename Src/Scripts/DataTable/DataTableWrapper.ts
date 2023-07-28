@@ -1,4 +1,5 @@
-const jq = require("jquery");
+//const jq = require("jquery");
+import $ from "jquery";
 import "datatables.net-bs5";
 import "datatables.net-fixedcolumns-bs5";
 import "datatables.net-searchpanes-bs5";
@@ -18,34 +19,34 @@ import { ElementStatusWithTable } from "../Elements/ElementStatus";
  * Display the data in the div with the id "dataTable" when clicking on the view all results or selection button.
  */
 export function TableDisplay(
-	Instance: string,
-	Solvers: string[],
-	InstanceLabels: string | string[],
-	DataLabels: string[],
-	ProblemList: string | string[],
-	ResultsData: string[]
+	instance: string,
+	solvers: string[],
+	instanceLabels: string | string[],
+	dataLabels: string[],
+	problemList: string | string[],
+	resultsData: string[]
 ): void {
 	setTimeout(() => {
-		const CheckedSolvers = GetCheckedSolvers();
-		const ComparisonArray = GetComparisonArray(CheckedSolvers, Solvers);
+		const checkedSolvers = GetCheckedSolvers();
+		const comparisonArray = GetComparisonArray(checkedSolvers, solvers);
 
 		/**
 		 * Create the table with the provided data.
 		 */
 		TableData(
-			Instance,
-			CheckedSolvers,
-			InstanceLabels,
-			DataLabels,
-			ProblemList,
-			ResultsData,
-			ComparisonArray
+			instance,
+			checkedSolvers,
+			instanceLabels,
+			dataLabels,
+			problemList,
+			resultsData,
+			comparisonArray
 		);
 
 		/**
 		 * Apply the DataTables plugin DataTables plugin. Applied as a layer over the generated table.
 		 */
-		jq(document).ready(function () {
+		$(function () {
 			DataTablesConfiguration();
 			("#dataTableGenerated_wrapper");
 		});
@@ -59,19 +60,19 @@ export function TableDisplay(
 
 /**
  * Display the data in the div with the id "dataTable" when clicking on the view all results or selection button.
- * @param TrcData
+ * @param traceData
  */
-export function TableDisplayTrc(TrcData: object[]): void {
+export function TableDisplayTrc(traceData: object[]): void {
 	setTimeout(() => {
 		/**
 		 * Create the table with the trc data.
 		 */
-		TableDataTrc(TrcData);
+		TableDataTrc(traceData);
 
 		/**
 		 * Apply the DataTables plugin. Applied as a layer over the generated table.
 		 */
-		jq(document).ready(function () {
+		$(function () {
 			DataTablesConfiguration();
 			("#dataTableGenerated_wrapper");
 		});
@@ -84,9 +85,10 @@ export function TableDisplayTrc(TrcData: object[]): void {
  * DataTables settings.
  */
 function DataTablesConfiguration(): void {
-	const table = jq("#dataTableGenerated").DataTable({
+	const table = $("#dataTableGenerated").DataTable({
 		destroy: true,
 		stateSave: true,
+		// @ts-ignore
 		searchPanes: {
 			layout: "auto"
 		},
@@ -123,9 +125,6 @@ function DataTablesConfiguration(): void {
 		fixedColumns: true,
 		columnDefs: [
 			{
-				searchPanes: {
-					show: true
-				},
 				targets: [0, 2]
 			}
 		],
@@ -137,13 +136,14 @@ function DataTablesConfiguration(): void {
 			{
 				extend: "colvis",
 				className: "rounded-end btn-sm",
-				columnText: (dt: any, idx: number, title: string): string =>
+				columnText: (_dt: DataTables.Api, idx: number, title: string): string =>
 					idx + 1 + ": " + title
 			},
 			"spacer",
 			{
 				text: "Toggle Filters",
 				action: function (): void {
+					// @ts-ignore
 					table.searchPanes.container().toggle();
 				},
 				className: "rounded btn-sm"
@@ -163,9 +163,12 @@ function DataTablesConfiguration(): void {
 			}
 		],
 		initComplete: function () {
-			jq("#loaderContainer").css("display", "none");
-			jq("#loaderContainer").hide();
-			jq("#dataTable").css("visibility", "visible");
+			$("#loaderContainer").css("display", "none");
+			$("#loaderContainer").hide();
+			$("#dataTable")
+				.css("opacity", "0")
+				.css("visibility", "visible")
+				.animate({ opacity: 1 }, 500);
 			const columnNamesToShow = [
 				"InputFileName",
 				"name",
@@ -209,9 +212,12 @@ function DataTablesConfiguration(): void {
 		}
 	});
 
-	jq(".dataTables_length select").addClass("custom-select custom-select-sm");
+	$(".dataTables_length select").addClass("custom-select custom-select-sm");
+	// @ts-ignore
 	table.searchPanes.container().prependTo(table.table().container());
+	// @ts-ignore
 	table.searchPanes.resizePanes();
+	// @ts-ignore
 	table.searchPanes.container().toggle();
 }
 
@@ -219,18 +225,18 @@ function DataTablesConfiguration(): void {
  * Destroy existing table.
  */
 export function DestroyDataTable(): void {
-	const table = jq("#dataTableGenerated").DataTable();
+	const table = $("#dataTableGenerated").DataTable();
 	table.destroy();
 
-	const TableElementWrapper = document.getElementById(
+	const tableElementWrapper = document.getElementById(
 		"dataTableGenerated_wrapper"
 	);
-	if (TableElementWrapper) {
-		TableElementWrapper.remove();
+	if (tableElementWrapper) {
+		tableElementWrapper.remove();
 	}
 
-	const TableElement = document.getElementById("dataTableGenerated");
-	if (TableElement) {
-		TableElement.remove();
+	const tableElement = document.getElementById("dataTableGenerated");
+	if (tableElement) {
+		tableElement.remove();
 	}
 }

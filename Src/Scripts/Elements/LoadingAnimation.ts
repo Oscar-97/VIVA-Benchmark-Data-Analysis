@@ -1,9 +1,9 @@
-import { LoaderContainer } from "./Elements";
+import { loaderContainer } from "./Elements";
 
 export function LoadingAnimation(): void {
-	const Loader = document.createElement("div") as HTMLDivElement;
-	Loader.className = "loader";
-	LoaderContainer.innerHTML = "";
-	LoaderContainer.appendChild(Loader);
-	LoaderContainer.style.display = "flex";
+	const loader = document.createElement("div") as HTMLDivElement;
+	loader.className = "loader";
+	loaderContainer.innerHTML = "";
+	loaderContainer.appendChild(loader);
+	loaderContainer.style.display = "flex";
 }

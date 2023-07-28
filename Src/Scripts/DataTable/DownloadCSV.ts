@@ -1,20 +1,20 @@
-import { DownloadCSVButton } from "../Elements/Elements";
+import { downloadCSVButton } from "../Elements/Elements";
 
 export function TableDownloadCSV(): void {
 	/**
 	 * @param DownloadableFile CSV file containing the table data.
 	 */
-	const Table = document.getElementById(
+	const table = document.getElementById(
 		"dataTableGenerated"
 	) as HTMLTableElement;
-	const Data = Array.from(Table.rows).map((row) =>
+	const data = Array.from(table.rows).map((row) =>
 		Array.from(row.cells)
 			.map((cell) => cell.innerText)
 			.join(",")
 	);
-	const csv = Data.join("\n");
-	const DownloadableFile = new Blob([csv], { type: "text/csv" });
+	const csv = data.join("\n");
+	const downloadableFile = new Blob([csv], { type: "text/csv" });
 
-	DownloadCSVButton.href = window.URL.createObjectURL(DownloadableFile);
-	DownloadCSVButton.download = "benchmark-table.csv";
+	downloadCSVButton.href = window.URL.createObjectURL(downloadableFile);
+	downloadCSVButton.download = "benchmark-table.csv";
 }

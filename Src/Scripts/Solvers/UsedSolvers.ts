@@ -1,34 +1,34 @@
 /**
  * Compare checked solvers versus full list of solvers.
- * @param CheckedSolvers
- * @param Solvers
+ * @param checkedSolvers
+ * @param solvers
  * @returns The ComparisonArray, which contains Used and not Used status on the solvers found in the benchmark results file.
  */
 export function GetComparisonArray(
-	CheckedSolvers: string[],
-	Solvers: string[]
+	checkedSolvers: string[],
+	solvers: string[]
 ): string[] {
-	const ComparisonArray = [];
-	for (let i = 0; i < Solvers.length; i++) {
-		if (CheckedSolvers.includes(Solvers[i])) {
-			ComparisonArray[i] = "Used";
+	const comparisonArray = [];
+	for (let i = 0; i < solvers.length; i++) {
+		if (checkedSolvers.includes(solvers[i])) {
+			comparisonArray[i] = "Used";
 		} else {
-			ComparisonArray[i] = "NotUsed";
+			comparisonArray[i] = "NotUsed";
 		}
 	}
-	return ComparisonArray;
+	return comparisonArray;
 }
 
 /**
  * @returns Get the solvers that are marked as checked.
  */
 export function GetCheckedSolvers(): string[] {
-	const FilterSolvers = document.getElementsByTagName("input");
-	const CheckedSolvers = [];
-	for (const Solver of FilterSolvers) {
-		if (Solver.checked) {
-			CheckedSolvers.push(Solver.id);
+	const filterSolvers = document.getElementsByTagName("input");
+	const checkedSolvers = [];
+	for (const solver of filterSolvers) {
+		if (solver.checked) {
+			checkedSolvers.push(solver.id);
 		}
 	}
-	return CheckedSolvers;
+	return checkedSolvers;
 }
