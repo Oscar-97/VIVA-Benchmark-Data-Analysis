@@ -234,7 +234,7 @@ div.dt-datetime{position:absolute;background-color:white;z-index:2050;border:1px
 body > :not(nav, hr) {
     opacity: 0;
     visibility: visible;
-    transition: opacity 1s;
+    transition: opacity 0.5s;
 }
 
 @media (max-width: 1250px) {
