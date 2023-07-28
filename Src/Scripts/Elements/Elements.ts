@@ -36,8 +36,6 @@ export const filterSelectionButton = document.getElementById(
 /**
  * @param SaveLocalStorageButton Save current table data to the local storage.
  * @param DownloadConfigurationButton Download current configuration.
- * @param DownloadCSVButton Download link the currently displayed table.
- * @param DownloadCSVButtonLayer Button element layer for the link.
  */
 export const saveLocalStorageButton = document.getElementById(
 	"saveLocalStorageButton"
@@ -47,12 +45,6 @@ export const downloadConfigurationButton = document.getElementById(
 ) as HTMLAnchorElement;
 export const downloadConfigurationButtonLayer = document.getElementById(
 	"downloadConfigurationButtonLayer"
-) as HTMLButtonElement;
-export const downloadCSVButton = document.getElementById(
-	"downloadCSVButton"
-) as HTMLAnchorElement;
-export const downloadCSVButtonLayer = document.getElementById(
-	"downloadCSVButtonLayer"
 ) as HTMLButtonElement;
 
 /**
@@ -82,10 +74,6 @@ export const dataTable = document.getElementById("dataTable") as HTMLDivElement;
 /**
  * Plots page.
  * @param ViewPlotsButton Displays a plot with the currently selected solvers.
- * @param xMaxInput Max x value.
- * @param xMinInput Min x value.
- * @param yMaxInput Max y value.
- * @param yMinInput Min y value.
  */
 export const viewPlotsButton = document.getElementById(
 	"viewPlotsButton"

@@ -68,7 +68,6 @@ import {
  * DataTable.
  */
 import { TableFilters } from "./DataTable/DataTableFilters";
-import { TableDownloadCSV } from "./DataTable/DownloadCSV";
 import {
 	TableDisplay,
 	TableDisplayTrc,
@@ -92,7 +91,6 @@ import {
 	filterSelectionButton,
 	saveLocalStorageButton,
 	downloadConfigurationButton,
-	downloadCSVButton,
 	deleteLocalStorageButton,
 	clearTableButton,
 	downloadConfigurationButtonLayer
@@ -367,6 +365,7 @@ function HandleReportPage(
 	 * Shows all problems depending on the uploaded file.
 	 */
 	viewAllResultsButton.addEventListener("click", () => {
+		viewAllResultsButton.disabled = true;
 		LoadingAnimation();
 		if (dataFileType === "txt") {
 			TableDisplay(
@@ -425,13 +424,6 @@ function HandleReportPage(
 			}
 			CreateUserConfiguration(newRawData, dataFileType, checkedSolvers);
 		}
-	});
-
-	/**
-	 * Download the currently displayed table as a CSV.
-	 */
-	downloadCSVButton.addEventListener("click", () => {
-		TableDownloadCSV();
 	});
 
 	/**

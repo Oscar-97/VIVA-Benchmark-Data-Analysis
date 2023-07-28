@@ -6,7 +6,6 @@ import {
 	selectAllButton,
 	saveLocalStorageButton,
 	downloadConfigurationButtonLayer,
-	downloadCSVButtonLayer,
 	deleteLocalStorageButton,
 	clearTableButton,
 	viewPlotsButton,
@@ -29,7 +28,6 @@ export function ElementStatus(): void {
 	selectAllButton.hidden = true;
 	selectAllButton.innerText = "Select All Solvers";
 	saveLocalStorageButton.disabled = true;
-	downloadCSVButtonLayer.disabled = true;
 	downloadConfigurationButtonLayer.disabled = true;
 	deleteLocalStorageButton.disabled = true;
 	clearTableButton.disabled = true;
@@ -62,7 +60,6 @@ export function ElementStatusWithTable(): void {
 	filterSelectionButton.disabled = false;
 	saveLocalStorageButton.disabled = false;
 	downloadConfigurationButtonLayer.disabled = false;
-	downloadCSVButtonLayer.disabled = false;
 	deleteLocalStorageButton.disabled = false;
 	clearTableButton.disabled = false;
 }
