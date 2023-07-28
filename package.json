@@ -7,8 +7,8 @@
     "test": "jest",
     "test:unit": "jest Function.test.ts",
     "test:ui": "jest UI.test.ts",
-    "lint": "eslint . --ext .ts,.tsx,.html",
-    "lint:fix": "eslint . --ext .ts,.tsx,.html --fix",
+    "lint": "eslint . --ext .ts,.tsx,.html,.css",
+    "lint:fix": "eslint . --ext .ts,.tsx,.html,.css --fix",
     "build": "webpack --config webpack.config.js",
     "build-docs": "typedoc --options typedoc.json"
   },
@@ -21,7 +21,7 @@
     "url": "git+https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis.git"
   },
   "author": "Oscar Härtull",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues"
   },
@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@types/chart.js": "^2.9.37",
+    "@types/datatables.net": "^1.10.24",
     "bootstrap": "^5.3.0",
     "chart.js": "^4.3.0",
     "datatables.net-bs5": "^1.13.1",
