@@ -14,11 +14,16 @@
       "error",
       {
         "selector": "variable",
-        "format": ["camelCase"]
+        "format": ["camelCase", "UPPER_CASE"]
       },
       {
         "selector": "function",
         "format": ["PascalCase"]
+      },
+      {
+        "selector": "parameter",
+        "format": ["camelCase"],
+        "leadingUnderscore": "allow"
       },
       {
         "selector": "class",
