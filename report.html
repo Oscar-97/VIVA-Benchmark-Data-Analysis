@@ -45,7 +45,7 @@
             <div class="input-group">
               <input type="file" class="form-control" id="fileInput" aria-describedby="inputGroupFileAddon04"
                 aria-label="Upload" value="" data-toggle="tooltip" data-placement="top"
-                title="Select and upload a .txt or .trc file." multiple>
+                title="Select and upload a trace or JSON file." multiple>
               <button class="btn btn-outline-primary" type="button" id="importDataButton" disabled="true"
                 data-toggle="tooltip" data-placement="top"
                 title="Upload the selected file for processing.">Upload</button>
@@ -97,18 +97,8 @@
       <button class="btn btn-danger btn-sm" id="clearTableButton" data-toggle="tooltip" data-placement="top"
         title="Clear current table.">Clear Data Table</button>
     </div>
-    <div class="col-auto vertical-separator"></div>
-    <div class="col-auto">
-      <button class="btn btn-primary btn-sm" type="none" id="selectAllButton" disabled="true" hidden="true" data-toggle="tooltip"
-        data-placement="top" title="Select all solvers found in the uploaded file.">Select All Solvers</button>
-    </div>
   </div>
   <hr />
-  <span class="badge bg-dark" id="solverAndProblemsHeader" hidden></span>
-  <div id="tableFilters"></div>
-  <!-- Table filters will be created here. -->
-  <!-- Table search appears after creating a table. -->
-  </div>
   <div id="loaderContainer" class="align-items-center justify-content-center"></div>
   <div id="dataTable">
     <!-- Table element will be created here. -->
