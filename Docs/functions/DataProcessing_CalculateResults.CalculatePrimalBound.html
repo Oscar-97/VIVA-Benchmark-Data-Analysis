@@ -18,18 +18,34 @@
 <h1>Function CalculatePrimalBound</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-<li class="tsd-signature tsd-anchor-link" id="CalculatePrimalBound">Calculate<wbr/>Primal<wbr/>Bound<span class="tsd-signature-symbol">(</span>PrimalBound<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span>, Direction<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><a href="#CalculatePrimalBound" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="CalculatePrimalBound">Calculate<wbr/>Primal<wbr/>Bound<span class="tsd-signature-symbol">(</span>primalBound<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span>, direction<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><a href="#CalculatePrimalBound" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Converts the <code>primalBound</code> argument into a corresponding numerical value based on its type and value.
+This function is used to calculate the primal bound of an optimization problem, which can either be a maximization or minimization problem.</p>
+
+<h3>Export</h3>
+<h3>Returns</h3><ul>
+<li>Returns a numerical value based on the input <code>primalBound</code>. 
+If the primal bound is an empty string, &#39;NA&#39;, &#39;nan&#39;, or &#39;-nan&#39;, it returns <code>-Infinity</code> for &#39;max&#39; direction and <code>Infinity</code> for &#39;min&#39; direction.
+If the primal bound is &#39;inf&#39; or &#39;+inf&#39;, it returns <code>Infinity</code>, and for &#39;-inf&#39;, it returns <code>-Infinity</code>.
+Otherwise, it converts the primal bound into a number using <code>math.bignumber(primalBound).toNumber()</code>.</li>
+</ul>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>PrimalBound: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5></li>
+<h5>primalBound: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The primal bound of the problem. This value can be a number or a string.
+If it&#39;s a string, it can represent a number, &#39;NA&#39;, &#39;nan&#39;, &#39;inf&#39;, &#39;+inf&#39;, &#39;-inf&#39;, &#39;-nan&#39;, or an empty string.</p>
+</div></li>
 <li>
-<h5>Direction: <span class="tsd-signature-type">string</span></h5></li></ul></div>
+<h5>direction: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The optimization direction, which can either be &#39;max&#39; for maximization problems or &#39;min&#39; for minimization problems.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Oscar-97/SHOT-Data-Visualization/blob/13dd70b/Src/Scripts/DataProcessing/CalculateResults.ts#L18">DataProcessing/CalculateResults.ts:18</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/Oscar-97/SHOT-Data-Visualization/blob/b31f699/Src/Scripts/DataProcessing/CalculateResults.ts#L37">DataProcessing/CalculateResults.ts:37</a></li></ul></aside></li></ul></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -56,23 +72,20 @@
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_AddResultCategories.html">Data<wbr/>Processing/<wbr/>Add<wbr/>Result<wbr/>Categories</a></li>
 <li class="current tsd-kind-module"><a href="../modules/DataProcessing_CalculateResults.html">Data<wbr/>Processing/<wbr/>Calculate<wbr/>Results</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_CreateData.html">Data<wbr/>Processing/<wbr/>Create<wbr/>Data</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataProcessing_FilterDataTrc.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data<wbr/>Trc</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataProcessing_FilterDataTxt.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data<wbr/>Txt</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataProcessing_GetInstanceInformation.html">Data<wbr/>Processing/<wbr/>Get<wbr/>Instance<wbr/>Information</a></li>
+<li class="tsd-kind-module"><a href="../modules/DataProcessing_FilterData.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data</a></li>
+<li class="tsd-kind-module"><a href="../modules/DataProcessing_GetExtraData.html">Data<wbr/>Processing/<wbr/>Get<wbr/>Extra<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_MergeData.html">Data<wbr/>Processing/<wbr/>Merge<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_ReadData.html">Data<wbr/>Processing/<wbr/>Read<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataTable_DataTableBase.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Base</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataTable_DataTableFilters.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Filters</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataTable_DataTableWrapper.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Wrapper</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataTable_DownloadCSV.html">Data<wbr/>Table/<wbr/>DownloadCSV</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataTable_UpdateResults.html">Data<wbr/>Table/<wbr/>Update<wbr/>Results</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_DisplayAlertNotification.html">Elements/<wbr/>Display<wbr/>Alert<wbr/>Notification</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_ElementStatus.html">Elements/<wbr/>Element<wbr/>Status</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_Elements.html">Elements/<wbr/>Elements</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_ImportDataEvents.html">Elements/<wbr/>Import<wbr/>Data<wbr/>Events</a></li>
+<li class="tsd-kind-module"><a href="../modules/Elements_LoadingAnimation.html">Elements/<wbr/>Loading<wbr/>Animation</a></li>
 <li class="tsd-kind-module"><a href="../modules/Main.html">Main</a></li>
-<li class="tsd-kind-module"><a href="../modules/Solvers_SelectAllSolvers.html">Solvers/<wbr/>Select<wbr/>All<wbr/>Solvers</a></li>
-<li class="tsd-kind-module"><a href="../modules/Solvers_UsedSolvers.html">Solvers/<wbr/>Used<wbr/>Solvers</a></li>
+<li class="tsd-kind-module"><a href="../modules/PWA_Setup.html">PWA_<wbr/>Setup</a></li>
 <li class="tsd-kind-module"><a href="../modules/UserConfiguration_UserConfiguration.html">User<wbr/>Configuration/<wbr/>User<wbr/>Configuration</a></li></ul></li></ul></div></details></nav>
 <nav class="tsd-navigation secondary menu-sticky">
 <ul>

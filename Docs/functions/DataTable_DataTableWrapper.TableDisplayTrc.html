@@ -18,18 +18,32 @@
 <h1>Function TableDisplayTrc</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-<li class="tsd-signature tsd-anchor-link" id="TableDisplayTrc">Table<wbr/>Display<wbr/>Trc<span class="tsd-signature-symbol">(</span>TrcData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#TableDisplayTrc" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="TableDisplayTrc">Table<wbr/>Display<wbr/>Trc<span class="tsd-signature-symbol">(</span>traceData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#TableDisplayTrc" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Display the data in the div with the id &quot;dataTable&quot; when clicking on the view all results or selection button.</p>
+<div class="tsd-comment tsd-typography"><p>Function to display the trace data in a dynamically generated HTML table using the DataTables library for improved user interaction.</p>
+
+<h3>Returns</h3><p>The function doesn&#39;t return anything.</p>
+
+<h3>Remarks</h3><p>This function generates and displays a table using the &#39;TableDataTrc&#39; function. It then applies DataTables configuration to it,
+resulting in a table with additional features like search and pagination.
+The table will be displayed in the HTML div with the id &#39;dataTable&#39;.
+This function will be invoked when a user clicks on the &#39;View All Results&#39; or &#39;Selection&#39; button.
+Note: this function directly manipulates the DOM and doesn&#39;t return anything.</p>
+
+<h3>Example</h3><pre><code class="language-typescript"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">traceData</span><span class="hl-1"> = [</span><br/><span class="hl-1">  {</span><span class="hl-3">Solver:</span><span class="hl-1"> </span><span class="hl-0">&quot;SolverA&quot;</span><span class="hl-1">, </span><span class="hl-3">Runtime:</span><span class="hl-1"> </span><span class="hl-8">10</span><span class="hl-1">, </span><span class="hl-3">ObjectiveValue:</span><span class="hl-1"> </span><span class="hl-8">100</span><span class="hl-1">},</span><br/><span class="hl-1">  {</span><span class="hl-3">Solver:</span><span class="hl-1"> </span><span class="hl-0">&quot;SolverB&quot;</span><span class="hl-1">, </span><span class="hl-3">Runtime:</span><span class="hl-1"> </span><span class="hl-8">20</span><span class="hl-1">, </span><span class="hl-3">ObjectiveValue:</span><span class="hl-1"> </span><span class="hl-8">200</span><span class="hl-1">}</span><br/><span class="hl-1">];</span><br/><span class="hl-9">TableDisplayTrc</span><span class="hl-1">(</span><span class="hl-3">traceData</span><span class="hl-1">);</span>
+</code></pre>
+<p>This example will generate a table with two rows and three columns (Solver, Runtime, and ObjectiveValue) and apply DataTables configuration to it.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>TrcData: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
+<h5>traceData: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">[]</span></h5>
+<div class="tsd-comment tsd-typography"><p>An array of objects where each object represents a row in the table, and the keys/values within the object represent columns and cell values.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Oscar-97/SHOT-Data-Visualization/blob/13dd70b/Src/Scripts/DataTable/DataTableWrapper.ts#L60">DataTable/DataTableWrapper.ts:60</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/Oscar-97/SHOT-Data-Visualization/blob/b31f699/Src/Scripts/DataTable/DataTableWrapper.ts#L41">DataTable/DataTableWrapper.ts:41</a></li></ul></aside></li></ul></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -56,28 +70,24 @@
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_AddResultCategories.html">Data<wbr/>Processing/<wbr/>Add<wbr/>Result<wbr/>Categories</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_CalculateResults.html">Data<wbr/>Processing/<wbr/>Calculate<wbr/>Results</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_CreateData.html">Data<wbr/>Processing/<wbr/>Create<wbr/>Data</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataProcessing_FilterDataTrc.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data<wbr/>Trc</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataProcessing_FilterDataTxt.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data<wbr/>Txt</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataProcessing_GetInstanceInformation.html">Data<wbr/>Processing/<wbr/>Get<wbr/>Instance<wbr/>Information</a></li>
+<li class="tsd-kind-module"><a href="../modules/DataProcessing_FilterData.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data</a></li>
+<li class="tsd-kind-module"><a href="../modules/DataProcessing_GetExtraData.html">Data<wbr/>Processing/<wbr/>Get<wbr/>Extra<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_MergeData.html">Data<wbr/>Processing/<wbr/>Merge<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_ReadData.html">Data<wbr/>Processing/<wbr/>Read<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataTable_DataTableBase.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Base</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataTable_DataTableFilters.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Filters</a></li>
 <li class="current tsd-kind-module"><a href="../modules/DataTable_DataTableWrapper.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Wrapper</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataTable_DownloadCSV.html">Data<wbr/>Table/<wbr/>DownloadCSV</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataTable_UpdateResults.html">Data<wbr/>Table/<wbr/>Update<wbr/>Results</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_DisplayAlertNotification.html">Elements/<wbr/>Display<wbr/>Alert<wbr/>Notification</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_ElementStatus.html">Elements/<wbr/>Element<wbr/>Status</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_Elements.html">Elements/<wbr/>Elements</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_ImportDataEvents.html">Elements/<wbr/>Import<wbr/>Data<wbr/>Events</a></li>
+<li class="tsd-kind-module"><a href="../modules/Elements_LoadingAnimation.html">Elements/<wbr/>Loading<wbr/>Animation</a></li>
 <li class="tsd-kind-module"><a href="../modules/Main.html">Main</a></li>
-<li class="tsd-kind-module"><a href="../modules/Solvers_SelectAllSolvers.html">Solvers/<wbr/>Select<wbr/>All<wbr/>Solvers</a></li>
-<li class="tsd-kind-module"><a href="../modules/Solvers_UsedSolvers.html">Solvers/<wbr/>Used<wbr/>Solvers</a></li>
+<li class="tsd-kind-module"><a href="../modules/PWA_Setup.html">PWA_<wbr/>Setup</a></li>
 <li class="tsd-kind-module"><a href="../modules/UserConfiguration_UserConfiguration.html">User<wbr/>Configuration/<wbr/>User<wbr/>Configuration</a></li></ul></li></ul></div></details></nav>
 <nav class="tsd-navigation secondary menu-sticky">
 <ul>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="DataTable_DataTableWrapper.DestroyDataTable.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-64-path"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)" id="icon-64-text"></path></svg>Destroy<wbr/>Data<wbr/>Table</a></li>
-<li class="tsd-kind-function tsd-parent-kind-module"><a href="DataTable_DataTableWrapper.TableDisplay.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>Table<wbr/>Display</a></li>
 <li class="current tsd-kind-function tsd-parent-kind-module"><a href="DataTable_DataTableWrapper.TableDisplayTrc.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>Table<wbr/>Display<wbr/>Trc</a></li></ul></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>

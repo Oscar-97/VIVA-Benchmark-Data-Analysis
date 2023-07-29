@@ -4,7 +4,7 @@
 ---
 Building on the concept and implementation of [PAVER 2.0](https://github.com/coin-or/paver), the main goal of this project is to allow end users to interact with their own uploaded benchmark data from mathematical optimization problems and their solvers. The data is presented in a tabular format, with the added ability to visualize specific results through various plots, making it easier to understand and interpret the data. 
 
-This project is developed using TypeScript, DataTables.js, Chart.js and Webpack. Bootstrap is used for styling.  Notably, the application can be run without a live server since Webpack is responsible for bundling the files.
+This project is developed using TypeScript, DataTables.js, Chart.js and Webpack. Bootstrap is used for styling.  Notably, the application can be run without a live server since Webpack is responsible for bundling the files. It is also possible to install it as a Progressive Web Application by launching the project in a live server, navigating to the report page using a compatible browser, and installing it. Support for offline functionality is incldued in the PWA implementation.
 
 <div style="text-align:left;">
   <img src="./Images/OverView_system_new.png" width="100%">
@@ -15,7 +15,6 @@ This project is developed using TypeScript, DataTables.js, Chart.js and Webpack.
 - Click the "Browse" button to upload the results and select either:
     - one or more results file in a `.trc` format.
         - .solu (best known primal and dual bounds for each instance) and .csv (instance properties) can be uploaded in conjugation to get additional information.
-    - or a single `.txt` based on the PAVER format.
     - or a single `UserConfiguration.json` (Which can be created from this application).
 - Once you have selected a file, click on upload.
 - Click on the View All Results/View Plot button to get a table or plot with the benchmark results, depending on the currently active page.
@@ -59,38 +58,16 @@ The following header structure and order should be used in conjunction with .trc
     "Nodes[i]",
     "UserComment",
 
-### .txt 
-
-The following header structure and order should be used in conjunction with .txt files, where the instance should feature:
-    
-    name,
-    #Vars,
-    #Disc,
-    #Equs,
-    Dir,
-    Dual bound,
-    Primal bound I,
-
-and each solver should have:
-
-    TermStatus
-    Dual bound,
-    DualGap,
-    Primal bound,
-    PrimGap Gap[%],
-    Time[s],
-    Nodes I
-
 ### .json
-The file should include `dataSet` and `dataFileType`, it is optionally to have a `checkedSolvers`.
+The file should include `dataSet` and `dataFileType`.
 
 ```json
 {
     "dataSet": [
-        "alan,MINLP,shot,NONE,CPLEX,43381.77804,min,8,9,4,24,3,1,8,Normal,2.925,2.925,0.041120867,0,0,0,#,2.925,2.925,2.925,2.925,0,0,0,0,0"
+        "alan,MINLP,shot,NONE,CPLEX,43381.77804,min,8,9,4,24,3,1,8,
+        Normal,2.925,2.925,0.041120867,0,0,0,#,2.925,2.925,2.925,2.925,0,0,0,0,0"
     ],
-    "dataFileType": "trc",
-    "checkedSolvers": []
+    "dataFileType": "trc"
 }
 ```
 

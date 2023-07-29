@@ -18,14 +18,18 @@
 <h1>Function GetUserConfiguration</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-<li class="tsd-signature tsd-anchor-link" id="GetUserConfiguration">Get<wbr/>User<wbr/>Configuration<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span><a href="#GetUserConfiguration" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="GetUserConfiguration">Get<wbr/>User<wbr/>Configuration<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]</span><a href="#GetUserConfiguration" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Get the user configuration from localStorage, item is called UserConfiguration.</p>
+<div class="tsd-comment tsd-typography"><p>This function retrieves the user configuration from the browser&#39;s local storage.</p>
 
-<h3>Returns</h3></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span></h4><aside class="tsd-sources">
+<h3>Returns</h3><p>An array that includes the raw data and the data file type.</p>
+
+<h3>Example</h3><pre><code class="language-ts"><span class="hl-9">GetUserConfiguration</span><span class="hl-1">();</span><br/><span class="hl-5">// This will return an array that includes the raw data and the data file type from local storage.</span>
+</code></pre>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Oscar-97/SHOT-Data-Visualization/blob/13dd70b/Src/Scripts/UserConfiguration/UserConfiguration.ts#L38">UserConfiguration/UserConfiguration.ts:38</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/Oscar-97/SHOT-Data-Visualization/blob/b31f699/Src/Scripts/UserConfiguration/UserConfiguration.ts#L45">UserConfiguration/UserConfiguration.ts:45</a></li></ul></aside></li></ul></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -52,23 +56,20 @@
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_AddResultCategories.html">Data<wbr/>Processing/<wbr/>Add<wbr/>Result<wbr/>Categories</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_CalculateResults.html">Data<wbr/>Processing/<wbr/>Calculate<wbr/>Results</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_CreateData.html">Data<wbr/>Processing/<wbr/>Create<wbr/>Data</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataProcessing_FilterDataTrc.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data<wbr/>Trc</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataProcessing_FilterDataTxt.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data<wbr/>Txt</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataProcessing_GetInstanceInformation.html">Data<wbr/>Processing/<wbr/>Get<wbr/>Instance<wbr/>Information</a></li>
+<li class="tsd-kind-module"><a href="../modules/DataProcessing_FilterData.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data</a></li>
+<li class="tsd-kind-module"><a href="../modules/DataProcessing_GetExtraData.html">Data<wbr/>Processing/<wbr/>Get<wbr/>Extra<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_MergeData.html">Data<wbr/>Processing/<wbr/>Merge<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_ReadData.html">Data<wbr/>Processing/<wbr/>Read<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataTable_DataTableBase.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Base</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataTable_DataTableFilters.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Filters</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataTable_DataTableWrapper.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Wrapper</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataTable_DownloadCSV.html">Data<wbr/>Table/<wbr/>DownloadCSV</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataTable_UpdateResults.html">Data<wbr/>Table/<wbr/>Update<wbr/>Results</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_DisplayAlertNotification.html">Elements/<wbr/>Display<wbr/>Alert<wbr/>Notification</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_ElementStatus.html">Elements/<wbr/>Element<wbr/>Status</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_Elements.html">Elements/<wbr/>Elements</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_ImportDataEvents.html">Elements/<wbr/>Import<wbr/>Data<wbr/>Events</a></li>
+<li class="tsd-kind-module"><a href="../modules/Elements_LoadingAnimation.html">Elements/<wbr/>Loading<wbr/>Animation</a></li>
 <li class="tsd-kind-module"><a href="../modules/Main.html">Main</a></li>
-<li class="tsd-kind-module"><a href="../modules/Solvers_SelectAllSolvers.html">Solvers/<wbr/>Select<wbr/>All<wbr/>Solvers</a></li>
-<li class="tsd-kind-module"><a href="../modules/Solvers_UsedSolvers.html">Solvers/<wbr/>Used<wbr/>Solvers</a></li>
+<li class="tsd-kind-module"><a href="../modules/PWA_Setup.html">PWA_<wbr/>Setup</a></li>
 <li class="current tsd-kind-module"><a href="../modules/UserConfiguration_UserConfiguration.html">User<wbr/>Configuration/<wbr/>User<wbr/>Configuration</a></li></ul></li></ul></div></details></nav>
 <nav class="tsd-navigation secondary menu-sticky">
 <ul>
