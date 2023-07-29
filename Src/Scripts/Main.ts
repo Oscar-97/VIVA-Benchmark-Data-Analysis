@@ -69,7 +69,7 @@ import { ElementStatus, ElementStatusPlots } from "./Elements/ElementStatus";
 import {
 	fileInput,
 	importDataButton,
-	viewAllResultsButton,
+	viewTableButton,
 	filterSelectionButton,
 	saveLocalStorageButton,
 	downloadConfigurationButton,
@@ -280,8 +280,8 @@ function HandleReportPage(traceData: object[], traceDataFiltered: any[]): void {
 	/**
 	 * Show the table when clicking on the "View Table" button.
 	 */
-	viewAllResultsButton.addEventListener("click", () => {
-		viewAllResultsButton.disabled = true;
+	viewTableButton.addEventListener("click", () => {
+		viewTableButton.disabled = true;
 		LoadingAnimation();
 		if (dataFileType === "trc") {
 			TableDisplayTrc(traceData);
