@@ -1,16 +1,32 @@
 /**
- * Extract the data from the trc file.
- * @param rawData The provided raw data.
- * @returns TrcData Contains the processed trc results.
+ * Converts an array of strings into an array of objects representing .trc data.
+ *
+ * @param rawData - Array of strings, where each string is a comma-separated representation of a row of data.
+ * @returns Array of objects, where each object represents a row of data from the .trc file.
+ *
+ * @remarks
+ * This function takes an array of strings (representing rows of .trc data) as input.
+ * It reads the first line to determine if it includes headers (prefixed with '*').
+ * If headers are found, they are extracted and used as the keys for the resulting objects.
+ * If not, default headers (specified in a constant array inside the function) are used.
+ *
+ * The function then iterates through each line of data, splitting it into separate elements
+ * based on the comma delimiter, and creating an object from these elements with the corresponding headers as keys.
+ *
+ * @example
+ * ```typescript
+ * const rawData = [ "* Column1,Column2", "Value1,Value2", "Value3,Value4" ];
+ * const result = ExtractTrcData(rawData);
+ * // result = [
+ * //   { "Column1": "Value1", "Column2": "Value2" },
+ * //   { "Column1": "Value3", "Column2": "Value4" },
+ * // ];
+ * ```
  */
 export function ExtractTrcData(rawData: string[]): object[] {
 	const traceData = [];
 	const firstLine = rawData[0].split(",");
 
-	/**
-	 * Check if headers are included in the .trc file.
-	 * If they are found, include them, if not, use the custom headers.
-	 */
 	if (firstLine[0].startsWith("*")) {
 		/**
 		 * Remove "* " from InputFileName.
@@ -28,10 +44,6 @@ export function ExtractTrcData(rawData: string[]): object[] {
 			traceData.push(obj);
 		}
 	} else if (!firstLine[0].startsWith("*")) {
-		/**
-		 * Standard order of headers:
-		 * https://www.gamsworld.org/performance/trace.htm
-		 */
 		const defaultHeaders = [
 			"InputFileName",
 			"ModelType",
@@ -63,7 +75,6 @@ export function ExtractTrcData(rawData: string[]): object[] {
 			const fileName = currentLine[0];
 			const solverName = currentLine[2];
 
-			// Check if the combination of filename and solver has been used earlier.
 			if (previousRow[fileName] === solverName) {
 				continue;
 			}
@@ -77,21 +88,4 @@ export function ExtractTrcData(rawData: string[]): object[] {
 		}
 	}
 	return traceData;
-}
-
-/**
- * Get the provided category and the corresponding data.
- * @param traceData Contains the processed trc results.
- * @param dataCategory The data category to extract values from.
- * @returns DataCategoryResults The category results that will be returned.
- */
-export function GetTrcDataCategory(
-	traceData: object[],
-	dataCategory: string
-): string[] {
-	const dataCategoryResults = [];
-	for (let i = 0; i < traceData.length; i++) {
-		dataCategoryResults.push(traceData[i][dataCategory]);
-	}
-	return dataCategoryResults;
 }

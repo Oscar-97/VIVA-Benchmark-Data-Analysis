@@ -1,80 +1,101 @@
 /**
- * Navigation bar.
- * @param FileInput Allows the user to select a benchmark results file for upload, located at the top of the page.
- * @param ImportDataButton Allows the user to upload the selected file, located at the top of the page.
+ * `fileInput` is a reference to the HTMLInputElement with the ID "fileInput".
+ * @type {HTMLInputElement}
  */
-export const fileInput = document.getElementById(
+export const fileInput: HTMLInputElement = document.getElementById(
 	"fileInput"
 ) as HTMLInputElement;
-export const importDataButton = document.getElementById(
+
+/**
+ * `importDataButton` is a reference to the HTMLButtonElement with the ID "importDataButton".
+ * @type {HTMLButtonElement}
+ */
+export const importDataButton: HTMLButtonElement = document.getElementById(
 	"importDataButton"
 ) as HTMLButtonElement;
 
 /**
- * On both pages.
- * @param SelectAllButton Selects all solvers from the benchmark results file.
+ * `alertNotification` is a reference to the HTMLDivElement with the ID "alertNotification".
+ * @type {HTMLDivElement}
  */
-export const alertNotification = document.getElementById(
+export const alertNotification: HTMLDivElement = document.getElementById(
 	"alertNotification"
 ) as HTMLDivElement;
-export const selectAllButton = document.getElementById(
-	"selectAllButton"
+
+/**
+ * `viewAllResultsButton` is a reference to the HTMLButtonElement with the ID "viewAllResultsButton".
+ * @type {HTMLButtonElement}
+ */
+export const viewAllResultsButton: HTMLButtonElement = document.getElementById(
+	"viewAllResultsButton"
 ) as HTMLButtonElement;
 
 /**
- * Table page.
- * @param ViewSelectionButton Displays a table with the currently selected solvers.
- * @param FilterSelectionButton Saves the currently marked rows.
+ * `filterSelectionButton` is a reference to the HTMLButtonElement with the ID "filterSelectionButton".
+ * @type {HTMLButtonElement}
  */
-export const viewAllResultsButton = document.getElementById(
-	"viewAllResultsButton"
-) as HTMLButtonElement;
-export const filterSelectionButton = document.getElementById(
+export const filterSelectionButton: HTMLButtonElement = document.getElementById(
 	"filterSelectionButton"
 ) as HTMLButtonElement;
 
 /**
- * @param SaveLocalStorageButton Save current table data to the local storage.
- * @param DownloadConfigurationButton Download current configuration.
+ * `saveLocalStorageButton` is a reference to the HTMLButtonElement with the ID "saveLocalStorageButton".
+ * @type {HTMLButtonElement}
  */
-export const saveLocalStorageButton = document.getElementById(
-	"saveLocalStorageButton"
-) as HTMLButtonElement;
-export const downloadConfigurationButton = document.getElementById(
-	"downloadConfigurationButton"
-) as HTMLAnchorElement;
-export const downloadConfigurationButtonLayer = document.getElementById(
-	"downloadConfigurationButtonLayer"
-) as HTMLButtonElement;
+export const saveLocalStorageButton: HTMLButtonElement =
+	document.getElementById("saveLocalStorageButton") as HTMLButtonElement;
 
 /**
- * @param DeleteLocalStorageButton Delete current saved table data from local storage.
- * @param ClearTableButton Clear current settings.
- * @param InputSearch Input for searching for problems.
- * @param SolverAndProblemsHeader Badge with the text Solvers or Problems.
+ * `downloadConfigurationButton` is a reference to the HTMLAnchorElement with the ID "downloadConfigurationButton".
+ * @type {HTMLAnchorElement}
  */
-export const deleteLocalStorageButton = document.getElementById(
-	"deleteLocalStorageButton"
-) as HTMLButtonElement;
-export const clearTableButton = document.getElementById(
+export const downloadConfigurationButton: HTMLAnchorElement =
+	document.getElementById("downloadConfigurationButton") as HTMLAnchorElement;
+
+/**
+ * `downloadConfigurationButtonLayer` is a reference to the HTMLButtonElement with the ID "downloadConfigurationButtonLayer".
+ * @type {HTMLButtonElement}
+ */
+export const downloadConfigurationButtonLayer: HTMLButtonElement =
+	document.getElementById(
+		"downloadConfigurationButtonLayer"
+	) as HTMLButtonElement;
+
+/**
+ * `deleteLocalStorageButton` is a reference to the HTMLButtonElement with the ID "deleteLocalStorageButton".
+ * @type {HTMLButtonElement}
+ */
+export const deleteLocalStorageButton: HTMLButtonElement =
+	document.getElementById("deleteLocalStorageButton") as HTMLButtonElement;
+
+/**
+ * `clearTableButton` is a reference to the HTMLButtonElement with the ID "clearTableButton".
+ * @type {HTMLButtonElement}
+ */
+export const clearTableButton: HTMLButtonElement = document.getElementById(
 	"clearTableButton"
 ) as HTMLButtonElement;
-export const solverAndProblemsHeader = document.getElementById(
-	"solverAndProblemsHeader"
-) as HTMLSpanElement;
 
 /**
- * @param Loading animation container.
+ * `loaderContainer` is a reference to the HTMLDivElement with the ID "loaderContainer".
+ * @type {HTMLDivElement}
  */
-export const loaderContainer = document.getElementById(
+export const loaderContainer: HTMLDivElement = document.getElementById(
 	"loaderContainer"
 ) as HTMLDivElement;
-export const dataTable = document.getElementById("dataTable") as HTMLDivElement;
 
 /**
- * Plots page.
- * @param ViewPlotsButton Displays a plot with the currently selected solvers.
+ * `dataTable` is a reference to the HTMLDivElement with the ID "dataTable".
+ * @type {HTMLDivElement}
  */
-export const viewPlotsButton = document.getElementById(
+export const dataTable: HTMLDivElement = document.getElementById(
+	"dataTable"
+) as HTMLDivElement;
+
+/**
+ * `viewPlotsButton` is a reference to the HTMLButtonElement with the ID "viewPlotsButton".
+ * @type {HTMLButtonElement}
+ */
+export const viewPlotsButton: HTMLButtonElement = document.getElementById(
 	"viewPlotsButton"
 ) as HTMLButtonElement;

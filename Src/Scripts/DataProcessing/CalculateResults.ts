@@ -1,7 +1,13 @@
 import * as math from "mathjs";
 
-// Problem - Direction
-// https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L261-L262
+/**
+ * This function calculates a direction, based on an input parameter 'direction'.
+ *
+ * @param {number | string} direction - A number or string input that represents the initial direction value.
+ *                                      This is then processed to calculate the final direction.
+ *
+ * @returns {string} direction - The calculated direction value in form of a string. It can be either 'max' or 'min'.
+ */
 export function CalculateDirection(direction: number | string): string {
 	direction = 1 - 2 * Number(direction);
 	if (direction == -1) {
@@ -13,8 +19,21 @@ export function CalculateDirection(direction: number | string): string {
 	}
 }
 
-// Problem & Solver - Primal Bound
-// https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L275-L282
+/**
+ * Converts the `primalBound` argument into a corresponding numerical value based on its type and value.
+ * This function is used to calculate the primal bound of an optimization problem, which can either be a maximization or minimization problem.
+ * 
+ * @export
+ * @param {(number | string)} primalBound - The primal bound of the problem. This value can be a number or a string.
+ * If it's a string, it can represent a number, 'NA', 'nan', 'inf', '+inf', '-inf', '-nan', or an empty string.
+ * 
+ * @param {string} direction - The optimization direction, which can either be 'max' for maximization problems or 'min' for minimization problems.
+ * 
+ * @returns {(number | string)} - Returns a numerical value based on the input `primalBound`. 
+ * If the primal bound is an empty string, 'NA', 'nan', or '-nan', it returns `-Infinity` for 'max' direction and `Infinity` for 'min' direction.
+ * If the primal bound is 'inf' or '+inf', it returns `Infinity`, and for '-inf', it returns `-Infinity`.
+ * Otherwise, it converts the primal bound into a number using `math.bignumber(primalBound).toNumber()`.
+ */
 export function CalculatePrimalBound(
 	primalBound: number | string,
 	direction: string
@@ -45,8 +64,21 @@ export function CalculatePrimalBound(
 	return primalBound;
 }
 
-// Problem & Solver - Dual Bound
-// https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L275-L282
+/**
+ * Converts the `dualBound` argument into a corresponding numerical value based on its type and value.
+ * This function is used to calculate the dual bound of an optimization problem, which can either be a maximization or minimization problem.
+ * 
+ * @export
+ * @param {(number | string)} dualBound - The dual bound of the problem. This value can be a number or a string.
+ * If it's a string, it can represent a number, 'NA', 'nan', 'inf', '+inf', '-inf', '-nan', or an empty string.
+ * 
+ * @param {string} direction - The optimization direction, which can either be 'max' for maximization problems or 'min' for minimization problems.
+ * 
+ * @returns {(number | string)} - Returns a numerical value based on the input `dualBound`. 
+ * If the dual bound is an empty string, 'NA', 'nan', or '-nan', it returns `Infinity` for 'max' direction and `-Infinity` for 'min' direction.
+ * If the dual bound is 'inf' or '+inf', it returns `Infinity`, and for '-inf', it returns `-Infinity`.
+ * Otherwise, it converts the dual bound into a number using `math.bignumber(dualBound).toNumber()`.
+ */
 export function CalculateDualBound(
 	dualBound: number | string,
 	direction: string
@@ -77,8 +109,115 @@ export function CalculateDualBound(
 	return dualBound;
 }
 
-// Solver- Termstatus
-// https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/readgamstrace.py#L90-L103
+/**
+ * Calculates the gap between two numbers, `a` and `b`, based on the given direction `dir` and tolerance `tol`.
+ *
+ * @export
+ * @param {number} a - The first number for the calculation.
+ * @param {number} b - The second number for the calculation.
+ * @param {string} dir - The direction of the calculation. If "max", the values of `a` and `b` are switched.
+ * @param {number} [tol=1e-9] - The tolerance level to check if `a` and `b` are approximately equal.
+ * 
+ * @returns {number} - Returns the gap between `a` and `b`. 
+ * If `a` and `b` are approximately equal (within `tol`), it returns 0.
+ * If the minimum absolute value of `a` and `b` is less than `tol`, or if either `a` or `b` is Infinity, or if `a` and `b` have different signs, or if either `a` or `b` is NaN, it returns Infinity.
+ * Otherwise, it returns the relative difference between `a` and `b` divided by the minimum absolute value of `a` and `b`, rounded to 7 decimal places.
+ */
+export function CalculateGap(
+	a: number,
+	b: number,
+	dir: string,
+	tol: number = 1e-9
+): number {
+	// If dir is negative, switch the values to do DualBound - PrimalBound.
+	if (dir === "max") {
+		[a, b] = [b, a];
+	}
+
+	// Check if the values are equal within tolerance
+	if (math.abs(a - b) < tol) {
+		return 0.0;
+	}
+
+	if (
+		math.min(math.abs(a), math.abs(b)) < tol ||
+		a === Infinity ||
+		b === Infinity ||
+		a * b < 0
+	) {
+		return Infinity;
+	}
+
+	if (isNaN(a) || isNaN(b)) {
+		return Infinity;
+	}
+
+	// Compute and return the gap between the values
+	return Number(((a - b) / math.min(math.abs(a), math.abs(b))).toFixed(7));
+}
+
+/**
+ * Calculates the absolute difference between two numbers, `a` and `b`, to a precision of 7 decimal places.
+ *
+ * @export
+ * @param {number} a - The first number for the calculation.
+ * @param {number} b - The second number for the calculation.
+ * 
+ * @returns {number} - Returns the absolute difference between `a` and `b`, rounded to 7 decimal places. 
+ * The function first determines the larger (higher) and smaller (lower) number between `a` and `b`, 
+ * then subtracts the lower from the higher to get the absolute difference.
+ */
+export function CalculateDifference(a: number, b: number): number {
+	const higher = Math.max(a, b);
+	const lower = Math.min(a, b);
+	return Number((higher - lower).toFixed(7));
+}
+
+/**
+ * Calculates the gap percentage between two numbers, `a` and `b`, based on the given direction `dir`.
+ *
+ * @export
+ * @param {number} a - The first number for the calculation.
+ * @param {number} b - The second number for the calculation.
+ * @param {string} dir - The direction of the calculation. If "max", the values of `a` and `b` are switched.
+ * 
+ * @returns {number} - Returns the gap percentage between `a` and `b`. 
+ * If either `a` or `b` is Infinity, it returns either 0 (if both are equal) or the subtraction of `a` and `b` multiplied by 100, rounded to 7 decimal places.
+ * Otherwise, it returns the relative difference between `a` and `b` divided by the maximum absolute value of `a` and `b` or 1.0, then multiplied by 100, rounded to 7 decimal places.
+ */
+export function CalculateGapPercentage(
+	a: number,
+	b: number,
+	dir: string
+): number {
+	// If dir is negative, switch the values to do DualBound - PrimalBound.
+	if (dir === "max") {
+		[a, b] = [b, a];
+	}
+
+	if (Math.abs(a) === Infinity || Math.abs(b) === Infinity) {
+		if (a === b) {
+			return 0.0;
+		} else {
+			return Number((a - b * 100).toFixed(7));
+		}
+	} else {
+		return Number(
+			(((a - b) / math.max(math.abs(a), math.abs(b), 1.0)) * 100).toFixed(7)
+		);
+	}
+}
+
+/**
+ * This function sets a termination status message based on an input parameter 'terminationStatus'.
+ *
+ * @param {number | string} terminationStatus - A number or string input that represents the initial termination status.
+ *                                              This is then processed to define the final termination status message.
+ *
+ * @returns {string} terminationStatus - The calculated termination status message in form of a string.
+ *                                       The possible return values include 'Normal', 'IterationLimit', 'TimeLimit',
+ *                                       'Other', 'OtherLimit', 'CapabilityProblem', 'UserInterrupt', and 'Error'.
+ */
 export function SetTermStatus(terminationStatus: number | string): string {
 	if (typeof terminationStatus === "string") {
 		terminationStatus = parseInt(terminationStatus);
@@ -114,75 +253,17 @@ export function SetTermStatus(terminationStatus: number | string): string {
 	return terminationStatus;
 }
 
-// Solver - Primal and Dual Gap
-// https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/utils.py#L46-L59
-export function CalculateGap(
-	a: number,
-	b: number,
-	dir: string,
-	tol = 1e-9
-): number {
-	// If dir is negative, switch the values to do DualBound - PrimalBound.
-	if (dir === "max") {
-		[a, b] = [b, a];
-	}
-
-	// Check if the values are equal within tolerance
-	if (math.abs(a - b) < tol) {
-		return 0.0;
-	}
-
-	if (
-		math.min(math.abs(a), math.abs(b)) < tol ||
-		a === Infinity ||
-		b === Infinity ||
-		a * b < 0
-	) {
-		return Infinity;
-	}
-
-	if (isNaN(a) || isNaN(b)) {
-		return Infinity;
-	}
-
-	// Compute and return the gap between the values
-	return Number(((a - b) / math.min(math.abs(a), math.abs(b))).toFixed(7));
-}
-
-// Absolute difference.
-export function CalculateDifference(a: number, b: number): number {
-	const higher = Math.max(a, b);
-	const lower = Math.min(a, b);
-	return Number((higher - lower).toFixed(7));
-}
-
-// Solver - Gap[%]
-// https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4/src/paver/utils.py#L21-L39
-export function CalculateGapPercentage(
-	a: number,
-	b: number,
-	dir: string
-): number {
-	// If dir is negative, switch the values to do DualBound - PrimalBound.
-	if (dir === "max") {
-		[a, b] = [b, a];
-	}
-
-	if (Math.abs(a) === Infinity || Math.abs(b) === Infinity) {
-		if (a === b) {
-			return 0.0;
-		} else {
-			return Number((a - b * 100).toFixed(7));
-		}
-	} else {
-		return Number(
-			(((a - b) / math.max(math.abs(a), math.abs(b), 1.0)) * 100).toFixed(7)
-		);
-	}
-}
-
 /**
- * Get the statistics for a selected category.
+ * `AnalyzeDataByCategory` function extracts the values of the specified category for each solver from the results data,
+ * calculates the statistical measures, and returns these statistics in a structured format.
+ *
+ * @param {any[]} resultsData - The array of result objects where each object corresponds to a particular solver's output.
+ * @param {string} category - The category whose values are to be analyzed. The category could be time, memory, etc.
+ *
+ * @returns {object} An object with solver names as keys. Each key points to an object that represents the statistical
+ * measures (average, min, max, standard deviation, sum, 10th percentile, 25th percentile, 50th percentile, 75th percentile,
+ * and 90th percentile) calculated from the values of the specified category for the corresponding solver. If the value of
+ * the category is not a finite number, the instance is not added to the final result.
  */
 export function AnalyzeDataByCategory(
 	resultsData: any[],
@@ -201,9 +282,6 @@ export function AnalyzeDataByCategory(
 		percentile_90: number;
 	};
 } {
-	/**
-	 * Get all the [Times[s]] from the results data.
-	 */
 	const solverTimes: { [SolverName: string]: number[] } = resultsData.reduce(
 		(acc, curr) => {
 			const parsedValue = Number(curr[category]);
@@ -219,9 +297,6 @@ export function AnalyzeDataByCategory(
 		{}
 	);
 
-	/**
-	 * Calculate statistics.
-	 */
 	const solverTimeStats: {
 		[SolverName: string]: {
 			average: number;
@@ -279,8 +354,17 @@ export function AnalyzeDataByCategory(
 }
 
 /**
- * Extract all solver times from each object per solver into an object.
- * Skip those Time[s] that are "NA" and NaN.
+ * `ExtractAllSolverTimes` function is used to structure trace data (log of the solver) into a more accessible object
+ * structure. It takes an array of objects (traceData) and returns an object.
+ *
+ * The returned object has a unique key for each solver and the value is an array of objects, each containing a 'time'
+ * and 'InputFileName'.
+ *
+ * @param {object[]} traceData - An array of objects where each object represents an instance of trace data.
+ *
+ * @returns {object} - An object with solver names as keys. Each key points to an array of objects where each object
+ * contains 'time' and 'InputFileName' property of the corresponding solver. If the time value is 'NA' or is not a number,
+ * the instance is not added to the final result.
  */
 export function ExtractAllSolverTimes(traceData: object[]): object {
 	const result = traceData.reduce(

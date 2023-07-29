@@ -1,10 +1,13 @@
 import { alertNotification } from "./Elements";
 import $ from "jquery";
 
+/**
+ * This function displays a success notification with the specified message.
+ * The notification fades in, remains visible for 4 seconds, and then fades out.
+ *
+ * @param message - The message to be displayed in the notification.
+ */
 export function DisplayAlertNotification(message: string): void {
-	/**
-	 * Show a success alert for 4 seconds with fade in and fade out effect.
-	 */
 	alertNotification.classList.add("alert-success");
 	alertNotification.innerText = message;
 
@@ -20,10 +23,13 @@ export function DisplayAlertNotification(message: string): void {
 	}, 3500);
 }
 
+/**
+ * This function displays a warning notification with the specified message.
+ * The notification fades in, remains visible for 3 seconds, and then fades out.
+ *
+ * @param message - The message to be displayed in the notification.
+ */
 export function DisplayWarningNotification(message: string): void {
-	/**
-	 * Show a warning alert for 3 seconds with fade in and fade out effect.
-	 */
 	alertNotification.classList.add("alert-warning");
 	alertNotification.innerText = message;
 
@@ -39,10 +45,13 @@ export function DisplayWarningNotification(message: string): void {
 	}, 2500);
 }
 
+/**
+ * This function displays an error notification with the specified message.
+ * The notification fades in, remains visible for 5 seconds, and then fades out.
+ *
+ * @param message - The message to be displayed in the notification.
+ */
 export function DisplayErrorNotification(message: string): void {
-	/**
-	 * Show an error alert for 5 seconds with fade in and fade out effect.
-	 */
 	alertNotification.classList.add("alert-danger");
 	alertNotification.innerText = message;
 

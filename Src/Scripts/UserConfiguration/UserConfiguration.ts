@@ -6,36 +6,43 @@ import {
 import { downloadConfigurationButton } from "../Elements/Elements";
 
 /**
- * UserData consists of dataset, file extension type and checked solvers.
+ * UserData consists of dataset and file extension.
  */
 const userData = {
 	dataSet: [],
-	dataFileType: "",
-	checkedSolvers: []
+	dataFileType: ""
 };
 
 /**
- * Create the user configuration and store it to localStorage.
+ * This function creates a user configuration and stores it in the browser's local storage.
+ *
+ * @param rawData - An array of strings representing raw data to be saved.
+ * @param dataFileType - A string representing the type of data file.
+ *
+ * @example
+ * CreateUserConfiguration(["raw data 1", "raw data 2"], "trc");
+ * // This will store the given raw data and data file type in the userData object, and then save the userData object in local storage.
  */
 export function CreateUserConfiguration(
 	rawData: string[],
-	dataFileType: string,
-	checkedSolvers?: string[]
+	dataFileType: string
 ): void {
 	userData.dataSet = rawData;
 	userData.dataFileType = dataFileType;
-	if (checkedSolvers) {
-		userData.checkedSolvers = checkedSolvers;
-	}
 	localStorage.setItem("UserConfiguration", JSON.stringify(userData));
 	DisplayAlertNotification("Saved configuration.");
 }
 
 /**
- * Get the user configuration from localStorage, item is called UserConfiguration.
- * @returns
+ * This function retrieves the user configuration from the browser's local storage.
+ *
+ * @returns An array that includes the raw data and the data file type.
+ *
+ * @example
+ * GetUserConfiguration();
+ * // This will return an array that includes the raw data and the data file type from local storage.
  */
-export function GetUserConfiguration(): [string[], string, string[]] {
+export function GetUserConfiguration(): [string[], string] {
 	const userConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
 	const rawData = [];
 	userConfig.dataSet.forEach((value: string[]) => {
@@ -44,21 +51,13 @@ export function GetUserConfiguration(): [string[], string, string[]] {
 
 	const dataFileType: string = userConfig.dataFileType;
 
-	const checkedSolvers = [];
-	if (userConfig.checkedSolvers) {
-		userConfig.checkedSolvers.forEach((value: string[]) => {
-			checkedSolvers.push(value);
-		});
-	}
-
 	console.log("RawData fron localStorage: ", rawData);
 	console.log("FileType of saved data: ", dataFileType);
-	console.log("Checked solvers: ", checkedSolvers);
-	return [rawData, dataFileType, checkedSolvers];
+	return [rawData, dataFileType];
 }
 
 /**
- * Delete the user configuration.
+ * This function deletes the user configuration from the browser's local storage.
  */
 export function DeleteUserConfiguration(): void {
 	localStorage.removeItem("UserConfiguration");
@@ -66,7 +65,17 @@ export function DeleteUserConfiguration(): void {
 }
 
 /**
- * Download user configuration as a .json file. Can be uploaded as a result file.
+ * This function downloads the user configuration saved in the local storage as a JSON file.
+ * If there is no saved user configuration in the local storage, it will display an error notification.
+ *
+ * @remarks
+ * The function assumes the existence of a global variable or a previously defined `downloadConfigurationButton`
+ * which should be a reference to an HTML anchor (`<a>`) element used to trigger the file download.
+ *
+ * @example
+ * DownloadUserConfiguration();
+ * // This will initiate the download of the user configuration stored in local storage, if present.
+ * // If no configuration is found, it will call DisplayErrorNotification function with the provided error message.
  */
 export function DownloadUserConfiguration(): void {
 	const userConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
