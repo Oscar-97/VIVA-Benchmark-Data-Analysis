@@ -23,11 +23,11 @@ export const alertNotification: HTMLDivElement = document.getElementById(
 ) as HTMLDivElement;
 
 /**
- * `viewAllResultsButton` is a reference to the HTMLButtonElement with the ID "viewAllResultsButton".
+ * `viewTableButton` is a reference to the HTMLButtonElement with the ID "viewTableButton".
  * @type {HTMLButtonElement}
  */
-export const viewAllResultsButton: HTMLButtonElement = document.getElementById(
-	"viewAllResultsButton"
+export const viewTableButton: HTMLButtonElement = document.getElementById(
+	"viewTableButton"
 ) as HTMLButtonElement;
 
 /**
