@@ -17,7 +17,7 @@
 </head>
 
 <body>
-  <nav class="navbar sticky-top navbar-expand-lg bg-light">
+  <nav class="navbar sticky-top navbar-expand-lg navbar-light">
     <div class="container-fluid">
       <span class="navbar-brand">
         <img src="./Src/CSS/tab_icon.png" width="30" height="30" class="d-inline-block align-top" alt="VIVA logo">
@@ -54,6 +54,9 @@
         </ul>
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
+            <span class="nav-link" data-bs-toggle="modal" data-bs-target="#fileFormatInformationModal">&#x1F6C8; Help</span>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="./Docs/index.html" target="_blank">Docs</a>
           </li>
           <li class="nav-item">
@@ -67,7 +70,11 @@
     </div>
   </nav>
   </div>
-  <div class="alert" role="alert" id="alertNotification"></div>
+  <div class="alert alert-dismissible" role="alert" id="alertNotification">
+    <i id="alertIcon" class="bi" style="margin-right: 10px;"></i>
+    <span id="alertMessage"></span>
+    <button id="closeAlertButton" type="button" class="btn-close" aria-label="Close"></button>
+  </div>
   <div id="buttonContainer" class="d-flex flex-wrap justify-content-start gap-2">
     <div class="col-auto">
       <button class="btn btn-success btn-sm" id="viewTableButton" disabled="true" data-toggle="tooltip"
@@ -102,6 +109,23 @@
   <div id="loaderContainer" class="align-items-center justify-content-center"></div>
   <div id="dataTable">
     <!-- Table element will be created here. -->
+  </div>
+  <div class="modal fade" id="fileFormatInformationModal" tabindex="-1" aria-labelledby="fileFormatInformationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="fileFormatInformationModalLabel">Supported File Formats</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>
+          Upload either one or more <b>.trc</b> files, or a single <b>.json</b> file with the structure mentioned in the documentation. 
+          Optionally, one can also upload a <b>.csv</b> file with information regarding instance properties, or a <b>.solu</b> file containing the best know bounds.
+          </p>
+          <p>Please check out the documentation for further information.</p>
+        </div>
+      </div>
+    </div>
   </div>
   <!-- Main script -->
   <script id="MainFunction" src="Dist/bundle.js"></script>
