@@ -1,7 +1,7 @@
 import {
 	importDataButton,
 	filterSelectionButton,
-	viewAllResultsButton,
+	viewTableButton,
 	viewPlotsButton,
 	deleteLocalStorageButton,
 	saveLocalStorageButton
@@ -54,7 +54,7 @@ export function ImportDataEvents(
 	}
 
 	if (document.title == "Report") {
-		viewAllResultsButton.disabled = false;
+		viewTableButton.disabled = false;
 		filterSelectionButton.disabled = true;
 		importDataButton.disabled = true;
 		filterSelectionButton.disabled = true;

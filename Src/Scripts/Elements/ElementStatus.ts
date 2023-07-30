@@ -1,7 +1,7 @@
 import {
 	fileInput,
 	importDataButton,
-	viewAllResultsButton,
+	viewTableButton,
 	filterSelectionButton,
 	saveLocalStorageButton,
 	downloadConfigurationButtonLayer,
@@ -30,7 +30,7 @@ export function ElementStatus(): void {
 	dataTable.style.visibility = "hidden";
 	fileInput.value = "";
 	importDataButton.disabled = true;
-	viewAllResultsButton.disabled = true;
+	viewTableButton.disabled = true;
 	filterSelectionButton.disabled = true;
 	saveLocalStorageButton.disabled = true;
 	downloadConfigurationButtonLayer.disabled = true;
