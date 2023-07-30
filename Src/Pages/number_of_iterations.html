@@ -5,8 +5,9 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#ffffff"/>
-  <meta name="description" content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers.">
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="description"
+    content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers.">
   <!-- Title and icon -->
   <title id="ReportTitle">Number of Iterations</title>
   <link rel="icon" href="../CSS/tab_icon.png">
@@ -55,10 +56,21 @@
             <a class="nav-link" href="../../Docs/index.html" target="_blank">Docs</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis" target="_blank">GitHub</a>
+            <a class="nav-link" href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis"
+              target="_blank">GitHub</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues/new" target="_blank">Submit Issue</a>
+            <a class="nav-link" href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues/new"
+              target="_blank">Submit Issue</a>
+          </li>
+          <li class="nav-item">
+            <button class="btn" data-bs-toggle="modal" data-bs-target="#fileFormatInformationModal" name="Help">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-question-circle-fill" viewBox="0 0 16 16">
+                <path
+                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z" />
+              </svg>
+            </button>
           </li>
         </ul>
       </div>
@@ -100,6 +112,25 @@
 
   <div id="statisticsTable">
     <!-- statistics table element will be created here. -->
+  </div>
+  <!-- Modal with file information. -->
+  <div class="modal fade" id="fileFormatInformationModal" tabindex="-1"
+    aria-labelledby="fileFormatInformationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="fileFormatInformationModalLabel">Supported File Formats</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Upload either one or more <b>.trc</b> files, or a single <b>.json</b> file with the structure mentioned in
+            the documentation. </p>
+          <p>Optionally, one can also upload a <b>.csv</b> file containing information about instance properties, or a
+            <b>.solu</b> file containing the best known bounds.</p>
+          <p>See the documentation for more information.</p>
+        </div>
+      </div>
+    </div>
   </div>
   <!-- Main script -->
   <script id="MainFunction" src="../../Dist/bundle.js"></script>
