@@ -259,7 +259,6 @@ function ManageData(): void {
 			if (dataFileType === "trc" || dataFileType === "json") {
 				let newRawData = [];
 				newRawData = CreateDataTrc(traceData);
-
 				CreateUserConfiguration(newRawData, dataFileType);
 			}
 			deleteLocalStorageButton.disabled = false;
@@ -316,6 +315,8 @@ function HandleReportPage(traceData: object[], traceDataFiltered: any[]): void {
 			}
 			CreateUserConfiguration(newRawData, dataFileType);
 		}
+		deleteLocalStorageButton.disabled = false;
+		downloadConfigurationButtonLayer.disabled = false;
 	});
 
 	/**
