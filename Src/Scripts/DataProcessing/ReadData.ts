@@ -72,7 +72,7 @@ export function GetDataFileType(): string {
 		throw new Error("Cannot upload both .trc and .json files simultaneously.");
 	}
 
-	return extensions[0];
+	return extensions.find(ext => ext === "trc" || ext === "json");
 }
 
 /**
