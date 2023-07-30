@@ -22,14 +22,14 @@ export function CalculateDirection(direction: number | string): string {
 /**
  * Converts the `primalBound` argument into a corresponding numerical value based on its type and value.
  * This function is used to calculate the primal bound of an optimization problem, which can either be a maximization or minimization problem.
- * 
+ *
  * @export
  * @param {(number | string)} primalBound - The primal bound of the problem. This value can be a number or a string.
  * If it's a string, it can represent a number, 'NA', 'nan', 'inf', '+inf', '-inf', '-nan', or an empty string.
- * 
+ *
  * @param {string} direction - The optimization direction, which can either be 'max' for maximization problems or 'min' for minimization problems.
- * 
- * @returns {(number | string)} - Returns a numerical value based on the input `primalBound`. 
+ *
+ * @returns {(number | string)} - Returns a numerical value based on the input `primalBound`.
  * If the primal bound is an empty string, 'NA', 'nan', or '-nan', it returns `-Infinity` for 'max' direction and `Infinity` for 'min' direction.
  * If the primal bound is 'inf' or '+inf', it returns `Infinity`, and for '-inf', it returns `-Infinity`.
  * Otherwise, it converts the primal bound into a number using `math.bignumber(primalBound).toNumber()`.
@@ -67,14 +67,14 @@ export function CalculatePrimalBound(
 /**
  * Converts the `dualBound` argument into a corresponding numerical value based on its type and value.
  * This function is used to calculate the dual bound of an optimization problem, which can either be a maximization or minimization problem.
- * 
+ *
  * @export
  * @param {(number | string)} dualBound - The dual bound of the problem. This value can be a number or a string.
  * If it's a string, it can represent a number, 'NA', 'nan', 'inf', '+inf', '-inf', '-nan', or an empty string.
- * 
+ *
  * @param {string} direction - The optimization direction, which can either be 'max' for maximization problems or 'min' for minimization problems.
- * 
- * @returns {(number | string)} - Returns a numerical value based on the input `dualBound`. 
+ *
+ * @returns {(number | string)} - Returns a numerical value based on the input `dualBound`.
  * If the dual bound is an empty string, 'NA', 'nan', or '-nan', it returns `Infinity` for 'max' direction and `-Infinity` for 'min' direction.
  * If the dual bound is 'inf' or '+inf', it returns `Infinity`, and for '-inf', it returns `-Infinity`.
  * Otherwise, it converts the dual bound into a number using `math.bignumber(dualBound).toNumber()`.
@@ -117,8 +117,8 @@ export function CalculateDualBound(
  * @param {number} b - The second number for the calculation.
  * @param {string} dir - The direction of the calculation. If "max", the values of `a` and `b` are switched.
  * @param {number} [tol=1e-9] - The tolerance level to check if `a` and `b` are approximately equal.
- * 
- * @returns {number} - Returns the gap between `a` and `b`. 
+ *
+ * @returns {number} - Returns the gap between `a` and `b`.
  * If `a` and `b` are approximately equal (within `tol`), it returns 0.
  * If the minimum absolute value of `a` and `b` is less than `tol`, or if either `a` or `b` is Infinity, or if `a` and `b` have different signs, or if either `a` or `b` is NaN, it returns Infinity.
  * Otherwise, it returns the relative difference between `a` and `b` divided by the minimum absolute value of `a` and `b`, rounded to 7 decimal places.
@@ -127,7 +127,7 @@ export function CalculateGap(
 	a: number,
 	b: number,
 	dir: string,
-	tol: number = 1e-9
+	tol = 1e-9
 ): number {
 	// If dir is negative, switch the values to do DualBound - PrimalBound.
 	if (dir === "max") {
@@ -162,9 +162,9 @@ export function CalculateGap(
  * @export
  * @param {number} a - The first number for the calculation.
  * @param {number} b - The second number for the calculation.
- * 
- * @returns {number} - Returns the absolute difference between `a` and `b`, rounded to 7 decimal places. 
- * The function first determines the larger (higher) and smaller (lower) number between `a` and `b`, 
+ *
+ * @returns {number} - Returns the absolute difference between `a` and `b`, rounded to 7 decimal places.
+ * The function first determines the larger (higher) and smaller (lower) number between `a` and `b`,
  * then subtracts the lower from the higher to get the absolute difference.
  */
 export function CalculateDifference(a: number, b: number): number {
@@ -180,8 +180,8 @@ export function CalculateDifference(a: number, b: number): number {
  * @param {number} a - The first number for the calculation.
  * @param {number} b - The second number for the calculation.
  * @param {string} dir - The direction of the calculation. If "max", the values of `a` and `b` are switched.
- * 
- * @returns {number} - Returns the gap percentage between `a` and `b`. 
+ *
+ * @returns {number} - Returns the gap percentage between `a` and `b`.
  * If either `a` or `b` is Infinity, it returns either 0 (if both are equal) or the subtraction of `a` and `b` multiplied by 100, rounded to 7 decimal places.
  * Otherwise, it returns the relative difference between `a` and `b` divided by the maximum absolute value of `a` and `b` or 1.0, then multiplied by 100, rounded to 7 decimal places.
  */

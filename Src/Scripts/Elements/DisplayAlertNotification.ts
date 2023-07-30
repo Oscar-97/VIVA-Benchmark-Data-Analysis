@@ -1,4 +1,11 @@
-import { alertNotification, alertIcon, alertMessage, closeAlertButton, checkCircleFill, exclamationTriangleFill } from "./Elements";
+import {
+	alertNotification,
+	alertIcon,
+	alertMessage,
+	closeAlertButton,
+	checkCircleFill,
+	exclamationTriangleFill
+} from "./Elements";
 import $ from "jquery";
 
 // const checkCircleFill = `
@@ -21,14 +28,14 @@ export function DisplayAlertNotification(message: string): void {
 	alertNotification.classList.add("alert-success");
 	alertMessage.innerText = message;
 	alertIcon.innerHTML = checkCircleFill;
-	
+
 	$(alertNotification)
 		.css({ display: "block", opacity: 0 })
 		.animate({ opacity: 1 }, 125);
-	
-		closeAlertButton.addEventListener("click", function() {
-			alertNotification.style.display = 'none';
-		});
+
+	closeAlertButton.addEventListener("click", function () {
+		alertNotification.style.display = "none";
+	});
 
 	setTimeout(() => {
 		$(alertNotification).animate({ opacity: 0 }, 250, function () {
@@ -53,9 +60,9 @@ export function DisplayWarningNotification(message: string): void {
 		.css({ display: "block", opacity: 0 })
 		.animate({ opacity: 1 }, 125);
 
-		closeAlertButton.addEventListener("click", function() {
-			alertNotification.style.display = 'none';
-		});
+	closeAlertButton.addEventListener("click", function () {
+		alertNotification.style.display = "none";
+	});
 
 	setTimeout(() => {
 		$(alertNotification).animate({ opacity: 0 }, 250, function () {
@@ -80,9 +87,9 @@ export function DisplayErrorNotification(message: string): void {
 		.css({ display: "block", opacity: 0 })
 		.animate({ opacity: 1 }, 125);
 
-		closeAlertButton.addEventListener("click", function() {
-			alertNotification.style.display = 'none';
-		});
+	closeAlertButton.addEventListener("click", function () {
+		alertNotification.style.display = "none";
+	});
 
 	setTimeout(() => {
 		$(alertNotification).animate({ opacity: 0 }, 250, function () {
