@@ -122,6 +122,7 @@ export function CalculateDualBound(
  * If `a` and `b` are approximately equal (within `tol`), it returns 0.
  * If the minimum absolute value of `a` and `b` is less than `tol`, or if either `a` or `b` is Infinity, or if `a` and `b` have different signs, or if either `a` or `b` is NaN, it returns Infinity.
  * Otherwise, it returns the relative difference between `a` and `b` divided by the minimum absolute value of `a` and `b`, rounded to 7 decimal places.
+ * If the result is -0, it converts it to 0.
  */
 export function CalculateGap(
 	a: number,
@@ -153,7 +154,14 @@ export function CalculateGap(
 	}
 
 	// Compute and return the gap between the values
-	return Number(((a - b) / math.min(math.abs(a), math.abs(b))).toFixed(7));
+	let result =
+		Number(((a - b) / math.min(math.abs(a), math.abs(b))).toFixed(7)) * 100;
+
+	if (result === -0) {
+		result = 0;
+	}
+
+	return result;
 }
 
 /**
@@ -174,36 +182,22 @@ export function CalculateDifference(a: number, b: number): number {
 }
 
 /**
- * Calculates the gap percentage between two numbers, `a` and `b`, based on the given direction `dir`.
+ * Calculates the gap difference between two numbers, taking infinity into account.
  *
- * @export
- * @param {number} a - The first number for the calculation.
- * @param {number} b - The second number for the calculation.
- * @param {string} dir - The direction of the calculation. If "max", the values of `a` and `b` are switched.
- *
- * @returns {number} - Returns the gap percentage between `a` and `b`.
- * If either `a` or `b` is Infinity, it returns either 0 (if both are equal) or the subtraction of `a` and `b` multiplied by 100, rounded to 7 decimal places.
- * Otherwise, it returns the relative difference between `a` and `b` divided by the maximum absolute value of `a` and `b` or 1.0, then multiplied by 100, rounded to 7 decimal places.
+ * @param {number} a - The first number.
+ * @param {number} b - The second number.
+ * @returns {number} The gap difference between the two numbers.
  */
-export function CalculateGapPercentage(
-	a: number,
-	b: number,
-	dir: string
-): number {
-	// If dir is negative, switch the values to do DualBound - PrimalBound.
-	if (dir === "max") {
-		[a, b] = [b, a];
-	}
-
+export function CalculateGapDifference(a: number, b: number): number {
 	if (Math.abs(a) === Infinity || Math.abs(b) === Infinity) {
 		if (a === b) {
 			return 0.0;
 		} else {
-			return Number((a - b * 100).toFixed(7));
+			return a - b;
 		}
 	} else {
 		return Number(
-			(((a - b) / math.max(math.abs(a), math.abs(b), 1.0)) * 100).toFixed(7)
+			((a - b) / math.max(math.abs(a), math.abs(b), 1.0)).toFixed(7)
 		);
 	}
 }
