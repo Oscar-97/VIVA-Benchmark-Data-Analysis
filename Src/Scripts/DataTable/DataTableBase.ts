@@ -80,8 +80,6 @@ export function TableDataTrc(traceData: object[]): void {
  * @param solverTimeStats An object where each key is the name of a solver and each value is another object that holds statistical metrics (average, min, max, std, sum, and percentiles) for the solver's runtime.
  * @param title A string that will be used as the table caption.
  *
- * @returns The function doesn't return anything.
- *
  * @remarks
  * This function generates a new table displaying statistical metrics for different solvers. The table is added to the 'statisticsTable' HTML div.
  * For each solver, it creates a row with the solver's name in the first column, and the solver's statistics in the subsequent columns.
@@ -104,39 +102,38 @@ export function StatisticsTable(
 	},
 	title: string
 ): void {
-	/**
-	 * @param StatisticsTableDiv Div that contains the statistics table.
-	 */
 	const statisticsTableDiv = document.getElementById(
 		"statisticsTable"
 	) as HTMLDivElement;
 	statisticsTableDiv.innerHTML = "";
 
-	const newStatisticsTable = document.createElement("table");
-	newStatisticsTable.classList.add(
+	const statisticsTable = document.createElement("table");
+	statisticsTable.classList.add(
 		"table",
 		"table-bordered",
-		"table-sm",
-		"border-dark",
-		"border-2"
+		"table-responsive",
+		"table-hover",
+		"table-sm"
 	);
 
 	const tableCaption = document.createElement("caption");
 	tableCaption.textContent = title + " statistics.";
 
 	const header = document.createElement("thead");
-	header.classList.add("table-dark");
+	header.classList.add("table-light");
 
 	const headerRow = document.createElement("tr");
 	const dataLabel = document.createElement("th");
-	dataLabel.textContent = "Summary";
+	dataLabel.textContent = "Solver";
 	dataLabel.scope = "col";
 
 	header.appendChild(headerRow);
 	headerRow.appendChild(dataLabel);
 
-	newStatisticsTable.appendChild(tableCaption);
-	newStatisticsTable.appendChild(header);
+	statisticsTable.appendChild(tableCaption);
+	statisticsTable.appendChild(header);
+
+	const tableBody = document.createElement("tbody");
 
 	/**
 	 * Iterate over each key in the SolverTimeStats and create a new table header element.
@@ -171,11 +168,9 @@ export function StatisticsTable(
 			td.textContent = dataValue.toString();
 			valuesRow.appendChild(td);
 		});
-		newStatisticsTable.appendChild(valuesRow);
+		tableBody.appendChild(valuesRow);
 	});
 
-	/**
-	 * Add the final table to the div.
-	 */
-	statisticsTableDiv.appendChild(newStatisticsTable);
+	statisticsTable.appendChild(tableBody);
+	statisticsTableDiv.appendChild(statisticsTable);
 }
