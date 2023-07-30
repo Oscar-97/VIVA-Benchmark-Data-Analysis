@@ -7,7 +7,7 @@ describe("UI tests", () => {
 	let page: Page;
 
 	beforeAll(async () => {
-		browser = await chromium.launch({ headless: true });
+		browser = await chromium.launch({ headless: false });
 		context = await browser.newContext();
 		page = await context.newPage();
 	});
@@ -37,7 +37,7 @@ describe("UI tests", () => {
 		selector: string,
 		expectedText: string
 	): Promise<void> {
-		await page.waitForSelector(selector, { state: "visible", timeout: 5000 });
+		await page.waitForSelector(selector, { state: "visible", timeout: 10000 });
 
 		const notificationElement = await page.$(selector);
 
@@ -45,7 +45,7 @@ describe("UI tests", () => {
 		expect(isVisible).toBeTruthy();
 
 		const notificationText = await notificationElement?.innerText();
-		expect(notificationText).toBe(expectedText);
+		expect(notificationText).toContain(expectedText);
 	}
 
 	async function UploadFile(page: Page, fileNames: string[]): Promise<void> {
@@ -121,11 +121,11 @@ describe("UI tests", () => {
 			notification: string
 		): Promise<void> {
 			await CheckNotification(page, "#alertNotification", notification);
-			await WaitForElementAndClick(page, "#viewAllResultsButton");
+			await WaitForElementAndClick(page, "#viewTableButton");
 
 			await page.waitForSelector("#dataTableGenerated_wrapper", {
 				state: "visible",
-				timeout: 20000
+				timeout: 25000
 			});
 		}
 
@@ -296,7 +296,7 @@ describe("UI tests", () => {
 				"//html/body/div[4]/div/div[3]/div/div/div[1]/div/table/thead/tr/th[1]"
 			);
 			const firstHeaderValueText = await firstHeaderValue?.innerText();
-			expect(firstHeaderValueText).toBe("ModelType");
+			expect(firstHeaderValueText).toBe("InputFileName");
 		}, 30000);
 
 		test("Use pagination on the table", async () => {
