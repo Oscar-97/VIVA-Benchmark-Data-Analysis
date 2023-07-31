@@ -1,5 +1,9 @@
 import { fileInput, importDataButton } from "../Elements/Elements";
-import { DisplayErrorNotification } from "../Elements/DisplayAlertNotification";
+import {
+	DisplayAlertNotification,
+	DisplayErrorNotification
+} from "../Elements/DisplayAlertNotification";
+import { userData } from "../UserConfiguration/UserConfiguration";
 
 /**
  * Retrieves the type of the data file inputted by the user.
@@ -72,7 +76,7 @@ export function GetDataFileType(): string {
 		throw new Error("Cannot upload both .trc and .json files simultaneously.");
 	}
 
-	return extensions.find(ext => ext === "trc" || ext === "json");
+	return extensions.find((ext) => ext === "trc" || ext === "json");
 }
 
 /**
@@ -123,8 +127,20 @@ export function ReadData(
 		reader.addEventListener("load", function () {
 			if (fileExtension === "json") {
 				const dataJSON = <string>reader.result;
-				localStorage.setItem("UserConfiguration", dataJSON);
-				console.log("Stored uploaded UserConfiguration.");
+				const parsedData = JSON.parse(dataJSON);
+
+				if (
+					parsedData.hasOwnProperty("dataSet") &&
+					parsedData.hasOwnProperty("dataFileType")
+				) {
+					userData.dataSet = parsedData.dataSet;
+					userData.dataFileType = parsedData.dataFileType;
+					localStorage.setItem("UserConfiguration", JSON.stringify(userData));
+					DisplayAlertNotification("Stored uploaded UserConfiguration.");
+				} else {
+					DisplayErrorNotification("Invalid data structure in uploaded JSON.");
+					console.log("Invalid data structure in uploaded JSON.");
+				}
 			} else if (fileExtension === "trc") {
 				const lines = (<string>reader.result)
 					.split(/\r?\n/)

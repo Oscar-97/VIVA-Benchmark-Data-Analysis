@@ -8,7 +8,7 @@ import { downloadConfigurationButton } from "../Elements/Elements";
 /**
  * UserData consists of dataset and file extension.
  */
-const userData = {
+export const userData = {
 	dataSet: [],
 	dataFileType: ""
 };
