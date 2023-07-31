@@ -7,12 +7,13 @@ import { PickColor, CreateChart } from "./CreateChart";
 import { StatisticsTable } from "../DataTable/DataTableBase";
 
 /**
- * Plot by result category
- * @param traceData Current TrcData.
- * @param type Type of plot.
- * @param category Name of the category.
- * @param label Label for the plot.
- * @param title Title for the plot.
+ * Prepares and plots data by a specific category.
+ *
+ * @param traceData - Array of objects containing the data to be analyzed and plotted.
+ * @param type - The type of the chart to be created (e.g., 'line', 'bar', 'pie').
+ * @param category - The category by which the data should be analyzed.
+ * @param label - The label for the data.
+ * @param title - The title of the chart.
  */
 export function PlotDataByCategory(
 	traceData: object[],
@@ -41,7 +42,9 @@ export function PlotDataByCategory(
 }
 
 /**
- * Plot all the solver times without any failed results.
+ * Prepares and plots all the solver times without any failed results.
+ *
+ * @param traceData - Array of objects containing the data to be analyzed and plotted.
  */
 export function PlotAllSolverTimes(traceData: object[]): void {
 	viewPlotsButton.disabled = false;

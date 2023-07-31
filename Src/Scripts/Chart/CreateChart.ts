@@ -2,9 +2,17 @@ import Chart from "chart.js/auto";
 let myChart = null;
 
 /**
- * Add a random color for the dataset.
- * @param PickColor Color picker for the data.
- * @returns Random different colors for each solver.
+ * Generates an array of random hex color codes.
+ *
+ * @param numberOfColors - The number of random colors to generate.
+ * @returns An array of random color hex codes.
+ *
+ * @example
+ * ```typescript
+ * // Generate three random colors
+ * const colors = PickColor(3);
+ * console.log(colors); // ["#6a5acd", "#8b008b", "#cd5c5c"]
+ * ```
  */
 export function PickColor(numberOfColors: number): string[] {
 	const colors: string[] = [];
@@ -17,7 +25,28 @@ export function PickColor(numberOfColors: number): string[] {
 }
 
 /**
- * Chart creation with Chart.js
+ * Creates a new Chart.js chart. If a chart already exists, it is destroyed before a new one is created.
+ *
+ * @param type - The type of chart to create (e.g., 'line', 'bar', 'pie').
+ * @param data - The data for the chart, which should be an array of objects.
+ * @param label - The label for the data.
+ * @param title - The title of the chart.
+ *
+ * @example
+ * ```typescript
+ * // Create a bar chart
+ * const data = [
+ * 	{
+ *		"label": "bbb",
+ *		"data": [
+ *			16912.75
+ *		],
+ *		"borderColor": "#33ef4b",
+ *		"backgroundColor": "#33ef4b"
+ *	 }
+ * ];
+ * CreateChart('bar', data, 'My Label', 'My Title');
+ * ```
  */
 export function CreateChart(type, data, label, title): void {
 	/**
@@ -27,7 +56,6 @@ export function CreateChart(type, data, label, title): void {
 		myChart.destroy();
 	}
 
-	// Create chart using array of objects
 	const chartCanvas = document.getElementById("myChart") as HTMLCanvasElement;
 	myChart = new Chart(chartCanvas, {
 		type: type,

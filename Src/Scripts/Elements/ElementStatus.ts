@@ -1,48 +1,52 @@
 import {
 	fileInput,
 	importDataButton,
-	viewAllResultsButton,
+	viewTableButton,
 	filterSelectionButton,
-	selectAllButton,
 	saveLocalStorageButton,
 	downloadConfigurationButtonLayer,
 	deleteLocalStorageButton,
 	clearTableButton,
 	viewPlotsButton,
-	solverAndProblemsHeader,
 	loaderContainer,
 	dataTable
 } from "./Elements";
 
 /**
- * Input values and button statuses when arriving/reloading to the table page.
+ * Resets the status of several elements to their initial state when the user first arrives at,
+ * or reloads, the table page.
+ *
+ * @remarks
+ *
+ * This function is typically called when the table page is first loaded or refreshed. It's designed to:
+ * 1. Clear the loader container's inner HTML.
+ * 2. Hide the data table.
+ * 3. Clear the file input's value.
+ * 4. Disable various interactive buttons (import data, view all results, filter selection,
+ *    save local storage, download configuration, delete local storage, clear table).
  */
 export function ElementStatus(): void {
 	loaderContainer.innerHTML = "";
 	dataTable.style.visibility = "hidden";
 	fileInput.value = "";
 	importDataButton.disabled = true;
-	viewAllResultsButton.disabled = true;
+	viewTableButton.disabled = true;
 	filterSelectionButton.disabled = true;
-	selectAllButton.disabled = true;
-	selectAllButton.hidden = true;
-	selectAllButton.innerText = "Select All Solvers";
 	saveLocalStorageButton.disabled = true;
 	downloadConfigurationButtonLayer.disabled = true;
 	deleteLocalStorageButton.disabled = true;
 	clearTableButton.disabled = true;
-	solverAndProblemsHeader.hidden = true;
-	try {
-		const filterCheckboxesContainer =
-			document.getElementById("checkboxContainer");
-		filterCheckboxesContainer.remove();
-	} catch (err) {
-		console.log("Could not remove solver checkboxes: ", err);
-	}
 }
 
 /**
- * Input values and button statuses when arriving/reloading to the plot page.
+ * Resets the status of several elements to their initial state when the user first arrives at,
+ * or reloads, the plot page.
+ *
+ * @remarks
+ *
+ * This function is typically called when the plot page is first loaded or refreshed. It's designed to:
+ * 1. Clear the file input's value.
+ * 2. Disable various interactive buttons (view plots, save local storage, download configuration, delete local storage).
  */
 export function ElementStatusPlots(): void {
 	fileInput.value = "";
@@ -53,10 +57,15 @@ export function ElementStatusPlots(): void {
 }
 
 /**
- * Button statuses when the table is displayed.
+ * Updates the status of several buttons when a data table is displayed.
+ *
+ * @remarks
+ *
+ * This function is typically called after a data table is generated and displayed on the page. It's designed to:
+ * 1. Enable various interactive buttons (filter selection, save local storage, download configuration,
+ *    delete local storage, clear table).
  */
 export function ElementStatusWithTable(): void {
-	selectAllButton.disabled = false;
 	filterSelectionButton.disabled = false;
 	saveLocalStorageButton.disabled = false;
 	downloadConfigurationButtonLayer.disabled = false;

@@ -1,60 +1,13 @@
 /**
- * Update the problemlist with the selected rows.
- * @returns ProblemList
- */
-export function UpdateProblemList(): string[] {
-	/**
-	 * @params Rows Select all rows with the class "selected".
-	 * @params data Store the data for the selected rows.
-	 */
-	//
-	const rows = document.querySelectorAll(".row-selected-problems");
-	const problemList: string[] = [];
-
-	for (let i = 0; i < rows.length; i++) {
-		const row = rows[i] as HTMLTableRowElement;
-
-		if (row.tagName === "TR") {
-			const cell = row.cells[0];
-			const cellData = cell.textContent;
-			problemList.push(cellData);
-		}
-	}
-	return problemList;
-}
-
-/**
- * Update the results data with the selected rows.
- * @returns ResultsData
- */
-export function UpdateResultsData(): string[] {
-	// select all rows with the class "selected"
-	/**
-	 * @params rows Select all rows with the class "selected".
-	 * @params data Store the data for the selected rows.
-	 */
-	const rows = document.querySelectorAll(".row-selected-problems");
-	const resultsData = [];
-
-	for (let i = 0; i < rows.length; i++) {
-		const row = rows[i] as HTMLTableRowElement;
-
-		if (row.tagName === "TR") {
-			const cells = row.cells as HTMLCollectionOf<HTMLTableCellElement>;
-			const rowData = [];
-			for (let j = 1; j < cells.length; j++) {
-				const cellData = cells[j].textContent;
-				rowData.push(cellData);
-			}
-			resultsData.push(rowData);
-		}
-	}
-	return resultsData;
-}
-
-/**
- * Update the trc data with the selected rows.
- * @returns TrcData
+ * Collects data from the selected rows in an HTML table and returns it as an array of objects.
+ *
+ * @returns An array of objects, each representing a row of data from the table. The keys in each object correspond to the table's headers, and the values correspond to the cell data in the corresponding row.
+ *
+ * @remarks
+ * This function fetches all the headers from the HTML table with class `.thead-dark th` and stores them in an array.
+ * It then selects all rows with the `.row-selected-problems` class and for each row, it creates an object.
+ * The keys of this object are the headers and the values are the corresponding cells' text content.
+ * This way, it effectively "translates" the table data into a more easily manipulable format (an array of objects).
  */
 export function UpdateResultsTrc(): object[] {
 	const headers = Array.from(document.querySelectorAll(".thead-dark th")).map(

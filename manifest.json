@@ -5,7 +5,14 @@
       {
         "src": "Src/CSS/tab_icon.png",
         "type": "image/png",
-        "sizes": "512x512"
+        "sizes": "512x512",
+        "purpose": "any"
+      },
+      {
+        "src": "Src/CSS/icon_maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
       }
     ],
     "start_url": "/report.html",

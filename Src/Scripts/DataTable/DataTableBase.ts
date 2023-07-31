@@ -1,118 +1,25 @@
-export function TableData(
-	instance: string,
-	solvers: string | string[],
-	instanceLabels: string | string[],
-	dataLabels: string[],
-	problems: string | string[],
-	resultsData: string[],
-	comparisonArray: string[]
-): void {
-	/**
-	 * Remove DataLabels that are not used.
-	 * @param NewDataLabels New data labels.
-	 * @param StartLabel Starting label.
-	 * @param EndLabel Ending label.
-	 */
-	const newDataLabels = [];
-	comparisonArray.forEach((element: string, index: number) => {
-		if (element === "Used") {
-			const startLabel = index * 8;
-			const endLabel = index * 8 + 8;
-			let tempArray = [];
-			tempArray = dataLabels.slice(startLabel, endLabel);
-			tempArray.forEach((element) => {
-				newDataLabels.push(element);
-			});
-		}
-	});
-
-	/**
-	 * Check which solvers to use.
-	 * @param ColumnsToUse Set the columns to always use the instance data.
-	 */
-	const columnsToUse = [0, 1, 2, 3, 4, 5];
-	comparisonArray.forEach((element: string, index: number) => {
-		const startValue = index * 8 + 6;
-		const endValue = index * 8 + 14;
-		if (element === "Used") {
-			for (let i = startValue; i < endValue; i++) {
-				columnsToUse.push(i);
-			}
-		}
-	});
-	const newResultsData = resultsData.map((r: string) =>
-		columnsToUse.map((i) => r[i])
-	);
-
-	/**
-	 * @param DataTableDiv Div that contains the data table.
-	 */
-	const dataTableDiv = document.getElementById("dataTable") as HTMLDivElement;
-	dataTableDiv.innerHTML = "";
-
-	/**
-	 * @param DataTableHeaders Thead created from instance and solvers on the first row, data labels on the second row.
-	 */
-	const dataTableHeaders = document.createElement("thead");
-	dataTableHeaders.className = "thead-dark";
-	const tr1 = document.createElement("tr");
-	tr1.innerHTML = "<th colspan='7'>" + instance + "</th>";
-	for (let i = 0; i < solvers.length; i++) {
-		const th = document.createElement("th");
-		th.colSpan = 8;
-		th.innerHTML = solvers[i];
-		tr1.appendChild(th);
-	}
-	dataTableHeaders.appendChild(tr1);
-
-	const tr2 = document.createElement("tr");
-	for (let i = 0; i < instanceLabels.length; i++) {
-		const th = document.createElement("th");
-		th.innerHTML = instanceLabels[i];
-		tr2.appendChild(th);
-	}
-	for (let i = 0; i < newDataLabels.length; i++) {
-		const th = document.createElement("th");
-		th.innerHTML = newDataLabels[i];
-		tr2.appendChild(th);
-	}
-	dataTableHeaders.appendChild(tr2);
-
-	/**
-	 * @param DataTableContent The content of the data table.
-	 * @param NewResultsData Contains all the result data and the table tags.
-	 */
-	const dataTableContent = document.createElement("tbody");
-	for (let i = 0; i < problems.length; i++) {
-		const tr3 = document.createElement("tr");
-		const th3 = document.createElement("th");
-		th3.scope = "row";
-		th3.innerHTML = problems[i];
-		tr3.appendChild(th3);
-		newResultsData[i].forEach((element: string) => {
-			const td3 = document.createElement("td");
-			td3.innerHTML = element;
-			tr3.appendChild(td3);
-		});
-		dataTableContent.appendChild(tr3);
-	}
-
-	/**
-	 * Create the table element.
-	 * @param NewDataTable Table element which is will contain all new content.
-	 */
-	const newDataTable = document.createElement("table") as HTMLTableElement;
-	newDataTable.className = "table table-bordered table-sm";
-	newDataTable.id = "dataTableGenerated";
-	newDataTable.appendChild(dataTableHeaders);
-	newDataTable.appendChild(dataTableContent);
-
-	/**
-	 * Add the table to the div.
-	 */
-	dataTableDiv.appendChild(newDataTable);
-}
-
+/**
+ * Function to dynamically create and display a HTML table based on the provided trace data.
+ *
+ * @param traceData An array of objects where each object represents a row in the table, and the keys/values within the object represent columns and cell values.
+ *
+ * @returns The function doesn't return anything.
+ *
+ * @remarks
+ * This function generates a new table to display trace data. The table is added to the 'dataTable' HTML div.
+ * For each object in the traceData array, it creates a row with the values from the object in the columns of the row.
+ * Note: this function directly manipulates the DOM and doesn't return anything.
+ *
+ * @example
+ * ```typescript
+ * const traceData = [
+ *   {Solver: "SolverA", Runtime: 10, ObjectiveValue: 100},
+ *   {Solver: "SolverB", Runtime: 20, ObjectiveValue: 200}
+ * ];
+ * TableDataTrc(traceData);
+ * ```
+ * This example will generate a table with two rows and three columns (Solver, Runtime, and ObjectiveValue).
+ */
 export function TableDataTrc(traceData: object[]): void {
 	/**
 	 * @param DataTableDiv Div that contains the data table.
@@ -167,6 +74,17 @@ export function TableDataTrc(traceData: object[]): void {
 	dataTableDiv.appendChild(newDataTable);
 }
 
+/**
+ * Function to dynamically create and display a HTML table based on solver's time statistics.
+ *
+ * @param solverTimeStats An object where each key is the name of a solver and each value is another object that holds statistical metrics (average, min, max, std, sum, and percentiles) for the solver's runtime.
+ * @param title A string that will be used as the table caption.
+ *
+ * @remarks
+ * This function generates a new table displaying statistical metrics for different solvers. The table is added to the 'statisticsTable' HTML div.
+ * For each solver, it creates a row with the solver's name in the first column, and the solver's statistics in the subsequent columns.
+ * Note: this function directly manipulates the DOM and doesn't return anything.
+ */
 export function StatisticsTable(
 	solverTimeStats: {
 		[SolverName: string]: {
@@ -184,39 +102,38 @@ export function StatisticsTable(
 	},
 	title: string
 ): void {
-	/**
-	 * @param StatisticsTableDiv Div that contains the statistics table.
-	 */
 	const statisticsTableDiv = document.getElementById(
 		"statisticsTable"
 	) as HTMLDivElement;
 	statisticsTableDiv.innerHTML = "";
 
-	const newStatisticsTable = document.createElement("table");
-	newStatisticsTable.classList.add(
+	const statisticsTable = document.createElement("table");
+	statisticsTable.classList.add(
 		"table",
 		"table-bordered",
-		"table-sm",
-		"border-dark",
-		"border-2"
+		"table-responsive",
+		"table-hover",
+		"table-sm"
 	);
 
 	const tableCaption = document.createElement("caption");
 	tableCaption.textContent = title + " statistics.";
 
 	const header = document.createElement("thead");
-	header.classList.add("table-dark");
+	header.classList.add("table-light");
 
 	const headerRow = document.createElement("tr");
 	const dataLabel = document.createElement("th");
-	dataLabel.textContent = "Summary";
+	dataLabel.textContent = "Solver";
 	dataLabel.scope = "col";
 
 	header.appendChild(headerRow);
 	headerRow.appendChild(dataLabel);
 
-	newStatisticsTable.appendChild(tableCaption);
-	newStatisticsTable.appendChild(header);
+	statisticsTable.appendChild(tableCaption);
+	statisticsTable.appendChild(header);
+
+	const tableBody = document.createElement("tbody");
 
 	/**
 	 * Iterate over each key in the SolverTimeStats and create a new table header element.
@@ -251,11 +168,9 @@ export function StatisticsTable(
 			td.textContent = dataValue.toString();
 			valuesRow.appendChild(td);
 		});
-		newStatisticsTable.appendChild(valuesRow);
+		tableBody.appendChild(valuesRow);
 	});
 
-	/**
-	 * Add the final table to the div.
-	 */
-	statisticsTableDiv.appendChild(newStatisticsTable);
+	statisticsTable.appendChild(tableBody);
+	statisticsTableDiv.appendChild(statisticsTable);
 }

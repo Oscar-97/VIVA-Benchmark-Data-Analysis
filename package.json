@@ -1,16 +1,16 @@
 {
-  "name": "datavisualization",
-  "version": "1.0.0",
+  "name": "viva",
+  "version": "1.0.1",
   "description": "",
   "main": "",
   "scripts": {
     "test": "jest",
-    "test:unit": "jest Function.test.ts",
+    "test:functions": "jest Function.test.ts",
     "test:ui": "jest UI.test.ts",
     "lint": "eslint . --ext .ts,.tsx,.html,.css",
     "lint:fix": "eslint . --ext .ts,.tsx,.html,.css --fix",
     "build": "webpack --config webpack.config.js",
-    "build-docs": "typedoc --options typedoc.json"
+    "build:docs": "typedoc --options typedoc.json"
   },
   "jest": {
     "preset": "ts-jest",

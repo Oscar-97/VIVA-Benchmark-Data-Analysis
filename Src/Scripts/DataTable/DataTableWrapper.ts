@@ -11,56 +11,32 @@ import "datatables.net-buttons/js/buttons.html5.mjs";
 import "datatables.net-buttons/js/buttons.print.mjs";
 import "datatables.net-datetime";
 
-import { GetCheckedSolvers, GetComparisonArray } from "../Solvers/UsedSolvers";
-import { TableData, TableDataTrc } from "./DataTableBase";
+import { TableDataTrc } from "./DataTableBase";
 import { ElementStatusWithTable } from "../Elements/ElementStatus";
 
 /**
- * Display the data in the div with the id "dataTable" when clicking on the view all results or selection button.
- */
-export function TableDisplay(
-	instance: string,
-	solvers: string[],
-	instanceLabels: string | string[],
-	dataLabels: string[],
-	problemList: string | string[],
-	resultsData: string[]
-): void {
-	setTimeout(() => {
-		const checkedSolvers = GetCheckedSolvers();
-		const comparisonArray = GetComparisonArray(checkedSolvers, solvers);
-
-		/**
-		 * Create the table with the provided data.
-		 */
-		TableData(
-			instance,
-			checkedSolvers,
-			instanceLabels,
-			dataLabels,
-			problemList,
-			resultsData,
-			comparisonArray
-		);
-
-		/**
-		 * Apply the DataTables plugin DataTables plugin. Applied as a layer over the generated table.
-		 */
-		$(function () {
-			DataTablesConfiguration();
-			("#dataTableGenerated_wrapper");
-		});
-
-		/**
-		 * Set the button statuses.
-		 */
-		ElementStatusWithTable();
-	}, 500);
-}
-
-/**
- * Display the data in the div with the id "dataTable" when clicking on the view all results or selection button.
- * @param traceData
+ * Function to display the trace data in a dynamically generated HTML table using the DataTables library for improved user interaction.
+ *
+ * @param traceData An array of objects where each object represents a row in the table, and the keys/values within the object represent columns and cell values.
+ *
+ * @returns The function doesn't return anything.
+ *
+ * @remarks
+ * This function generates and displays a table using the 'TableDataTrc' function. It then applies DataTables configuration to it,
+ * resulting in a table with additional features like search and pagination.
+ * The table will be displayed in the HTML div with the id 'dataTable'.
+ * This function will be invoked when a user clicks on the 'View All Results' or 'Selection' button.
+ * Note: this function directly manipulates the DOM and doesn't return anything.
+ *
+ * @example
+ * ```typescript
+ * const traceData = [
+ *   {Solver: "SolverA", Runtime: 10, ObjectiveValue: 100},
+ *   {Solver: "SolverB", Runtime: 20, ObjectiveValue: 200}
+ * ];
+ * TableDisplayTrc(traceData);
+ * ```
+ * This example will generate a table with two rows and three columns (Solver, Runtime, and ObjectiveValue) and apply DataTables configuration to it.
  */
 export function TableDisplayTrc(traceData: object[]): void {
 	setTimeout(() => {
@@ -82,7 +58,17 @@ export function TableDisplayTrc(traceData: object[]): void {
 }
 
 /**
- * DataTables settings.
+ * This function configures the settings for the DataTables JavaScript library.
+ * DataTables is a jQuery plugin that provides interactive features to HTML tables such as search, pagination, and sorting.
+ *
+ * @returns void
+ *
+ * @remarks
+ * This function finds the table with the id 'dataTableGenerated' and applies various configurations to it.
+ * Configurations include enabling the state saving feature, search panes, defining the DOM structure of the table,
+ * setting table length and select options, defining responsive breakpoints, setting scroll properties,
+ * defining fixed columns, setting button options and more.
+ * Note that after configuring, the function makes some changes to CSS classes and moves the search panes container.
  */
 function DataTablesConfiguration(): void {
 	const table = $("#dataTableGenerated").DataTable({
@@ -222,7 +208,13 @@ function DataTablesConfiguration(): void {
 }
 
 /**
- * Destroy existing table.
+ * This function destroys the DataTable with id 'dataTableGenerated' and removes it from the DOM.
+ *
+ * @returns void
+ *
+ * @remarks
+ * This function first grabs the DataTable by its id 'dataTableGenerated', destroys it using DataTables' .destroy() method.
+ * Then it removes the wrapper of the DataTable, and finally removes the DataTable itself from the DOM.
  */
 export function DestroyDataTable(): void {
 	const table = $("#dataTableGenerated").DataTable();

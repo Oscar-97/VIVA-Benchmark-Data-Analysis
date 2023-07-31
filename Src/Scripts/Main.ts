@@ -47,37 +47,20 @@ import { CreateDataTrc } from "./DataProcessing/CreateData";
 import { ImportDataEvents } from "./Elements/ImportDataEvents";
 import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
 import { MergeData } from "./DataProcessing/MergeData";
-import {
-	ExtractTrcData,
-	GetTrcDataCategory
-} from "./DataProcessing/FilterDataTrc";
+import { ExtractTrcData } from "./DataProcessing/FilterData";
 import {
 	GetInstanceInformation,
-	GetInstancePrimalDualbounds
-} from "./DataProcessing/GetInstanceInformation";
-import {
-	GetInstance,
-	GetSolvers,
-	GetInstanceLabels,
-	GetDataLabels,
-	GetProblems,
-	GetResults
-} from "./DataProcessing/FilterDataTxt";
+	GetBestKnowBounds
+} from "./DataProcessing/GetExtraData";
 
 /**
  * DataTable.
  */
-import { TableFilters } from "./DataTable/DataTableFilters";
 import {
-	TableDisplay,
 	TableDisplayTrc,
 	DestroyDataTable
 } from "./DataTable/DataTableWrapper";
-import {
-	UpdateProblemList,
-	UpdateResultsData,
-	UpdateResultsTrc
-} from "./DataTable/UpdateResults";
+import { UpdateResultsTrc } from "./DataTable/UpdateResults";
 
 /**
  * Elements.
@@ -86,8 +69,7 @@ import { ElementStatus, ElementStatusPlots } from "./Elements/ElementStatus";
 import {
 	fileInput,
 	importDataButton,
-	selectAllButton,
-	viewAllResultsButton,
+	viewTableButton,
 	filterSelectionButton,
 	saveLocalStorageButton,
 	downloadConfigurationButton,
@@ -96,15 +78,6 @@ import {
 	downloadConfigurationButtonLayer
 } from "./Elements/Elements";
 import { LoadingAnimation } from "./Elements/LoadingAnimation";
-
-/**
- * Solvers.
- */
-import { GetCheckedSolvers } from "./Solvers/UsedSolvers";
-import {
-	ToggleSelection,
-	SelectSavedSolvers
-} from "./Solvers/SelectAllSolvers";
 
 /**
  * User Configuration.
@@ -117,6 +90,9 @@ import {
 } from "./UserConfiguration/UserConfiguration";
 //#endregion
 
+/**
+ * Fade effect on all children of the body element, except for nav.
+ */
 $(function () {
 	$("body > :not(nav)").css("opacity", "1");
 	$("hr").css("opacity", "0.25");
@@ -128,7 +104,7 @@ $(function () {
 RegisterServiceWorker();
 
 /**
- * @param DataFileType Type of file extension for the imported data.
+ * @param DataFileType Type of file extension for the imported data. As of now, either .trc or .json. Text based files were removed.
  * @param RawData Raw data of the imported benchmark results.
  * @param CheckedSolvers Array containing checked solvers.
  * @param RawInstanceInfoData Unprocessed instanceinfo.csv containing properties.
@@ -136,7 +112,6 @@ RegisterServiceWorker();
  */
 let dataFileType = "";
 let rawData: string[] = [];
-let checkedSolvers: string[] = [];
 let rawInstanceInfoData: string[] = [];
 let rawSoluData: string[] = [];
 
@@ -145,16 +120,19 @@ let rawSoluData: string[] = [];
  */
 function InitializeProgram(): void {
 	/**
-	 * Values reset after clearing table and running InitializeProgram() again.
+	 * Resets the dataFileType and the three arrays holding the raw data,
+	 * raw instance info data, and raw solution data to their initial states.
+	 * This occurs when the table is cleared and InitializeProgram() is run again.
 	 */
 	dataFileType = "";
 	rawData = [];
-	checkedSolvers = [];
 	rawInstanceInfoData = [];
 	rawSoluData = [];
 
 	/**
-	 * Set all button status from new method after refreshing.
+	 * Sets the status of all buttons based on the current document title.
+	 * Different functions, ElementStatus() and ElementStatusPlots(), are called
+	 * depending on whether the title is "Report" or not.
 	 */
 	if (document.title == "Report") {
 		ElementStatus();
@@ -163,10 +141,14 @@ function InitializeProgram(): void {
 	}
 
 	/**
-	 * Try to retrieve stored config/data/state when arriving to the page, or refreshing the page.
+	 * Tries to retrieve stored configuration when arriving at
+	 * the page or refreshing the page. If data is found in local storage, the
+	 * rawData and dataFileType are updated, the ImportDataEvents() function is
+	 * called with a success message, the "Delete Local Storage" and "Download
+	 * Configuration" buttons are enabled, and the ManageData() function is called.
 	 */
 	try {
-		[rawData, dataFileType, checkedSolvers] = GetUserConfiguration();
+		[rawData, dataFileType] = GetUserConfiguration();
 		ImportDataEvents("Found cached benchmark file!", "json");
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
@@ -176,7 +158,13 @@ function InitializeProgram(): void {
 	}
 
 	/**
-	 * Read the data from the input file and set the file extension type.
+	 * Arguably the actions the sequence of events below is not correct, as the "load" button actually acts as a confirm button.
+	 */
+
+	/**
+	 * Adds an event listener to the file input field that sets the dataFileType
+	 * variable and reads data into the rawData, rawInstanceInfoData, and rawSoluData
+	 * arrays whenever the value of the file input field changes.
 	 */
 	fileInput.addEventListener("change", () => {
 		dataFileType = GetDataFileType();
@@ -184,7 +172,9 @@ function InitializeProgram(): void {
 	});
 
 	/**
-	 * Click on the upload data button to continue the process.
+	 * Adds an event listener to the "Import Data" button that calls the
+	 * ImportDataEvents() function with a success message and the ManageData()
+	 * function whenever the button is clicked.
 	 */
 	importDataButton.addEventListener("click", () => {
 		ImportDataEvents("Benchmark file succesfully loaded!");
@@ -193,58 +183,34 @@ function InitializeProgram(): void {
 }
 
 /**
- * Sort the benchmark results file and display the relevant elements per page.
+ * Manage the benchmark results data.
  */
 function ManageData(): void {
 	/**
-	 * TRC file.
-	 * @param TrcData Trace data results.
-	 * @param TrcDataFiltered Filtered trace data results.
+	 * Trace data results and filtered trace data results.
 	 */
 	let traceData: object[] = [];
 	const traceDataFiltered: object[] = [];
 
 	/**
-	 * SOLU and CSV file.
-	 * @param InstanceInfoData Instance properties.
-	 * @param SoluData Best known primal and dual bounds for each instance.
+	 * instanceInfoData holds the instance properties.
+	 * soluData holds the best known primal and dual bounds for each instance.
 	 */
 	let instanceInfoData: object[] = [];
 	let soluData: object[] = [];
 
 	/**
-	 * TXT file.
-	 * First row of the benchmark results file.
-	 * @param Instance The column where the instance is located. Instance is at index 0.
-	 * @param Solvers The columns where the solvers are located. Solvers are in the rest of the indices.
-	 *
-	 * Second row of the benchmark results file.
-	 * @param DataLabels The data labels.
-	 * @param InstanceLabels The instance categories.
-	 *
-	 * Problems and the results kept separate.
-	 * @param ProblemList List of the problems.
-	 * @param ResultsData List of results.
-	 */
-	let instance: string;
-	let solvers: string[] = [];
-	let dataLabels: string[];
-	let instanceLabels: string[];
-	let problemList: string[] = [];
-	let resultsData: string[] = [];
-
-	const problemListFiltered: string[] = [];
-	const resultsDataFiltered: string[] = [];
-
-	/**
-	 * Run if the uploaded file is json.
+	 * If the uploaded data file is of type JSON, it retrieves the user configuration
+	 * and updates the rawData and dataFileType variables.
 	 */
 	if (dataFileType == "json") {
-		[rawData, dataFileType, checkedSolvers] = GetUserConfiguration();
+		[rawData, dataFileType] = GetUserConfiguration();
 	}
 
 	/**
-	 * Check which file format is used, add the data to correct categories and create the solver filters. Select solvers if they are found in localStorage.
+	 * If the uploaded data file is of type TRC, it extracts the trace data from the rawData,
+	 * gets instance information if any, gets best known bounds if any, merges the data,
+	 * and adds result categories to the trace data.
 	 */
 	if (dataFileType === "trc") {
 		traceData = ExtractTrcData(rawData);
@@ -255,38 +221,21 @@ function ManageData(): void {
 		}
 
 		if (rawSoluData.length !== 0) {
-			soluData = GetInstancePrimalDualbounds(rawSoluData);
+			soluData = GetBestKnowBounds(rawSoluData);
 			traceData = MergeData(traceData, soluData);
 		}
-
-		solvers = GetTrcDataCategory(traceData, "SolverName");
 		AddResultCategories(traceData);
 	}
 
-	if (dataFileType === "txt") {
-		instance = GetInstance(rawData);
-		solvers = GetSolvers(rawData);
-		dataLabels = GetDataLabels(rawData);
-		instanceLabels = GetInstanceLabels(dataLabels);
-		problemList = GetProblems(rawData);
-		resultsData = GetResults(rawData);
-
-		selectAllButton.hidden = false;
-
-		if (checkedSolvers.length !== 0) {
-			SelectSavedSolvers(checkedSolvers);
-		}
-	}
-
 	/**
-	 * Download the current configuration.
+	 * Download the current configuration when clicking on the "Download Configuration" button.
 	 */
 	downloadConfigurationButton.addEventListener("click", () => {
 		DownloadUserConfiguration();
 	});
 
 	/**
-	 * Delete stored data in local storage.
+	 * Delete stored data in local storage when clicking in the "Delete Data" button.
 	 */
 	deleteLocalStorageButton.addEventListener("click", () => {
 		DeleteUserConfiguration();
@@ -295,32 +244,25 @@ function ManageData(): void {
 	});
 
 	/**
-	 * Check if the user is on the Report page.
+	 * If the document title is "Report", it handles the report page functionality using
+	 * the traceData and traceDataFiltered variables.
 	 */
 	if (document.title == "Report") {
-		HandleReportPage(
-			solvers,
-			instance,
-			instanceLabels,
-			dataLabels,
-			problemList,
-			resultsData,
-			problemListFiltered,
-			resultsDataFiltered,
-			traceData,
-			traceDataFiltered
-		);
+		HandleReportPage(traceData, traceDataFiltered);
 	}
 
 	/**
-	 * Save to local storage functionality on the plot pages.
+	 * If the document title is not "Report", it adds an event listener to the
+	 * "Save Local Storage" button that creates a new data configuration if the
+	 * dataFileType is either "trc" or "json", saves it to local storage, and enables
+	 * the "Delete Local Storage" and "Download Configuration" buttons when the button is clicked.
+	 * Also, it handles the plot page functionality using the traceData variable.
 	 */
 	if (document.title != "Report") {
 		saveLocalStorageButton.addEventListener("click", () => {
 			if (dataFileType === "trc" || dataFileType === "json") {
 				let newRawData = [];
 				newRawData = CreateDataTrc(traceData);
-
 				CreateUserConfiguration(newRawData, dataFileType);
 			}
 			deleteLocalStorageButton.disabled = false;
@@ -332,51 +274,19 @@ function ManageData(): void {
 }
 
 /**
- * Handle report(table) page button functions.
+ * This function manages the functionality of the buttons on the Report page of the application.
+ *
+ * @param {object[]} traceData - This parameter is an array of objects that represents the trace data.
+ * @param {object[]} traceDataFiltered - This parameter is an array of objects that represents the filtered trace data.
  */
-function HandleReportPage(
-	solvers,
-	instance,
-	instanceLabels,
-	dataLabels,
-	problemList,
-	resultsData,
-	problemListFiltered,
-	resultsDataFiltered,
-	traceData,
-	traceDataFiltered
-): void {
-	if (dataFileType === "txt") {
-		TableFilters(solvers, "Solvers");
-
-		if (checkedSolvers.length !== 0) {
-			SelectSavedSolvers(checkedSolvers);
-		}
-	}
-
+function HandleReportPage(traceData: object[], traceDataFiltered: any[]): void {
 	/**
-	 * Select all checkboxes button functionality.
+	 * Show the table when clicking on the "View Table" button.
 	 */
-	selectAllButton.addEventListener("click", () => {
-		ToggleSelection();
-	});
-
-	/**
-	 * Shows all problems depending on the uploaded file.
-	 */
-	viewAllResultsButton.addEventListener("click", () => {
-		viewAllResultsButton.disabled = true;
+	viewTableButton.addEventListener("click", () => {
+		viewTableButton.disabled = true;
 		LoadingAnimation();
-		if (dataFileType === "txt") {
-			TableDisplay(
-				instance,
-				solvers,
-				instanceLabels,
-				dataLabels,
-				problemList,
-				resultsData
-			);
-		} else if (dataFileType === "trc") {
+		if (dataFileType === "trc") {
 			TableDisplayTrc(traceData);
 		} else if (dataFileType === "json") {
 			[rawData, dataFileType] = GetUserConfiguration();
@@ -386,48 +296,35 @@ function HandleReportPage(
 	});
 
 	/**
-	 * Shows the selected problems by modifying the ProblemList and ResultsData.
+	 * Shows the selected problems when clicking on the "View Selected Problems" button.
 	 */
 	filterSelectionButton.addEventListener("click", () => {
 		filterSelectionButton.disabled = true;
-		if (dataFileType === "txt") {
-			problemListFiltered = UpdateProblemList();
-			resultsDataFiltered = UpdateResultsData();
-
-			TableDisplay(
-				instance,
-				solvers,
-				instanceLabels,
-				dataLabels,
-				problemListFiltered,
-				resultsDataFiltered
-			);
-		} else if (dataFileType === "trc") {
+		if (dataFileType === "trc") {
 			traceDataFiltered = UpdateResultsTrc();
 			TableDisplayTrc(traceDataFiltered);
 		}
 	});
 
 	/**
-	 * Save to local storage when clicking on the relevant button.
+	 * Save to local storage when clicking on the "Save Data" button.
 	 */
 	saveLocalStorageButton.addEventListener("click", () => {
-		if (dataFileType === "txt") {
-			checkedSolvers = GetCheckedSolvers();
-			CreateUserConfiguration(rawData, dataFileType, checkedSolvers);
-		} else if (dataFileType === "trc" || dataFileType === "json") {
+		if (dataFileType === "trc" || dataFileType === "json") {
 			let newRawData = [];
 			if (traceDataFiltered.length === 0) {
 				newRawData = CreateDataTrc(traceData);
 			} else {
 				newRawData = CreateDataTrc(traceDataFiltered);
 			}
-			CreateUserConfiguration(newRawData, dataFileType, checkedSolvers);
+			CreateUserConfiguration(newRawData, dataFileType);
 		}
+		deleteLocalStorageButton.disabled = false;
+		downloadConfigurationButtonLayer.disabled = false;
 	});
 
 	/**
-	 * Clear table action.
+	 * Destroy the data table and reinitializes the program when clicking on "Clear Data Table".
 	 */
 	clearTableButton.addEventListener("click", () => {
 		DestroyDataTable();

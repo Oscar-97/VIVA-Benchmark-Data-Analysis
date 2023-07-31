@@ -5,13 +5,23 @@ import {
 	SetTermStatus,
 	CalculateDifference,
 	CalculateGap,
-	CalculateGapPercentage
+	CalculateGapDifference
 } from "./CalculateResults";
 
 /**
- * Add and modify keys with new result categories.
- * https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4
- * /src/paver/paver.py#L258-L290
+ * Adds result categories to each object in the traceData array.
+ *
+ * @param traceData - Array of objects containing the data to be processed.
+ *
+ * @remarks
+ * This function modifies the passed `traceData` array by adding calculated properties to each object.
+ * Each object in the `traceData` array is expected to have certain properties like "Dir", "Obj",
+ * "Obj Est", and "TermStatus". The function uses these existing properties to calculate new ones.
+ * If an object in the `traceData` array already has a property that the function tries to add,
+ * the existing property will not be overwritten.
+ *
+ * The specific calculations performed by this function and the functions it calls are not described here.
+ * Please refer to the documentation of those functions for details.
  */
 export function AddResultCategories(traceData: object[]): void {
 	for (const obj of traceData) {
@@ -59,10 +69,6 @@ export function AddResultCategories(traceData: object[]): void {
 			obj["DualBound Problem"]
 		);
 
-		obj["Gap[%] Solver"] = CalculateGapPercentage(
-			obj["PrimalBound Solver"],
-			obj["DualBound Solver"],
-			obj["Dir"]
-		);
+		obj["Gap[%]"] = CalculateGapDifference(obj["PrimalGap"], obj["DualGap"]);
 	}
 }

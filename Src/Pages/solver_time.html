@@ -5,8 +5,9 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#ffffff"/>
-  <meta name="description" content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers.">
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="description"
+    content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers.">
   <!-- Title and icon -->
   <title id="ReportTitle">Solver Time</title>
   <link rel="icon" href="../CSS/tab_icon.png">
@@ -15,7 +16,7 @@
 </head>
 
 <body>
-  <nav class="navbar sticky-top navbar-expand-lg bg-light">
+  <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <span class="navbar-brand">
         <img src="../CSS/tab_icon.png" width="30" height="30" class="d-inline-block align-top" alt="VIVA logo">
@@ -43,7 +44,7 @@
             <div class="input-group">
               <input type="file" class="form-control" id="fileInput" aria-describedby="inputGroupFileAddon04"
                 aria-label="Upload" value="" data-toggle="tooltip" data-placement="top"
-                title="Select and upload a .txt or .trc file." multiple>
+                title="Select and upload a trace or JSON file." multiple>
               <button class="btn btn-outline-primary" type="button" id="importDataButton" disabled="true"
                 data-toggle="tooltip" data-placement="top"
                 title="Upload the selected file for processing.">Upload</button>
@@ -55,13 +56,31 @@
             <a class="nav-link" href="../../Docs/index.html" target="_blank">Docs</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="https://github.com/Oscar-97/SHOT-Data-Visualization" target="_blank">GitHub</a>
+            <a class="nav-link" href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis"
+              target="_blank">GitHub</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues/new"
+              target="_blank">Submit Issue</a>
+          </li>
+          <li class="nav-item">
+            <button class="btn" data-bs-toggle="modal" data-bs-target="#fileFormatInformationModal" name="Help">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-question-circle-fill" viewBox="0 0 16 16">
+                <path
+                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z" />
+              </svg>
+            </button>
           </li>
         </ul>
       </div>
     </div>
   </nav>
-  <div class="alert" role="alert" id="alertNotification"></div>
+  <div class="alert alert-dismissible" role="alert" id="alertNotification">
+    <i id="alertIcon" class="bi" style="margin-right: 10px;"></i>
+    <span id="alertMessage"></span>
+    <button id="closeAlertButton" type="button" class="btn-close" aria-label="Close"></button>
+  </div>
   <div id="buttonContainer" class="d-flex flex-wrap justify-content-start gap-2">
     <div class="col-auto">
       <button class="btn btn-success btn-sm" type="submit" id="viewPlotsButton">View Plot</button>
@@ -83,11 +102,6 @@
     </div>
   </div>
   <hr />
-  <span class="badge bg-dark" id="solverAndProblemsHeader" hidden></span>
-  <div id="tableFilters"></div>
-  <!-- Table filters will be created here. -->
-  <!-- Table search appears after creating a table. -->
-  </div>
   </div>
 
   <div id="chartContainer">
@@ -96,8 +110,60 @@
     </canvas>
   </div>
 
-  <div id="statisticsTable" class="table-responsive">
-     <!-- statistics table element will be created here. -->
+  <div id="statisticsTable">
+    <!-- statistics table element will be created here. -->
+  </div>
+  <!-- Modal with file information. -->
+  <div class="modal fade" id="fileFormatInformationModal" tabindex="-1"
+    aria-labelledby="fileFormatInformationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="fileFormatInformationModalLabel">Supported File Formats</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Upload either one or more <b>.trc</b> files, or a single <b>.json</b> file with the structure mentioned in
+            the documentation or in this collapsable list of <u>standard</u> headers. </p>
+          <p>Optionally, one can also upload a <b>.csv</b> file containing information about instance properties, or a
+            <b>.solu</b> file containing the best known bounds.
+          </p>
+          <p>See the documentation for more information regarding the application.</p>
+
+          <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#expandableList"
+            aria-expanded="false" aria-controls="expandableList">
+            Expand List of Headers
+          </button>
+
+          <div class="collapse" id="expandableList">
+            <ul class="list-group mt-3">
+              <li class="list-group-item">InputFileName</li>
+              <li class="list-group-item">ModelType</li>
+              <li class="list-group-item">SolverName</li>
+              <li class="list-group-item">NLP</li>
+              <li class="list-group-item">MIP</li>
+              <li class="list-group-item">JulianDate</li>
+              <li class="list-group-item">Dir</li>
+              <li class="list-group-item">Equs</li>
+              <li class="list-group-item">Vars</li>
+              <li class="list-group-item">Disc</li>
+              <li class="list-group-item">NumberOfNonZeros</li>
+              <li class="list-group-item">NumberOfNonlinearNonZeros</li>
+              <li class="list-group-item">OptionFile</li>
+              <li class="list-group-item">ModelStatus</li>
+              <li class="list-group-item">TermStatus</li>
+              <li class="list-group-item">Obj</li>
+              <li class="list-group-item">Obj Est</li>
+              <li class="list-group-item">Time[s]</li>
+              <li class="list-group-item">NumberOfIterations</li>
+              <li class="list-group-item">NumberOfDomainViolations</li>
+              <li class="list-group-item">Nodes[i]</li>
+              <li class="list-group-item">UserComment</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <!-- Main script -->
   <script id="MainFunction" src="../../Dist/bundle.js"></script>
