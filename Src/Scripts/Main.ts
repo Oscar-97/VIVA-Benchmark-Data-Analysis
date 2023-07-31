@@ -104,7 +104,7 @@ $(function () {
 RegisterServiceWorker();
 
 /**
- * @param DataFileType Type of file extension for the imported data.
+ * @param DataFileType Type of file extension for the imported data. As of now, either .trc or .json. Text based files were removed.
  * @param RawData Raw data of the imported benchmark results.
  * @param CheckedSolvers Array containing checked solvers.
  * @param RawInstanceInfoData Unprocessed instanceinfo.csv containing properties.
@@ -156,6 +156,10 @@ function InitializeProgram(): void {
 	} catch (err) {
 		console.log("No data found in local storage: ", err);
 	}
+
+	/**
+	 * Arguably the actions the sequence of events below is not correct, as the "load" button actually acts as a confirm button.
+	 */
 
 	/**
 	 * Adds an event listener to the file input field that sets the dataFileType
