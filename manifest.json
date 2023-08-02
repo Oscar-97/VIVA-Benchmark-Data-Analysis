@@ -1,24 +1,95 @@
 {
-    "name": "VIVA",
-    "description": "Benchmark data analysis for optimization solvers.",
-    "icons": [
-      {
-        "src": "Src/CSS/tab_icon.png",
-        "type": "image/png",
-        "sizes": "512x512",
-        "purpose": "any"
-      },
-      {
-        "src": "Src/CSS/icon_maskable.png",
+  "name": "VIVA",
+  "categories": [
+    "utilities", 
+    "development",
+    "education"
+  ],
+  "description": "Benchmark data analysis for optimization solvers.",
+  "screenshots": [
+    {
+      "src": "Docs/Images/OverViewe_system_new.png",
+      "type": "image/png",
+      "sizes": "1252x659",
+      "purpose": "any"
+    }
+  ],
+  "icons": [
+    {
+      "src": "Src/CSS/tab_icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "Src/CSS/icon_maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
-      }
-    ],
-    "start_url": "/report.html",
-    "display": "minimal-ui",
-    "orientation": "landscape",
-    "theme_color": "white",
-    "background_color": "white"
-  }
-  
+    }
+  ],
+  "start_url": "/report.html",
+  "display": "standalone",
+  "orientation": "landscape",
+  "theme_color": "white",
+  "background_color": "white",
+  "shortcuts": [
+    {
+      "name": "Report",
+      "short_name": "Reports",
+      "description": "View the latest reports",
+      "url": "report.html",
+      "icons": [
+        {
+          "src": "Src/CSS/icon_maskable.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Average Solver Time",
+      "url": "Src/Pages/average_solver_time.html",
+      "icons": [
+        {
+          "src": "Src/CSS/icon_maskable.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Solver Time",
+      "url": "Src/Pages/solver_time.html",
+      "icons": [
+        {
+          "src": "Src/CSS/icon_maskable.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Number of Iterations",
+      "url": "Src/Pages/number_of_iterations.html",
+      "icons": [
+        {
+          "src": "Src/CSS/icon_maskable.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Number of Nodes",
+      "url": "Src/Pages/number_of_nodes.html",
+      "icons": [
+        {
+          "src": "Src/CSS/icon_maskable.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}
