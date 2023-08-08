@@ -130,6 +130,10 @@ export function CalculateGap(
 	dir: string,
 	tol = 1e-9
 ): number {
+	if (isNaN(a) || isNaN(b)) {
+		return Infinity;
+	}
+	
 	// If dir is negative, switch the values to do DualBound - PrimalBound.
 	if (dir === "max") {
 		[a, b] = [b, a];
@@ -146,10 +150,6 @@ export function CalculateGap(
 		b === Infinity ||
 		a * b < 0
 	) {
-		return Infinity;
-	}
-
-	if (isNaN(a) || isNaN(b)) {
 		return Infinity;
 	}
 
