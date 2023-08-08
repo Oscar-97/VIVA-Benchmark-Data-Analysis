@@ -214,11 +214,13 @@ function DataTablesConfiguration(): void {
  *
  * @remarks
  * This function first grabs the DataTable by its id 'dataTableGenerated', destroys it using DataTables' .destroy() method.
+ * Thereafter the state is cleared by running table.state.clear().
  * Then it removes the wrapper of the DataTable, and finally removes the DataTable itself from the DOM.
  */
 export function DestroyDataTable(): void {
 	const table = $("#dataTableGenerated").DataTable();
 	table.destroy();
+	table.state.clear();
 
 	const tableElementWrapper = document.getElementById(
 		"dataTableGenerated_wrapper"
