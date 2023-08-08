@@ -29,7 +29,24 @@ export function CreateUserConfiguration(
 ): void {
 	userData.dataSet = rawData;
 	userData.dataFileType = dataFileType;
-	localStorage.setItem("UserConfiguration", JSON.stringify(userData));
+	try {
+		localStorage.setItem("UserConfiguration", JSON.stringify(userData));
+	} catch (error) {
+		switch (error.name) {
+			case "QuotaExceededError":
+				DisplayErrorNotification("Local storage is full. Please clear.");
+				break;
+			case "SecurityError":
+				DisplayErrorNotification("Local storage is disabled. Please enable it in your browser settings.");
+				break;
+			case "InvalidAccessError":
+				DisplayErrorNotification("Local storage cannot be accessed. Please try again.");
+				break;
+			default:
+				DisplayErrorNotification("Error occured: " + error);
+				break;
+		}
+	}
 	DisplayAlertNotification("Saved configuration.");
 }
 
@@ -43,7 +60,19 @@ export function CreateUserConfiguration(
  * // This will return an array that includes the raw data and the data file type from local storage.
  */
 export function GetUserConfiguration(): [string[], string] {
-	const userConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
+	let userConfig: { dataSet: string[][]; dataFileType: string; };
+	try {
+		userConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
+	} catch (error) {
+		switch (error.name) {
+			case "SecurityError":
+				DisplayErrorNotification("Local storage is disabled. Please enable it in your browser settings.");
+				break;
+			default:
+				DisplayErrorNotification("Error occured: " + error);
+				break;
+		}
+	}
 	const rawData = [];
 	userConfig.dataSet.forEach((value: string[]) => {
 		rawData.push(value);
@@ -60,7 +89,18 @@ export function GetUserConfiguration(): [string[], string] {
  * This function deletes the user configuration from the browser's local storage.
  */
 export function DeleteUserConfiguration(): void {
-	localStorage.removeItem("UserConfiguration");
+	try {
+		localStorage.removeItem("UserConfiguration");
+	} catch (error) {
+		switch (error.name) {
+			case "SecurityError":
+				DisplayErrorNotification("Local storage is disabled. Please enable it in your browser settings.");
+				break;
+			default:
+				DisplayErrorNotification("Error occured: " + error);
+				break;
+		}
+	}
 	DisplayWarningNotification("Deleted configuration.");
 }
 
