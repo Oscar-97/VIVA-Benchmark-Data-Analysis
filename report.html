@@ -34,7 +34,7 @@
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Plots</a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <ul class="dropdown-menu mb-2" aria-labelledby="navbarDropdownMenuLink">
               <li><a class="dropdown-item" href="./Src/Pages/average_solver_time.html">Average Solver Time</a></li>
               <li><a class="dropdown-item" href="./Src/Pages/solver_time.html">Solver Time</a></li>
               <li><a class="dropdown-item" href="./Src/Pages/number_of_nodes.html">Number of Nodes</a></li>
@@ -65,7 +65,8 @@
               target="_blank">Submit Issue</a>
           </li>
           <li class="nav-item">
-            <button class="btn" data-bs-toggle="modal" data-bs-target="#fileFormatInformationModal" name="Help">
+            <button class="btn" aria-label="help" data-bs-toggle="modal" data-bs-target="#fileFormatInformationModal"
+              name="Help">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 class="bi bi-question-circle-fill" viewBox="0 0 16 16">
                 <path
@@ -134,11 +135,13 @@
             <b>.solu</b> file containing the best known bounds.
           </p>
           <p>See the documentation for more information regarding the application.</p>
-          
-          <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#expandableList"
-            aria-expanded="false" aria-controls="expandableList">
-            Expand List of Headers
-          </button>
+
+          <div class="d-grid gap-2">
+            <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#expandableList"
+              aria-expanded="false" aria-controls="expandableList">
+              List of Headers
+            </button>
+          </div>
 
           <div class="collapse" id="expandableList">
             <ul class="list-group mt-3">

@@ -33,7 +33,7 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">Plots</a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <ul class="dropdown-menu mb-2" aria-labelledby="navbarDropdownMenuLink">
               <li><a class="dropdown-item" href="../Pages/average_solver_time.html">Average Solver Time</a></li>
               <li><span class="dropdown-item active">Solver Time</span></li>
               <li><a class="dropdown-item" href="../Pages/number_of_nodes.html">Number of Nodes</a></li>
@@ -130,10 +130,12 @@
           </p>
           <p>See the documentation for more information regarding the application.</p>
 
-          <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#expandableList"
-            aria-expanded="false" aria-controls="expandableList">
-            Expand List of Headers
-          </button>
+          <div class="d-grid gap-2">
+            <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#expandableList"
+              aria-expanded="false" aria-controls="expandableList">
+              List of Headers
+            </button>
+          </div>
 
           <div class="collapse" id="expandableList">
             <ul class="list-group mt-3">
