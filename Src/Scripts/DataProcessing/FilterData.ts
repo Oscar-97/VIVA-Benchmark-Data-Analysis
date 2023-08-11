@@ -44,7 +44,7 @@ export function ExtractTrcData(rawData: string[]): object[] {
 			traceData.push(obj);
 		}
 	} else if (!firstLine[0].startsWith("*")) {
-		const defaultHeaders = [
+		const defaultHeaders: string[] = [
 			"InputFileName",
 			"ModelType",
 			"SolverName",
@@ -82,7 +82,13 @@ export function ExtractTrcData(rawData: string[]): object[] {
 
 			const obj = {};
 			for (let j = 0; j < defaultHeaders.length; j++) {
-				obj[defaultHeaders[j]] = currentLine[j];
+				let value = currentLine[j];
+				
+				if ((defaultHeaders[j] === "Obj" || defaultHeaders[j] === "Obj Est") && value.length > 25) {
+					value = value.substring(0, 25);
+				}
+				
+				obj[defaultHeaders[j]] = value;
 			}
 			traceData.push(obj);
 		}
