@@ -37,10 +37,14 @@ export function CreateUserConfiguration(
 				DisplayErrorNotification("Local storage is full. Please clear.");
 				break;
 			case "SecurityError":
-				DisplayErrorNotification("Local storage is disabled. Please enable it in your browser settings.");
+				DisplayErrorNotification(
+					"Local storage is disabled. Please enable it in your browser settings."
+				);
 				break;
 			case "InvalidAccessError":
-				DisplayErrorNotification("Local storage cannot be accessed. Please try again.");
+				DisplayErrorNotification(
+					"Local storage cannot be accessed. Please try again."
+				);
 				break;
 			default:
 				DisplayErrorNotification("Error occured: " + error);
@@ -60,13 +64,25 @@ export function CreateUserConfiguration(
  * // This will return an array that includes the raw data and the data file type from local storage.
  */
 export function GetUserConfiguration(): [string[], string] {
-	let userConfig: { dataSet: string[][]; dataFileType: string; };
+	let userConfig: { dataSet: string[][]; dataFileType: string };
 	try {
 		userConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
+		if (
+			!userConfig ||
+			!userConfig.dataSet ||
+			!Array.isArray(userConfig.dataSet)
+		) {
+			throw new Error("No saved configuration data found.");
+		}
 	} catch (error) {
-		switch (error.name) {
+		switch (error.message) {
 			case "SecurityError":
-				DisplayErrorNotification("Local storage is disabled. Please enable it in your browser settings.");
+				DisplayErrorNotification(
+					"Local storage is disabled. Please enable it in your browser settings."
+				);
+				break;
+			case "No saved configuration data found.":
+				DisplayWarningNotification("No saved configuration data found.");
 				break;
 			default:
 				DisplayErrorNotification("Error occured: " + error);
@@ -94,7 +110,9 @@ export function DeleteUserConfiguration(): void {
 	} catch (error) {
 		switch (error.name) {
 			case "SecurityError":
-				DisplayErrorNotification("Local storage is disabled. Please enable it in your browser settings.");
+				DisplayErrorNotification(
+					"Local storage is disabled. Please enable it in your browser settings."
+				);
 				break;
 			default:
 				DisplayErrorNotification("Error occured: " + error);
