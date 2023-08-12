@@ -106,7 +106,6 @@ RegisterServiceWorker();
 /**
  * @param DataFileType Type of file extension for the imported data. As of now, either .trc or .json. Text based files were removed.
  * @param RawData Raw data of the imported benchmark results.
- * @param CheckedSolvers Array containing checked solvers.
  * @param RawInstanceInfoData Unprocessed instanceinfo.csv containing properties.
  * @param RawSoluData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
  */
@@ -154,7 +153,7 @@ function InitializeProgram(): void {
 		downloadConfigurationButtonLayer.disabled = false;
 		ManageData();
 	} catch (err) {
-		console.log("No data found in local storage: ", err);
+		console.log("No saved configuration data found. ", err);
 	}
 
 	/**
@@ -333,7 +332,9 @@ function HandleReportPage(traceData: object[], traceDataFiltered: any[]): void {
 }
 
 /**
- * Hande plot pages button functions.
+ * This function manages the functionality of the buttons on the plot pages of the application.
+ *
+ * @param {object[]} traceData - This parameter is an array of objects that represents the trace data.
  */
 function HandlePlotPages(traceData: object[]): void {
 	/**
