@@ -128,7 +128,7 @@ export function CalculateGap(
 	a: number,
 	b: number,
 	dir: string,
-	tol: number = 1e-9
+	tol = 1e-9
 ): number {
 	if (isNaN(a) || isNaN(b)) {
 		return Infinity;
@@ -183,8 +183,8 @@ export function CalculateDifference(a: number, b: number): number {
 
 /**
  * Calculates the relative difference between two numbers, `a` and `b`, to a precision of 7 decimal places.
- * The relative difference is computed as (a - b) divided by the maximum absolute value of the two numbers 
- * (or 1 if both are 0). If either number is infinite and both numbers are not the same, the absolute 
+ * The relative difference is computed as (a - b) divided by the maximum absolute value of the two numbers
+ * (or 1 if both are 0). If either number is infinite and both numbers are not the same, the absolute
  * difference is returned.
  *
  * @param a - The first number for the calculation.

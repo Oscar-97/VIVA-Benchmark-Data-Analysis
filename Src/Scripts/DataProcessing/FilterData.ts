@@ -12,7 +12,7 @@
  *
  * The function then iterates through each line of data, splitting it into separate elements
  * based on the comma delimiter, and creating an object from these elements with the corresponding headers as keys.
- * 
+ *
  * If the header is "Obj" or "Obj Est", it will be truncated if the value exceeds 25.
  *
  * @example
@@ -85,11 +85,14 @@ export function ExtractTrcData(rawData: string[]): object[] {
 			const obj = {};
 			for (let j = 0; j < defaultHeaders.length; j++) {
 				let value = currentLine[j];
-				
-				if ((defaultHeaders[j] === "Obj" || defaultHeaders[j] === "Obj Est") && value.length > 25) {
+
+				if (
+					(defaultHeaders[j] === "Obj" || defaultHeaders[j] === "Obj Est") &&
+					value.length > 25
+				) {
 					value = value.substring(0, 25);
 				}
-				
+
 				obj[defaultHeaders[j]] = value;
 			}
 			traceData.push(obj);
