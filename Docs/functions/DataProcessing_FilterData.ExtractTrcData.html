@@ -30,6 +30,7 @@ If headers are found, they are extracted and used as the keys for the resulting 
 If not, default headers (specified in a constant array inside the function) are used.</p>
 <p>The function then iterates through each line of data, splitting it into separate elements
 based on the comma delimiter, and creating an object from these elements with the corresponding headers as keys.</p>
+<p>If the header is &quot;Obj&quot; or &quot;Obj Est&quot;, it will be truncated if the value exceeds 25.</p>
 
 <h3>Example</h3><pre><code class="language-typescript"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">rawData</span><span class="hl-1"> = [ </span><span class="hl-0">&quot;* Column1,Column2&quot;</span><span class="hl-1">, </span><span class="hl-0">&quot;Value1,Value2&quot;</span><span class="hl-1">, </span><span class="hl-0">&quot;Value3,Value4&quot;</span><span class="hl-1"> ];</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">result</span><span class="hl-1"> = </span><span class="hl-9">ExtractTrcData</span><span class="hl-1">(</span><span class="hl-3">rawData</span><span class="hl-1">);</span><br/><span class="hl-5">// result = [</span><br/><span class="hl-5">//   { &quot;Column1&quot;: &quot;Value1&quot;, &quot;Column2&quot;: &quot;Value2&quot; },</span><br/><span class="hl-5">//   { &quot;Column1&quot;: &quot;Value3&quot;, &quot;Column2&quot;: &quot;Value4&quot; },</span><br/><span class="hl-5">// ];</span>
 </code></pre>
@@ -43,7 +44,7 @@ based on the comma delimiter, and creating an object from these elements with th
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Oscar-97/SHOT-Data-Visualization/blob/b31f699/Src/Scripts/DataProcessing/FilterData.ts#L26">DataProcessing/FilterData.ts:26</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/Oscar-97/SHOT-Data-Visualization/blob/7609d61/Src/Scripts/DataProcessing/FilterData.ts#L28">DataProcessing/FilterData.ts:28</a></li></ul></aside></li></ul></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
