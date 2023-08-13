@@ -31,24 +31,7 @@ export function GetDataFileType(): string {
 	const fileCounts = { csv: 0, solu: 0, json: 0 };
 
 	for (let i = 0; i < files.length; i++) {
-		const extension = files[i].name.split(".").pop();
-
-		if (!IsValidExtension(extension)) {
-			DisplayErrorNotification(
-				"Invalid file extension. Only .trc, .json, .solu, and .csv allowed."
-			);
-			throw new Error(
-				"Invalid file extension. Only .trc, .json, .solu, and .csv allowed."
-			);
-		}
-
-		if (extension in fileCounts) {
-			fileCounts[extension]++;
-			if (fileCounts[extension] > 1) {
-				DisplayErrorNotification(`Cannot upload multiple .${extension} files.`);
-				throw new Error(`Cannot upload multiple .${extension} files.`);
-			}
-		}
+		const extension = CheckFileExtension(files[i], fileCounts);
 
 		if (["trc", "solu", "json", "csv"].includes(extension)) {
 			extensions.push(extension);
@@ -77,6 +60,50 @@ export function GetDataFileType(): string {
 	}
 
 	return extensions.find((ext) => ext === "trc" || ext === "json");
+}
+
+/**
+ * Validates the extension of the given file and updates the file counts accordingly.
+ *
+ * @param file - The file for which to check the extension.
+ * @param fileCounts - An object that tracks the count of each file extension encountered.
+ * @returns The valid file extension of the provided file.
+ * @throws Error if an invalid extension is encountered or if multiple files of the same extension are uploaded.
+ *
+ * @example
+ * const fileCounts = { csv: 0, solu: 0, json: 0 };
+ * const file = new File(["content"], "filename.json");
+ * const extension = CheckFileExtension(file, fileCounts);  // Returns "json"
+ */
+function CheckFileExtension(
+	file: File,
+	fileCounts: {
+		[x: string]: number;
+		csv?: number;
+		solu?: number;
+		json?: number;
+	}
+): string {
+	const extension = file.name.split(".").pop();
+
+	if (!IsValidExtension(extension)) {
+		DisplayErrorNotification(
+			"Invalid file extension. Only .trc, .json, .solu, and .csv allowed."
+		);
+		throw new Error(
+			"Invalid file extension. Only .trc, .json, .solu, and .csv allowed."
+		);
+	}
+
+	if (extension in fileCounts) {
+		fileCounts[extension]++;
+		if (fileCounts[extension] > 1) {
+			DisplayErrorNotification(`Cannot upload multiple .${extension} files.`);
+			throw new Error(`Cannot upload multiple .${extension} files.`);
+		}
+	}
+
+	return extension;
 }
 
 /**
