@@ -12,97 +12,109 @@
 <div class="col-8 col-content">
 <div class="tsd-page-title">
 <h2>System Documentation</h2></div>
-<div class="tsd-panel tsd-typography">
+<div class="tsd-panel tsd-typography"><p><img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white" alt="TypeScript"> <img src="https://img.shields.io/badge/bootstrap-%23563D7C.svg?style=flat&logo=bootstrap&logoColor=white" alt="Bootstrap"> <img src="https://img.shields.io/badge/webpack-%238DD6F9.svg?style=flat&logo=webpack&logoColor=black" alt="Webpack"> <img src="https://img.shields.io/badge/chart.js-F5788D.svg?style=flat&logo=chart.js&logoColor=white" alt="Chart.js"></p>
+
 <a href="#viva-visualize-interact-verify-and-analyze-benchmarking-data-for-optimization-solvers" id="viva-visualize-interact-verify-and-analyze-benchmarking-data-for-optimization-solvers" style="color: inherit; text-decoration: none;">
-  <h1>VIVA: Visualize, Interact, Verify and Analyze: Benchmarking Data for Optimization Solvers</h1>
+  <h1>VIVA: Visualize, Interact, Verify, and Analyze Benchmarking Data for Optimization Solvers</h1>
 </a>
-<p>This is a project in <strong>progress</strong> for creating a dynamic reporting system, in a portable HTML format, based on benchmark results from mathemathical optimization problems and their solvers. The main goal of this project is to enable the end user to be able to interact with the benchmark data in a tabular format and visualize specific results by using different plots, making it easier for them to understand and interpret the data.</p>
+<hr>
+<p>Building on the concept and implementation of <a href="https://github.com/coin-or/paver">PAVER 2.0</a>, the main goal of this project is to allow end users to interact with their own uploaded benchmark data from mathematical optimization problems and their solvers. The data is presented in a tabular format, with the added ability to visualize specific results through various plots, making it easier to understand and interpret the data. </p>
+<p>This project is developed using TypeScript, DataTables.js, Chart.js and Webpack. Bootstrap is used for styling.  Notably, the application can be run without a live server since Webpack is responsible for bundling the files. It is also possible to install it as a Progressive Web Application by launching the project in a live server, navigating to the report page using a compatible browser, and installing it. Support for offline functionality is incldued in the PWA implementation.</p>
 <div style="text-align:left;">
-  <img src="./Images/OverView_system.png" width="100%">
+  <img src="./Images/OverView_system_new.png" width="100%">
 </div>
 
-<hr>
 
-<a href="#instructions-for" id="instructions-for" style="color: inherit; text-decoration: none;">
-  <h1>Instructions for</h1>
+<a href="#instructions-for-using-the-system" id="instructions-for-using-the-system" style="color: inherit; text-decoration: none;">
+  <h2>Instructions for using the system</h2>
 </a>
+<ul>
+<li>To get started with the project, either download or clone the repository and open the <code>report.html</code> file in a web browser. </li>
+<li>Click the &quot;Browse&quot; button to upload the results and select either:<ul>
+<li>one or more results file in a <code>.trc</code> format.<ul>
+<li>.solu (best known primal and dual bounds for each instance) and .csv (instance properties) can be uploaded in conjugation to get additional information.</li>
+</ul>
+</li>
+<li>or a single <code>UserConfiguration.json</code> (Which can be created from this application).</li>
+</ul>
+</li>
+<li>Once you have selected a file, click on upload.</li>
+<li>Click on the View All Results/View Plot button to get a table or plot with the benchmark results, depending on the currently active page.</li>
+</ul>
 
-<a href="#using-the-system" id="using-the-system" style="color: inherit; text-decoration: none;">
-  <h2>Using the System</h2>
+<a href="#table-page" id="table-page" style="color: inherit; text-decoration: none;">
+  <h3>Table Page</h3>
 </a>
-<p>To get started with the project, clone the repository and open the <code>report.html</code> file in a web browser. Select a <code>traceresult.trc</code> or <code>solvedata.txt</code>, <code>UserConfiguration.json</code> file from your computer by clicking the &quot;Browse&quot; button and selecting a file from the file picker that appears.
-Once you have selected a file, click on the View All Results button to get a table with the benchmark results.</p>
+<ul>
+<li>On the table page, View Selected Problems filters the table and only shows selected problems.</li>
+<li>Save Data stores the currently uploaded data to local storage, if the above mentioned filtering has been applied, then that currently visible table will be stored.</li>
+<li>The stored data can be downloaded as a <code>UserConfiguration.json</code> by clicking on the Download Saved Data button.</li>
+<li>Download Table as CSV downloads the currently visible table in a csv format.</li>
+<li>Delete Data removes all stored data from the local storage.</li>
+<li>Clear Data Table clears the currently visible table.</li>
+<li>The filter options on the table page can be collapsed and expanded.</li>
+</ul>
 
 <a href="#supported-formats" id="supported-formats" style="color: inherit; text-decoration: none;">
-  <h2>Supported Formats</h2>
+  <h3>Supported Formats</h3>
 </a>
 
 <a href="#trc" id="trc" style="color: inherit; text-decoration: none;">
-  <h2>.trc</h2>
+  <h3>.trc</h3>
 </a>
 <p>See: <a href="https://www.gamsworld.org/performance/trace.htm">https://www.gamsworld.org/performance/trace.htm</a>
 The following header structure and order should be used in conjunction with .trc files:</p>
-<pre><code><span class="hl-0">  </span><span class="hl-1">&quot;InputFileName&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;ModelType&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;SolverName&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;NLP&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;MIP&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;JulianDate&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;Dir&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;Equs&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;Vars&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;Disc&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;NumberOfNonZeros&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;NumberOfNonlinearNonZeros&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;OptionFile&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;ModelStatus&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;TermStatus&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;PrimalBoundSolver&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;DualBoundSolver&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;Time[s]&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;NumberOfIterations&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;NumberOfDomainViolations&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;Nodes[i]&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-1">&quot;UserComment&quot;</span><span class="hl-0">,</span>
-</code></pre>
-
-<a href="#txt" id="txt" style="color: inherit; text-decoration: none;">
-  <h2>.txt</h2>
-</a>
-<p>The following header structure and order should be used in conjunction with .txt files, where the instance should feature</p>
-<pre><code><span class="hl-2">name</span><span class="hl-0">,</span><br/><span class="hl-0">#</span><span class="hl-2">Vars</span><span class="hl-0">,</span><br/><span class="hl-0">#</span><span class="hl-2">Disc</span><span class="hl-0">,</span><br/><span class="hl-0">#</span><span class="hl-2">Equs</span><span class="hl-0">,</span><br/><span class="hl-2">Dir</span><span class="hl-0">,</span><br/><span class="hl-2">Dual</span><span class="hl-0"> </span><span class="hl-2">bound</span><span class="hl-0">,</span><br/><span class="hl-2">Primal</span><span class="hl-0"> </span><span class="hl-2">bound</span><span class="hl-0"> </span><span class="hl-3">I</span><span class="hl-0">,</span>
-</code></pre>
-<p>and each solver should have </p>
-<pre><code><span class="hl-2">TermStatus</span><br/><span class="hl-2">Dual</span><span class="hl-0"> </span><span class="hl-2">bound</span><span class="hl-0">,</span><br/><span class="hl-2">DualGap</span><span class="hl-0">,</span><br/><span class="hl-2">Primal</span><span class="hl-0"> </span><span class="hl-2">bound</span><span class="hl-0">,</span><br/><span class="hl-2">PrimGap</span><span class="hl-0"> </span><span class="hl-2">Gap</span><span class="hl-0">[%],</span><br/><span class="hl-2">Time</span><span class="hl-0">[</span><span class="hl-2">s</span><span class="hl-0">],</span><br/><span class="hl-2">Nodes</span><span class="hl-0"> </span><span class="hl-3">I</span>
+<pre><code><span class="hl-0">&quot;InputFileName&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;ModelType&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;SolverName&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;NLP&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;MIP&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;JulianDate&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;Dir&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;Equs&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;Vars&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;Disc&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;NumberOfNonZeros&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;NumberOfNonlinearNonZeros&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;OptionFile&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;ModelStatus&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;TermStatus&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;PrimalBoundSolver&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;DualBoundSolver&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;Time[s]&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;NumberOfIterations&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;NumberOfDomainViolations&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;Nodes[i]&quot;</span><span class="hl-1">,</span><br/><span class="hl-0">&quot;UserComment&quot;</span><span class="hl-1">,</span>
 </code></pre>
 
 <a href="#json" id="json" style="color: inherit; text-decoration: none;">
-  <h2>.json</h2>
+  <h3>.json</h3>
 </a>
-<p>The file should include <code>dataSet</code>, <code>dataFileType</code> and <code>checkedSolvers</code>.</p>
+<p>The file should include <code>dataSet</code> and <code>dataFileType</code>.</p>
+<pre><code class="language-json"><span class="hl-1">{</span><br/><span class="hl-1">    </span><span class="hl-2">&quot;dataSet&quot;</span><span class="hl-1">: [</span><br/><span class="hl-1">        </span><span class="hl-0">&quot;alan,MINLP,knitro,CONOPT,CPLEX,43365.479,min,8,9,4,24,3,1,8,Error,2.925,2.925,0.142,0,0,18,#,2.925,2.925,2.925,2.925,0,0,0,0,0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-0">&quot;ball_mk2_10,MINLP,knitro,CONOPT,CPLEX,43365.479,min,2,11,10,21,10,1,8,Error,0,2.22044604925031E-16,2.5,0,0,3070,#,0,2.22044604925031e-16,0,2.22044604925031e-16,0,0,0,0,0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-0">&quot;ball_mk2_30,MINLP,knitro,CONOPT,CPLEX,43365.479,min,2,31,30,61,30,1,2,Error,0,-26.887733399442,900.034,0,0,42269,#,0,-26.887733399442,0,-26.887733399442,Infinity,Infinity,0,0,0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-0">&quot;ball_mk3_10,MINLP,knitro,CONOPT,CPLEX,43365.489,min,2,11,10,21,10,1,13,Error,0,NA,NA,NA,NA,NA,#,0,-Infinity,0,-Infinity,Infinity,Infinity,0,NaN,NaN&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-0">&quot;ball_mk3_20,MINLP,knitro,CONOPT,CPLEX,43365.49,min,2,21,20,41,20,1,6,Error,-21.6911427569375,-21.6911427569302,900.059,0,0,154017,#,-21.6911427569375,-21.6911427569302,-21.6911427569375,-21.6911427569302,0,0,0,0,0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-0">&quot;ball_mk3_30,MINLP,knitro,CONOPT,CPLEX,43365.5,min,2,31,30,61,30,1,6,Error,-32.4338272833906,-32.6214975320104,900.065,0,0,156536,#,-32.4338272833906,-32.6214975320104,-32.4338272833906,-32.6214975320104,0.57863,0.57863,0,0,0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-0">&quot;ball_mk4_05,MINLP,knitro,CONOPT,CPLEX,43365.51,min,2,11,10,21,10,1,13,Error,0,NA,NA,NA,NA,NA,#,0,-Infinity,0,-Infinity,Infinity,Infinity,0,NaN,NaN&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-0">&quot;ball_mk4_10,MINLP,knitro,CONOPT,CPLEX,43365.514,min,2,21,20,41,20,1,6,Error,-14.6650988983745,-14.6650988983711,267.221,0,0,199351,#,-14.6650988983745,-14.6650988983711,-14.6650988983745,-14.6650988983711,0,0,0,0,0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-0">&quot;ball_mk4_15,MINLP,knitro,CONOPT,CPLEX,43365.517,min,2,31,30,61,30,1,6,Error,-33.6086573695247,-33.6086573695138,419.96,0,0,199353,#,-33.6086573695247,-33.6086573695138,-33.6086573695247,-33.6086573695138,0,0,0,0,0&quot;</span><br/><span class="hl-1">    ],</span><br/><span class="hl-1">    </span><span class="hl-2">&quot;dataFileType&quot;</span><span class="hl-1">: </span><span class="hl-0">&quot;trc&quot;</span><br/><span class="hl-1">}</span>
+</code></pre>
 <hr>
 
-<a href="#features-to-implement" id="features-to-implement" style="color: inherit; text-decoration: none;">
-  <h1>Features to Implement</h1>
-</a>
-<ul>
-<li><input disabled="" type="checkbox"> SearchBuilder.</li>
-<li><input disabled="" type="checkbox"> Export plot data as csv.</li>
-<li><input disabled="" type="checkbox"> Add DocType support.</li>
-<li><input disabled="" type="checkbox"> Update instruction section.</li>
-<li><input disabled="" type="checkbox"> Update the &#39;Working with codebase&#39; chapter below.</li>
-</ul>
-
 <a href="#working-with-the-codebase" id="working-with-the-codebase" style="color: inherit; text-decoration: none;">
-  <h1>Working with the Codebase</h1>
+  <h2>Working with the Codebase</h2>
 </a>
 
 <a href="#1-prerequisites" id="1-prerequisites" style="color: inherit; text-decoration: none;">
-  <h2>1. Prerequisites</h2>
+  <h3>1. Prerequisites</h3>
 </a>
 <p>Before getting started, make sure you have the following software installed on your machine:</p>
-<pre><code><span class="hl-2">Node</span><span class="hl-0">.</span><span class="hl-2">js</span><span class="hl-0">: </span><span class="hl-4">https</span><span class="hl-0">:</span><span class="hl-5">//nodejs.org/</span><br/><span class="hl-4">TypeScript</span><span class="hl-0">: </span><span class="hl-4">https</span><span class="hl-0">:</span><span class="hl-5">//www.typescriptlang.org/</span><br/><span class="hl-4">Webpack</span><span class="hl-0">: </span><span class="hl-4">https</span><span class="hl-0">:</span><span class="hl-5">//webpack.js.org/</span>
+<pre><code><span class="hl-3">Node</span><span class="hl-1">.</span><span class="hl-3">js</span><span class="hl-1">: </span><span class="hl-4">https</span><span class="hl-1">:</span><span class="hl-5">//nodejs.org/</span><br/><span class="hl-4">TypeScript</span><span class="hl-1">: </span><span class="hl-4">https</span><span class="hl-1">:</span><span class="hl-5">//www.typescriptlang.org/</span><br/><span class="hl-4">Webpack</span><span class="hl-1">: </span><span class="hl-4">https</span><span class="hl-1">:</span><span class="hl-5">//webpack.js.org/</span>
 </code></pre>
 <p>Install the required packages by running: </p>
-<pre><code><span class="hl-2">npm</span><span class="hl-0"> </span><span class="hl-2">install</span>
+<pre><code><span class="hl-3">npm</span><span class="hl-1"> </span><span class="hl-3">install</span>
 </code></pre>
 
-<a href="#2-compiling" id="2-compiling" style="color: inherit; text-decoration: none;">
-  <h2>2. Compiling</h2>
+<a href="#2-bundling" id="2-bundling" style="color: inherit; text-decoration: none;">
+  <h3>2. Bundling</h3>
 </a>
 <p>Navigate to the project directory in your terminal and run:</p>
-<pre><code><span class="hl-2">npm</span><span class="hl-0"> </span><span class="hl-2">run</span><span class="hl-0"> </span><span class="hl-2">build</span>
+<pre><code><span class="hl-3">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">build</span>
 </code></pre>
-<p>This runs the command &quot;webpack --config webpack.config.js&quot;, which will build the application using webpack and the configuration file &#39;webpack.config.js&#39;.</p>
+<p>This runs the command &quot;webpack --config webpack.config.js&quot;, which will build the application using webpack&#39;. The created <code>bundle.js</code> and <code>main.css</code> are located in <code>Dist/</code>.</p>
 
 <a href="#3-other-scripts" id="3-other-scripts" style="color: inherit; text-decoration: none;">
-  <h2>3. Other Scripts</h2>
+  <h3>3. Other Scripts</h3>
 </a>
-<pre><code><span class="hl-2">npm</span><span class="hl-0"> </span><span class="hl-2">run</span><span class="hl-0"> </span><span class="hl-2">build</span><span class="hl-0">-</span><span class="hl-2">docs</span>
+<p>Run unit tests using Jest:</p>
+<pre><code><span class="hl-3">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-4">test</span><span class="hl-1">:</span><span class="hl-3">unit</span>
 </code></pre>
-<p>Runs the command &quot;typedoc --options typedoc.json&quot;, which will generate documentation for the project using typedoc and the configuration file &#39;typedoc.json&#39;. The produced documentation is located in the Docs folder.</p>
-<pre><code><span class="hl-2">npm</span><span class="hl-0"> </span><span class="hl-2">run</span><span class="hl-0"> </span><span class="hl-2">lint</span>
+<p>Run UI tests with Playwright using Jest:</p>
+<pre><code><span class="hl-3">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-4">test</span><span class="hl-1">:</span><span class="hl-3">ui</span>
 </code></pre>
-<p>Runs the command &quot;eslint . --ext .ts,.tsx,.html&quot;, which will lint the code in the current directory for any issues, including files with the extensions &#39;.ts&#39;, &#39;.tsx&#39;, and &#39;.html&#39;.</p>
+<p>Lint the project files using ESLint:</p>
+<pre><code><span class="hl-3">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">lint</span>
+</code></pre>
+<p>To automatically fix linting issues:</p>
+<pre><code><span class="hl-3">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-4">lint</span><span class="hl-1">:</span><span class="hl-3">fix</span>
+</code></pre>
+<p>Generate documentation using TypeDoc:</p>
+<pre><code><span class="hl-3">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">build</span><span class="hl-1">-</span><span class="hl-3">docs</span>
+</code></pre>
 </div></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
@@ -130,23 +142,20 @@ The following header structure and order should be used in conjunction with .trc
 <li class="tsd-kind-module"><a href="modules/DataProcessing_AddResultCategories.html">Data<wbr/>Processing/<wbr/>Add<wbr/>Result<wbr/>Categories</a></li>
 <li class="tsd-kind-module"><a href="modules/DataProcessing_CalculateResults.html">Data<wbr/>Processing/<wbr/>Calculate<wbr/>Results</a></li>
 <li class="tsd-kind-module"><a href="modules/DataProcessing_CreateData.html">Data<wbr/>Processing/<wbr/>Create<wbr/>Data</a></li>
-<li class="tsd-kind-module"><a href="modules/DataProcessing_FilterDataTrc.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data<wbr/>Trc</a></li>
-<li class="tsd-kind-module"><a href="modules/DataProcessing_FilterDataTxt.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data<wbr/>Txt</a></li>
-<li class="tsd-kind-module"><a href="modules/DataProcessing_GetInstanceInformation.html">Data<wbr/>Processing/<wbr/>Get<wbr/>Instance<wbr/>Information</a></li>
+<li class="tsd-kind-module"><a href="modules/DataProcessing_FilterData.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data</a></li>
+<li class="tsd-kind-module"><a href="modules/DataProcessing_GetExtraData.html">Data<wbr/>Processing/<wbr/>Get<wbr/>Extra<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="modules/DataProcessing_MergeData.html">Data<wbr/>Processing/<wbr/>Merge<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="modules/DataProcessing_ReadData.html">Data<wbr/>Processing/<wbr/>Read<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="modules/DataTable_DataTableBase.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Base</a></li>
-<li class="tsd-kind-module"><a href="modules/DataTable_DataTableFilters.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Filters</a></li>
 <li class="tsd-kind-module"><a href="modules/DataTable_DataTableWrapper.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Wrapper</a></li>
-<li class="tsd-kind-module"><a href="modules/DataTable_DownloadCSV.html">Data<wbr/>Table/<wbr/>DownloadCSV</a></li>
 <li class="tsd-kind-module"><a href="modules/DataTable_UpdateResults.html">Data<wbr/>Table/<wbr/>Update<wbr/>Results</a></li>
 <li class="tsd-kind-module"><a href="modules/Elements_DisplayAlertNotification.html">Elements/<wbr/>Display<wbr/>Alert<wbr/>Notification</a></li>
 <li class="tsd-kind-module"><a href="modules/Elements_ElementStatus.html">Elements/<wbr/>Element<wbr/>Status</a></li>
 <li class="tsd-kind-module"><a href="modules/Elements_Elements.html">Elements/<wbr/>Elements</a></li>
 <li class="tsd-kind-module"><a href="modules/Elements_ImportDataEvents.html">Elements/<wbr/>Import<wbr/>Data<wbr/>Events</a></li>
+<li class="tsd-kind-module"><a href="modules/Elements_LoadingAnimation.html">Elements/<wbr/>Loading<wbr/>Animation</a></li>
 <li class="tsd-kind-module"><a href="modules/Main.html">Main</a></li>
-<li class="tsd-kind-module"><a href="modules/Solvers_SelectAllSolvers.html">Solvers/<wbr/>Select<wbr/>All<wbr/>Solvers</a></li>
-<li class="tsd-kind-module"><a href="modules/Solvers_UsedSolvers.html">Solvers/<wbr/>Used<wbr/>Solvers</a></li>
+<li class="tsd-kind-module"><a href="modules/PWA_Setup.html">PWA_<wbr/>Setup</a></li>
 <li class="tsd-kind-module"><a href="modules/UserConfiguration_UserConfiguration.html">User<wbr/>Configuration/<wbr/>User<wbr/>Configuration</a></li></ul></li></ul></div></details></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>

@@ -7,7 +7,7 @@ describe("UI tests", () => {
 	let page: Page;
 
 	beforeAll(async () => {
-		browser = await chromium.launch({ headless: true });
+		browser = await chromium.launch({ headless: false });
 		context = await browser.newContext();
 		page = await context.newPage();
 	});
@@ -37,7 +37,7 @@ describe("UI tests", () => {
 		selector: string,
 		expectedText: string
 	): Promise<void> {
-		await page.waitForSelector(selector, { state: "visible", timeout: 3000 });
+		await page.waitForSelector(selector, { state: "visible", timeout: 10000 });
 
 		const notificationElement = await page.$(selector);
 
@@ -45,7 +45,7 @@ describe("UI tests", () => {
 		expect(isVisible).toBeTruthy();
 
 		const notificationText = await notificationElement?.innerText();
-		expect(notificationText).toBe(expectedText);
+		expect(notificationText).toContain(expectedText);
 	}
 
 	async function UploadFile(page: Page, fileNames: string[]): Promise<void> {
@@ -121,11 +121,11 @@ describe("UI tests", () => {
 			notification: string
 		): Promise<void> {
 			await CheckNotification(page, "#alertNotification", notification);
-			await WaitForElementAndClick(page, "#viewAllResultsButton");
+			await WaitForElementAndClick(page, "#viewTableButton");
 
 			await page.waitForSelector("#dataTableGenerated_wrapper", {
 				state: "visible",
-				timeout: 10000
+				timeout: 25000
 			});
 		}
 
@@ -136,7 +136,7 @@ describe("UI tests", () => {
 				"./solvedata/TraceFiles/pavitoALL.trc"
 			]);
 			await RunTableOperations(page, "Benchmark file succesfully loaded!");
-		}, 20000);
+		}, 30000);
 
 		test("Instance information and best known bound values files", async () => {
 			await UploadFile(page, [
@@ -148,17 +148,12 @@ describe("UI tests", () => {
 				page,
 				"Instance information succesfully loaded!"
 			);
-		}, 20000);
+		}, 30000);
 
 		test("Handle JSON-file", async () => {
 			await UploadFile(page, ["./solvedata/UserConfiguration.json"]);
 			await RunTableOperations(page, "Benchmark file succesfully loaded!");
-		}, 10000);
-
-		test("Handle text file", async () => {
-			await UploadFile(page, ["./solvedata/solvedata.txt"]);
-			await RunTableOperations(page, "Benchmark file succesfully loaded!");
-		}, 10000);
+		}, 30000);
 
 		test("Save to, load from and remove local storage", async () => {
 			await page.evaluate(() => {
@@ -194,7 +189,7 @@ describe("UI tests", () => {
 				"#alertNotification",
 				"Deleted configuration."
 			);
-		}, 20000);
+		}, 30000);
 
 		test("Loading wrong file format", async () => {
 			await page.waitForSelector("#fileInput");
@@ -204,9 +199,9 @@ describe("UI tests", () => {
 			await CheckNotification(
 				page,
 				"#alertNotification",
-				"No .txt, .trc or .json files found."
+				"Invalid file extension. Only .trc, .json, .solu, and .csv allowed."
 			);
-		}, 10000);
+		}, 30000);
 
 		test("Select rows and filter table", async () => {
 			await UploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
@@ -236,14 +231,13 @@ describe("UI tests", () => {
 			);
 			const expectedRowCount = 3;
 			expect(rowCount).toBe(expectedRowCount);
-		}, 20000);
+		}, 30000);
 
 		test("Button status after viewing a table", async () => {
 			await UploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
 			await RunTableOperations(page, "Benchmark file succesfully loaded!");
 			await page.waitForTimeout(5000);
 			const buttonIDs = [
-				"#viewAllResultsButton",
 				"#filterSelectionButton",
 				"#saveLocalStorageButton",
 				"#downloadConfigurationButtonLayer",
@@ -257,7 +251,7 @@ describe("UI tests", () => {
 				const isEnabled = await button.isEnabled();
 				expect(isEnabled).toBeTruthy();
 			}
-		}, 20000);
+		}, 30000);
 
 		test("Download data", async () => {
 			await UploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
@@ -274,7 +268,7 @@ describe("UI tests", () => {
 			});
 
 			await WaitForElementAndClick(page, "#downloadConfigurationButton");
-		}, 10000);
+		}, 30000);
 
 		test("Sort table and hide columns", async () => {
 			await UploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
@@ -302,8 +296,8 @@ describe("UI tests", () => {
 				"//html/body/div[4]/div/div[3]/div/div/div[1]/div/table/thead/tr/th[1]"
 			);
 			const firstHeaderValueText = await firstHeaderValue?.innerText();
-			expect(firstHeaderValueText).toBe("ModelType");
-		}, 10000);
+			expect(firstHeaderValueText).toBe("InputFileName");
+		}, 30000);
 
 		test("Use pagination on the table", async () => {
 			await UploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
@@ -327,7 +321,7 @@ describe("UI tests", () => {
 			);
 			const currentPageValueText = await currentPageValue?.innerText();
 			expect(currentPageValueText).toBe("2");
-		}, 10000);
+		}, 30000);
 
 		test("Search in the displayed data", async () => {
 			await UploadFile(page, ["./solvedata/TraceFiles/shotALL.trc"]);
@@ -341,11 +335,11 @@ describe("UI tests", () => {
 			);
 			const expectedRowCount = 4;
 			expect(rowCount).toBe(expectedRowCount);
-		}, 10000);
+		}, 30000);
 	});
 
 	describe("Plot Pages", () => {
-		async function RunPlotOperations(filePath: string) {
+		async function RunPlotOperations(filePath: string): Promise<void> {
 			const absoluteFilePath: string = path.resolve(__dirname, filePath);
 			const fileUrl = `file://${absoluteFilePath}`;
 

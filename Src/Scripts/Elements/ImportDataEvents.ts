@@ -1,63 +1,71 @@
 import {
-	ImportDataButton,
-	SelectAllButton,
-	FilterSelectionButton,
-	ViewAllResultsButton,
-	ViewPlotsButton,
-	DeleteLocalStorageButton,
-	SaveLocalStorageButton
+	importDataButton,
+	filterSelectionButton,
+	viewTableButton,
+	viewPlotsButton,
+	deleteLocalStorageButton,
+	saveLocalStorageButton
 } from "./Elements";
 import { DisplayAlertNotification } from "./DisplayAlertNotification";
 
 /**
- * Click on the upload data button to start the process.
+ * Handles events after a data import action. The function removes existing data tables and
+ * adjusts the status of various interactive buttons based on the current page title and
+ * the type of file extension of the imported data.
+ *
+ * @param message - Message to be displayed as an alert notification after the data import.
+ * @param fileExtensionType - The file extension of the imported data (optional).
+ *
+ * @remarks
+ *
+ * This function should be invoked after a user imports data to the application, typically via
+ * an 'upload data' button. It is designed to:
+ *
+ * 1. Remove any existing data tables displayed on the page.
+ * 2. Enable or disable certain interactive buttons based on the title of the document
+ *    (assumed to represent the current page of the application) and the type of file extension
+ *    of the imported data.
+ * 3. Display an alert notification message.
+ *
+ * @throws
+ * This function may throw an error if it fails to remove the existing data tables.
+ *
+ * @example
+ * ImportDataEvents("Data imported successfully!", ".csv"); // Example usage of ImportDataEvents function
  */
 export function ImportDataEvents(
-	Message: string,
-	FileExtensionType?: string
+	message: string,
+	fileExtensionType?: string
 ): void {
-	/**
-	 * Remove existing Solvers and datatable after uploading a new result file.
-	 * Set the file upload value to empty.
-	 */
 	try {
-		document.querySelectorAll(".form-check").forEach((solver) => {
-			solver.remove();
-		});
-
-		const TableElementWrapper = document.getElementById(
+		const tableElementWrapper = document.getElementById(
 			"dataTableGenerated_wrapper"
 		);
-		if (TableElementWrapper) {
-			TableElementWrapper.remove();
+		if (tableElementWrapper) {
+			tableElementWrapper.remove();
 		}
 
-		const TableElement = document.getElementById("dataTableGenerated");
-		if (TableElement) {
-			TableElement.remove();
+		const tableElement = document.getElementById("dataTableGenerated");
+		if (tableElement) {
+			tableElement.remove();
 		}
 	} catch (err) {
 		console.log("Could not remove elements: ", err);
 	}
 
-	/**
-	 * Change the statuses of the buttons after uploading the data.
-	 */
 	if (document.title == "Report") {
-		ViewAllResultsButton.disabled = false;
-		SelectAllButton.disabled = false;
-		SelectAllButton.innerText === "Select All Solvers";
-		FilterSelectionButton.disabled = true;
-		ImportDataButton.disabled = true;
-		FilterSelectionButton.disabled = true;
-		ImportDataButton.disabled = true;
-		if (FileExtensionType === "json") {
-			DeleteLocalStorageButton.disabled = false;
+		viewTableButton.disabled = false;
+		filterSelectionButton.disabled = true;
+		importDataButton.disabled = true;
+		filterSelectionButton.disabled = true;
+		importDataButton.disabled = true;
+		if (fileExtensionType === "json") {
+			deleteLocalStorageButton.disabled = false;
 		}
 	} else if (document.title != "Report") {
-		ViewPlotsButton.disabled = false;
-		SaveLocalStorageButton.disabled = false;
+		viewPlotsButton.disabled = false;
+		saveLocalStorageButton.disabled = false;
 	}
 
-	DisplayAlertNotification(Message);
+	DisplayAlertNotification(message);
 }

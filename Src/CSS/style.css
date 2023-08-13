@@ -1,3 +1,35 @@
+body > :not(nav, hr) {
+    opacity: 0;
+    visibility: visible;
+    transition: opacity 0.5s;
+}
+
+@media (max-width: 1250px) {
+    .dt-buttons button {
+        margin-bottom: 5px;
+    }
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loader {
+    margin-top: 1rem;
+    border: 16px solid #ccc; 
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 80px;
+    height: 80px;
+    animation: spinner 2s linear infinite;
+}
+
+#loaderContainer {
+    display: none;
+  }
+
 .navbar-brand {
     font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", sans-serif;
 }
@@ -24,6 +56,7 @@ a {
 #solverAndProblemsHeader,
 #tableFilters {
     margin-left: 1rem;
+    margin-top: 0.5rem;
 }
 
 #instancedataInput {
@@ -31,7 +64,7 @@ a {
     width: 20rem;
 }
 
-#dataTable, #statisticsTable {
+#dataTable {
     visibility: hidden;
     padding: 1rem;
     padding-top: 0rem;
@@ -64,7 +97,7 @@ a {
 }
 
 #chartContainer {
-    height: auto; 
+    height: auto;
     width: auto;
     margin-left: 1rem;
 }
@@ -72,6 +105,9 @@ a {
 hr {
     margin-left: 1rem;
     margin-right: 1rem;
+    opacity: 0;
+    visibility: visible;
+    transition: opacity 1s;
 }
 
 .form-check {
@@ -80,13 +116,11 @@ hr {
 }
 
 tbody tr.even td.dtfc-fixed-left {
-    background-color: #f2f2f2  !important;
-    /* z-index: 2; */
+    background-color: #f2f2f2 !important;
 }
 
 tbody tr.odd td.dtfc-fixed-left {
-    background-color: #d9d9d9  !important;
-    /* z-index: 2; */
+    background-color: #d9d9d9 !important;
 }
 
 tr.even td,
@@ -95,7 +129,7 @@ tr.even th {
 }
 
 tr.odd td,
-tr.odd th{
+tr.odd th {
     background-color: rgba(0, 0, 0, .15) !important;
 }
 
@@ -114,7 +148,7 @@ tr.even.bg-primary.row-selected-problems td.dtfc-fixed-left.sorting_1,
 tr.even.bg-primary.row-selected-problems th.dtfc-fixed-left.sorting_1,
 tr.odd.bg-primary.row-selected-problems td.dtfc-fixed-left.sorting_1,
 tr.odd.bg-primary.row-selected-problems th.dtfc-fixed-left.sorting_1 {
-    background-color: #0d6efd !important; 
+    background-color: #0d6efd !important;
     color: #ffffff;
     font-weight: bold;
 }

@@ -3,79 +3,154 @@ import {
 	DisplayWarningNotification,
 	DisplayErrorNotification
 } from "../Elements/DisplayAlertNotification";
-import { DownloadConfigurationButton } from "../Elements/Elements";
+import { downloadConfigurationButton } from "../Elements/Elements";
 
 /**
- * UserData consists of dataset, file extension type and checked solvers.
+ * UserData consists of dataset and file extension.
  */
-const UserData = {
+export const userData = {
 	dataSet: [],
-	dataFileType: "",
-	checkedSolvers: []
+	dataFileType: ""
 };
 
 /**
- * Create the user configuration and store it to localStorage.
+ * This function creates a user configuration and stores it in the browser's local storage.
+ *
+ * @param rawData - An array of strings representing raw data to be saved.
+ * @param dataFileType - A string representing the type of data file.
+ *
+ * @example
+ * CreateUserConfiguration(["raw data 1", "raw data 2"], "trc");
+ * // This will store the given raw data and data file type in the userData object, and then save the userData object in local storage.
  */
 export function CreateUserConfiguration(
-	RawData: string[],
-	DataFileType: string,
-	CheckedSolvers?: string[]
+	rawData: string[],
+	dataFileType: string
 ): void {
-	UserData.dataSet = RawData;
-	UserData.dataFileType = DataFileType;
-	if (CheckedSolvers) {
-		UserData.checkedSolvers = CheckedSolvers;
+	userData.dataSet = rawData;
+	userData.dataFileType = dataFileType;
+	try {
+		localStorage.setItem("UserConfiguration", JSON.stringify(userData));
+	} catch (error) {
+		switch (error.name) {
+			case "QuotaExceededError":
+				DisplayErrorNotification("Local storage is full. Please clear.");
+				break;
+			case "SecurityError":
+				DisplayErrorNotification(
+					"Local storage is disabled. Please enable it in your browser settings."
+				);
+				break;
+			case "InvalidAccessError":
+				DisplayErrorNotification(
+					"Local storage cannot be accessed. Please try again."
+				);
+				break;
+			default:
+				DisplayErrorNotification("Error occured: " + error);
+				break;
+		}
 	}
-	localStorage.setItem("UserConfiguration", JSON.stringify(UserData));
 	DisplayAlertNotification("Saved configuration.");
 }
 
 /**
- * Get the user configuration from localStorage, item is called UserConfiguration.
- * @returns
+ * This function retrieves the user configuration from the browser's local storage.
+ * The user is notified if no saved configuration was found and the flag is stored to the session storage.
+ *
+ * @returns An array that includes the raw data and the data file type.
+ *
+ * @example
+ * GetUserConfiguration();
+ * // This will return an array that includes the raw data and the data file type from local storage.
  */
-export function GetUserConfiguration(): [string[], string, string[]] {
-	const UserConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
-	const RawData = [];
-	UserConfig.dataSet.forEach((value: string[]) => {
-		RawData.push(value);
+export function GetUserConfiguration(): [string[], string] {
+	let userConfig: { dataSet: string[][]; dataFileType: string };
+	try {
+		userConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
+		if (
+			!userConfig ||
+			!userConfig.dataSet ||
+			!Array.isArray(userConfig.dataSet)
+		) {
+			throw new Error("No saved configuration data found.");
+		}
+	} catch (error) {
+		switch (error.message) {
+			case "SecurityError":
+				DisplayErrorNotification(
+					"Local storage is disabled. Please enable it in your browser settings."
+				);
+				break;
+			case "No saved configuration data found.":
+				if (sessionStorage.getItem("alertedStorage")) {
+					console.log(
+						"User has previously visited this page in this session/tab."
+					);
+				} else {
+					DisplayWarningNotification("No saved configuration data found.");
+					sessionStorage.setItem("alertedStorage", "true");
+				}
+				break;
+			default:
+				DisplayErrorNotification("Error occured: " + error);
+				break;
+		}
+	}
+	const rawData = [];
+	userConfig.dataSet.forEach((value: string[]) => {
+		rawData.push(value);
 	});
 
-	const DataFileType: string = UserConfig.dataFileType;
+	const dataFileType: string = userConfig.dataFileType;
 
-	const CheckedSolvers = [];
-	if (UserConfig.checkedSolvers) {
-		UserConfig.checkedSolvers.forEach((value: string[]) => {
-			CheckedSolvers.push(value);
-		});
-	}
-
-	console.log("RawData fron localStorage: ", RawData);
-	console.log("FileType of saved data: ", DataFileType);
-	console.log("Checked solvers: ", CheckedSolvers);
-	return [RawData, DataFileType, CheckedSolvers];
+	console.log("RawData fron localStorage: ", rawData);
+	console.log("FileType of saved data: ", dataFileType);
+	return [rawData, dataFileType];
 }
 
 /**
- * Delete the user configuration.
+ * This function deletes the user configuration from the browser's local storage.
  */
 export function DeleteUserConfiguration(): void {
-	localStorage.removeItem("UserConfiguration");
+	try {
+		localStorage.removeItem("UserConfiguration");
+	} catch (error) {
+		switch (error.name) {
+			case "SecurityError":
+				DisplayErrorNotification(
+					"Local storage is disabled. Please enable it in your browser settings."
+				);
+				break;
+			default:
+				DisplayErrorNotification("Error occured: " + error);
+				break;
+		}
+	}
 	DisplayWarningNotification("Deleted configuration.");
 }
 
 /**
- * Download user configuration as a .json file. Can be uploaded as a result file.
+ * This function downloads the user configuration saved in the local storage as a JSON file.
+ * If there is no saved user configuration in the local storage, it will display an error notification.
+ *
+ * @remarks
+ * The function assumes the existence of a global variable or a previously defined `downloadConfigurationButton`
+ * which should be a reference to an HTML anchor (`<a>`) element used to trigger the file download.
+ *
+ * @example
+ * DownloadUserConfiguration();
+ * // This will initiate the download of the user configuration stored in local storage, if present.
+ * // If no configuration is found, it will call DisplayErrorNotification function with the provided error message.
  */
 export function DownloadUserConfiguration(): void {
-	const UserConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
-	if (UserConfig) {
-		const DownloadAbleFile = JSON.stringify(UserConfig);
-		const blob = new Blob([DownloadAbleFile], { type: "application/json" });
+	const userConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
+	if (userConfig) {
+		const downloadAbleFile = JSON.stringify(userConfig);
+		const blob = new Blob([downloadAbleFile], { type: "application/json" });
 
-		DownloadConfigurationButton.href = window.URL.createObjectURL(blob);
-		DownloadConfigurationButton.download = "UserConfiguration.json";
+		downloadConfigurationButton.href = window.URL.createObjectURL(blob);
+		downloadConfigurationButton.download = "UserConfiguration.json";
 	} else {
 		DisplayErrorNotification("No saved configuration found!");
 	}

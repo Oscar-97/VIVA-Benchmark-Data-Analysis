@@ -5,64 +5,70 @@ import {
 	SetTermStatus,
 	CalculateDifference,
 	CalculateGap,
-	CalculateGapPercentage
+	CalculateGapDifference
 } from "./CalculateResults";
 
 /**
- * Add and modify keys with new result categories.
- * https://github.com/coin-or/Paver/blob/783a6f5d0d3782a168d0ef529d01bcbda91ea8a4
- * /src/paver/paver.py#L258-L290
+ * Adds result categories to each object in the traceData array.
+ *
+ * @param traceData - Array of objects containing the data to be processed.
+ *
+ * @remarks
+ * This function modifies the passed `traceData` array by adding calculated properties to each object.
+ * Each object in the `traceData` array is expected to have certain properties like "Dir", "Obj",
+ * "Obj Est", and "TermStatus". The function uses these existing properties to calculate new ones.
+ * If an object in the `traceData` array already has a property that the function tries to add,
+ * the existing property will not be overwritten.
+ *
+ * The specific calculations performed by this function and the functions it calls are not described here.
+ * Please refer to the documentation of those functions for details.
  */
-export function AddResultCategories(TrcData: object[]): void {
-	for (const Obj of TrcData) {
-		Obj["Dir"] = CalculateDirection(Obj["Dir"]);
+export function AddResultCategories(traceData: object[]): void {
+	for (const obj of traceData) {
+		obj["Dir"] = CalculateDirection(obj["Dir"]);
 
-		Obj["PrimalBound Solver"] = CalculatePrimalBound(Obj["Obj"], Obj["Dir"]);
+		obj["PrimalBoundSolver"] = CalculatePrimalBound(obj["Obj"], obj["Dir"]);
 
-		Obj["DualBound Solver"] = CalculateDualBound(Obj["Obj Est"], Obj["Dir"]);
+		obj["DualBoundSolver"] = CalculateDualBound(obj["Obj_Est"], obj["Dir"]);
 
-		Obj["TermStatus"] = SetTermStatus(Obj["TermStatus"] as string | number);
+		obj["TermStatus"] = SetTermStatus(obj["TermStatus"] as string | number);
 
-		if (!Obj.hasOwnProperty("PrimalBound Problem")) {
-			Obj["PrimalBound Problem"] = CalculatePrimalBound(
-				Obj["PrimalBound Solver"],
-				Obj["Dir"]
+		if (!obj.hasOwnProperty("PrimalBoundProblem")) {
+			obj["PrimalBoundProblem"] = CalculatePrimalBound(
+				obj["PrimalBoundSolver"],
+				obj["Dir"]
 			);
 		}
 
-		if (!Obj.hasOwnProperty("DualBound Problem")) {
-			Obj["DualBound Problem"] = CalculateDualBound(
-				Obj["DualBound Solver"],
-				Obj["Dir"]
+		if (!obj.hasOwnProperty("DualBoundProblem")) {
+			obj["DualBoundProblem"] = CalculateDualBound(
+				obj["DualBoundSolver"],
+				obj["Dir"]
 			);
 		}
 
-		Obj["Gap Solver"] = CalculateGap(
-			Obj["PrimalBound Solver"],
-			Obj["DualBound Solver"],
-			Obj["Dir"]
+		obj["Gap_Solver"] = CalculateGap(
+			obj["PrimalBoundSolver"],
+			obj["DualBoundSolver"],
+			obj["Dir"]
 		);
 
-		Obj["Gap Problem"] = CalculateGap(
-			Obj["PrimalBound Problem"],
-			Obj["DualBound Problem"],
-			Obj["Dir"]
+		obj["Gap_Problem"] = CalculateGap(
+			obj["PrimalBoundProblem"],
+			obj["DualBoundProblem"],
+			obj["Dir"]
 		);
 
-		Obj["PrimalGap"] = CalculateDifference(
-			Obj["PrimalBound Solver"],
-			Obj["PrimalBound Problem"]
+		obj["PrimalGap"] = CalculateDifference(
+			obj["PrimalBoundSolver"],
+			obj["PrimalBoundProblem"]
 		);
 
-		Obj["DualGap"] = CalculateDifference(
-			Obj["DualBound Solver"],
-			Obj["DualBound Problem"]
+		obj["DualGap"] = CalculateDifference(
+			obj["DualBoundSolver"],
+			obj["DualBoundProblem"]
 		);
 
-		Obj["Gap[%] Solver"] = CalculateGapPercentage(
-			Obj["PrimalBound Solver"],
-			Obj["DualBound Solver"],
-			Obj["Dir"]
-		);
+		obj["Gap[%]"] = CalculateGapDifference(obj["PrimalGap"], obj["DualGap"]);
 	}
 }

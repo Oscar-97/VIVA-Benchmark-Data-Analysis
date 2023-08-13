@@ -1,64 +1,74 @@
 import {
-	FileInput,
-	ImportDataButton,
-	ViewAllResultsButton,
-	FilterSelectionButton,
-	SelectAllButton,
-	SaveLocalStorageButton,
-	DownloadConfigurationButtonLayer,
-	DownloadCSVButtonLayer,
-	DeleteLocalStorageButton,
-	ClearTableButton,
-	ViewPlotsButton,
-	SolverAndProblemsHeader
+	fileInput,
+	importDataButton,
+	viewTableButton,
+	filterSelectionButton,
+	saveLocalStorageButton,
+	downloadConfigurationButtonLayer,
+	deleteLocalStorageButton,
+	clearTableButton,
+	viewPlotsButton,
+	loaderContainer,
+	dataTable
 } from "./Elements";
 
 /**
- * Input values and button statuses when arriving/reloading to the table page.
+ * Resets the status of several elements to their initial state when the user first arrives at,
+ * or reloads, the table page.
+ *
+ * @remarks
+ *
+ * This function is typically called when the table page is first loaded or refreshed. It's designed to:
+ * 1. Clear the loader container's inner HTML.
+ * 2. Hide the data table.
+ * 3. Clear the file input's value.
+ * 4. Disable various interactive buttons (import data, view all results, filter selection,
+ *    save local storage, download configuration, delete local storage, clear table).
  */
 export function ElementStatus(): void {
-	FileInput.value = "";
-	ImportDataButton.disabled = true;
-	ViewAllResultsButton.disabled = true;
-	FilterSelectionButton.disabled = true;
-	SelectAllButton.disabled = true;
-	SelectAllButton.hidden = true;
-	SelectAllButton.innerText = "Select All Solvers";
-	SaveLocalStorageButton.disabled = true;
-	DownloadCSVButtonLayer.disabled = true;
-	DownloadConfigurationButtonLayer.disabled = true;
-	DeleteLocalStorageButton.disabled = true;
-	ClearTableButton.disabled = true;
-	SolverAndProblemsHeader.hidden = true;
-	try {
-		const FilterCheckboxesContainer =
-			document.getElementById("checkboxContainer");
-		FilterCheckboxesContainer.remove();
-	} catch (err) {
-		console.log("Could not remove solver checkboxes: ", err);
-	}
+	loaderContainer.innerHTML = "";
+	dataTable.style.visibility = "hidden";
+	fileInput.value = "";
+	importDataButton.disabled = true;
+	viewTableButton.disabled = true;
+	filterSelectionButton.disabled = true;
+	saveLocalStorageButton.disabled = true;
+	downloadConfigurationButtonLayer.disabled = true;
+	deleteLocalStorageButton.disabled = true;
+	clearTableButton.disabled = true;
 }
 
 /**
- * Input values and button statuses when arriving/reloading to the plot page.
+ * Resets the status of several elements to their initial state when the user first arrives at,
+ * or reloads, the plot page.
+ *
+ * @remarks
+ *
+ * This function is typically called when the plot page is first loaded or refreshed. It's designed to:
+ * 1. Clear the file input's value.
+ * 2. Disable various interactive buttons (view plots, save local storage, download configuration, delete local storage).
  */
 export function ElementStatusPlots(): void {
-	FileInput.value = "";
-	ViewPlotsButton.disabled = true;
-	SaveLocalStorageButton.disabled = true;
-	DownloadConfigurationButtonLayer.disabled = true;
-	DeleteLocalStorageButton.disabled = true;
+	fileInput.value = "";
+	viewPlotsButton.disabled = true;
+	saveLocalStorageButton.disabled = true;
+	downloadConfigurationButtonLayer.disabled = true;
+	deleteLocalStorageButton.disabled = true;
 }
 
 /**
- * Button statuses when the table is displayed.
+ * Updates the status of several buttons when a data table is displayed.
+ *
+ * @remarks
+ *
+ * This function is typically called after a data table is generated and displayed on the page. It's designed to:
+ * 1. Enable various interactive buttons (filter selection, save local storage, download configuration,
+ *    delete local storage, clear table).
  */
 export function ElementStatusWithTable(): void {
-	SelectAllButton.disabled = false;
-	FilterSelectionButton.disabled = false;
-	SaveLocalStorageButton.disabled = false;
-	DownloadConfigurationButtonLayer.disabled = false;
-	DownloadCSVButtonLayer.disabled = false;
-	DeleteLocalStorageButton.disabled = false;
-	ClearTableButton.disabled = false;
+	filterSelectionButton.disabled = false;
+	saveLocalStorageButton.disabled = false;
+	downloadConfigurationButtonLayer.disabled = false;
+	deleteLocalStorageButton.disabled = false;
+	clearTableButton.disabled = false;
 }

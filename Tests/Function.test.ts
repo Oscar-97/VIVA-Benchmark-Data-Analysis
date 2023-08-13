@@ -4,14 +4,49 @@ import {
 	CalculateDualBound,
 	CalculateGap,
 	CalculateDifference,
-	CalculateGapPercentage,
+	CalculateGapDifference,
 	AnalyzeDataByCategory,
 	ExtractAllSolverTimes
 } from "../Src/Scripts/DataProcessing/CalculateResults";
 
-jest.doMock("../Src/Scripts/DataProcessing/GetInstanceInformation", () => ({
+jest.doMock("../Src/Scripts/DataProcessing/GetExtraData", () => ({
 	DOMElement: jest.fn()
 }));
+
+const mockupTraceData = [
+	{
+		SolverName: "TestSolver1",
+		"Time[s]": "0.041120867",
+		InputFileName: "TestInstance",
+		PrimalBound: 1.33594e1,
+		DualBound: 1.96894e1,
+		UserComment: "This is will get filtered."
+	},
+	{
+		SolverName: "TestSolver1",
+		"Time[s]": "0.560621249",
+		InputFileName: "TestInstance_B",
+		PrimalBound: -5.96e3,
+		DualBound: -3.153852e4,
+		UserComment: "This is will get filtered."
+	},
+	{
+		SolverName: "TestSolver2",
+		"Time[s]": "900.971",
+		InputFileName: "TestInstance_X",
+		PrimalBound: -5.905217,
+		DualBound: 1.43358e1,
+		UserComment: "This is will get filtered."
+	},
+	{
+		SolverName: "TestSolver2",
+		"Time[s]": "5.922",
+		InputFileName: "TestInstance_Y",
+		PrimalBound: 1.13389e2,
+		DualBound: -2.0423e4,
+		UserComment: "This is will get filtered."
+	}
+];
 
 describe("CalculateDirection", () => {
 	it('should return "max" when Direction is 1 or "1"', () => {
@@ -111,8 +146,15 @@ describe("CalculateGap", () => {
 	it("should return 0.0 when a and b are equal within tolerance", () => {
 		expect(CalculateGap(1, 1, "max")).toBe(0.0);
 		expect(CalculateGap(1, 1, "min")).toBe(0.0);
-		expect(CalculateGap(1, 1.000000001, "max")).toBe(0.0);
-		expect(CalculateGap(1, 1.000000001, "min")).toBe(0.0);
+		expect(CalculateGap(5.994797334158539, 5.994797334158539, "min")).toBe(0.0);
+		expect(CalculateGap(16.3, 6.34028371962439, "min")).toBe(
+			157.08628699924557
+		);
+	});
+
+	it("should return 0.0 if the absolute value of b subtacted from a is less than tolerance", () => {
+		expect(CalculateGap(1, 1.0000000001, "max")).toBe(0.0);
+		expect(CalculateGap(1, 1.0000000001, "min")).toBe(0.0);
 	});
 
 	it("should return Infinity when the minimum absolute value of a and b is less than tolerance", () => {
@@ -137,10 +179,34 @@ describe("CalculateGap", () => {
 	});
 
 	it("should return the gap between a and b when none of the above conditions are met", () => {
-		expect(CalculateGap(1, 2, "max")).toBeCloseTo(-1.0, 7);
-		expect(CalculateGap(1, 2, "min")).toBeCloseTo(1.0, 7);
-		expect(CalculateGap(2, 1, "max")).toBeCloseTo(1.0, 7);
-		expect(CalculateGap(2, 1, "min")).toBeCloseTo(-1.0, 7);
+		expect(
+			CalculateGap(
+				mockupTraceData[0].PrimalBound as number,
+				mockupTraceData[0].DualBound as number,
+				"max"
+			)
+		).toBeCloseTo(47.38);
+		expect(
+			CalculateGap(
+				mockupTraceData[1].PrimalBound as number,
+				mockupTraceData[1].DualBound as number,
+				"min"
+			)
+		).toBeCloseTo(429.17);
+		expect(
+			CalculateGap(
+				mockupTraceData[2].PrimalBound as number,
+				mockupTraceData[2].DualBound as number,
+				"max"
+			)
+		).toBe(Infinity);
+		expect(
+			CalculateGap(
+				mockupTraceData[3].PrimalBound as number,
+				mockupTraceData[3].DualBound as number,
+				"min"
+			)
+		).toBe(Infinity);
 	});
 });
 
@@ -160,142 +226,77 @@ describe("CalculateDifference", () => {
 	});
 });
 
-describe("CalculateGapPercentage", () => {
-	it("should return 0.0 when a and b are both Infinity", () => {
-		expect(CalculateGapPercentage(Infinity, Infinity, "max")).toBe(0.0);
-		expect(CalculateGapPercentage(Infinity, Infinity, "min")).toBe(0.0);
+describe("CalculateGapDifference", () => {
+	it("should return 0.0 when both numbers are Infinity", () => {
+		expect(CalculateGapDifference(Infinity, Infinity)).toBe(0.0);
 	});
 
-	it("should return a - b * 100 when either a or b is Infinity but not both", () => {
-		expect(CalculateGapPercentage(Infinity, 1, "max")).toBeCloseTo(Infinity, 7);
-		expect(CalculateGapPercentage(Infinity, 1, "min")).toBeCloseTo(
-			-Infinity,
-			7
-		);
-		expect(CalculateGapPercentage(1, Infinity, "max")).toBeCloseTo(
-			-Infinity,
-			7
-		);
-		expect(CalculateGapPercentage(1, Infinity, "min")).toBeCloseTo(Infinity, 7);
+	it("should return the difference between a and b when either a or b is Infinity but not both", () => {
+		expect(CalculateGapDifference(Infinity, 10)).toBe(Infinity - 10);
 	});
 
-	it("should return the percentage gap between a and b when neither a nor b is Infinity", () => {
-		expect(CalculateGapPercentage(1, 2, "max")).toBeCloseTo(-100.0, 7);
-		expect(CalculateGapPercentage(1, 2, "min")).toBeCloseTo(100.0, 7);
-		expect(CalculateGapPercentage(2, 1, "max")).toBeCloseTo(100.0, 7);
-		expect(CalculateGapPercentage(2, 1, "min")).toBeCloseTo(-100.0, 7);
+	it("should return the correct gap difference when neither a nor b is Infinity", () => {
+		expect(CalculateGapDifference(0, 0.1)).toBe(-0.1);
+		expect(CalculateGapDifference(0.09, 0.07)).toBe(0.02);
 	});
 });
 
 describe("ExtractAllSolverTimes", () => {
-	it("Extracts solver times correctly.", () => {
-		const TrcData = [
-			{
-				SolverName: "shot",
-				"Time[s]": "0.041120867",
-				InputFileName: "alan",
-				UserComment: "This is will get filtered."
-			},
-			{
-				SolverName: "shot",
-				"Time[s]": "0.560621249",
-				InputFileName: "ball_mk2_10",
-				UserComment: "This is will get filtered."
-			},
-			{
-				SolverName: "bbb",
-				"Time[s]": "900.971",
-				InputFileName: "ball_mk2_30",
-				UserComment: "This is will get filtered."
-			},
-			{
-				SolverName: "bbb",
-				"Time[s]": "5.922",
-				InputFileName: "ball_mk3_10",
-				UserComment: "This is will get filtered."
-			}
-		];
-
-		const result = ExtractAllSolverTimes(TrcData);
+	test("Extracts solver times correctly.", () => {
+		const result = ExtractAllSolverTimes(mockupTraceData);
 
 		expect(
 			(result as { [key: string]: { time: number; InputFileName: string }[] })
-				.shot
+				.TestSolver1
 		).toHaveLength(2);
 		expect(
 			(result as { [key: string]: { time: number; InputFileName: string }[] })
-				.shot[0]
+				.TestSolver1[0]
 		).toHaveProperty("time", 0.041120867);
 		expect(
 			(result as { [key: string]: { time: number; InputFileName: string }[] })
-				.shot[0]
-		).toHaveProperty("InputFileName", "alan");
+				.TestSolver1[0]
+		).toHaveProperty("InputFileName", "TestInstance");
 		expect(
 			(result as { [key: string]: { time: number; InputFileName: string }[] })
-				.shot[1]
+				.TestSolver1[1]
 		).toHaveProperty("time", 0.560621249);
 		expect(
 			(result as { [key: string]: { time: number; InputFileName: string }[] })
-				.shot[1]
-		).toHaveProperty("InputFileName", "ball_mk2_10");
+				.TestSolver1[1]
+		).toHaveProperty("InputFileName", "TestInstance_B");
 
 		expect(
 			(result as { [key: string]: { time: number; InputFileName: string }[] })
-				.bbb
+				.TestSolver2
 		).toHaveLength(2);
 		expect(
 			(result as { [key: string]: { time: number; InputFileName: string }[] })
-				.bbb[0]
+				.TestSolver2[0]
 		).toHaveProperty("time", 900.971);
 		expect(
 			(result as { [key: string]: { time: number; InputFileName: string }[] })
-				.bbb[0]
-		).toHaveProperty("InputFileName", "ball_mk2_30");
+				.TestSolver2[0]
+		).toHaveProperty("InputFileName", "TestInstance_X");
 		expect(
 			(result as { [key: string]: { time: number; InputFileName: string }[] })
-				.bbb[1]
+				.TestSolver2[1]
 		).toHaveProperty("time", 5.922);
 		expect(
 			(result as { [key: string]: { time: number; InputFileName: string }[] })
-				.bbb[1]
-		).toHaveProperty("InputFileName", "ball_mk3_10");
+				.TestSolver2[1]
+		).toHaveProperty("InputFileName", "TestInstance_Y");
 	});
 });
 
 describe("AnalyzeDataByCategory", () => {
-	const TrcData = [
-		{
-			SolverName: "shot",
-			"Time[s]": "0.041120867",
-			InputFileName: "alan",
-			UserComment: "This is will get filtered."
-		},
-		{
-			SolverName: "shot",
-			"Time[s]": "0.560621249",
-			InputFileName: "ball_mk2_10",
-			UserComment: "This is will get filtered."
-		},
-		{
-			SolverName: "bbb",
-			"Time[s]": "900.971",
-			InputFileName: "ball_mk2_30",
-			UserComment: "This is will get filtered."
-		},
-		{
-			SolverName: "bbb",
-			"Time[s]": "5.922",
-			InputFileName: "ball_mk3_10",
-			UserComment: "This is will get filtered."
-		}
-	];
-	const Category = "Time[s]";
+	const category = "Time[s]";
 
-	it("Calculate the statistics table correctly.", () => {
-		const result = AnalyzeDataByCategory(TrcData, Category);
+	test("Calculate the statistics table correctly.", () => {
+		const result = AnalyzeDataByCategory(mockupTraceData, category);
 
 		expect(result).toEqual({
-			shot: {
+			TestSolver1: {
 				average: expect.any(Number),
 				min: expect.any(Number),
 				max: expect.any(Number),
@@ -307,7 +308,7 @@ describe("AnalyzeDataByCategory", () => {
 				percentile_75: expect.any(Number),
 				percentile_90: expect.any(Number)
 			},
-			bbb: {
+			TestSolver2: {
 				average: expect.any(Number),
 				min: expect.any(Number),
 				max: expect.any(Number),
@@ -321,7 +322,7 @@ describe("AnalyzeDataByCategory", () => {
 			}
 		});
 
-		expect(result.shot).toEqual({
+		expect(result.TestSolver1).toEqual({
 			average: 0.3008711,
 			min: 0.04112087,
 			max: 0.5606212,
@@ -334,7 +335,7 @@ describe("AnalyzeDataByCategory", () => {
 			percentile_90: 0.5086712
 		});
 
-		expect(result.bbb).toEqual({
+		expect(result.TestSolver2).toEqual({
 			average: 453.4465,
 			min: 5.922,
 			max: 900.971,

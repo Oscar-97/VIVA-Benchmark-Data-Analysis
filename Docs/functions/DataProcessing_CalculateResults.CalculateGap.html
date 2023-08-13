@@ -18,22 +18,41 @@
 <h1>Function CalculateGap</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-<li class="tsd-signature tsd-anchor-link" id="CalculateGap">Calculate<wbr/>Gap<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, dir<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, tol<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#CalculateGap" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="CalculateGap">Calculate<wbr/>Gap<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, dir<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, tol<span class="tsd-signature-symbol">??: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#CalculateGap" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Calculates the gap between two numbers, <code>a</code> and <code>b</code>, based on the given direction <code>dir</code> and tolerance <code>tol</code>.</p>
+
+<h3>Export</h3>
+<h3>Returns</h3><ul>
+<li>Returns the gap between <code>a</code> and <code>b</code>.
+If <code>a</code> and <code>b</code> are approximately equal (within <code>tol</code>), it returns 0.
+If the minimum absolute value of <code>a</code> and <code>b</code> is less than <code>tol</code>, or if either <code>a</code> or <code>b</code> is Infinity, or if <code>a</code> and <code>b</code> have different signs, or if either <code>a</code> or <code>b</code> is NaN, it returns Infinity.
+Otherwise, it returns the relative difference between <code>a</code> and <code>b</code> divided by the minimum absolute value of <code>a</code> and <code>b</code>, rounded to 7 decimal places.
+If the result is -0, it converts it to 0.</li>
+</ul>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>a: <span class="tsd-signature-type">number</span></h5></li>
+<h5>a: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The first number for the calculation.</p>
+</div></li>
 <li>
-<h5>b: <span class="tsd-signature-type">number</span></h5></li>
+<h5>b: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The second number for the calculation.</p>
+</div></li>
 <li>
-<h5>dir: <span class="tsd-signature-type">string</span></h5></li>
+<h5>dir: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The direction of the calculation. If &quot;max&quot;, the values of <code>a</code> and <code>b</code> are switched.</p>
+</div></li>
 <li>
-<h5>tol: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 1e-9</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> tol: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 1e-9</span></h5>
+<div class="tsd-comment tsd-typography"><p>The tolerance level to check if <code>a</code> and <code>b</code> are approximately equal.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Oscar-97/SHOT-Data-Visualization/blob/13dd70b/Src/Scripts/DataProcessing/CalculateResults.ts#L119">DataProcessing/CalculateResults.ts:119</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/Oscar-97/SHOT-Data-Visualization/blob/7609d61/Src/Scripts/DataProcessing/CalculateResults.ts#L136">DataProcessing/CalculateResults.ts:136</a></li></ul></aside></li></ul></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -60,23 +79,20 @@
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_AddResultCategories.html">Data<wbr/>Processing/<wbr/>Add<wbr/>Result<wbr/>Categories</a></li>
 <li class="current tsd-kind-module"><a href="../modules/DataProcessing_CalculateResults.html">Data<wbr/>Processing/<wbr/>Calculate<wbr/>Results</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_CreateData.html">Data<wbr/>Processing/<wbr/>Create<wbr/>Data</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataProcessing_FilterDataTrc.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data<wbr/>Trc</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataProcessing_FilterDataTxt.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data<wbr/>Txt</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataProcessing_GetInstanceInformation.html">Data<wbr/>Processing/<wbr/>Get<wbr/>Instance<wbr/>Information</a></li>
+<li class="tsd-kind-module"><a href="../modules/DataProcessing_FilterData.html">Data<wbr/>Processing/<wbr/>Filter<wbr/>Data</a></li>
+<li class="tsd-kind-module"><a href="../modules/DataProcessing_GetExtraData.html">Data<wbr/>Processing/<wbr/>Get<wbr/>Extra<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_MergeData.html">Data<wbr/>Processing/<wbr/>Merge<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataProcessing_ReadData.html">Data<wbr/>Processing/<wbr/>Read<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataTable_DataTableBase.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Base</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataTable_DataTableFilters.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Filters</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataTable_DataTableWrapper.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Wrapper</a></li>
-<li class="tsd-kind-module"><a href="../modules/DataTable_DownloadCSV.html">Data<wbr/>Table/<wbr/>DownloadCSV</a></li>
 <li class="tsd-kind-module"><a href="../modules/DataTable_UpdateResults.html">Data<wbr/>Table/<wbr/>Update<wbr/>Results</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_DisplayAlertNotification.html">Elements/<wbr/>Display<wbr/>Alert<wbr/>Notification</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_ElementStatus.html">Elements/<wbr/>Element<wbr/>Status</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_Elements.html">Elements/<wbr/>Elements</a></li>
 <li class="tsd-kind-module"><a href="../modules/Elements_ImportDataEvents.html">Elements/<wbr/>Import<wbr/>Data<wbr/>Events</a></li>
+<li class="tsd-kind-module"><a href="../modules/Elements_LoadingAnimation.html">Elements/<wbr/>Loading<wbr/>Animation</a></li>
 <li class="tsd-kind-module"><a href="../modules/Main.html">Main</a></li>
-<li class="tsd-kind-module"><a href="../modules/Solvers_SelectAllSolvers.html">Solvers/<wbr/>Select<wbr/>All<wbr/>Solvers</a></li>
-<li class="tsd-kind-module"><a href="../modules/Solvers_UsedSolvers.html">Solvers/<wbr/>Used<wbr/>Solvers</a></li>
+<li class="tsd-kind-module"><a href="../modules/PWA_Setup.html">PWA_<wbr/>Setup</a></li>
 <li class="tsd-kind-module"><a href="../modules/UserConfiguration_UserConfiguration.html">User<wbr/>Configuration/<wbr/>User<wbr/>Configuration</a></li></ul></li></ul></div></details></nav>
 <nav class="tsd-navigation secondary menu-sticky">
 <ul>
@@ -85,7 +101,7 @@
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="DataProcessing_CalculateResults.CalculateDirection.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>Calculate<wbr/>Direction</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="DataProcessing_CalculateResults.CalculateDualBound.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>Calculate<wbr/>Dual<wbr/>Bound</a></li>
 <li class="current tsd-kind-function tsd-parent-kind-module"><a href="DataProcessing_CalculateResults.CalculateGap.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>Calculate<wbr/>Gap</a></li>
-<li class="tsd-kind-function tsd-parent-kind-module"><a href="DataProcessing_CalculateResults.CalculateGapPercentage.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>Calculate<wbr/>Gap<wbr/>Percentage</a></li>
+<li class="tsd-kind-function tsd-parent-kind-module"><a href="DataProcessing_CalculateResults.CalculateGapDifference.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>Calculate<wbr/>Gap<wbr/>Difference</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="DataProcessing_CalculateResults.CalculatePrimalBound.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>Calculate<wbr/>Primal<wbr/>Bound</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="DataProcessing_CalculateResults.ExtractAllSolverTimes.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>Extract<wbr/>All<wbr/>Solver<wbr/>Times</a></li>
 <li class="tsd-kind-function tsd-parent-kind-module"><a href="DataProcessing_CalculateResults.SetTermStatus.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>Set<wbr/>Term<wbr/>Status</a></li></ul></nav></div></div>

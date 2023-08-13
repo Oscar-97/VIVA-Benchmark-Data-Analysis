@@ -4,7 +4,7 @@
 ---
 Building on the concept and implementation of [PAVER 2.0](https://github.com/coin-or/paver), the main goal of this project is to allow end users to interact with their own uploaded benchmark data from mathematical optimization problems and their solvers. The data is presented in a tabular format, with the added ability to visualize specific results through various plots, making it easier to understand and interpret the data. 
 
-This project is developed using TypeScript, DataTables.js, Chart.js and Webpack. Bootstrap is used for styling.  Notably, the application can be run without a live server since Webpack is responsible for bundling the files.
+This project is developed using TypeScript, DataTables.js, Chart.js and Webpack. Bootstrap is used for styling.  Notably, the application can be run without a live server since Webpack is responsible for bundling the files. It is also possible to install it as a Progressive Web Application by launching the project in a live server, navigating to the report page using a compatible browser, and installing it. Support for offline functionality is incldued in the PWA implementation.
 
 <div style="text-align:left;">
   <img src="./Images/OverView_system_new.png" width="100%">
@@ -15,7 +15,6 @@ This project is developed using TypeScript, DataTables.js, Chart.js and Webpack.
 - Click the "Browse" button to upload the results and select either:
     - one or more results file in a `.trc` format.
         - .solu (best known primal and dual bounds for each instance) and .csv (instance properties) can be uploaded in conjugation to get additional information.
-    - or a single `.txt` based on the PAVER format.
     - or a single `UserConfiguration.json` (Which can be created from this application).
 - Once you have selected a file, click on upload.
 - Click on the View All Results/View Plot button to get a table or plot with the benchmark results, depending on the currently active page.
@@ -59,38 +58,23 @@ The following header structure and order should be used in conjunction with .trc
     "Nodes[i]",
     "UserComment",
 
-### .txt 
-
-The following header structure and order should be used in conjunction with .txt files, where the instance should feature:
-    
-    name,
-    #Vars,
-    #Disc,
-    #Equs,
-    Dir,
-    Dual bound,
-    Primal bound I,
-
-and each solver should have:
-
-    TermStatus
-    Dual bound,
-    DualGap,
-    Primal bound,
-    PrimGap Gap[%],
-    Time[s],
-    Nodes I
-
 ### .json
-The file should include `dataSet` and `dataFileType`, it is optionally to have a `checkedSolvers`.
+The file should include `dataSet` and `dataFileType`.
 
 ```json
 {
     "dataSet": [
-        "alan,MINLP,shot,NONE,CPLEX,43381.77804,min,8,9,4,24,3,1,8,Normal,2.925,2.925,0.041120867,0,0,0,#,2.925,2.925,2.925,2.925,0,0,0,0,0"
+        "alan,MINLP,knitro,CONOPT,CPLEX,43365.479,min,8,9,4,24,3,1,8,Error,2.925,2.925,0.142,0,0,18,#,2.925,2.925,2.925,2.925,0,0,0,0,0",
+        "ball_mk2_10,MINLP,knitro,CONOPT,CPLEX,43365.479,min,2,11,10,21,10,1,8,Error,0,2.22044604925031E-16,2.5,0,0,3070,#,0,2.22044604925031e-16,0,2.22044604925031e-16,0,0,0,0,0",
+        "ball_mk2_30,MINLP,knitro,CONOPT,CPLEX,43365.479,min,2,31,30,61,30,1,2,Error,0,-26.887733399442,900.034,0,0,42269,#,0,-26.887733399442,0,-26.887733399442,Infinity,Infinity,0,0,0",
+        "ball_mk3_10,MINLP,knitro,CONOPT,CPLEX,43365.489,min,2,11,10,21,10,1,13,Error,0,NA,NA,NA,NA,NA,#,0,-Infinity,0,-Infinity,Infinity,Infinity,0,NaN,NaN",
+        "ball_mk3_20,MINLP,knitro,CONOPT,CPLEX,43365.49,min,2,21,20,41,20,1,6,Error,-21.6911427569375,-21.6911427569302,900.059,0,0,154017,#,-21.6911427569375,-21.6911427569302,-21.6911427569375,-21.6911427569302,0,0,0,0,0",
+        "ball_mk3_30,MINLP,knitro,CONOPT,CPLEX,43365.5,min,2,31,30,61,30,1,6,Error,-32.4338272833906,-32.6214975320104,900.065,0,0,156536,#,-32.4338272833906,-32.6214975320104,-32.4338272833906,-32.6214975320104,0.57863,0.57863,0,0,0",
+        "ball_mk4_05,MINLP,knitro,CONOPT,CPLEX,43365.51,min,2,11,10,21,10,1,13,Error,0,NA,NA,NA,NA,NA,#,0,-Infinity,0,-Infinity,Infinity,Infinity,0,NaN,NaN",
+        "ball_mk4_10,MINLP,knitro,CONOPT,CPLEX,43365.514,min,2,21,20,41,20,1,6,Error,-14.6650988983745,-14.6650988983711,267.221,0,0,199351,#,-14.6650988983745,-14.6650988983711,-14.6650988983745,-14.6650988983711,0,0,0,0,0",
+        "ball_mk4_15,MINLP,knitro,CONOPT,CPLEX,43365.517,min,2,31,30,61,30,1,6,Error,-33.6086573695247,-33.6086573695138,419.96,0,0,199353,#,-33.6086573695247,-33.6086573695138,-33.6086573695247,-33.6086573695138,0,0,0,0,0"
     ],
-    "dataFileType": "trc",
-    "checkedSolvers": []
+    "dataFileType": "trc"
 }
 ```
 

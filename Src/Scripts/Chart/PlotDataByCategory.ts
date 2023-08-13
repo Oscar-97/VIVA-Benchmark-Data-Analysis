@@ -1,4 +1,4 @@
-import { ViewPlotsButton } from "../Elements/Elements";
+import { viewPlotsButton } from "../Elements/Elements";
 import {
 	AnalyzeDataByCategory,
 	ExtractAllSolverTimes
@@ -7,27 +7,27 @@ import { PickColor, CreateChart } from "./CreateChart";
 import { StatisticsTable } from "../DataTable/DataTableBase";
 
 /**
- * Plot by result category
- * @param TrcData Current TrcData.
- * @param Type Type of plot.
- * @param Category Name of the category.
- * @param Label Label for the plot.
- * @param Title Title for the plot.
+ * Prepares and plots data by a specific category.
+ *
+ * @param traceData - Array of objects containing the data to be analyzed and plotted.
+ * @param type - The type of the chart to be created (e.g., 'line', 'bar', 'pie').
+ * @param category - The category by which the data should be analyzed.
+ * @param label - The label for the data.
+ * @param title - The title of the chart.
  */
 export function PlotDataByCategory(
-	TrcData: object[],
-	Type: string,
-	Category: string,
-	Label: string,
-	Title: string
+	traceData: object[],
+	type: string,
+	category: string,
+	label: string,
+	title: string
 ): void {
-	ViewPlotsButton.disabled = false;
-	ViewPlotsButton.addEventListener("click", () => {
-		const data = AnalyzeDataByCategory(TrcData, Category);
-		console.log("Data for category", Category, ": ", data);
+	viewPlotsButton.disabled = false;
+	viewPlotsButton.addEventListener("click", () => {
+		const data = AnalyzeDataByCategory(traceData, category);
+		console.log("Data for category", category, ": ", data);
 
-		const type = Type;
-		const colors = [PickColor(), PickColor(), PickColor()];
+		const colors = PickColor(20);
 		const chartData = Object.entries(data).map(([key, value], index) => ({
 			label: key,
 			data: [value.average],
@@ -35,33 +35,35 @@ export function PlotDataByCategory(
 			backgroundColor: colors[index % colors.length]
 		}));
 
-		console.log("Data for chart", Label, ": ", chartData);
-		CreateChart(type, chartData, Label, Title);
-		StatisticsTable(data, Title);
+		console.log("Data for chart", label, ": ", chartData);
+		CreateChart(type, chartData, label, title);
+		StatisticsTable(data, title);
 	});
 }
 
 /**
- * Plot all the solver times without any failed results.
+ * Prepares and plots all the solver times without any failed results.
+ *
+ * @param traceData - Array of objects containing the data to be analyzed and plotted.
  */
-export function PlotAllSolverTimes(TrcData: object[]): void {
-	ViewPlotsButton.disabled = false;
-	ViewPlotsButton.addEventListener("click", () => {
-		const SolverTimes = ExtractAllSolverTimes(TrcData);
-		const Data = (
-			Object.entries(SolverTimes) as [
+export function PlotAllSolverTimes(traceData: object[]): void {
+	viewPlotsButton.disabled = false;
+	viewPlotsButton.addEventListener("click", () => {
+		const solverTimes = ExtractAllSolverTimes(traceData);
+		const data = (
+			Object.entries(solverTimes) as [
 				string,
 				{ time: number; InputFileName: string }[]
 			][]
 		).map(([key, values]) => ({
 			label: key,
-			data: values.map(({ time, InputFileName }) => ({
-				x: InputFileName,
+			data: values.map(({ time, InputFileName: inputFileName }) => ({
+				x: inputFileName,
 				y: time
 			})),
 			showLine: false
 		}));
 
-		CreateChart("line", Data, "InputFileName", "Solver times");
+		CreateChart("line", data, "InputFileName", "Solver times");
 	});
 }

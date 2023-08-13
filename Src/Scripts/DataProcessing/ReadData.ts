@@ -1,110 +1,202 @@
-import { FileInput, ImportDataButton } from "../Elements/Elements";
-import { DisplayErrorNotification } from "../Elements/DisplayAlertNotification";
+import { fileInput, importDataButton } from "../Elements/Elements";
+import {
+	DisplayAlertNotification,
+	DisplayErrorNotification
+} from "../Elements/DisplayAlertNotification";
+import { userData } from "../UserConfiguration/UserConfiguration";
 
 /**
- * User should only be able to upload multiple .trc files, and atleast one of the files needs to be a .txt, .trc or .json file.
- * @returns DataFileType
+ * Retrieves the type of the data file inputted by the user.
+ *
+ * @returns The extension of the data file.
+ *
+ * @remarks
+ * This function examines the files selected by the user through the file input.
+ * It checks each file's extension, verifying that it is valid (.trc, .json, .solu, or .csv).
+ * It then asserts that there are not multiple files of the same extension and that
+ * there is at least one .trc or .json file.
+ * If any of these checks fail, it displays an error notification and throws an error.
+ * If all checks pass, it returns the extension of the first file.
+ *
+ * @throws
+ * This function will throw an error if:
+ * - Any file has an invalid extension.
+ * - There are multiple files with the same extension.
+ * - There is no .trc or .json file.
+ * - There are both .trc and .json files.
  */
 export function GetDataFileType(): string {
-	const Files = FileInput.files;
-	const Extensions = [];
+	const files = fileInput.files;
+	const extensions = [];
+	const fileCounts = { csv: 0, solu: 0, json: 0 };
 
-	let txtCount = 0;
-	let jsonCount = 0;
+	for (let i = 0; i < files.length; i++) {
+		const extension = CheckFileExtension(files[i], fileCounts);
 
-	for (let i = 0; i < Files.length; i++) {
-		const Extension = Files[i].name.split(".").pop();
-		if (Extension === "trc") {
-			Extensions.push(Extension);
-		} else if (Extension === "txt") {
-			txtCount++;
-			if (txtCount > 1) {
-				DisplayErrorNotification("Cannot upload multiple .txt files.");
-				throw new Error("Cannot upload multiple .txt files.");
-			}
-			Extensions.push(Extension);
-		} else if (Extension === "json") {
-			jsonCount++;
-			if (jsonCount > 1) {
-				DisplayErrorNotification("Cannot upload multiple .json files.");
-				throw new Error("Cannot upload multiple .json files.");
-			}
-			Extensions.push(Extension);
+		if (["trc", "solu", "json", "csv"].includes(extension)) {
+			extensions.push(extension);
 		}
 	}
 
-	if (Extensions.length === 0) {
-		DisplayErrorNotification("No .txt, .trc or .json files found.");
-		throw new Error("No .txt, .trc or .json files found.");
+	if (extensions.length === 0) {
+		DisplayErrorNotification("No .trc, .json or .solu files found.");
+		throw new Error("No .trc, .json or .solu files found.");
 	}
 
-	return Extensions[0];
+	const hasTRCOrJSON = extensions.some(
+		(ext) => ext === "trc" || ext === "json"
+	);
+
+	if (!hasTRCOrJSON) {
+		DisplayErrorNotification("At least one .trc or .json file required.");
+		throw new Error("At least one .trc or .json file required.");
+	}
+
+	if (extensions.includes("trc") && extensions.includes("json")) {
+		DisplayErrorNotification(
+			"Cannot upload both .trc and .json files simultaneously."
+		);
+		throw new Error("Cannot upload both .trc and .json files simultaneously.");
+	}
+
+	return extensions.find((ext) => ext === "trc" || ext === "json");
 }
 
 /**
- * Read the raw data.
- * @param RawData
- * @param RawInstanceInfoData
- * @param RawSoluData
- * @returns
+ * Validates the extension of the given file and updates the file counts accordingly.
+ *
+ * @param file - The file for which to check the extension.
+ * @param fileCounts - An object that tracks the count of each file extension encountered.
+ * @returns The valid file extension of the provided file.
+ * @throws Error if an invalid extension is encountered or if multiple files of the same extension are uploaded.
+ *
+ * @example
+ * const fileCounts = { csv: 0, solu: 0, json: 0 };
+ * const file = new File(["content"], "filename.json");
+ * const extension = CheckFileExtension(file, fileCounts);  // Returns "json"
+ */
+function CheckFileExtension(
+	file: File,
+	fileCounts: {
+		[x: string]: number;
+		csv?: number;
+		solu?: number;
+		json?: number;
+	}
+): string {
+	const extension = file.name.split(".").pop();
+
+	if (!IsValidExtension(extension)) {
+		DisplayErrorNotification(
+			"Invalid file extension. Only .trc, .json, .solu, and .csv allowed."
+		);
+		throw new Error(
+			"Invalid file extension. Only .trc, .json, .solu, and .csv allowed."
+		);
+	}
+
+	if (extension in fileCounts) {
+		fileCounts[extension]++;
+		if (fileCounts[extension] > 1) {
+			DisplayErrorNotification(`Cannot upload multiple .${extension} files.`);
+			throw new Error(`Cannot upload multiple .${extension} files.`);
+		}
+	}
+
+	return extension;
+}
+
+/**
+ * Checks if a file extension is valid.
+ *
+ * @param extension - The file extension to check.
+ * @returns Boolean value indicating if the file extension is valid.
+ */
+function IsValidExtension(extension: string): boolean {
+	return ["trc", "json", "solu", "csv"].includes(extension);
+}
+
+/**
+ * Reads data from multiple file inputs, returning the raw data, instance information data and solu data.
+ *
+ * @param rawData - An array to store the raw data from .trc files.
+ * @param rawInstanceInfoData - An array to store the raw data from .csv files.
+ * @param rawSoluData - An array to store the raw data from .solu files.
+ * @returns An object containing arrays of raw data, instance information data, and solu data.
+ *
+ * @remarks
+ * This function reads multiple files selected by the user, like trace1.trc, trace2.trc and minlp.solu.
+ * It uses the FileReader API to read the content of each file.
+ * Depending on the file extension (.json, .trc, .csv, .solu), it splits the file's content into an array of lines
+ * and processes each line as required, storing the results in the relevant arrays (rawData, rawInstanceInfoData, rawSoluData).
+ * If the file extension is .json, the function stores the uploaded UserConfiguration in the localStorage.
  */
 export function ReadData(
-	RawData: string[],
-	RawInstanceInfoData: string[],
-	RawSoluData: string[]
+	rawData: string[],
+	rawInstanceInfoData: string[],
+	rawSoluData: string[]
 ): { RawData: string[]; RawInstanceInfoData: string[]; RawSoluData: string[] } {
-	ImportDataButton.disabled = false;
+	importDataButton.disabled = false;
 
 	/**
 	 * Input multiple files.
 	 * For instance: trace1.trc, trace2.trc and minlp.solu.
 	 */
-	for (let i = 0; i < FileInput.files.length; i++) {
-		const Reader = new FileReader();
-		const File = FileInput.files[i];
-		const FileName = File.name;
-		const FileExtension = FileName.split(".").pop();
+	for (let i = 0; i < fileInput.files.length; i++) {
+		const reader = new FileReader();
+		const file = fileInput.files[i];
+		const fileName = file.name;
+		const fileExtension = fileName.split(".").pop();
 
 		/**
 		 * Split the file's content into an array of lines and iterate over the lines array and process each line as needed.
 		 */
-		Reader.addEventListener("load", function () {
-			if (FileExtension === "json") {
-				const JSON_Data = <string>Reader.result;
-				localStorage.setItem("UserConfiguration", JSON_Data);
-				console.log("Stored uploaded UserConfiguration.");
-			} else if (FileExtension === "txt" || FileExtension === "trc") {
-				const Lines = (<string>Reader.result)
+		reader.addEventListener("load", function () {
+			if (fileExtension === "json") {
+				const dataJSON = <string>reader.result;
+				const parsedData = JSON.parse(dataJSON);
+
+				if (
+					parsedData.hasOwnProperty("dataSet") &&
+					parsedData.hasOwnProperty("dataFileType")
+				) {
+					userData.dataSet = parsedData.dataSet;
+					userData.dataFileType = parsedData.dataFileType;
+					localStorage.setItem("UserConfiguration", JSON.stringify(userData));
+					DisplayAlertNotification("Stored uploaded UserConfiguration.");
+				} else {
+					DisplayErrorNotification("Invalid data structure in uploaded JSON.");
+					console.log("Invalid data structure in uploaded JSON.");
+				}
+			} else if (fileExtension === "trc") {
+				const lines = (<string>reader.result)
 					.split(/\r?\n/)
 					.map((line) => line.trim());
-				for (let i = 0; i <= Lines.length - 1; i++) {
-					const Line = Lines[i];
-					RawData.push(Line);
+				for (let i = 0; i <= lines.length - 1; i++) {
+					const line = lines[i];
+					rawData.push(line);
 				}
-			} else if (FileExtension === "csv") {
-				const Lines = (<string>Reader.result).split("\n");
-				for (let i = 0; i <= Lines.length - 1; i++) {
-					const Line = Lines[i];
-					RawInstanceInfoData.push(Line);
+			} else if (fileExtension === "csv") {
+				const lines = (<string>reader.result).split("\n");
+				for (let i = 0; i <= lines.length - 1; i++) {
+					const line = lines[i];
+					rawInstanceInfoData.push(line);
 				}
-			} else if (FileExtension === "solu") {
-				const Lines = (<string>Reader.result).split("\r\n");
-				for (let i = 0; i <= Lines.length - 1; i++) {
-					const Line = Lines[i];
-					RawSoluData.push(Line);
+			} else if (fileExtension === "solu") {
+				const lines = (<string>reader.result).split("\r\n");
+				for (let i = 0; i <= lines.length - 1; i++) {
+					const line = lines[i];
+					rawSoluData.push(line);
 				}
-			} else {
-				DisplayErrorNotification(
-					"Invalid file extension. Please use a .trc or .txt file for results. Use a .csv file for instance data information."
-				);
-				throw new Error(
-					"Invalid file extension. Please use a .trc or .txt file for results. Use a .csv file for instance data information."
-				);
 			}
 		});
 
-		Reader.readAsText(File);
+		reader.readAsText(file);
 	}
 
-	return { RawData, RawInstanceInfoData, RawSoluData };
+	return {
+		RawData: rawData,
+		RawInstanceInfoData: rawInstanceInfoData,
+		RawSoluData: rawSoluData
+	};
 }
