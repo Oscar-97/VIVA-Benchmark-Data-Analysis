@@ -56,6 +56,7 @@ export function CreateUserConfiguration(
 
 /**
  * This function retrieves the user configuration from the browser's local storage.
+ * The user is notified if no saved configuration was found and the flag is stored to the session storage.
  *
  * @returns An array that includes the raw data and the data file type.
  *
@@ -82,7 +83,14 @@ export function GetUserConfiguration(): [string[], string] {
 				);
 				break;
 			case "No saved configuration data found.":
-				DisplayWarningNotification("No saved configuration data found.");
+				if (sessionStorage.getItem("alertedStorage")) {
+					console.log(
+						"User has previously visited this page in this session/tab."
+					);
+				} else {
+					DisplayWarningNotification("No saved configuration data found.");
+					sessionStorage.setItem("alertedStorage", "true");
+				}
 				break;
 			default:
 				DisplayErrorNotification("Error occured: " + error);
