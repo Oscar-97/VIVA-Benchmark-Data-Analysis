@@ -128,12 +128,12 @@ export function CalculateGap(
 	a: number,
 	b: number,
 	dir: string,
-	tol = 1e-9
+	tol: number = 1e-9
 ): number {
 	if (isNaN(a) || isNaN(b)) {
 		return Infinity;
 	}
-	
+
 	// If dir is negative, switch the values to do DualBound - PrimalBound.
 	if (dir === "max") {
 		[a, b] = [b, a];
@@ -182,11 +182,16 @@ export function CalculateDifference(a: number, b: number): number {
 }
 
 /**
- * Calculates the gap difference between two numbers, taking infinity into account.
+ * Calculates the relative difference between two numbers, `a` and `b`, to a precision of 7 decimal places.
+ * The relative difference is computed as (a - b) divided by the maximum absolute value of the two numbers 
+ * (or 1 if both are 0). If either number is infinite and both numbers are not the same, the absolute 
+ * difference is returned.
  *
- * @param {number} a - The first number.
- * @param {number} b - The second number.
- * @returns {number} The gap difference between the two numbers.
+ * @param a - The first number for the calculation.
+ * @param b - The second number for the calculation.
+ * @returns The relative difference between `a` and `b` if neither are infinite and not the same.
+ * If either `a` or `b` is infinite and they are not the same, returns the difference between them.
+ * Otherwise, returns 0.0.
  */
 export function CalculateGapDifference(a: number, b: number): number {
 	if (Math.abs(a) === Infinity || Math.abs(b) === Infinity) {
