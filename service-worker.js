@@ -45,10 +45,13 @@ self.addEventListener("fetch", function (event) {
 			if (response) {
 				return response;
 			}
-			return fetch(event.request).catch(function () {
-				return new Response(
-					"You are offline. Some resources may not be available."
-				);
+			return fetch(event.request).then(function(response) {
+				if (response.redirected) {
+					return fetch(new Request(response.url, { mode: 'follow' }));
+				}
+				return response;
+			}).catch(function() {
+				return new Response("You are offline. Some resources may not be available.");
 			});
 		})
 	);
