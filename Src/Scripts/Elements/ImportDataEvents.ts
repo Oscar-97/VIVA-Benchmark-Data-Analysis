@@ -13,8 +13,8 @@ import { DisplayAlertNotification } from "./DisplayAlertNotification";
  * adjusts the status of various interactive buttons based on the current page title and
  * the type of file extension of the imported data.
  *
- * @param message {string} - Message to be displayed as an alert notification after the data import.
- * @param fileExtensionType {string} - The file extension of the imported data (optional).
+ * @param message - Message to be displayed as an alert notification after the data import.
+ * @param fileExtensionType - The file extension of the imported data (optional).
  *
  * @remarks
  *
