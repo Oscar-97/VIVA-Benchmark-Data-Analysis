@@ -171,21 +171,21 @@ function DataTablesConfiguration(): void {
 				"NumberOfIterations",
 				"Nodes[i]",
 				"Obj",
-				"Obj Est",
-				"PrimalBound Problem",
-				"DualBound Problem",
+				"Obj_Est",
+				"PrimalBoundProblem",
+				"DualBoundSolver",
 				"dualbound",
 				"primalbound",
-				"Gap",
 				"gap",
 				"objcurvature",
 				"probtype",
-				"PrimalBound Solver",
-				"DualBound Solver",
-				"Gap[%] Solver",
+				"DualBoundProblem",
+				"PrimalBoundSolver",
+				"Gap[%]",
 				"PrimalGap",
 				"DualGap",
-				"Gap Problem"
+				"Gap_Problem",
+				"Gap_Solver"
 			];
 			this.api()
 				.columns()

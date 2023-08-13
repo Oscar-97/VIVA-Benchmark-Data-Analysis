@@ -27,46 +27,46 @@ export function AddResultCategories(traceData: object[]): void {
 	for (const obj of traceData) {
 		obj["Dir"] = CalculateDirection(obj["Dir"]);
 
-		obj["PrimalBound Solver"] = CalculatePrimalBound(obj["Obj"], obj["Dir"]);
+		obj["PrimalBoundSolver"] = CalculatePrimalBound(obj["Obj"], obj["Dir"]);
 
-		obj["DualBound Solver"] = CalculateDualBound(obj["Obj Est"], obj["Dir"]);
+		obj["DualBoundSolver"] = CalculateDualBound(obj["Obj_Est"], obj["Dir"]);
 
 		obj["TermStatus"] = SetTermStatus(obj["TermStatus"] as string | number);
 
-		if (!obj.hasOwnProperty("PrimalBound Problem")) {
-			obj["PrimalBound Problem"] = CalculatePrimalBound(
-				obj["PrimalBound Solver"],
+		if (!obj.hasOwnProperty("PrimalBoundProblem")) {
+			obj["PrimalBoundProblem"] = CalculatePrimalBound(
+				obj["PrimalBoundSolver"],
 				obj["Dir"]
 			);
 		}
 
-		if (!obj.hasOwnProperty("DualBound Problem")) {
-			obj["DualBound Problem"] = CalculateDualBound(
-				obj["DualBound Solver"],
+		if (!obj.hasOwnProperty("DualBoundProblem")) {
+			obj["DualBoundProblem"] = CalculateDualBound(
+				obj["DualBoundSolver"],
 				obj["Dir"]
 			);
 		}
 
-		obj["Gap Solver"] = CalculateGap(
-			obj["PrimalBound Solver"],
-			obj["DualBound Solver"],
+		obj["Gap_Solver"] = CalculateGap(
+			obj["PrimalBoundSolver"],
+			obj["DualBoundSolver"],
 			obj["Dir"]
 		);
 
-		obj["Gap Problem"] = CalculateGap(
-			obj["PrimalBound Problem"],
-			obj["DualBound Problem"],
+		obj["Gap_Problem"] = CalculateGap(
+			obj["PrimalBoundProblem"],
+			obj["DualBoundProblem"],
 			obj["Dir"]
 		);
 
 		obj["PrimalGap"] = CalculateDifference(
-			obj["PrimalBound Solver"],
-			obj["PrimalBound Problem"]
+			obj["PrimalBoundSolver"],
+			obj["PrimalBoundProblem"]
 		);
 
 		obj["DualGap"] = CalculateDifference(
-			obj["DualBound Solver"],
-			obj["DualBound Problem"]
+			obj["DualBoundSolver"],
+			obj["DualBoundProblem"]
 		);
 
 		obj["Gap[%]"] = CalculateGapDifference(obj["PrimalGap"], obj["DualGap"]);

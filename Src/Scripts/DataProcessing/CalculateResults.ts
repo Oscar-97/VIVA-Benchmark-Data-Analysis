@@ -37,7 +37,7 @@ export function CalculateDirection(direction: number | string): string {
 export function CalculatePrimalBound(
 	primalBound: number | string,
 	direction: string
-): number | string {
+): number {
 	if (typeof primalBound === "string") {
 		if (
 			primalBound === "" ||
@@ -58,8 +58,12 @@ export function CalculatePrimalBound(
 		} else if (primalBound.toLocaleLowerCase() === "-inf") {
 			primalBound = -1 * Infinity;
 		} else {
-			primalBound = math.bignumber(primalBound).toNumber();
+			primalBound = Number(primalBound);
 		}
+	}
+	// Ensure that the result is a number
+	if (typeof primalBound !== "number" || isNaN(primalBound)) {
+		primalBound = NaN;
 	}
 	return primalBound;
 }
@@ -82,7 +86,7 @@ export function CalculatePrimalBound(
 export function CalculateDualBound(
 	dualBound: number | string,
 	direction: string
-): number | string {
+): number {
 	if (typeof dualBound === "string") {
 		if (
 			dualBound === "" ||
@@ -103,8 +107,13 @@ export function CalculateDualBound(
 		} else if (dualBound.toLowerCase() === "-inf") {
 			dualBound = -1 * Infinity;
 		} else {
-			dualBound = math.bignumber(dualBound).toNumber();
+			dualBound = Number(dualBound);
 		}
+	}
+
+	// Ensure that the result is a number
+	if (typeof dualBound !== "number" || isNaN(dualBound)) {
+		dualBound = NaN;
 	}
 	return dualBound;
 }
@@ -130,6 +139,7 @@ export function CalculateGap(
 	dir: string,
 	tol = 1e-9
 ): number {
+	console.log("a: ", a, " b: ", b, " dir: ", dir);
 	if (isNaN(a) || isNaN(b)) {
 		return Infinity;
 	}
@@ -140,12 +150,12 @@ export function CalculateGap(
 	}
 
 	// Check if the values are equal within tolerance
-	if (math.abs(a - b) < tol) {
+	if (Math.abs(a - b) < tol) {
 		return 0.0;
 	}
 
 	if (
-		math.min(math.abs(a), math.abs(b)) < tol ||
+		Math.min(Math.abs(a), Math.abs(b)) < tol ||
 		a === Infinity ||
 		b === Infinity ||
 		a * b < 0
@@ -154,8 +164,7 @@ export function CalculateGap(
 	}
 
 	// Compute and return the gap between the values
-	let result =
-		Number(((a - b) / math.min(math.abs(a), math.abs(b))).toFixed(7)) * 100;
+	let result = ((a - b) / Math.min(Math.abs(a), Math.abs(b))) * 100;
 
 	if (result === -0) {
 		result = 0;
@@ -202,7 +211,7 @@ export function CalculateGapDifference(a: number, b: number): number {
 		}
 	} else {
 		return Number(
-			((a - b) / math.max(math.abs(a), math.abs(b), 1.0)).toFixed(7)
+			((a - b) / Math.max(Math.abs(a), Math.abs(b), 1.0)).toFixed(7)
 		);
 	}
 }

@@ -1,4 +1,3 @@
-import * as math from "mathjs";
 import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
 
 /**
@@ -82,16 +81,30 @@ export function GetBestKnowBounds(rawSoluData: string[]): object[] {
 			switch (match[1]) {
 				case "best":
 					// Value in the third column is primal bound.
-					obj["PrimalBound Problem"] = math.bignumber(match[3]).toNumber();
+					try {
+						obj["PrimalBoundProblem"] = Number(match[3]);
+					} catch (err) {
+						console.log(err)["PrimalBoundProblem"] = NaN;
+					}
 					break;
 				case "bestdual":
 					// Value in the third column is dual bound.
-					obj["DualBound Problem"] = math.bignumber(match[3]).toNumber();
+					try {
+						obj["DualBoundProblem"] = Number(match[3]);
+					} catch (err) {
+						console.log(err)["DualBoundProblem"] = NaN;
+					}
 					break;
 				case "opt":
 					// Value in the third column is both primal and dual bound.
-					obj["PrimalBound Problem"] = math.bignumber(match[3]).toNumber();
-					obj["DualBound Problem"] = math.bignumber(match[3]).toNumber();
+					try {
+						obj["PrimalBoundProblem"] = Number(match[3]);
+						obj["DualBoundProblem"] = Number(match[3]);
+					} catch (err) {
+						console.log(err);
+						obj["PrimalBoundProblem"] = NaN;
+						obj["DualBoundProblem"] = NaN;
+					}
 					break;
 			}
 		}

@@ -146,8 +146,15 @@ describe("CalculateGap", () => {
 	it("should return 0.0 when a and b are equal within tolerance", () => {
 		expect(CalculateGap(1, 1, "max")).toBe(0.0);
 		expect(CalculateGap(1, 1, "min")).toBe(0.0);
-		expect(CalculateGap(1, 1.000000001, "max")).toBe(0.0);
-		expect(CalculateGap(1, 1.000000001, "min")).toBe(0.0);
+		expect(CalculateGap(5.994797334158539, 5.994797334158539, "min")).toBe(0.0);
+		expect(CalculateGap(16.3, 6.34028371962439, "min")).toBe(
+			157.08628699924557
+		);
+	});
+
+	it("should return 0.0 if the absolute value of b subtacted from a is less than tolerance", () => {
+		expect(CalculateGap(1, 1.0000000001, "max")).toBe(0.0);
+		expect(CalculateGap(1, 1.0000000001, "min")).toBe(0.0);
 	});
 
 	it("should return Infinity when the minimum absolute value of a and b is less than tolerance", () => {

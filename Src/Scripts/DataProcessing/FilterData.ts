@@ -63,7 +63,7 @@ export function ExtractTrcData(rawData: string[]): object[] {
 			"ModelStatus",
 			"TermStatus",
 			"Obj",
-			"Obj Est",
+			"Obj_Est",
 			"Time[s]",
 			"NumberOfIterations",
 			"NumberOfDomainViolations",
@@ -87,7 +87,7 @@ export function ExtractTrcData(rawData: string[]): object[] {
 				let value = currentLine[j];
 
 				if (
-					(defaultHeaders[j] === "Obj" || defaultHeaders[j] === "Obj Est") &&
+					(defaultHeaders[j] === "Obj" || defaultHeaders[j] === "Obj_Est") &&
 					value.length > 25
 				) {
 					value = value.substring(0, 25);
