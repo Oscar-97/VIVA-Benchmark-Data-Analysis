@@ -1,7 +1,6 @@
-![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white) ![Bootstrap](https://img.shields.io/badge/bootstrap-%23563D7C.svg?style=flat&logo=bootstrap&logoColor=white) ![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=flat&logo=webpack&logoColor=black) ![Chart.js](https://img.shields.io/badge/chart.js-F5788D.svg?style=flat&logo=chart.js&logoColor=white)
+![VIVA](https://img.shields.io/badge/VIVA-1.0.2-brightgreen) ![License](https://img.shields.io/badge/License-MIT-brightgreen) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white) ![Bootstrap](https://img.shields.io/badge/bootstrap-%23563D7C.svg?style=flat&logo=bootstrap&logoColor=white) ![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=flat&logo=webpack&logoColor=black) ![Chart.js](https://img.shields.io/badge/chart.js-F5788D.svg?style=flat&logo=chart.js&logoColor=white)
 
 # VIVA: Visualize, Interact, Verify, and Analyze Benchmarking Data for Optimization Solvers
----
 Building on the concept and implementation of [PAVER 2.0](https://github.com/coin-or/paver), the main goal of this project is to allow end users to interact with their own uploaded benchmark data from mathematical optimization problems and their solvers. The data is presented in a tabular format, with the added ability to visualize specific results through various plots, making it easier to understand and interpret the data. 
 
 This project is developed using TypeScript, DataTables.js, Chart.js and Webpack. Bootstrap is used for styling.  Notably, the application can be run without a live server since Webpack is responsible for bundling the files. It is also possible to install it as a Progressive Web Application by launching the project in a live server, navigating to the report page using a compatible browser, and installing it. Support for offline functionality is incldued in the PWA implementation.
@@ -33,30 +32,33 @@ This project is developed using TypeScript, DataTables.js, Chart.js and Webpack.
 ### .trc
 
 See: https://www.gamsworld.org/performance/trace.htm
+
 The following header structure and order should be used in conjunction with .trc files:
 
-    "InputFileName",
-    "ModelType",
-    "SolverName",
-    "NLP",
-    "MIP",
-    "JulianDate",
-    "Dir",
-    "Equs",
-    "Vars",
-    "Disc",
-    "NumberOfNonZeros",
-    "NumberOfNonlinearNonZeros",
-    "OptionFile",
-    "ModelStatus",
-    "TermStatus",
-    "PrimalBoundSolver",
-    "DualBoundSolver",
-    "Time[s]",
-    "NumberOfIterations",
-    "NumberOfDomainViolations",
-    "Nodes[i]",
-    "UserComment",
+    InputFileName
+    ModelType
+    SolverName
+    NLP
+    MIP
+    JulianDate
+    Dir
+    Equs
+    Vars
+    Disc
+    NumberOfNonZeros
+    NumberOfNonlinearNonZeros
+    OptionFile
+    ModelStatus
+    TermStatus
+    Obj
+    Obj_Est
+    Time[s]
+    NumberOfIterations
+    NumberOfDomainViolations
+    Nodes[i]
+    UserComment
+
+
 
 ### .json
 The file should include `dataSet` and `dataFileType`.
@@ -77,8 +79,6 @@ The file should include `dataSet` and `dataFileType`.
     "dataFileType": "trc"
 }
 ```
-
---- 
 
 ## Working with the Codebase
 ### 1. Prerequisites

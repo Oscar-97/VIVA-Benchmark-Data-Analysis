@@ -13,7 +13,7 @@
  * The function then iterates through each line of data, splitting it into separate elements
  * based on the comma delimiter, and creating an object from these elements with the corresponding headers as keys.
  *
- * If the header is "Obj" or "Obj Est", it will be truncated if the value exceeds 25.
+ * If the header is "Obj" or "Obj_Est", it will be truncated if the value exceeds 25.
  *
  * @example
  * ```typescript

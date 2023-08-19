@@ -16,7 +16,7 @@ import {
  * @remarks
  * This function modifies the passed `traceData` array by adding calculated properties to each object.
  * Each object in the `traceData` array is expected to have certain properties like "Dir", "Obj",
- * "Obj Est", and "TermStatus". The function uses these existing properties to calculate new ones.
+ * "Obj_Est", and "TermStatus". The function uses these existing properties to calculate new ones.
  * If an object in the `traceData` array already has a property that the function tries to add,
  * the existing property will not be overwritten.
  *
