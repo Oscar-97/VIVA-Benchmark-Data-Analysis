@@ -149,7 +149,7 @@ function InitializeProgram(): void {
 	try {
 		[rawData, dataFileType] = GetUserConfiguration();
 		ImportDataEvents("Found cached benchmark file!", "json");
-		saveLocalStorageButton.disabled= true;
+		saveLocalStorageButton.disabled = true;
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
 		sessionStorage.setItem("savedStorageNotification", "true");
@@ -254,7 +254,7 @@ function ManageData(): void {
 	}
 
 	/**
-	 * If the document title is not "Report", it handles the plot page functionality using 
+	 * If the document title is not "Report", it handles the plot page functionality using
 	 * the traceData variable.
 	 */
 	if (document.title != "Report") {
