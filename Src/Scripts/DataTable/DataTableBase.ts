@@ -1,3 +1,5 @@
+import { dataTable } from "../Elements/Elements";
+
 /**
  * Function to dynamically create and display a HTML table based on the provided trace data.
  *
@@ -24,7 +26,7 @@ export function TableDataTrc(traceData: object[]): void {
 	/**
 	 * @param DataTableDiv Div that contains the data table.
 	 */
-	const dataTableDiv = document.getElementById("dataTable") as HTMLDivElement;
+	const dataTableDiv = dataTable;
 	dataTableDiv.innerHTML = "";
 
 	const dataTableHeaders = document.createElement("thead");
