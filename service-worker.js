@@ -20,8 +20,8 @@ const filesToCache = [
  * This is an ideal time to pre-cache static assets that make up the application shell,
  * so that the web app is immediately functional even when offline.
  */
-self.addEventListener("install", function (e) {
-	e.waitUntil(
+self.addEventListener("install", function (event) {
+	event.waitUntil(
 		caches
 			.open(CACHE_NAME)
 			.then(function (cache) {
@@ -45,14 +45,11 @@ self.addEventListener("fetch", function (event) {
 			if (response) {
 				return response;
 			}
-			return fetch(event.request).then(function(response) {
-				if (response.redirected) {
-					return fetch(new Request(response.url, { mode: 'follow' }));
-				}
-				return response;
-			}).catch(function() {
-				return new Response("You are offline. Some resources may not be available.");
-			});
+			return fetch(event.request)
+				.catch(function (error) {
+					console.error("Failed fetch request:", error);
+					return new Response("You are offline. Some resources may not be available.");
+				});
 		})
 	);
 });
