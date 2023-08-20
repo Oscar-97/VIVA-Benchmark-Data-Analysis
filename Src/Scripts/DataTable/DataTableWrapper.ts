@@ -122,19 +122,28 @@ function DataTablesConfiguration(): void {
 		},
 		buttons: [
 			{
-				extend: "pageLength",
-				className: "rounded-start btn-sm"
-			},
-			{
-				extend: "colvis",
-				className: "rounded-end btn-sm",
-				columnText: (_dt: DataTables.Api, idx: number, title: string): string =>
-					idx + 1 + ": " + title
+				extend: "collection",
+				text: "<i class='bi bi-gear'></i> Settings <span class='caret'></span>",
+				className: "rounded btn-sm",
+				buttons: [
+					{
+						extend: "pageLength",
+						text: function (dt) {
+							return "<i class='bi bi-list-columns-reverse'></i> Show " + dt.page.len() + " rows";
+						}
+					},
+					{
+						extend: "colvis",
+						text: "<i class='bi bi-layout-three-columns'></i> Column Visibility",
+						columnText: function (_dt, idx, title) {
+							return idx + 1 + ": " + title;
+						}
+					}
+				]
 			},
 			"spacer",
 			{
 				extend: "searchBuilder",
-				text: "Advanced Search Builder",
 				className: "rounded btn-sm"
 			},
 			"spacer",
@@ -151,7 +160,20 @@ function DataTablesConfiguration(): void {
 				extend: "collection",
 				text: "<i class='bi bi-database-down'></i> Export",
 				className: "rounded btn-sm",
-				buttons: ["print", "copy", "csv"]
+				buttons: [
+					{
+						extend: "print",
+						text: "<i class='bi bi-printer'></i> Print"
+					},
+					{
+						extend: "copy",
+						text: "<i class='bi bi-clipboard2'></i> Copy"
+					},
+					{
+						extend: "csv",
+						text: "<i class='bi bi-filetype-csv'></i> CSV"
+					}
+				]
 			}
 		],
 		initComplete: function () {
