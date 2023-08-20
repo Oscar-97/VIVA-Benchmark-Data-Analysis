@@ -5,7 +5,7 @@ module.exports = {
   entry: "./Src/Scripts/Main.ts",
   output: {
     filename: "bundle.js",
-    path: __dirname + "/Dist", 
+    path: __dirname + "/Dist",
   },
   devtool: "source-map",
   resolve: {
@@ -22,10 +22,15 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          MiniCssExtractPlugin.loader, // We use MiniCssExtractPlugin.loader instead of 'style-loader' to extract CSS into a separate file
+          // MiniCssExtractPlugin.loader to extract CSS into a separate file.
+          MiniCssExtractPlugin.loader,
           'css-loader',
         ],
       },
+      {
+          test: /\.(woff|woff2|eot|ttf|otf)$/i,
+          type: "asset/inline",
+      }
     ],
   },
   plugins: [

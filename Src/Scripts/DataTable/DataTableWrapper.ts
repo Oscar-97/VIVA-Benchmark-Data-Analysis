@@ -114,6 +114,12 @@ function DataTablesConfiguration(): void {
 				targets: [0, 2]
 			}
 		],
+		language: {
+			// @ts-ignore
+			searchBuilder: {
+				button: "<i class='bi bi-search'></i> Advanced Search"
+			}
+		},
 		buttons: [
 			{
 				extend: "pageLength",
@@ -127,7 +133,13 @@ function DataTablesConfiguration(): void {
 			},
 			"spacer",
 			{
-				text: "Toggle Filters",
+				extend: "searchBuilder",
+				text: "Advanced Search Builder",
+				className: "rounded btn-sm"
+			},
+			"spacer",
+			{
+				text: "<i class='bi bi-filter-square'></i> Toggle Filters",
 				action: function (): void {
 					// @ts-ignore
 					table.searchPanes.container().toggle();
@@ -136,14 +148,8 @@ function DataTablesConfiguration(): void {
 			},
 			"spacer",
 			{
-				extend: "searchBuilder",
-				text: "Search Builder",
-				className: "rounded btn-sm"
-			},
-			"spacer",
-			{
 				extend: "collection",
-				text: "Export",
+				text: "<i class='bi bi-database-down'></i> Export",
 				className: "rounded btn-sm",
 				buttons: ["print", "copy", "csv"]
 			}

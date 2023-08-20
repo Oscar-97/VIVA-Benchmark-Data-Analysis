@@ -30,15 +30,20 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <span class="nav-link active" aria-current="page">Table</span>
+            <span class="nav-link active" aria-current="page"><i class="bi bi-file-spreadsheet"></i> Table</span>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Plots</a>
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i
+                class="bi bi-bar-chart-steps"></i> Plots</a>
             <ul class="dropdown-menu mb-2" aria-labelledby="navbarDropdownMenuLink">
-              <li><a class="dropdown-item" href="./Src/Pages/average_solver_time.html">Average Solver Time</a></li>
-              <li><a class="dropdown-item" href="./Src/Pages/solver_time.html">Solver Time</a></li>
-              <li><a class="dropdown-item" href="./Src/Pages/number_of_nodes.html">Number of Nodes</a></li>
-              <li><a class="dropdown-item" href="./Src/Pages/number_of_iterations.html">Number of Iterations</a></li>
+              <li><a class="dropdown-item" href="./Src/Pages/average_solver_time.html"><i
+                    class="bi bi-bar-chart-line-fill"></i> Average Solver Time</a></li>
+              <li><a class="dropdown-item" href="./Src/Pages/solver_time.html"><i class="bi bi-graph-up"></i> Solver
+                  Time</a></li>
+              <li><a class="dropdown-item" href="./Src/Pages/number_of_nodes.html"><i class="bi bi-bar-chart-line"></i>
+                  Number of Nodes</a></li>
+              <li><a class="dropdown-item" href="./Src/Pages/number_of_iterations.html"><i
+                    class="bi bi-bar-chart-line"></i> Number of Iterations</a></li>
             </ul>
           </li>
           <li class="nav-item">
@@ -47,31 +52,26 @@
                 aria-label="Upload" value="" data-toggle="tooltip" data-placement="top"
                 title="Select and upload a trace or JSON file." multiple>
               <button class="btn btn-outline-primary" type="button" id="importDataButton" disabled="true"
-                data-toggle="tooltip" data-placement="top"
-                title="Upload the selected file for processing.">Upload</button>
+                data-toggle="tooltip" data-placement="top" title="Upload the selected file for processing."><i
+                  class="bi bi-upload"></i> Upload</button>
             </div>
           </li>
         </ul>
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" href="./Docs/index.html" target="_blank">Docs</a>
+            <a class="nav-link" href="./Docs/index.html" target="_blank"><i class="bi bi-journal-code"></i> Docs</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis"
-              target="_blank">GitHub</a>
+            <a class="nav-link" href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis" target="_blank"><i
+                class="bi bi-github"></i> GitHub</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues/new"
-              target="_blank">Submit Issue</a>
+              target="_blank"><i class="bi bi-plus-square"></i> Submit Issue</a>
           </li>
           <li class="nav-item">
             <button class="btn" aria-label="help" data-bs-toggle="modal" data-bs-target="#fileFormatInformationModal"
-              name="Help">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                class="bi bi-question-circle-fill" viewBox="0 0 16 16">
-                <path
-                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z" />
-              </svg>
+              name="Help"> <i class="bi bi-question-circle-fill"></i> Help
             </button>
           </li>
         </ul>
@@ -87,31 +87,34 @@
   <div id="buttonContainer" class="d-flex flex-wrap justify-content-start gap-2">
     <div class="col-auto">
       <button class="btn btn-success btn-sm" id="viewTableButton" disabled="true" data-toggle="tooltip"
-        data-placement="top" title="View the table.">View Table</button>
+        data-placement="top" title="View the table."><i class="bi bi-table"></i> View Table
+      </button>
     </div>
     <div class="col-auto">
       <button class="btn btn-primary btn-sm" id="filterSelectionButton" disabled="true" data-toggle="tooltip"
-        data-placement="top" title="View problems that have been selected from the table.">View Selected
+        data-placement="top" title="View problems that have been selected from the table."><i class="bi bi-funnel"></i>
+        View Selected
         Problems</button>
     </div>
     <div class="col-auto">
       <button class="btn btn-primary btn-sm" id="saveLocalStorageButton" disabled="true" data-toggle="tooltip"
-        data-placement="top" title="Save current table configuration to local storage.">Save Data</button>
+        data-placement="top" title="Save current table configuration to local storage."><i class="bi bi-save"></i> Save
+        Data</button>
     </div>
     <div class="col-auto vertical-separator"></div>
     <div class="col-auto">
       <button class="btn btn-dark btn-sm" type="button" id="downloadConfigurationButtonLayer" disabled="true"><a
           id="downloadConfigurationButton" data-toggle="tooltip" data-placement="top"
-          title="Download the user configuration.">Download Saved Data</a></button>
+          title="Download the user configuration."><i class="bi bi-download"></i> Download Saved Data</a></button>
     </div>
     <div class="col-auto vertical-separator"></div>
     <div class="col-auto">
       <button class="btn btn-danger btn-sm" id="deleteLocalStorageButton" data-toggle="tooltip" data-placement="top"
-        title="Delete current table configuration from local storage.">Delete Data</button>
+        title="Delete current table configuration from local storage."><i class="bi bi-trash"></i> Delete Data</button>
     </div>
     <div class="col-auto">
       <button class="btn btn-danger btn-sm" id="clearTableButton" data-toggle="tooltip" data-placement="top"
-        title="Clear current table.">Clear Data Table</button>
+        title="Clear current table."><i class="bi bi-x-circle-fill"></i> Clear Data Table</button>
     </div>
   </div>
   <hr />
@@ -125,7 +128,8 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="fileFormatInformationModalLabel">Supported File Formats</h5>
+          <h5 class="modal-title" id="fileFormatInformationModalLabel"><i class="bi bi-info-circle"></i> Supported File
+            Formats</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -139,7 +143,7 @@
           <div class="d-grid gap-2">
             <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#expandableList"
               aria-expanded="false" aria-controls="expandableList">
-              List of Headers
+              <i class="bi bi-list"></i> List of Headers
             </button>
           </div>
 

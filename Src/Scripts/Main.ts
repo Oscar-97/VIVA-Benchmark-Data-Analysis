@@ -9,6 +9,7 @@ import $ from "jquery";
  */
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 /**
  * DataTables and extensions.
@@ -268,7 +269,10 @@ function ManageData(): void {
  * @param {object[]} traceData - This parameter is an array of objects that represents the trace data.
  * @param {object[]} traceDataFiltered - This parameter is an array of objects that represents the filtered trace data.
  */
-function HandleReportPage(traceData: object[], traceDataFiltered: any[]): void {
+function HandleReportPage(
+	traceData: object[],
+	traceDataFiltered: object[]
+): void {
 	/**
 	 * Show the table when clicking on the "View Table" button.
 	 */
