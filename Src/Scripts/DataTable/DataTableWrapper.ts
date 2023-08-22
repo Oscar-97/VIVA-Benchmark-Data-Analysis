@@ -129,13 +129,17 @@ function DataTablesConfiguration(): void {
 					{
 						extend: "pageLength",
 						text: function (dt) {
-							return "<i class='bi bi-list-columns-reverse'></i> Show " + dt.page.len() + " rows";
+							return (
+								"<i class='bi bi-list-columns-reverse'></i> Show " +
+								dt.page.len() +
+								" rows"
+							);
 						}
 					},
 					{
 						extend: "colvis",
 						text: "<i class='bi bi-layout-three-columns'></i> Column Visibility",
-						columnText: function (_dt, idx, title) {
+						columnText: function (_dt, idx, title): string {
 							return idx + 1 + ": " + title;
 						}
 					}
