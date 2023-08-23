@@ -104,7 +104,7 @@ This runs the command "webpack --config webpack.config.js", which will build the
 
 Run unit tests using Jest:
     
-    npm run test:unit
+    npm run test:functions
 
 Run UI tests with Playwright using Jest:
 
@@ -120,4 +120,8 @@ To automatically fix linting issues:
 
 Generate documentation using TypeDoc:
 
-    npm run build-docs
+    npm run build:docs
+
+Create a slimmed down release build:
+
+    npm run release

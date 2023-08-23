@@ -128,7 +128,7 @@ function DataTablesConfiguration(): void {
 				buttons: [
 					{
 						extend: "pageLength",
-						text: function (dt) {
+						text: function (dt): string {
 							return (
 								"<i class='bi bi-list-columns-reverse'></i> Show " +
 								dt.page.len() +
