@@ -1,5 +1,5 @@
-solvedata
-solvedata*.txt
 node_modules
+Release
+TestData
 TestScreenshots
 Tests/downloads
