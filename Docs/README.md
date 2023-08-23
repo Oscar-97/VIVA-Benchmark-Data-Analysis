@@ -122,6 +122,10 @@ Generate documentation using TypeDoc:
 
     npm run build:docs
 
-Create a slimmed down release build:
+Create a slimmed down release build using gulp:
 
     npm run release
+
+Create a slimmed down web release build using gulp:
+
+    npm run release:web
