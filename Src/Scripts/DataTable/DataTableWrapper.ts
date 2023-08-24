@@ -79,9 +79,9 @@ function DataTablesConfiguration(): void {
 			layout: "auto"
 		},
 		dom:
-			"<'row'<'col-12 col-sm-6 col-md-6'i><'col-12 col-sm-6 col-md-6 text-end'f>>" +
-			"<'row'<'col-12'tr>>" +
-			"<'row'<'col-12 col-lg-6 mt-4'B><'col-12 col-lg-6 mt-4 text-end'p>>",
+			"<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'f>>" +
+			"<'row'<'col-sm-12'tr>>" +
+			"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 mt-2'p>>",
 		lengthChange: true,
 		lengthMenu: [
 			[10, 25, 50, 100, -1],
