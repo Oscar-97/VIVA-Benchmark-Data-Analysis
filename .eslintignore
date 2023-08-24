@@ -1,5 +1,5 @@
 Docs/
 Dist/
-solvedata/
-solvedata*.txt/
+TestData/
+TestData*.txt/
 node_modules/
