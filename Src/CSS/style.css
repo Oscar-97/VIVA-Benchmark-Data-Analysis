@@ -52,16 +52,9 @@ a {
     margin-right: 1rem;
 }
 
-#buttonContainer,
-#solverAndProblemsHeader,
-#tableFilters {
+#buttonContainer {
     margin-left: 1rem;
     margin-top: 0.5rem;
-}
-
-#instancedataInput {
-    margin-top: 1rem;
-    width: 20rem;
 }
 
 #dataTable {
@@ -74,26 +67,6 @@ a {
     visibility: visible;
     padding: 1rem;
     padding-top: 1rem;
-}
-
-#tableFilters {
-    padding-left: 1rem;
-    padding-top: 1rem;
-}
-
-#tableFilters:empty {
-    padding: 0;
-}
-
-#checkboxContainer {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-#axesValues {
-    margin-top: 1rem;
 }
 
 #chartContainer {

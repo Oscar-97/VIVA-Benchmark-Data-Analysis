@@ -9,6 +9,7 @@ import $ from "jquery";
  */
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 /**
  * DataTables and extensions.
@@ -149,8 +150,10 @@ function InitializeProgram(): void {
 	try {
 		[rawData, dataFileType] = GetUserConfiguration();
 		ImportDataEvents("Found cached benchmark file!", "json");
+		saveLocalStorageButton.disabled = true;
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
+		sessionStorage.setItem("savedStorageNotification", "true");
 		ManageData();
 	} catch (err) {
 		console.log("No saved configuration data found. ", err);
@@ -176,6 +179,7 @@ function InitializeProgram(): void {
 	 * function whenever the button is clicked.
 	 */
 	importDataButton.addEventListener("click", () => {
+		sessionStorage.removeItem("savedStorageNotification");
 		ImportDataEvents("Benchmark file succesfully loaded!");
 		ManageData();
 	});
@@ -251,23 +255,10 @@ function ManageData(): void {
 	}
 
 	/**
-	 * If the document title is not "Report", it adds an event listener to the
-	 * "Save Local Storage" button that creates a new data configuration if the
-	 * dataFileType is either "trc" or "json", saves it to local storage, and enables
-	 * the "Delete Local Storage" and "Download Configuration" buttons when the button is clicked.
-	 * Also, it handles the plot page functionality using the traceData variable.
+	 * If the document title is not "Report", it handles the plot page functionality using
+	 * the traceData variable.
 	 */
 	if (document.title != "Report") {
-		saveLocalStorageButton.addEventListener("click", () => {
-			if (dataFileType === "trc" || dataFileType === "json") {
-				let newRawData = [];
-				newRawData = CreateDataTrc(traceData);
-				CreateUserConfiguration(newRawData, dataFileType);
-			}
-			deleteLocalStorageButton.disabled = false;
-			downloadConfigurationButtonLayer.disabled = false;
-		});
-
 		HandlePlotPages(traceData);
 	}
 }
@@ -278,7 +269,10 @@ function ManageData(): void {
  * @param {object[]} traceData - This parameter is an array of objects that represents the trace data.
  * @param {object[]} traceDataFiltered - This parameter is an array of objects that represents the filtered trace data.
  */
-function HandleReportPage(traceData: object[], traceDataFiltered: any[]): void {
+function HandleReportPage(
+	traceData: object[],
+	traceDataFiltered: object[]
+): void {
 	/**
 	 * Show the table when clicking on the "View Table" button.
 	 */

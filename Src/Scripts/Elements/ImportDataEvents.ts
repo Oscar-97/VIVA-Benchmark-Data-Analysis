@@ -58,14 +58,19 @@ export function ImportDataEvents(
 		filterSelectionButton.disabled = true;
 		importDataButton.disabled = true;
 		filterSelectionButton.disabled = true;
-		importDataButton.disabled = true;
 		if (fileExtensionType === "json") {
 			deleteLocalStorageButton.disabled = false;
 		}
 	} else if (document.title != "Report") {
 		viewPlotsButton.disabled = false;
-		saveLocalStorageButton.disabled = false;
+		importDataButton.disabled = true;
+		saveLocalStorageButton.disabled = true;
+		if (fileExtensionType === "json") {
+			deleteLocalStorageButton.disabled = false;
+		}
 	}
 
-	DisplayAlertNotification(message);
+	if (!sessionStorage.getItem("savedStorageNotification")) {
+		DisplayAlertNotification(message);
+	}
 }

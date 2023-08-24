@@ -1,6 +1,5 @@
 Docs/
 Dist/
-Src/bootstrap-5.2.3-dist/
-solvedata/
-solvedata*.txt/
+TestData/
+TestData*.txt/
 node_modules/

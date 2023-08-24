@@ -80,7 +80,6 @@ export function GetBestKnowBounds(rawSoluData: string[]): object[] {
 			obj["InputFileName"] = match[2];
 			switch (match[1]) {
 				case "best":
-					// Value in the third column is primal bound.
 					try {
 						obj["PrimalBoundProblem"] = Number(match[3]);
 					} catch (err) {
@@ -88,7 +87,6 @@ export function GetBestKnowBounds(rawSoluData: string[]): object[] {
 					}
 					break;
 				case "bestdual":
-					// Value in the third column is dual bound.
 					try {
 						obj["DualBoundProblem"] = Number(match[3]);
 					} catch (err) {
@@ -96,7 +94,6 @@ export function GetBestKnowBounds(rawSoluData: string[]): object[] {
 					}
 					break;
 				case "opt":
-					// Value in the third column is both primal and dual bound.
 					try {
 						obj["PrimalBoundProblem"] = Number(match[3]);
 						obj["DualBoundProblem"] = Number(match[3]);

@@ -79,9 +79,9 @@ function DataTablesConfiguration(): void {
 			layout: "auto"
 		},
 		dom:
-			"<'row'<'col-12 col-sm-6 col-md-6'i><'col-12 col-sm-6 col-md-6 text-end'f>>" +
-			"<'row'<'col-12'tr>>" +
-			"<'row'<'col-12 col-lg-6 mt-4'B><'col-12 col-lg-6 mt-4 text-end'p>>",
+			"<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'f>>" +
+			"<'row'<'col-sm-12'tr>>" +
+			"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 mt-2'p>>",
 		lengthChange: true,
 		lengthMenu: [
 			[10, 25, 50, 100, -1],
@@ -114,20 +114,45 @@ function DataTablesConfiguration(): void {
 				targets: [0, 2]
 			}
 		],
+		language: {
+			// @ts-ignore
+			searchBuilder: {
+				button: "<i class='bi bi-search'></i> Advanced Search"
+			}
+		},
 		buttons: [
 			{
-				extend: "pageLength",
-				className: "rounded-start btn-sm"
-			},
-			{
-				extend: "colvis",
-				className: "rounded-end btn-sm",
-				columnText: (_dt: DataTables.Api, idx: number, title: string): string =>
-					idx + 1 + ": " + title
+				extend: "collection",
+				text: "<i class='bi bi-gear'></i> Settings <span class='caret'></span>",
+				className: "rounded btn-sm",
+				buttons: [
+					{
+						extend: "pageLength",
+						text: function (dt): string {
+							return (
+								"<i class='bi bi-list-columns-reverse'></i> Show " +
+								dt.page.len() +
+								" rows"
+							);
+						}
+					},
+					{
+						extend: "colvis",
+						text: "<i class='bi bi-layout-three-columns'></i> Column Visibility",
+						columnText: function (_dt, idx, title): string {
+							return idx + 1 + ": " + title;
+						}
+					}
+				]
 			},
 			"spacer",
 			{
-				text: "Toggle Filters",
+				extend: "searchBuilder",
+				className: "rounded btn-sm"
+			},
+			"spacer",
+			{
+				text: "<i class='bi bi-filter-square'></i> Toggle Filters",
 				action: function (): void {
 					// @ts-ignore
 					table.searchPanes.container().toggle();
@@ -136,16 +161,23 @@ function DataTablesConfiguration(): void {
 			},
 			"spacer",
 			{
-				extend: "searchBuilder",
-				text: "Search Builder",
-				className: "rounded btn-sm"
-			},
-			"spacer",
-			{
 				extend: "collection",
-				text: "Export",
+				text: "<i class='bi bi-database-down'></i> Export",
 				className: "rounded btn-sm",
-				buttons: ["print", "copy", "csv"]
+				buttons: [
+					{
+						extend: "print",
+						text: "<i class='bi bi-printer'></i> Print"
+					},
+					{
+						extend: "copy",
+						text: "<i class='bi bi-clipboard2'></i> Copy"
+					},
+					{
+						extend: "csv",
+						text: "<i class='bi bi-filetype-csv'></i> CSV"
+					}
+				]
 			}
 		],
 		initComplete: function () {
