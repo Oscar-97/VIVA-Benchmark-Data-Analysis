@@ -45,7 +45,8 @@ export function MergeData(
 	}
 
 	if (mergedData.length === 0) {
-		console.log("No matching objects when merging data.");
+		console.log("No matching objects when merging data. Returning trace data.");
+		return traceData;
 	}
 	return mergedData;
 }
