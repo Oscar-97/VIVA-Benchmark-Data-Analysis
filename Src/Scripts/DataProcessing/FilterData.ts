@@ -24,7 +24,7 @@ function ExtractHeaders(rawData: string[]): string[] {
 }
 
 /**
- * Processes an array of raw data lines, using header names to create objects.
+ * Processes an array of raw data lines, using header names to create objects. If the line contains an asterisk (*), it is skipped.
  *
  * @param headers - Array of strings representing the headers/keys for the resulting objects.
  * @param rawData - Array of strings, where each string is a comma-separated representation of a row of data.
@@ -38,6 +38,7 @@ function ProcessLines(
 ): object[] {
 	const traceData = [];
 	for (let i = Math.max(startIdx, 0); i < rawData.length; i++) {
+		if (rawData[i].startsWith("*")) continue;
 		const currentLine = rawData[i].split(",");
 		if (currentLine.some((cell) => cell.trim() !== "")) {
 			const obj: { [key: string]: string } = {};
