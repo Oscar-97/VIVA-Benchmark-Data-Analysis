@@ -15,8 +15,8 @@ import {
  *
  * @remarks
  * This function modifies the passed `traceData` array by adding calculated properties to each object.
- * Each object in the `traceData` array is expected to have certain properties like "Dir", "Obj",
- * "Obj_Est", and "TermStatus". The function uses these existing properties to calculate new ones.
+ * Each object in the `traceData` array is expected to have certain properties like "Direction", "ObjectiveValue",
+ * "ObjectiveValueEstimate", and "TermStatus". The function uses these existing properties to calculate new ones.
  * If an object in the `traceData` array already has a property that the function tries to add,
  * the existing property will not be overwritten.
  *
@@ -25,38 +25,44 @@ import {
  */
 export function AddResultCategories(traceData: object[]): void {
 	for (const obj of traceData) {
-		obj["Dir"] = CalculateDirection(obj["Dir"]);
+		obj["Direction"] = CalculateDirection(obj["Direction"]);
 
-		obj["PrimalBoundSolver"] = CalculatePrimalBound(obj["Obj"], obj["Dir"]);
+		obj["PrimalBoundSolver"] = CalculatePrimalBound(
+			obj["ObjectiveValue"],
+			obj["Direction"]
+		);
 
-		obj["DualBoundSolver"] = CalculateDualBound(obj["Obj_Est"], obj["Dir"]);
+		obj["DualBoundSolver"] = CalculateDualBound(
+			obj["ObjectiveValueEstimate"],
+			obj["Direction"]
+		);
 
 		obj["TermStatus"] = SetTermStatus(obj["TermStatus"] as string | number);
 
 		if (!obj.hasOwnProperty("PrimalBoundProblem")) {
 			obj["PrimalBoundProblem"] = CalculatePrimalBound(
 				obj["PrimalBoundSolver"],
-				obj["Dir"]
+				obj["Direction"]
 			);
 		}
 
 		if (!obj.hasOwnProperty("DualBoundProblem")) {
 			obj["DualBoundProblem"] = CalculateDualBound(
 				obj["DualBoundSolver"],
-				obj["Dir"]
+				obj["Direction"]
 			);
 		}
 
 		obj["Gap_Solver"] = CalculateGap(
 			obj["PrimalBoundSolver"],
 			obj["DualBoundSolver"],
-			obj["Dir"]
+			obj["Direction"]
 		);
 
 		obj["Gap_Problem"] = CalculateGap(
 			obj["PrimalBoundProblem"],
 			obj["DualBoundProblem"],
-			obj["Dir"]
+			obj["Direction"]
 		);
 
 		obj["PrimalGap"] = CalculateDifference(

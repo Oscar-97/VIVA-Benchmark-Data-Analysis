@@ -16,7 +16,7 @@ jest.doMock("../Src/Scripts/DataProcessing/GetExtraData", () => ({
 const mockupTraceData = [
 	{
 		SolverName: "TestSolver1",
-		"Time[s]": "0.041120867",
+		SolverTime: "0.041120867",
 		InputFileName: "TestInstance",
 		PrimalBound: 1.33594e1,
 		DualBound: 1.96894e1,
@@ -24,7 +24,7 @@ const mockupTraceData = [
 	},
 	{
 		SolverName: "TestSolver1",
-		"Time[s]": "0.560621249",
+		SolverTime: "0.560621249",
 		InputFileName: "TestInstance_B",
 		PrimalBound: -5.96e3,
 		DualBound: -3.153852e4,
@@ -32,7 +32,7 @@ const mockupTraceData = [
 	},
 	{
 		SolverName: "TestSolver2",
-		"Time[s]": "900.971",
+		SolverTime: "900.971",
 		InputFileName: "TestInstance_X",
 		PrimalBound: -5.905217,
 		DualBound: 1.43358e1,
@@ -40,7 +40,7 @@ const mockupTraceData = [
 	},
 	{
 		SolverName: "TestSolver2",
-		"Time[s]": "5.922",
+		SolverTime: "5.922",
 		InputFileName: "TestInstance_Y",
 		PrimalBound: 1.13389e2,
 		DualBound: -2.0423e4,
@@ -290,7 +290,7 @@ describe("ExtractAllSolverTimes", () => {
 });
 
 describe("AnalyzeDataByCategory", () => {
-	const category = "Time[s]";
+	const category = "SolverTime";
 
 	test("Calculate the statistics table correctly.", () => {
 		const result = AnalyzeDataByCategory(mockupTraceData, category);

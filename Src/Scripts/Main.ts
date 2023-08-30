@@ -357,8 +357,8 @@ function HandlePlotPages(traceData: object[]): void {
 		PlotDataByCategory(
 			traceData,
 			"bar",
-			"Time[s]",
-			"Time[s].average",
+			"SolverTime",
+			"SolverTime.average",
 			"Average solver time"
 		);
 	}
@@ -377,8 +377,8 @@ function HandlePlotPages(traceData: object[]): void {
 		PlotDataByCategory(
 			traceData,
 			"bar",
-			"Nodes[i]",
-			"Nodes[i].average",
+			"NumberOfNodes",
+			"NumberOfNodes.average",
 			"Average number of nodes"
 		);
 	}
