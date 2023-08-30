@@ -120,3 +120,11 @@ export const dataTable: HTMLDivElement = document.getElementById(
 export const viewPlotsButton: HTMLButtonElement = document.getElementById(
 	"viewPlotsButton"
 ) as HTMLButtonElement;
+
+/**
+ * `demoModeButton` is a reference to the HTMLButtonElement with the ID "demoModeButton".
+ * @type {HTMLButtonElement}
+ */
+export const demoDataButton: HTMLButtonElement = document.getElementById(
+	"demoModeButton"
+) as HTMLButtonElement;
