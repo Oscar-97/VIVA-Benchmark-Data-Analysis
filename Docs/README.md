@@ -41,21 +41,21 @@ The following header structure and order should be used in conjunction with .trc
     NLP
     MIP
     JulianDate
-    Dir
-    Equs
-    Vars
-    Disc
+    Direction
+    NumberOfEquations
+    NumberOfVariables
+    NumberOfDiscreteVariables
     NumberOfNonZeros
     NumberOfNonlinearNonZeros
     OptionFile
     ModelStatus
     TermStatus
-    Obj
-    Obj_Est
-    Time[s]
+    ObjectiveValue
+    ObjectiveValueEstimate
+    SolverTime
     NumberOfIterations
     NumberOfDomainViolations
-    Nodes[i]
+    NumberOfNodes
     UserComment
 
 
