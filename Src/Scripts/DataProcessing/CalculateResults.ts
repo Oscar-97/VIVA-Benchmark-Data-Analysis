@@ -30,42 +30,37 @@ export function CalculateDirection(direction: number | string): string {
  * @param {string} direction - The optimization direction, which can either be 'max' for maximization problems or 'min' for minimization problems.
  *
  * @returns {(number | string)} - Returns a numerical value based on the input `primalBound`.
- * If the primal bound is an empty string, 'NA', 'nan', or '-nan', it returns `-Infinity` for 'max' direction and `Infinity` for 'min' direction.
+ * If the primal bound is an empty string, 'na', 'nan', or '-nan', it returns `-Infinity` for 'max' direction and `Infinity` for 'min' direction.
  * If the primal bound is 'inf' or '+inf', it returns `Infinity`, and for '-inf', it returns `-Infinity`.
- * Otherwise, it converts the primal bound into a number using `math.bignumber(primalBound).toNumber()`.
+ * Otherwise, it converts the primal bound into a number.
  */
 export function CalculatePrimalBound(
 	primalBound: number | string,
 	direction: string
 ): number {
 	if (typeof primalBound === "string") {
-		if (
-			primalBound === "" ||
-			primalBound === "NA" ||
-			primalBound === "nan" ||
-			primalBound === "-nan"
-		) {
-			if (direction === "max") {
-				primalBound = -1 * Infinity;
-			} else if (direction === "min") {
+		switch (primalBound.toLowerCase()) {
+			case "":
+			case "na":
+			case "nan":
+			case "-nan":
+				primalBound = direction === "max" ? -Infinity : Infinity;
+				break;
+			case "inf":
+			case "+inf":
 				primalBound = Infinity;
-			}
-		} else if (
-			primalBound.toLowerCase() === "inf" ||
-			primalBound.toLowerCase() === "+inf"
-		) {
-			primalBound = Infinity;
-		} else if (primalBound.toLocaleLowerCase() === "-inf") {
-			primalBound = -1 * Infinity;
-		} else {
-			primalBound = Number(primalBound);
+				break;
+			case "-inf":
+				primalBound = -Infinity;
+				break;
+			default:
+				primalBound = Number(primalBound);
 		}
 	}
-	// Ensure that the result is a number
-	if (typeof primalBound !== "number" || isNaN(primalBound)) {
-		primalBound = NaN;
-	}
-	return primalBound;
+
+	return typeof primalBound === "number" && !isNaN(primalBound)
+		? primalBound
+		: NaN;
 }
 
 /**
@@ -79,43 +74,35 @@ export function CalculatePrimalBound(
  * @param {string} direction - The optimization direction, which can either be 'max' for maximization problems or 'min' for minimization problems.
  *
  * @returns {(number | string)} - Returns a numerical value based on the input `dualBound`.
- * If the dual bound is an empty string, 'NA', 'nan', or '-nan', it returns `Infinity` for 'max' direction and `-Infinity` for 'min' direction.
+ * If the dual bound is an empty string, 'na', 'nan', or '-nan', it returns `Infinity` for 'max' direction and `-Infinity` for 'min' direction.
  * If the dual bound is 'inf' or '+inf', it returns `Infinity`, and for '-inf', it returns `-Infinity`.
- * Otherwise, it converts the dual bound into a number using `math.bignumber(dualBound).toNumber()`.
+ * Otherwise, it converts the dual bound into a number.
  */
 export function CalculateDualBound(
 	dualBound: number | string,
 	direction: string
 ): number {
 	if (typeof dualBound === "string") {
-		if (
-			dualBound === "" ||
-			dualBound === "NA" ||
-			dualBound === "nan" ||
-			dualBound === "-nan"
-		) {
-			if (direction === "max") {
+		switch (dualBound.toLowerCase()) {
+			case "":
+			case "na":
+			case "nan":
+			case "-nan":
+				dualBound = direction === "max" ? Infinity : -Infinity;
+				break;
+			case "inf":
+			case "+inf":
 				dualBound = Infinity;
-			} else if (direction === "min") {
-				dualBound = -1 * Infinity;
-			}
-		} else if (
-			dualBound.toLowerCase() === "inf" ||
-			dualBound.toLowerCase() === "+inf"
-		) {
-			dualBound = Infinity;
-		} else if (dualBound.toLowerCase() === "-inf") {
-			dualBound = -1 * Infinity;
-		} else {
-			dualBound = Number(dualBound);
+				break;
+			case "-inf":
+				dualBound = -Infinity;
+				break;
+			default:
+				dualBound = Number(dualBound);
 		}
 	}
 
-	// Ensure that the result is a number
-	if (typeof dualBound !== "number" || isNaN(dualBound)) {
-		dualBound = NaN;
-	}
-	return dualBound;
+	return typeof dualBound === "number" && !isNaN(dualBound) ? dualBound : NaN;
 }
 
 /**
@@ -383,8 +370,8 @@ export function ExtractAllSolverTimes(traceData: object[]): object {
 			if (!acc[obj.SolverName]) {
 				acc[obj.SolverName] = [];
 			}
-			if (obj["Time[s]"] !== "NA") {
-				const time = math.bignumber(obj["Time[s]"]).toNumber();
+			if (obj["SolverTime"] !== "NA") {
+				const time = math.bignumber(obj["SolverTime"]).toNumber();
 				if (!isNaN(time)) {
 					const inputFileName = obj["InputFileName"];
 					acc[obj.SolverName].push({ time, InputFileName: inputFileName });
