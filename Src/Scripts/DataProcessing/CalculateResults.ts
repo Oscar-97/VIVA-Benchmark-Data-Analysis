@@ -126,7 +126,6 @@ export function CalculateGap(
 	dir: string,
 	tol = 1e-9
 ): number {
-	console.log("a: ", a, " b: ", b, " dir: ", dir);
 	if (isNaN(a) || isNaN(b)) {
 		return Infinity;
 	}
