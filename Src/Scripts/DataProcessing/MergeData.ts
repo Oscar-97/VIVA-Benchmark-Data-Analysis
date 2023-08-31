@@ -28,28 +28,21 @@ export function MergeData(
 	const mergedData = [];
 
 	for (const obj1 of traceData) {
+		let isMatchFound = false;
 		for (const obj2 of data) {
-			if (obj2.InputFileName) {
-				if (obj1.InputFileName === obj2.InputFileName) {
-					const mergedObj = Object.assign({}, obj1, obj2);
-					mergedData.push(mergedObj);
-					break;
-				}
-			} else if (obj2.name) {
-				if (obj1.InputFileName === obj2.name) {
-					const mergedObj = Object.assign({}, obj1, obj2);
-					mergedData.push(mergedObj);
-					break;
-				}
+			if (
+				(obj2.InputFileName && obj1.InputFileName === obj2.InputFileName) ||
+				(obj2.name && obj1.InputFileName === obj2.name)
+			) {
+				const mergedObj = Object.assign({}, obj1, obj2);
+				mergedData.push(mergedObj);
+				isMatchFound = true;
+				break;
 			}
 		}
-	}
-
-	if (mergedData.length === 0) {
-		DisplayWarningNotification(
-			"No matching objects when merging data with additional files."
-		);
-		return traceData;
+		if (!isMatchFound) {
+			mergedData.push(obj1);
+		}
 	}
 	return mergedData;
 }
