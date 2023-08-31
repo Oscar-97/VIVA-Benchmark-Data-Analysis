@@ -210,172 +210,88 @@ export function CalculateGapDifference(a: number, b: number): number {
  * @returns {string} terminationStatus - The calculated termination status message in form of a string.
  */
 export function SetTermStatus(terminationStatus: number | string): string {
+	const statusMap: { [key: number]: string } = {
+		1: "Normal",
+		2: "IterationLimit",
+		3: "TimeLimit",
+		4: "Other",
+		5: "OtherLimit",
+		6: "CapabilityProblem",
+		7: "Other",
+		8: "UserInterrupt",
+		12: "Other"
+	};
+
 	if (typeof terminationStatus === "string") {
 		terminationStatus = parseInt(terminationStatus);
 	}
-	switch (terminationStatus) {
-		case 1:
-			terminationStatus = "Normal";
-			break;
-		case 2:
-			terminationStatus = "IterationLimit";
-			break;
-		case 3:
-			terminationStatus = "TimeLimit";
-			break;
-		case 4:
-		case 7:
-		case 12:
-			terminationStatus = "Other";
-			break;
-		case 5:
-			terminationStatus = "OtherLimit";
-			break;
-		case 6:
-			terminationStatus = "CapabilityProblem";
-			break;
-		case 8:
-			terminationStatus = "UserInterrupt";
-			break;
-		default:
-			terminationStatus = "Error";
-			break;
-	}
-	return terminationStatus;
+	return statusMap[terminationStatus] || "Error";
 }
 
 /**
  * This function sets a model status message based on an input parameter 'modelStatus'.
- * 
+ *
  * @param {number | string} modelStatus - A number or string input that represents the initial model status.
- * 
+ *
  * @returns {string} modelStatus - The calculated model status message in form of a string.
  */
 export function SetModelStatus(modelStatus: number | string): string {
+	const statusMap: { [key: number]: string } = {
+		1: "Optimal",
+		2: "Locally Optimal",
+		3: "Unbounded",
+		4: "Infeasible",
+		5: "Locally Infeasible",
+		6: "Intermediate Infeasible",
+		7: "Feasible Solution",
+		8: "Integer Solution",
+		9: "Intermediate Non-integer",
+		10: "Integer Infeasible",
+		11: "Lic Problem - No Solution",
+		12: "Error Unknown",
+		13: "Error No Solution",
+		14: "No Solution Returned",
+		15: "Solved Unique",
+		16: "Solved",
+		17: "Solved Singular",
+		18: "Unbounded - No Solution",
+		19: "Infeasible - No Solution"
+	};
+
 	if (typeof modelStatus === "string") {
 		modelStatus = parseInt(modelStatus);
 	}
-	switch (modelStatus) {
-		case 1:
-			modelStatus = "Optimal";
-			break;
-		case 2:
-			modelStatus = "Locally Optimal";
-			break;
-		case 3:
-			modelStatus = "Unbounded";
-			break;
-		case 4:
-			modelStatus = "Infeasible";
-			break;
-		case 5:
-			modelStatus = "Locally Infeasible";
-			break;
-		case 6:
-			modelStatus = "Intermediate Infeasible";
-			break;
-		case 7:
-			modelStatus = "Feasible Solution";
-			break;
-		case 8:
-			modelStatus = "Integer Solution";
-			break;
-		case 9:
-			modelStatus = "Intermediate Non-integer";
-			break;
-		case 10:
-			modelStatus = "Integer Infeasible";
-			break;
-		case 11:
-			modelStatus = "Lic Problem - No Solution";
-			break;
-		case 12:
-			modelStatus = "Error Unknown";
-			break;
-		case 13:
-			modelStatus = "Error No Solution";
-			break;
-		case 14:
-			modelStatus = "No Solution Returned";
-			break;
-		case 15:
-			modelStatus = "Solved Unique";
-			break;
-		case 16:
-			modelStatus = "Solved";
-			break;
-		case 17:
-			modelStatus = "Solved Singular";
-			break;
-		case 18:
-			modelStatus = "Unbounded - No Solution";
-			break;
-		case 19:
-			modelStatus = "Infeasible - No Solution";
-			break;
-		default:
-			modelStatus = "Unknown Error";
-			break;
-	}
-	return modelStatus;
+	return statusMap[modelStatus] || "Unknown Error";
 }
 
 /**
  * This function sets a solver status message based on an input parameter 'solverStatus'.
- * 
+ *
  * @param {number | string} solverStatus - A number or string input that represents the initial solver status.
- * 
+ *
  * @returns {string} solverStatus - The calculated solver status message in form of a string.
  */
 export function SetSolverStatus(solverStatus: number | string): string {
+	const statusMap: { [key: number]: string } = {
+		1: "Normal Completion",
+		2: "Iteration Interrupt",
+		3: "Resource Interrupt",
+		4: "Terminated By Solver",
+		5: "Evaluation Interrupt",
+		6: "Capability Problems",
+		7: "Licensing Problems",
+		8: "User Interrupt",
+		9: "Error Setup Failure",
+		10: "Error Solver Failure",
+		11: "Error Internal Solver Failure",
+		12: "Solve Processing Skipped",
+		13: "Error System Failure"
+	};
+
 	if (typeof solverStatus === "string") {
 		solverStatus = parseInt(solverStatus);
 	}
-	switch (solverStatus) {
-		case 1:
-			solverStatus = "Normal Completion";
-			break;
-		case 2:
-			solverStatus = "Iteration Interrupt";
-			break;
-		case 3:
-			solverStatus = "Resource Interrupt";
-			break;
-		case 4:
-			solverStatus = "Terminated By Solver";
-			break;
-		case 5:
-			solverStatus = "Evaluation Interrupt";
-			break;
-		case 6:
-			solverStatus = "Capability Problems";
-			break;
-		case 7:
-			solverStatus = "Licensing Problems";
-			break;
-		case 8:
-			solverStatus = "User Interrupt";
-			break;
-		case 9:
-			solverStatus = "Error Setup Failure";
-			break;
-		case 10:
-			solverStatus = "Error Solver Failure";
-			break;
-		case 11:
-			solverStatus = "Error Internal Solver Failure";
-			break;
-		case 12:
-			solverStatus = "Solve Processing Skipped";
-			break;
-		case 13:
-			solverStatus = "Error System Failure";
-			break;
-		default:
-			solverStatus = "Unknown Error";
-			break;
-	}
-	return solverStatus;
+	return statusMap[solverStatus] || "Unknown Error";
 }
 
 /**
