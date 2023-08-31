@@ -41,7 +41,9 @@ export function AddResultCategories(traceData: object[]): void {
 
 		obj["ModelStatus"] = SetModelStatus(obj["ModelStatus"] as string | number);
 
-		obj["SolverStatus"] = SetSolverStatus(obj["SolverStatus"] as string | number);
+		obj["SolverStatus"] = SetSolverStatus(
+			obj["SolverStatus"] as string | number
+		);
 
 		if (!obj.hasOwnProperty("PrimalBoundProblem")) {
 			obj["PrimalBoundProblem"] = CalculatePrimalBound(
