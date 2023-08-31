@@ -1,3 +1,4 @@
+import { DisplayWarningNotification } from "../Elements/DisplayAlertNotification";
 /**
  * Interface representing a categories object with optional `InputFileName` and `name` properties.
  */
@@ -45,7 +46,9 @@ export function MergeData(
 	}
 
 	if (mergedData.length === 0) {
-		console.log("No matching objects when merging data. Returning trace data.");
+		DisplayWarningNotification(
+			"No matching objects when merging data with additional files."
+		);
 		return traceData;
 	}
 	return mergedData;
