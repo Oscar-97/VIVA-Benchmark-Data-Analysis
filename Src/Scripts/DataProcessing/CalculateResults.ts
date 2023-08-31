@@ -206,11 +206,8 @@ export function CalculateGapDifference(a: number, b: number): number {
  * This function sets a termination status message based on an input parameter 'terminationStatus'.
  *
  * @param {number | string} terminationStatus - A number or string input that represents the initial termination status.
- *                                              This is then processed to define the final termination status message.
  *
  * @returns {string} terminationStatus - The calculated termination status message in form of a string.
- *                                       The possible return values include 'Normal', 'IterationLimit', 'TimeLimit',
- *                                       'Other', 'OtherLimit', 'CapabilityProblem', 'UserInterrupt', and 'Error'.
  */
 export function SetTermStatus(terminationStatus: number | string): string {
 	if (typeof terminationStatus === "string") {
@@ -245,6 +242,140 @@ export function SetTermStatus(terminationStatus: number | string): string {
 			break;
 	}
 	return terminationStatus;
+}
+
+/**
+ * This function sets a model status message based on an input parameter 'modelStatus'.
+ * 
+ * @param {number | string} modelStatus - A number or string input that represents the initial model status.
+ * 
+ * @returns {string} modelStatus - The calculated model status message in form of a string.
+ */
+export function SetModelStatus(modelStatus: number | string): string {
+	if (typeof modelStatus === "string") {
+		modelStatus = parseInt(modelStatus);
+	}
+	switch (modelStatus) {
+		case 1:
+			modelStatus = "Optimal";
+			break;
+		case 2:
+			modelStatus = "Locally Optimal";
+			break;
+		case 3:
+			modelStatus = "Unbounded";
+			break;
+		case 4:
+			modelStatus = "Infeasible";
+			break;
+		case 5:
+			modelStatus = "Locally Infeasible";
+			break;
+		case 6:
+			modelStatus = "Intermediate Infeasible";
+			break;
+		case 7:
+			modelStatus = "Feasible Solution";
+			break;
+		case 8:
+			modelStatus = "Integer Solution";
+			break;
+		case 9:
+			modelStatus = "Intermediate Non-integer";
+			break;
+		case 10:
+			modelStatus = "Integer Infeasible";
+			break;
+		case 11:
+			modelStatus = "Lic Problem - No Solution";
+			break;
+		case 12:
+			modelStatus = "Error Unknown";
+			break;
+		case 13:
+			modelStatus = "Error No Solution";
+			break;
+		case 14:
+			modelStatus = "No Solution Returned";
+			break;
+		case 15:
+			modelStatus = "Solved Unique";
+			break;
+		case 16:
+			modelStatus = "Solved";
+			break;
+		case 17:
+			modelStatus = "Solved Singular";
+			break;
+		case 18:
+			modelStatus = "Unbounded - No Solution";
+			break;
+		case 19:
+			modelStatus = "Infeasible - No Solution";
+			break;
+		default:
+			modelStatus = "Unknown Error";
+			break;
+	}
+	return modelStatus;
+}
+
+/**
+ * This function sets a solver status message based on an input parameter 'solverStatus'.
+ * 
+ * @param {number | string} solverStatus - A number or string input that represents the initial solver status.
+ * 
+ * @returns {string} solverStatus - The calculated solver status message in form of a string.
+ */
+export function SetSolverStatus(solverStatus: number | string): string {
+	if (typeof solverStatus === "string") {
+		solverStatus = parseInt(solverStatus);
+	}
+	switch (solverStatus) {
+		case 1:
+			solverStatus = "Normal Completion";
+			break;
+		case 2:
+			solverStatus = "Iteration Interrupt";
+			break;
+		case 3:
+			solverStatus = "Resource Interrupt";
+			break;
+		case 4:
+			solverStatus = "Terminated By Solver";
+			break;
+		case 5:
+			solverStatus = "Evaluation Interrupt";
+			break;
+		case 6:
+			solverStatus = "Capability Problems";
+			break;
+		case 7:
+			solverStatus = "Licensing Problems";
+			break;
+		case 8:
+			solverStatus = "User Interrupt";
+			break;
+		case 9:
+			solverStatus = "Error Setup Failure";
+			break;
+		case 10:
+			solverStatus = "Error Solver Failure";
+			break;
+		case 11:
+			solverStatus = "Error Internal Solver Failure";
+			break;
+		case 12:
+			solverStatus = "Solve Processing Skipped";
+			break;
+		case 13:
+			solverStatus = "Error System Failure";
+			break;
+		default:
+			solverStatus = "Unknown Error";
+			break;
+	}
+	return solverStatus;
 }
 
 /**

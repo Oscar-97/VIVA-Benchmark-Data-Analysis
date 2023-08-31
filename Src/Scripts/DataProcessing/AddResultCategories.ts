@@ -3,6 +3,8 @@ import {
 	CalculatePrimalBound,
 	CalculateDualBound,
 	SetTermStatus,
+	SetModelStatus,
+	SetSolverStatus,
 	CalculateDifference,
 	CalculateGap,
 	CalculateGapDifference
@@ -15,10 +17,8 @@ import {
  *
  * @remarks
  * This function modifies the passed `traceData` array by adding calculated properties to each object.
- * Each object in the `traceData` array is expected to have certain properties like "Direction", "ObjectiveValue",
- * "ObjectiveValueEstimate", and "TermStatus". The function uses these existing properties to calculate new ones.
- * If an object in the `traceData` array already has a property that the function tries to add,
- * the existing property will not be overwritten.
+ * Each object in the `traceData` array is expected to have certain properties like "Direction", "ObjectiveValue", and
+ * "ObjectiveValueEstimate". The function uses these existing properties to calculate new ones.
  *
  * The specific calculations performed by this function and the functions it calls are not described here.
  * Please refer to the documentation of those functions for details.
@@ -38,6 +38,10 @@ export function AddResultCategories(traceData: object[]): void {
 		);
 
 		obj["TermStatus"] = SetTermStatus(obj["TermStatus"] as string | number);
+
+		obj["ModelStatus"] = SetModelStatus(obj["ModelStatus"] as string | number);
+
+		obj["SolverStatus"] = SetSolverStatus(obj["SolverStatus"] as string | number);
 
 		if (!obj.hasOwnProperty("PrimalBoundProblem")) {
 			obj["PrimalBoundProblem"] = CalculatePrimalBound(
