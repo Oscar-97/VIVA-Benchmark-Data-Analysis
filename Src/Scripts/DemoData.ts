@@ -1,4 +1,10 @@
-export const demoData = {
+/**
+ * Provides demo data for testing and development.
+ * @type {object}
+ * @property {string[]} dataset - The data set.
+ * @property {string} dataFileType - The type of file extension.
+ */
+export const demoData: object = {
 	dataSet: [
 		"* InputFileName,ModelType,SolverName,OptionFile,Direction,NumberOfEquations,NumberOfVariables,NumberOfDiscreteVariables,NumberOfNonZeros,NumberOfNonlinearNonZeros,ModelStatus,SolverStatus,ObjectiveValue,ObjectiveValueEstimate,SolverTime,ETSolver,NumberOfIterations,NumberOfNodes,PrimalBoundSolver,DualBoundSolver,TermStatus,PrimalBoundProblem,DualBoundProblem,Gap_Solver,Gap_Problem,PrimalGap,DualGap,Gap[%]",
 		"30n20b8,MIP,Thorin,NA,min,577,18381,11098,109709,0,1,1,302,302,111.17,114.516999805346,217025,230,302,302,Error,302,302,0,0,0,0,0",
