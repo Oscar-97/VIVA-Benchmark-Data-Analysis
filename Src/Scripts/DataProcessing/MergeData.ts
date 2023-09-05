@@ -28,7 +28,8 @@ export function MergeData(
 		let isMatchFound = false;
 		for (const dataObj of data) {
 			if (
-				(dataObj.InputFileName && traceDataObj.InputFileName === dataObj.InputFileName) ||
+				(dataObj.InputFileName &&
+					traceDataObj.InputFileName === dataObj.InputFileName) ||
 				(dataObj.name && traceDataObj.InputFileName === dataObj.name)
 			) {
 				const mergedObj = Object.assign({}, traceDataObj, dataObj);
