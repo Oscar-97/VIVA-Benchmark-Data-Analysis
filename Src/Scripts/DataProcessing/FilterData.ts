@@ -1,4 +1,32 @@
 /**
+ * Default headers for the trace file.
+ */
+const defaultHeaders: string[] = [
+	"InputFileName",
+	"ModelType",
+	"SolverName",
+	"NLP",
+	"MIP",
+	"JulianDate",
+	"Direction",
+	"NumberOfEquations",
+	"NumberOfVariables",
+	"NumberOfDiscreteVariables",
+	"NumberOfNonZeros",
+	"NumberOfNonlinearNonZeros",
+	"OptionFile",
+	"ModelStatus",
+	"TermStatus",
+	"ObjectiveValue",
+	"ObjectiveValueEstimate",
+	"SolverTime",
+	"NumberOfIterations",
+	"NumberOfDomainViolations",
+	"NumberOfNodes",
+	"UserComment"
+];
+
+/**
  * Extracts headers from the array with raw data results.
  * Headers start with an asterisk (*) and are comma-separated.
  *
@@ -10,6 +38,7 @@ function ExtractHeaders(rawData: string[]): string[] {
 	for (const line of rawData) {
 		if (line.startsWith("*")) {
 			const cleanLine = line.slice(1).trim();
+
 			if (cleanLine === "") {
 				break;
 			}
@@ -25,6 +54,8 @@ function ExtractHeaders(rawData: string[]): string[] {
 
 /**
  * Processes an array of raw data lines, using header names to create objects. If the line contains an asterisk (*), it is skipped.
+ * 
+ * If the header is "ObjectiveValue" or "ObjectiveValueEstimate", it will be truncated if the value exceeds 25.
  *
  * @param headers - Array of strings representing the headers/keys for the resulting objects.
  * @param rawData - Array of strings, where each string is a comma-separated representation of a row of data.
@@ -37,13 +68,34 @@ function ProcessLines(
 	startIdx: number
 ): object[] {
 	const traceData = [];
+	const previousRow = {};
 	for (let i = Math.max(startIdx, 0); i < rawData.length; i++) {
 		if (rawData[i].startsWith("*")) continue;
+
 		const currentLine = rawData[i].split(",");
+		const fileName = currentLine[0];
+		const solverName = currentLine[2];
+
+		if (previousRow[fileName] === solverName) {
+			continue;
+		}
+		previousRow[fileName] = solverName;
+
 		if (currentLine.some((cell) => cell.trim() !== "")) {
-			const obj: { [key: string]: string } = {};
+			const obj = {};
 			for (let j = 0; j < headers.length; j++) {
-				obj[headers[j]] = currentLine[j];
+				let value = currentLine[j];
+
+				if (headers[j] === "ObjectiveValue" || headers[j] === "ObjectiveValueEstimate") 
+				{
+					value = Number(value).toExponential(6);
+				}
+
+				if (headers[j] === "SolverTime") {
+					value = (Math.round(Number(value) * 100) / 100).toString();
+				}
+
+				obj[headers[j]] = value;
 			}
 			traceData.push(obj);
 		}
@@ -61,12 +113,10 @@ function ProcessLines(
  * This function takes an array of strings (representing rows of .trc data) as input.
  * It reads the lines to determine if it includes headers (prefixed with '*').
  * If headers are found, they are extracted and used as the keys for the resulting objects.
- * If not, default headers (specified in a constant array inside the function) are used.
+ * If not, default headers are used.
  *
- * The function then iterates through each line of data, splitting it into separate elements
+ * The function then iterates through each line of data by using the function ProcessLines, splitting it into separate elements
  * based on the comma delimiter, and creating an object from these elements with the corresponding headers as keys.
- *
- * If the header is "ObjectiveValue" or "ObjectiveValueEstimate", it will be truncated if the value exceeds 25.
  *
  * @example
  * ```typescript
@@ -87,58 +137,7 @@ export function ExtractTrcData(rawData: string[]): object[] {
 		const startIdx = rawData.findIndex((line) => !line.startsWith("*"));
 		traceData = ProcessLines(headers, rawData, startIdx);
 	} else if (!firstLine[0].startsWith("*")) {
-		const defaultHeaders: string[] = [
-			"InputFileName",
-			"ModelType",
-			"SolverName",
-			"NLP",
-			"MIP",
-			"JulianDate",
-			"Direction",
-			"NumberOfEquations",
-			"NumberOfVariables",
-			"NumberOfDiscreteVariables",
-			"NumberOfNonZeros",
-			"NumberOfNonlinearNonZeros",
-			"OptionFile",
-			"ModelStatus",
-			"TermStatus",
-			"ObjectiveValue",
-			"ObjectiveValueEstimate",
-			"SolverTime",
-			"NumberOfIterations",
-			"NumberOfDomainViolations",
-			"NumberOfNodes",
-			"UserComment"
-		];
-		const previousRow = {};
-
-		for (let i = 0; i < rawData.length; i++) {
-			const currentLine = rawData[i].split(",");
-			const fileName = currentLine[0];
-			const solverName = currentLine[2];
-
-			if (previousRow[fileName] === solverName) {
-				continue;
-			}
-			previousRow[fileName] = solverName;
-
-			const obj = {};
-			for (let j = 0; j < defaultHeaders.length; j++) {
-				let value = currentLine[j];
-
-				if (
-					(defaultHeaders[j] === "ObjectiveValue" ||
-						defaultHeaders[j] === "ObjectiveValueEstimate") &&
-					value.length > 25
-				) {
-					value = value.substring(0, 25);
-				}
-
-				obj[defaultHeaders[j]] = value;
-			}
-			traceData.push(obj);
-		}
+		traceData = ProcessLines(defaultHeaders, rawData, 0)
 	}
 	return traceData;
 }
