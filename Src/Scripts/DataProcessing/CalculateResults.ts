@@ -323,7 +323,7 @@ export function AnalyzeDataByCategory(
 		percentile_90: number;
 	};
 } {
-	const solverTimes: { [SolverName: string]: number[] } = resultsData.reduce(
+	const categoryValues: { [SolverName: string]: number[] } = resultsData.reduce(
 		(acc, curr) => {
 			const parsedValue = Number(curr[category]);
 
@@ -338,7 +338,7 @@ export function AnalyzeDataByCategory(
 		{}
 	);
 
-	const solverTimeStats: {
+	const solverCategoryStats: {
 		[SolverName: string]: {
 			average: number;
 			min: number;
@@ -353,31 +353,31 @@ export function AnalyzeDataByCategory(
 		};
 	} = {};
 
-	for (const solverName in solverTimes) {
-		if (Object.prototype.hasOwnProperty.call(solverTimes, solverName)) {
-			const times = solverTimes[solverName];
-			const avgValue = Number(math.format(math.mean(times), { precision: 7 }));
-			const minValue = Number(math.format(math.min(times), { precision: 7 }));
-			const maxValue = Number(math.format(math.max(times), { precision: 7 }));
-			const stdValue = Number(math.format(math.std(times), { precision: 7 }));
-			const sumValue = Number(math.format(math.sum(times), { precision: 7 }));
+	for (const solverName in categoryValues) {
+		if (Object.prototype.hasOwnProperty.call(categoryValues, solverName)) {
+			const values = categoryValues[solverName];
+			const avgValue = Number(math.format(math.mean(values), { precision: 7 }));
+			const minValue = Number(math.format(math.min(values), { precision: 7 }));
+			const maxValue = Number(math.format(math.max(values), { precision: 7 }));
+			const stdValue = Number(math.format(math.std(values), { precision: 7 }));
+			const sumValue = Number(math.format(math.sum(values), { precision: 7 }));
 			const p10Value = Number(
-				math.format(math.quantileSeq(times, 0.1), { precision: 7 })
+				math.format(math.quantileSeq(values, 0.1), { precision: 7 })
 			);
 			const p25Value = Number(
-				math.format(math.quantileSeq(times, 0.25), { precision: 7 })
+				math.format(math.quantileSeq(values, 0.25), { precision: 7 })
 			);
 			const p50Value = Number(
-				math.format(math.quantileSeq(times, 0.5), { precision: 7 })
+				math.format(math.quantileSeq(values, 0.5), { precision: 7 })
 			);
 			const p75Value = Number(
-				math.format(math.quantileSeq(times, 0.75), { precision: 7 })
+				math.format(math.quantileSeq(values, 0.75), { precision: 7 })
 			);
 			const p90Value = Number(
-				math.format(math.quantileSeq(times, 0.9), { precision: 7 })
+				math.format(math.quantileSeq(values, 0.9), { precision: 7 })
 			);
 
-			solverTimeStats[solverName] = {
+			solverCategoryStats[solverName] = {
 				average: avgValue,
 				min: minValue,
 				max: maxValue,
@@ -391,7 +391,7 @@ export function AnalyzeDataByCategory(
 			};
 		}
 	}
-	return solverTimeStats;
+	return solverCategoryStats;
 }
 
 /**
