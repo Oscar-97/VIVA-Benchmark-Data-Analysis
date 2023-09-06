@@ -212,20 +212,20 @@ export function CalculateGapDifference(a: number, b: number): number {
 export function SetTermStatus(terminationStatus: number | string): string {
 	const statusMap: { [key: number]: string } = {
 		1: "Normal",
-		2: "IterationLimit",
-		3: "TimeLimit",
+		2: "Iteration Limit",
+		3: "Time Limit",
 		4: "Other",
-		5: "OtherLimit",
-		6: "CapabilityProblem",
+		5: "Other Limit",
+		6: "Capability Problem",
 		7: "Other",
-		8: "UserInterrupt",
+		8: "User Interrupt",
 		12: "Other"
 	};
 
 	if (typeof terminationStatus === "string") {
 		terminationStatus = parseInt(terminationStatus);
 	}
-	return statusMap[terminationStatus] || "Error";
+	return statusMap[terminationStatus] || "Unknown Error";
 }
 
 /**
