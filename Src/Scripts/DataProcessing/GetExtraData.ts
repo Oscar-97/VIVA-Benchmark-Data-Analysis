@@ -55,7 +55,7 @@ export function GetInstanceInformation(
  * expression pattern to extract the best known primal and dual bounds, as well as the file name.
  *
  * The function then generates an object for each line of data, with the file name and the primal and/or dual bounds
- * as properties of the object, depending on the keyword in the first column. The keyword "best" indicates a primal bound,
+ * as properties of the object, depending on the keyword in the first column. The keyword "inf" indicates infinity, "best" a primal bound,
  * "bestdual" a dual bound, and "opt" indicates that the bound is both primal and dual.
  *
  * @example
@@ -79,6 +79,16 @@ export function GetBestKnowBounds(rawSoluData: string[]): object[] {
 		if (match !== null) {
 			obj["InputFileName"] = match[2];
 			switch (match[1]) {
+				case "inf":
+					try {
+						obj["PrimalBoundProblem"] = Infinity;
+						obj["DualBoundProblem"] = Infinity;
+					} catch (err) {
+						console.log(err);
+						obj["PrimalBoundProblem"] = NaN;
+						obj["DualBoundProblem"] = NaN;
+					}
+					break;
 				case "best":
 					try {
 						obj["PrimalBoundProblem"] = Number(match[3]);
