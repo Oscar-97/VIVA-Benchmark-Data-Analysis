@@ -198,6 +198,7 @@ function DataTablesConfiguration(): void {
 				"objsense",
 				"objtype",
 				"ModelStatus",
+				"SolverStatus",
 				"TermStatus",
 				"SolverTime",
 				"NumberOfIterations",
