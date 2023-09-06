@@ -54,7 +54,7 @@ function ExtractHeaders(rawData: string[]): string[] {
 
 /**
  * Processes an array of raw data lines, using header names to create objects. If the line contains an asterisk (*), it is skipped.
- * 
+ *
  * If the header is "ObjectiveValue" or "ObjectiveValueEstimate", it will be truncated if the value exceeds 25.
  *
  * @param headers - Array of strings representing the headers/keys for the resulting objects.
@@ -86,8 +86,10 @@ function ProcessLines(
 			for (let j = 0; j < headers.length; j++) {
 				let value = currentLine[j];
 
-				if (headers[j] === "ObjectiveValue" || headers[j] === "ObjectiveValueEstimate") 
-				{
+				if (
+					headers[j] === "ObjectiveValue" ||
+					headers[j] === "ObjectiveValueEstimate"
+				) {
 					value = Number(value).toExponential(6);
 				}
 
@@ -137,7 +139,7 @@ export function ExtractTrcData(rawData: string[]): object[] {
 		const startIdx = rawData.findIndex((line) => !line.startsWith("*"));
 		traceData = ProcessLines(headers, rawData, startIdx);
 	} else if (!firstLine[0].startsWith("*")) {
-		traceData = ProcessLines(defaultHeaders, rawData, 0)
+		traceData = ProcessLines(defaultHeaders, rawData, 0);
 	}
 	return traceData;
 }
