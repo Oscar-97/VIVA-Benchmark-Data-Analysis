@@ -9,7 +9,8 @@ import { dataTable } from "../Elements/Elements";
  *
  * @remarks
  * This function generates a new table to display trace data. The table is added to the 'dataTable' HTML div.
- * For each object in the traceData array, it creates a row with the values from the object in the columns of the row.
+ * For each object in the traceData array, it creates a row with the values from the object in the columns of the row. 
+ * The objects are sorted to assert that keys that have been manipulated get in the correct order.
  * Note: this function directly manipulates the DOM and doesn't return anything.
  *
  * @example
@@ -36,12 +37,15 @@ export function TableDataTrc(traceData: object[]): void {
 	 * @param DataTableHeaders Thead created from the categories.
 	 */
 	const headerRow = document.createElement("tr");
-	for (const key of Object.keys(traceData[0])) {
-		if (key !== undefined) {
-			const th = document.createElement("th");
-			th.textContent = key;
-			headerRow.appendChild(th);
-		}
+	const sortedKeys = Object.keys(traceData[0]).filter(
+		(k) => k !== "InputFileName"
+	);
+	sortedKeys.sort();
+	sortedKeys.unshift("InputFileName");
+	for (const key of sortedKeys) {
+		const th = document.createElement("th");
+		th.textContent = key || "NA";
+		headerRow.appendChild(th);
 	}
 	dataTableHeaders.appendChild(headerRow);
 
@@ -51,11 +55,20 @@ export function TableDataTrc(traceData: object[]): void {
 	 */
 	const dataTableContent = document.createElement("tbody");
 	for (const obj of traceData) {
-		const results = Object.values(obj);
 		const resultRow = document.createElement("tr");
-		for (let i = 0; i < results.length; i++) {
+		const sortedKeys = Object.keys(obj).filter((k) => k !== "InputFileName");
+		sortedKeys.sort();
+		sortedKeys.unshift("InputFileName");
+		for (const key of sortedKeys) {
+			const value = obj[key];
 			const td = document.createElement("td");
-			td.textContent = results[i];
+			if (value !== null && value !== undefined && !Number.isNaN(value)) {
+				td.textContent = value.toString();
+			} else if (Number.isNaN(value)) {
+				td.textContent = "NaN";
+			} else {
+				td.textContent = "-";
+			}
 			resultRow.appendChild(td);
 		}
 		dataTableContent.appendChild(resultRow);
