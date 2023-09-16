@@ -38,10 +38,10 @@ export function TableDataTrc(traceData: object[]): void {
 	 */
 	const headerRow = document.createElement("tr");
 	const sortedKeys = Object.keys(traceData[0]).filter(
-		(k) => k !== "InputFileName"
+		(k) => k !== "InputFileName" && k !== "SolverName"
 	);
 	sortedKeys.sort();
-	sortedKeys.unshift("InputFileName");
+	sortedKeys.unshift("InputFileName", "SolverName");
 	for (const key of sortedKeys) {
 		const th = document.createElement("th");
 		th.textContent = key || "NA";
@@ -56,9 +56,11 @@ export function TableDataTrc(traceData: object[]): void {
 	const dataTableContent = document.createElement("tbody");
 	for (const obj of traceData) {
 		const resultRow = document.createElement("tr");
-		const sortedKeys = Object.keys(obj).filter((k) => k !== "InputFileName");
+		const sortedKeys = Object.keys(obj).filter(
+			(k) => k !== "InputFileName" && k !== "SolverName"
+		);
 		sortedKeys.sort();
-		sortedKeys.unshift("InputFileName");
+		sortedKeys.unshift("InputFileName", "SolverName");
 		for (const key of sortedKeys) {
 			const value = obj[key];
 			const td = document.createElement("td");
