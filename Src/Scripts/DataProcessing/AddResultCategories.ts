@@ -5,7 +5,6 @@ import {
 	SetTermStatus,
 	SetModelStatus,
 	SetSolverStatus,
-	CalculateDifference,
 	CalculateGap,
 	CalculateGapDifference
 } from "./CalculateResults";
@@ -71,14 +70,16 @@ export function AddResultCategories(traceData: object[]): void {
 			obj["Direction"]
 		);
 
-		obj["PrimalGap"] = CalculateDifference(
+		obj["PrimalGap"] = CalculateGap(
 			obj["PrimalBoundSolver"],
-			obj["PrimalBoundProblem"]
+			obj["PrimalBoundProblem"],
+			obj["Direction"]
 		);
 
-		obj["DualGap"] = CalculateDifference(
+		obj["DualGap"] = CalculateGap(
 			obj["DualBoundSolver"],
-			obj["DualBoundProblem"]
+			obj["DualBoundProblem"],
+			obj["Direction"]
 		);
 
 		obj["Gap[%]"] = CalculateGapDifference(obj["PrimalGap"], obj["DualGap"]);

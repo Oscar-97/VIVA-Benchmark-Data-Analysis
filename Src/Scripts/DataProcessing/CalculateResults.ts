@@ -37,7 +37,7 @@ export function CalculateDirection(direction: number | string): string {
 export function CalculatePrimalBound(
 	primalBound: number | string,
 	direction: string
-): number {
+): number | string {
 	if (typeof primalBound === "string") {
 		switch (primalBound.toLowerCase()) {
 			case "":
@@ -54,13 +54,11 @@ export function CalculatePrimalBound(
 				primalBound = -Infinity;
 				break;
 			default:
-				primalBound = Number(primalBound);
+				primalBound = Number(primalBound).toExponential(6);
 		}
 	}
 
-	return typeof primalBound === "number" && !isNaN(primalBound)
-		? primalBound
-		: NaN;
+	return primalBound;
 }
 
 /**
@@ -81,7 +79,7 @@ export function CalculatePrimalBound(
 export function CalculateDualBound(
 	dualBound: number | string,
 	direction: string
-): number {
+): number | string {
 	if (typeof dualBound === "string") {
 		switch (dualBound.toLowerCase()) {
 			case "":
@@ -98,11 +96,11 @@ export function CalculateDualBound(
 				dualBound = -Infinity;
 				break;
 			default:
-				dualBound = Number(dualBound);
+				dualBound = Number(dualBound).toExponential(6);
 		}
 	}
 
-	return typeof dualBound === "number" && !isNaN(dualBound) ? dualBound : NaN;
+	return dualBound;
 }
 
 /**
@@ -150,30 +148,12 @@ export function CalculateGap(
 	}
 
 	// Compute and return the gap between the values
-	let result = ((a - b) / Math.min(Math.abs(a), Math.abs(b))) * 100;
+	//let result = ((a - b) / Math.min(Math.abs(a), Math.abs(b))) * 100;
 
-	if (result === -0) {
-		result = 0;
-	}
+	//result = (Math.round(Number(result) * 100) / 100);
+	let result = Math.abs(Math.round(((a - b) / Math.min(Math.abs(a), Math.abs(b))) * 10000) / 100);
 
 	return result;
-}
-
-/**
- * Calculates the absolute difference between two numbers, `a` and `b`, to a precision of 7 decimal places.
- *
- * @export
- * @param {number} a - The first number for the calculation.
- * @param {number} b - The second number for the calculation.
- *
- * @returns {number} - Returns the absolute difference between `a` and `b`, rounded to 7 decimal places.
- * The function first determines the larger (higher) and smaller (lower) number between `a` and `b`,
- * then subtracts the lower from the higher to get the absolute difference.
- */
-export function CalculateDifference(a: number, b: number): number {
-	const higher = Math.max(a, b);
-	const lower = Math.min(a, b);
-	return Number((higher - lower).toFixed(7));
 }
 
 /**
