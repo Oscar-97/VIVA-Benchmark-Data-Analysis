@@ -9,7 +9,7 @@ import { dataTable } from "../Elements/Elements";
  *
  * @remarks
  * This function generates a new table to display trace data. The table is added to the 'dataTable' HTML div.
- * For each object in the traceData array, it creates a row with the values from the object in the columns of the row. 
+ * For each object in the traceData array, it creates a row with the values from the object in the columns of the row.
  * The objects are sorted to assert that keys that have been manipulated get in the correct order.
  * Note: this function directly manipulates the DOM and doesn't return anything.
  *
