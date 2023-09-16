@@ -148,9 +148,6 @@ export function CalculateGap(
 	}
 
 	// Compute and return the gap between the values
-	//let result = ((a - b) / Math.min(Math.abs(a), Math.abs(b))) * 100;
-
-	//result = (Math.round(Number(result) * 100) / 100);
 	const result = Math.abs(
 		Math.round(((a - b) / Math.min(Math.abs(a), Math.abs(b))) * 10000) / 100
 	);
