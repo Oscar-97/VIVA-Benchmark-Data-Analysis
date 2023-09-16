@@ -76,7 +76,8 @@ import {
 	downloadConfigurationButton,
 	deleteLocalStorageButton,
 	clearTableButton,
-	downloadConfigurationButtonLayer
+	downloadConfigurationButtonLayer,
+	demoDataButton
 } from "./Elements/Elements";
 import { LoadingAnimation } from "./Elements/LoadingAnimation";
 
@@ -89,6 +90,8 @@ import {
 	DeleteUserConfiguration,
 	DownloadUserConfiguration
 } from "./UserConfiguration/UserConfiguration";
+
+import { demoData } from "./DemoData";
 //#endregion
 
 /**
@@ -182,6 +185,14 @@ function InitializeProgram(): void {
 		sessionStorage.removeItem("savedStorageNotification");
 		ImportDataEvents("Benchmark file succesfully loaded!");
 		ManageData();
+	});
+
+	/**
+	 * Adds an event listener to the "Demo-Mode" button that loads a demo data set and savet it to local storage.
+	 */
+	demoDataButton.addEventListener("click", () => {
+		localStorage.setItem("UserConfiguration", JSON.stringify(demoData));
+		location.reload();
 	});
 }
 
@@ -357,8 +368,8 @@ function HandlePlotPages(traceData: object[]): void {
 		PlotDataByCategory(
 			traceData,
 			"bar",
-			"Time[s]",
-			"Time[s].average",
+			"SolverTime",
+			"SolverTime.average",
 			"Average solver time"
 		);
 	}
@@ -377,8 +388,8 @@ function HandlePlotPages(traceData: object[]): void {
 		PlotDataByCategory(
 			traceData,
 			"bar",
-			"Nodes[i]",
-			"Nodes[i].average",
+			"NumberOfNodes",
+			"NumberOfNodes.average",
 			"Average number of nodes"
 		);
 	}

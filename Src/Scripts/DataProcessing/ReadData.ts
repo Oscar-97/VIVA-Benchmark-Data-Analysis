@@ -183,7 +183,7 @@ export function ReadData(
 					rawInstanceInfoData.push(line);
 				}
 			} else if (fileExtension === "solu") {
-				const lines = (<string>reader.result).split("\r\n");
+				const lines = (<string>reader.result).split(/\r?\n/);
 				for (let i = 0; i <= lines.length - 1; i++) {
 					const line = lines[i];
 					rawSoluData.push(line);

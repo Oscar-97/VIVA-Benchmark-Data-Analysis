@@ -30,41 +30,34 @@ export function CalculateDirection(direction: number | string): string {
  * @param {string} direction - The optimization direction, which can either be 'max' for maximization problems or 'min' for minimization problems.
  *
  * @returns {(number | string)} - Returns a numerical value based on the input `primalBound`.
- * If the primal bound is an empty string, 'NA', 'nan', or '-nan', it returns `-Infinity` for 'max' direction and `Infinity` for 'min' direction.
+ * If the primal bound is an empty string, 'na', 'nan', or '-nan', it returns `-Infinity` for 'max' direction and `Infinity` for 'min' direction.
  * If the primal bound is 'inf' or '+inf', it returns `Infinity`, and for '-inf', it returns `-Infinity`.
- * Otherwise, it converts the primal bound into a number using `math.bignumber(primalBound).toNumber()`.
+ * Otherwise, it converts the primal bound into a number.
  */
 export function CalculatePrimalBound(
 	primalBound: number | string,
 	direction: string
-): number {
+): number | string {
 	if (typeof primalBound === "string") {
-		if (
-			primalBound === "" ||
-			primalBound === "NA" ||
-			primalBound === "nan" ||
-			primalBound === "-nan"
-		) {
-			if (direction === "max") {
-				primalBound = -1 * Infinity;
-			} else if (direction === "min") {
+		switch (primalBound.toLowerCase()) {
+			case "":
+			case "na":
+			case "nan":
+			case "-nan":
+				primalBound = direction === "max" ? -Infinity : Infinity;
+				break;
+			case "inf":
+			case "+inf":
 				primalBound = Infinity;
-			}
-		} else if (
-			primalBound.toLowerCase() === "inf" ||
-			primalBound.toLowerCase() === "+inf"
-		) {
-			primalBound = Infinity;
-		} else if (primalBound.toLocaleLowerCase() === "-inf") {
-			primalBound = -1 * Infinity;
-		} else {
-			primalBound = Number(primalBound);
+				break;
+			case "-inf":
+				primalBound = -Infinity;
+				break;
+			default:
+				primalBound = Number(primalBound).toExponential(6);
 		}
 	}
-	// Ensure that the result is a number
-	if (typeof primalBound !== "number" || isNaN(primalBound)) {
-		primalBound = NaN;
-	}
+
 	return primalBound;
 }
 
@@ -79,42 +72,34 @@ export function CalculatePrimalBound(
  * @param {string} direction - The optimization direction, which can either be 'max' for maximization problems or 'min' for minimization problems.
  *
  * @returns {(number | string)} - Returns a numerical value based on the input `dualBound`.
- * If the dual bound is an empty string, 'NA', 'nan', or '-nan', it returns `Infinity` for 'max' direction and `-Infinity` for 'min' direction.
+ * If the dual bound is an empty string, 'na', 'nan', or '-nan', it returns `Infinity` for 'max' direction and `-Infinity` for 'min' direction.
  * If the dual bound is 'inf' or '+inf', it returns `Infinity`, and for '-inf', it returns `-Infinity`.
- * Otherwise, it converts the dual bound into a number using `math.bignumber(dualBound).toNumber()`.
+ * Otherwise, it converts the dual bound into a number.
  */
 export function CalculateDualBound(
 	dualBound: number | string,
 	direction: string
-): number {
+): number | string {
 	if (typeof dualBound === "string") {
-		if (
-			dualBound === "" ||
-			dualBound === "NA" ||
-			dualBound === "nan" ||
-			dualBound === "-nan"
-		) {
-			if (direction === "max") {
+		switch (dualBound.toLowerCase()) {
+			case "":
+			case "na":
+			case "nan":
+			case "-nan":
+				dualBound = direction === "max" ? Infinity : -Infinity;
+				break;
+			case "inf":
+			case "+inf":
 				dualBound = Infinity;
-			} else if (direction === "min") {
-				dualBound = -1 * Infinity;
-			}
-		} else if (
-			dualBound.toLowerCase() === "inf" ||
-			dualBound.toLowerCase() === "+inf"
-		) {
-			dualBound = Infinity;
-		} else if (dualBound.toLowerCase() === "-inf") {
-			dualBound = -1 * Infinity;
-		} else {
-			dualBound = Number(dualBound);
+				break;
+			case "-inf":
+				dualBound = -Infinity;
+				break;
+			default:
+				dualBound = Number(dualBound).toExponential(6);
 		}
 	}
 
-	// Ensure that the result is a number
-	if (typeof dualBound !== "number" || isNaN(dualBound)) {
-		dualBound = NaN;
-	}
 	return dualBound;
 }
 
@@ -139,7 +124,6 @@ export function CalculateGap(
 	dir: string,
 	tol = 1e-9
 ): number {
-	console.log("a: ", a, " b: ", b, " dir: ", dir);
 	if (isNaN(a) || isNaN(b)) {
 		return Infinity;
 	}
@@ -164,30 +148,11 @@ export function CalculateGap(
 	}
 
 	// Compute and return the gap between the values
-	let result = ((a - b) / Math.min(Math.abs(a), Math.abs(b))) * 100;
-
-	if (result === -0) {
-		result = 0;
-	}
+	const result = Math.abs(
+		Math.round(((a - b) / Math.min(Math.abs(a), Math.abs(b))) * 10000) / 100
+	);
 
 	return result;
-}
-
-/**
- * Calculates the absolute difference between two numbers, `a` and `b`, to a precision of 7 decimal places.
- *
- * @export
- * @param {number} a - The first number for the calculation.
- * @param {number} b - The second number for the calculation.
- *
- * @returns {number} - Returns the absolute difference between `a` and `b`, rounded to 7 decimal places.
- * The function first determines the larger (higher) and smaller (lower) number between `a` and `b`,
- * then subtracts the lower from the higher to get the absolute difference.
- */
-export function CalculateDifference(a: number, b: number): number {
-	const higher = Math.max(a, b);
-	const lower = Math.min(a, b);
-	return Number((higher - lower).toFixed(7));
 }
 
 /**
@@ -210,8 +175,10 @@ export function CalculateGapDifference(a: number, b: number): number {
 			return a - b;
 		}
 	} else {
-		return Number(
-			((a - b) / Math.max(Math.abs(a), Math.abs(b), 1.0)).toFixed(7)
+		return (
+			Math.round(
+				Math.abs((a - b) / Math.max(Math.abs(a), Math.abs(b), 1.0)) * 100
+			) / 100
 		);
 	}
 }
@@ -220,45 +187,92 @@ export function CalculateGapDifference(a: number, b: number): number {
  * This function sets a termination status message based on an input parameter 'terminationStatus'.
  *
  * @param {number | string} terminationStatus - A number or string input that represents the initial termination status.
- *                                              This is then processed to define the final termination status message.
  *
  * @returns {string} terminationStatus - The calculated termination status message in form of a string.
- *                                       The possible return values include 'Normal', 'IterationLimit', 'TimeLimit',
- *                                       'Other', 'OtherLimit', 'CapabilityProblem', 'UserInterrupt', and 'Error'.
  */
 export function SetTermStatus(terminationStatus: number | string): string {
+	const statusMap: { [key: number]: string } = {
+		1: "Normal",
+		2: "Iteration Limit",
+		3: "Time Limit",
+		4: "Other",
+		5: "Other Limit",
+		6: "Capability Problem",
+		7: "Other",
+		8: "User Interrupt",
+		12: "Other"
+	};
+
 	if (typeof terminationStatus === "string") {
 		terminationStatus = parseInt(terminationStatus);
 	}
-	switch (terminationStatus) {
-		case 1:
-			terminationStatus = "Normal";
-			break;
-		case 2:
-			terminationStatus = "IterationLimit";
-			break;
-		case 3:
-			terminationStatus = "TimeLimit";
-			break;
-		case 4:
-		case 7:
-		case 12:
-			terminationStatus = "Other";
-			break;
-		case 5:
-			terminationStatus = "OtherLimit";
-			break;
-		case 6:
-			terminationStatus = "CapabilityProblem";
-			break;
-		case 8:
-			terminationStatus = "UserInterrupt";
-			break;
-		default:
-			terminationStatus = "Error";
-			break;
+	return statusMap[terminationStatus] || "Unknown Error";
+}
+
+/**
+ * This function sets a model status message based on an input parameter 'modelStatus'.
+ *
+ * @param {number | string} modelStatus - A number or string input that represents the initial model status.
+ *
+ * @returns {string} modelStatus - The calculated model status message in form of a string.
+ */
+export function SetModelStatus(modelStatus: number | string): string {
+	const statusMap: { [key: number]: string } = {
+		1: "Optimal",
+		2: "Locally Optimal",
+		3: "Unbounded",
+		4: "Infeasible",
+		5: "Locally Infeasible",
+		6: "Intermediate Infeasible",
+		7: "Feasible Solution",
+		8: "Integer Solution",
+		9: "Intermediate Non-integer",
+		10: "Integer Infeasible",
+		11: "Lic Problem - No Solution",
+		12: "Error Unknown",
+		13: "Error No Solution",
+		14: "No Solution Returned",
+		15: "Solved Unique",
+		16: "Solved",
+		17: "Solved Singular",
+		18: "Unbounded - No Solution",
+		19: "Infeasible - No Solution"
+	};
+
+	if (typeof modelStatus === "string") {
+		modelStatus = parseInt(modelStatus);
 	}
-	return terminationStatus;
+	return statusMap[modelStatus] || "Unknown Error";
+}
+
+/**
+ * This function sets a solver status message based on an input parameter 'solverStatus'.
+ *
+ * @param {number | string} solverStatus - A number or string input that represents the initial solver status.
+ *
+ * @returns {string} solverStatus - The calculated solver status message in form of a string.
+ */
+export function SetSolverStatus(solverStatus: number | string): string {
+	const statusMap: { [key: number]: string } = {
+		1: "Normal Completion",
+		2: "Iteration Interrupt",
+		3: "Resource Interrupt",
+		4: "Terminated By Solver",
+		5: "Evaluation Interrupt",
+		6: "Capability Problems",
+		7: "Licensing Problems",
+		8: "User Interrupt",
+		9: "Error Setup Failure",
+		10: "Error Solver Failure",
+		11: "Error Internal Solver Failure",
+		12: "Solve Processing Skipped",
+		13: "Error System Failure"
+	};
+
+	if (typeof solverStatus === "string") {
+		solverStatus = parseInt(solverStatus);
+	}
+	return statusMap[solverStatus] || "Unknown Error";
 }
 
 /**
@@ -290,7 +304,7 @@ export function AnalyzeDataByCategory(
 		percentile_90: number;
 	};
 } {
-	const solverTimes: { [SolverName: string]: number[] } = resultsData.reduce(
+	const categoryValues: { [SolverName: string]: number[] } = resultsData.reduce(
 		(acc, curr) => {
 			const parsedValue = Number(curr[category]);
 
@@ -305,7 +319,7 @@ export function AnalyzeDataByCategory(
 		{}
 	);
 
-	const solverTimeStats: {
+	const solverCategoryStats: {
 		[SolverName: string]: {
 			average: number;
 			min: number;
@@ -320,31 +334,31 @@ export function AnalyzeDataByCategory(
 		};
 	} = {};
 
-	for (const solverName in solverTimes) {
-		if (Object.prototype.hasOwnProperty.call(solverTimes, solverName)) {
-			const times = solverTimes[solverName];
-			const avgValue = Number(math.format(math.mean(times), { precision: 7 }));
-			const minValue = Number(math.format(math.min(times), { precision: 7 }));
-			const maxValue = Number(math.format(math.max(times), { precision: 7 }));
-			const stdValue = Number(math.format(math.std(times), { precision: 7 }));
-			const sumValue = Number(math.format(math.sum(times), { precision: 7 }));
+	for (const solverName in categoryValues) {
+		if (Object.prototype.hasOwnProperty.call(categoryValues, solverName)) {
+			const values = categoryValues[solverName];
+			const avgValue = Number(math.format(math.mean(values), { precision: 7 }));
+			const minValue = Number(math.format(math.min(values), { precision: 7 }));
+			const maxValue = Number(math.format(math.max(values), { precision: 7 }));
+			const stdValue = Number(math.format(math.std(values), { precision: 7 }));
+			const sumValue = Number(math.format(math.sum(values), { precision: 7 }));
 			const p10Value = Number(
-				math.format(math.quantileSeq(times, 0.1), { precision: 7 })
+				math.format(math.quantileSeq(values, 0.1), { precision: 7 })
 			);
 			const p25Value = Number(
-				math.format(math.quantileSeq(times, 0.25), { precision: 7 })
+				math.format(math.quantileSeq(values, 0.25), { precision: 7 })
 			);
 			const p50Value = Number(
-				math.format(math.quantileSeq(times, 0.5), { precision: 7 })
+				math.format(math.quantileSeq(values, 0.5), { precision: 7 })
 			);
 			const p75Value = Number(
-				math.format(math.quantileSeq(times, 0.75), { precision: 7 })
+				math.format(math.quantileSeq(values, 0.75), { precision: 7 })
 			);
 			const p90Value = Number(
-				math.format(math.quantileSeq(times, 0.9), { precision: 7 })
+				math.format(math.quantileSeq(values, 0.9), { precision: 7 })
 			);
 
-			solverTimeStats[solverName] = {
+			solverCategoryStats[solverName] = {
 				average: avgValue,
 				min: minValue,
 				max: maxValue,
@@ -358,7 +372,7 @@ export function AnalyzeDataByCategory(
 			};
 		}
 	}
-	return solverTimeStats;
+	return solverCategoryStats;
 }
 
 /**
@@ -383,8 +397,8 @@ export function ExtractAllSolverTimes(traceData: object[]): object {
 			if (!acc[obj.SolverName]) {
 				acc[obj.SolverName] = [];
 			}
-			if (obj["Time[s]"] !== "NA") {
-				const time = math.bignumber(obj["Time[s]"]).toNumber();
+			if (obj["SolverTime"] !== "NA") {
+				const time = math.bignumber(obj["SolverTime"]).toNumber();
 				if (!isNaN(time)) {
 					const inputFileName = obj["InputFileName"];
 					acc[obj.SolverName].push({ time, InputFileName: inputFileName });

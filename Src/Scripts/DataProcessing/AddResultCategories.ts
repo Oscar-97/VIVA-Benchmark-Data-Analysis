@@ -3,7 +3,8 @@ import {
 	CalculatePrimalBound,
 	CalculateDualBound,
 	SetTermStatus,
-	CalculateDifference,
+	SetModelStatus,
+	SetSolverStatus,
 	CalculateGap,
 	CalculateGapDifference
 } from "./CalculateResults";
@@ -15,58 +16,70 @@ import {
  *
  * @remarks
  * This function modifies the passed `traceData` array by adding calculated properties to each object.
- * Each object in the `traceData` array is expected to have certain properties like "Dir", "Obj",
- * "Obj_Est", and "TermStatus". The function uses these existing properties to calculate new ones.
- * If an object in the `traceData` array already has a property that the function tries to add,
- * the existing property will not be overwritten.
+ * Each object in the `traceData` array is expected to have certain properties like "Direction", "ObjectiveValue", and
+ * "ObjectiveValueEstimate". The function uses these existing properties to calculate new ones.
  *
  * The specific calculations performed by this function and the functions it calls are not described here.
  * Please refer to the documentation of those functions for details.
  */
 export function AddResultCategories(traceData: object[]): void {
 	for (const obj of traceData) {
-		obj["Dir"] = CalculateDirection(obj["Dir"]);
+		obj["Direction"] = CalculateDirection(obj["Direction"]);
 
-		obj["PrimalBoundSolver"] = CalculatePrimalBound(obj["Obj"], obj["Dir"]);
+		obj["PrimalBoundSolver"] = CalculatePrimalBound(
+			obj["ObjectiveValue"],
+			obj["Direction"]
+		);
 
-		obj["DualBoundSolver"] = CalculateDualBound(obj["Obj_Est"], obj["Dir"]);
+		obj["DualBoundSolver"] = CalculateDualBound(
+			obj["ObjectiveValueEstimate"],
+			obj["Direction"]
+		);
 
 		obj["TermStatus"] = SetTermStatus(obj["TermStatus"] as string | number);
+
+		obj["ModelStatus"] = SetModelStatus(obj["ModelStatus"] as string | number);
+
+		obj["SolverStatus"] = SetSolverStatus(
+			obj["SolverStatus"] as string | number
+		);
 
 		if (!obj.hasOwnProperty("PrimalBoundProblem")) {
 			obj["PrimalBoundProblem"] = CalculatePrimalBound(
 				obj["PrimalBoundSolver"],
-				obj["Dir"]
+				obj["Direction"]
 			);
 		}
 
 		if (!obj.hasOwnProperty("DualBoundProblem")) {
 			obj["DualBoundProblem"] = CalculateDualBound(
 				obj["DualBoundSolver"],
-				obj["Dir"]
+				obj["Direction"]
 			);
 		}
 
 		obj["Gap_Solver"] = CalculateGap(
 			obj["PrimalBoundSolver"],
 			obj["DualBoundSolver"],
-			obj["Dir"]
+			obj["Direction"]
 		);
 
 		obj["Gap_Problem"] = CalculateGap(
 			obj["PrimalBoundProblem"],
 			obj["DualBoundProblem"],
-			obj["Dir"]
+			obj["Direction"]
 		);
 
-		obj["PrimalGap"] = CalculateDifference(
+		obj["PrimalGap"] = CalculateGap(
 			obj["PrimalBoundSolver"],
-			obj["PrimalBoundProblem"]
+			obj["PrimalBoundProblem"],
+			obj["Direction"]
 		);
 
-		obj["DualGap"] = CalculateDifference(
+		obj["DualGap"] = CalculateGap(
 			obj["DualBoundSolver"],
-			obj["DualBoundProblem"]
+			obj["DualBoundProblem"],
+			obj["Direction"]
 		);
 
 		obj["Gap[%]"] = CalculateGapDifference(obj["PrimalGap"], obj["DualGap"]);

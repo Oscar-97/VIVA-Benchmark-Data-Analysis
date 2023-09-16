@@ -33,7 +33,7 @@
     "complexity": [
       "error",
       {
-        "max": 12
+        "max": 10
       }
     ],
     "prettier/prettier": [

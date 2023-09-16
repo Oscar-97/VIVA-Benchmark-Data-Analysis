@@ -17,8 +17,6 @@ interface CategoriesObj {
  * This function merges two arrays of objects (`traceData` and `data`) based on the `InputFileName` or `name` properties.
  * If an object in `traceData` has the same `InputFileName` or `name` as an object in `data`, the two objects are merged
  * into a single object with properties from both.
- *
- * If no matches are found, the function logs a message to the console and returns an empty array.
  */
 export function MergeData(
 	traceData: CategoriesObj[],
@@ -26,26 +24,23 @@ export function MergeData(
 ): object[] {
 	const mergedData = [];
 
-	for (const obj1 of traceData) {
-		for (const obj2 of data) {
-			if (obj2.InputFileName) {
-				if (obj1.InputFileName === obj2.InputFileName) {
-					const mergedObj = Object.assign({}, obj1, obj2);
-					mergedData.push(mergedObj);
-					break;
-				}
-			} else if (obj2.name) {
-				if (obj1.InputFileName === obj2.name) {
-					const mergedObj = Object.assign({}, obj1, obj2);
-					mergedData.push(mergedObj);
-					break;
-				}
+	for (const traceDataObj of traceData) {
+		let isMatchFound = false;
+		for (const dataObj of data) {
+			if (
+				(dataObj["InputFileName"] &&
+					traceDataObj["InputFileName"] === dataObj["InputFileName"]) ||
+				(dataObj["name"] && traceDataObj["InputFileName"] === dataObj["name"])
+			) {
+				const mergedObj = Object.assign({}, traceDataObj, dataObj);
+				mergedData.push(mergedObj);
+				isMatchFound = true;
+				break;
 			}
 		}
-	}
-
-	if (mergedData.length === 0) {
-		console.log("No matching objects when merging data.");
+		if (!isMatchFound) {
+			mergedData.push(traceDataObj);
+		}
 	}
 	return mergedData;
 }
