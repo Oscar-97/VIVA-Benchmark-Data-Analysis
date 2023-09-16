@@ -175,8 +175,10 @@ export function CalculateGapDifference(a: number, b: number): number {
 			return a - b;
 		}
 	} else {
-		return Number(
-			((a - b) / Math.max(Math.abs(a), Math.abs(b), 1.0)).toFixed(7)
+		return (
+			Math.round(
+				Math.abs((a - b) / Math.max(Math.abs(a), Math.abs(b), 1.0)) * 100
+			) / 100
 		);
 	}
 }
