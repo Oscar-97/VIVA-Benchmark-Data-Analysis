@@ -55,7 +55,7 @@ function ExtractHeaders(rawData: string[]): string[] {
 /**
  * Processes an array of raw data lines, using header names to create objects. If the line contains an asterisk (*), it is skipped.
  *
- * If the header is "ObjectiveValue" or "ObjectiveValueEstimate", it will be truncated if the value exceeds 25.
+ * If the header is "ObjectiveValue" or "ObjectiveValueEstimate", it will be set to exponential format.
  *
  * @param headers - Array of strings representing the headers/keys for the resulting objects.
  * @param rawData - Array of strings, where each string is a comma-separated representation of a row of data.
