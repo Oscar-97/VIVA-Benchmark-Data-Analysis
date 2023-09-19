@@ -62,11 +62,11 @@ const minlpBenchmarksData = [
 		DualBoundSolver: 2.925,
 		PrimalBoundProblem: 2.925,
 		DualBoundProblem: 2.925,
-		Direction: "min",
 		Gap_Solver: 0.0,
 		Gap_Problem: 0.0,
 		PrimalGap: 0.0,
-		DualGap: 0.0
+		DualGap: 0.0,
+		Direction: "min",
 	},
 	{
 		SolverName: "baron",
