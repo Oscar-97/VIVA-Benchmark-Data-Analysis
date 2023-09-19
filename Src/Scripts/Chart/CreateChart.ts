@@ -29,7 +29,7 @@ export function PickColor(numberOfColors: number): string[] {
  *
  * @param type - The type of chart to create (e.g., 'line', 'bar', 'pie').
  * @param data - The data for the chart, which should be an array of objects.
- * @param label - The label for the data.
+ * @param label - The label/s for the data.
  * @param title - The title of the chart.
  *
  * @example
@@ -60,7 +60,7 @@ export function CreateChart(type, data, label, title): void {
 	myChart = new Chart(chartCanvas, {
 		type: type,
 		data: {
-			labels: [label],
+			labels: typeof label === "string" ? [label] : label,
 			datasets: data
 		},
 		options: {
