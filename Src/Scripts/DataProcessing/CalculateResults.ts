@@ -417,7 +417,7 @@ export function ExtractAllSolverTimes(traceData: object[]): object {
  * structure. It takes an array of objects (traceData) and returns an object.
  *
  * The returned object has a unique key for each solver and the value is an array of objects, each containing a 'time'
- * and 'InputFileName'. All results with missing SolverTime or failed get a default value of 1000.
+ * and 'InputFileName'. All results with missing SolverTime, or with a failed status, get a default value of 1000.
  * A fail is if the termination or solver status is "Normal" or "Normal Completion".
  *
  * @param {object[]} traceData - An array of objects where each object represents an instance of trace data.
