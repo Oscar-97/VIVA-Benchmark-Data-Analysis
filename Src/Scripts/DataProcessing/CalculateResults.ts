@@ -438,8 +438,10 @@ export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 			}
 			if (!isNaN(Number(obj["SolverTime"]))) {
 				if (
-					(obj["PrimalGap"] <= 0.01 && obj["TermStatus"] === "Normal") ||
-					obj["SolverStatus"] === "Normal Completion"
+					obj["PrimalGap"] <= 0.01 &&
+					Number(obj["SolverTime"]) <= 1000.0 &&
+					(obj["TermStatus"] === "Normal" ||
+						obj["SolverStatus"] === "Normal Completion")
 				) {
 					acc[obj.SolverName].push({
 						time: Number(obj["SolverTime"]),
