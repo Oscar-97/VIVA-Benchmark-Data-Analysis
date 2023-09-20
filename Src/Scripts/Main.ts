@@ -37,7 +37,8 @@ import { RegisterServiceWorker } from "./PWA_Setup";
  */
 import {
 	PlotDataByCategory,
-	PlotAllSolverTimes
+	PlotAllSolverTimes,
+	PlotAbsolutePerformanceProfileSolverTimes
 } from "./Chart/PlotDataByCategory";
 
 /**
@@ -359,6 +360,13 @@ function HandlePlotPages(traceData: object[]): void {
 			deleteLocalStorageButton.disabled = false;
 			downloadConfigurationButtonLayer.disabled = false;
 		});
+	}
+
+	/**
+	 * Check if the user is on the Absolute Performance Profile.
+	 */
+	if (document.title == "Absolute Performance Profile") {
+		PlotAbsolutePerformanceProfileSolverTimes(traceData);
 	}
 
 	/**

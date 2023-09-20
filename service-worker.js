@@ -9,6 +9,7 @@ const filesToCache = [
 	"Dist/bundle.js",
 	"Dist/main.css",
 	"Src/CSS/tab_icon.png",
+	"Src/Pages/absolute_performance_profile.html",
 	"Src/Pages/average_solver_time.html",
 	"Src/Pages/number_of_iterations.html",
 	"Src/Pages/number_of_nodes.html",
