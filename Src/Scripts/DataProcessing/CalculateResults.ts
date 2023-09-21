@@ -376,6 +376,38 @@ export function AnalyzeDataByCategory(
 }
 
 /**
+ * `ExtractStatusMessages` function extracts the values of the termination message for each instance per solver, from the results data.
+ *
+ * @param {object[]} traceData - An array of objects where each object represents an instance of trace data.
+ * @returns  {string[]} - An object with solver names as keys. Each solver contains a counter of the instance status messages.
+ */
+
+export function ExtractStatusMessages(traceData: object[]): string[] {
+	const result = [];
+	const nameErrorMap = new Map();
+
+	traceData.forEach((obj) => {
+		const existingEntry = nameErrorMap.get(obj["SolverName"]);
+
+		if (existingEntry) {
+			existingEntry[obj["SolverStatus"]] =
+				(existingEntry[obj["SolverStatus"]] || 0) + 1;
+			existingEntry[obj["TermStatus"]] =
+				(existingEntry[obj["TermStatus"]] || 0) + 1;
+		} else {
+			const newEntry = {
+				SolverName: obj["SolverName"],
+				[obj["SolverStatus"]]: 1,
+				[obj["TermStatus"]]: 1
+			};
+			nameErrorMap.set(obj["SolverName"], newEntry);
+			result.push(newEntry);
+		}
+	});
+	return result;
+}
+
+/**
  * `ExtractAllSolverTimes` function is used to structure trace data (log of the solver) into a more accessible object
  * structure. It takes an array of objects (traceData) and returns an object.
  *
@@ -394,21 +426,20 @@ export function ExtractAllSolverTimes(traceData: object[]): object {
 			acc: { [key: string]: { time: number; InputFileName: string }[] },
 			obj: any
 		): { [key: string]: { time: number; InputFileName: string }[] } => {
-			if (!acc[obj.SolverName]) {
-				acc[obj.SolverName] = [];
+			if (!acc[obj["SolverName"]]) {
+				acc[obj["SolverName"]] = [];
 			}
 			if (obj["SolverTime"] !== "NA") {
 				const time = Number(obj["SolverTime"]);
 				if (!isNaN(time)) {
 					const inputFileName = obj["InputFileName"];
-					acc[obj.SolverName].push({ time, InputFileName: inputFileName });
+					acc[obj["SolverName"]].push({ time, InputFileName: inputFileName });
 				}
 			}
 			return acc;
 		},
 		{}
 	);
-
 	return result;
 }
 
@@ -433,8 +464,8 @@ export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 			acc: { [key: string]: { time: number; InputFileName: string }[] },
 			obj: any
 		): { [key: string]: { time: number; InputFileName: string }[] } => {
-			if (!acc[obj.SolverName]) {
-				acc[obj.SolverName] = [];
+			if (!acc[obj["SolverName"]]) {
+				acc[obj["SolverName"]] = [];
 			}
 			if (!isNaN(Number(obj["SolverTime"]))) {
 				if (
@@ -443,13 +474,13 @@ export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 					(obj["TermStatus"] === "Normal" ||
 						obj["SolverStatus"] === "Normal Completion")
 				) {
-					acc[obj.SolverName].push({
+					acc[obj["SolverName"]].push({
 						time: Number(obj["SolverTime"]),
 						InputFileName: obj["InputFileName"]
 					});
 				}
 			} else {
-				acc[obj.SolverName].push({
+				acc[obj["SolverName"]].push({
 					time: 1000,
 					InputFileName: obj["InputFileName"]
 				});
@@ -458,6 +489,5 @@ export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 		},
 		{}
 	);
-
 	return result;
 }

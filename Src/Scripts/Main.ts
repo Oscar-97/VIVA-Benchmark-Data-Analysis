@@ -37,6 +37,7 @@ import { RegisterServiceWorker } from "./PWA_Setup";
  */
 import {
 	PlotDataByCategory,
+	PlotStatusMessages,
 	PlotAllSolverTimes,
 	PlotAbsolutePerformanceProfileSolverTimes
 } from "./Chart/PlotDataByCategory";
@@ -413,6 +414,13 @@ function HandlePlotPages(traceData: object[]): void {
 			"NumberOfiterations.average",
 			"Average number of iterations"
 		);
+	}
+
+	/**
+	 * Check if the user is on the Termination Status page.
+	 */
+	if (document.title == "Termination Status") {
+		PlotStatusMessages(traceData, "bar", "Termination status by type");
 	}
 }
 

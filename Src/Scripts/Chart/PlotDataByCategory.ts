@@ -1,6 +1,7 @@
 import { viewPlotsButton, saveLocalStorageButton } from "../Elements/Elements";
 import {
 	AnalyzeDataByCategory,
+	ExtractStatusMessages,
 	ExtractAllSolverTimes,
 	ExtractAllSolverTimesNoFailedAndGapBelow1Percent
 } from "../DataProcessing/CalculateResults";
@@ -39,6 +40,42 @@ export function PlotDataByCategory(
 		console.log("Data for chart", label, ": ", chartData);
 		CreateChart(type, chartData, label, title);
 		StatisticsTable(data, title);
+		saveLocalStorageButton.disabled = false;
+	});
+}
+
+/**
+ * Prepares and plots all the termination status messages per solver.
+ * 
+ * @param traceData - Array of objects containing the data to be analyzed and plotted.
+ * @param type - The type of the chart to be created (e.g., 'line', 'bar', 'pie').
+ * @param title - The title of the chart.
+ */
+export function PlotStatusMessages(
+	traceData: object[],
+	type: string,
+	title: string
+): void {
+	viewPlotsButton.disabled = false;
+	viewPlotsButton.addEventListener("click", () => {
+		const data = ExtractStatusMessages(traceData);
+		const solverNames = data.map((obj) => obj["SolverName"]);
+		const statusKeys = Object.keys(data[0]).filter(
+			(key) => key !== "SolverName"
+		);
+
+		console.log("Data for extracted messages: ", data);
+		const colors = PickColor(20);
+
+		const chartData = statusKeys.map((key, index) => ({
+			label: key,
+			data: data.map((obj) => obj[key] || 0),
+			borderColor: colors[index % colors.length],
+			backgroundColor: colors[index % colors.length],
+			stack: "Stack 0"
+		}));
+
+		CreateChart(type, chartData, solverNames, title);
 		saveLocalStorageButton.disabled = false;
 	});
 }
@@ -85,7 +122,6 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 			ExtractAllSolverTimesNoFailedAndGapBelow1Percent(traceData);
 		console.log("Data: ", absolutePerformanceProfileSolverTimes);
 
-		const sortNumbers = (a: number, b: number) => a - b;
 		const allLabels = [];
 		const allXValues: string[] = [];
 
@@ -113,7 +149,7 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 				bucketCounts[bucket]++;
 			});
 
-			uniqueKeys.sort(sortNumbers);
+			uniqueKeys.sort(((a: number, b: number) => a - b));
 
 			let cumulativeCount = 0;
 			const cumulativeCounts: { x: string; y: number }[] = [];
