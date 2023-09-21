@@ -70,6 +70,17 @@ describe("UI tests", () => {
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[1]/a");
 			await page.waitForTimeout(2000);
+			const absolutePerformanceProfileTitle = await page.title();
+			expect(absolutePerformanceProfileTitle).toBe(
+				"Absolute Performance Profile"
+			);
+			await page.screenshot({
+				path: "TestScreenshots/absoluteperformanceprofilepage.png"
+			});
+
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[2]/a");
+			await page.waitForTimeout(2000);
 			const averageSolverTimeTitle = await page.title();
 			expect(averageSolverTimeTitle).toBe("Average Solver Time");
 			await page.screenshot({
@@ -77,14 +88,14 @@ describe("UI tests", () => {
 			});
 
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
-			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[2]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[3]/a");
 			await page.waitForTimeout(2000);
 			const solverTimeTitle = await page.title();
 			expect(solverTimeTitle).toBe("Solver Time");
 			await page.screenshot({ path: "TestScreenshots/solvertimepage.png" });
 
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
-			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[3]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[4]/a");
 			await page.waitForTimeout(2000);
 			const numberOfNodesTitle = await page.title();
 			expect(numberOfNodesTitle).toBe("Number of Nodes");
@@ -93,7 +104,7 @@ describe("UI tests", () => {
 			});
 
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
-			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[4]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[5]/a");
 			await page.waitForTimeout(2000);
 			const numberOfIterationsTitle = await page.title();
 			expect(numberOfIterationsTitle).toBe("Number of Iterations");
