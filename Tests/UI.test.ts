@@ -56,7 +56,7 @@ describe("UI tests", () => {
 		await WaitForElementAndClick(page, "#importDataButton");
 	}
 
-	describe.only("Overall Application", () => {
+	describe("Overall Application", () => {
 		const filePath = "../report.html";
 		const absoluteFilePath: string = path.resolve(__dirname, filePath);
 		const fileUrl = `file://${absoluteFilePath}`;
@@ -71,7 +71,9 @@ describe("UI tests", () => {
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[1]/a");
 			await page.waitForTimeout(2000);
 			const absolutePerformanceProfileTitle = await page.title();
-			expect(absolutePerformanceProfileTitle).toBe("Absolute Performance Profile");
+			expect(absolutePerformanceProfileTitle).toBe(
+				"Absolute Performance Profile"
+			);
 			await page.screenshot({
 				path: "TestScreenshots/absoluteperformanceprofilepage.png"
 			});
