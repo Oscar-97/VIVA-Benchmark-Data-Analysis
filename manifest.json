@@ -48,6 +48,17 @@
       ]
     },
     {
+      "name": "Absolute Performance Profile",
+      "url": "Src/Pages/absolute_performance_profile.html",
+      "icons": [
+        {
+          "src": "Src/CSS/icon_maskable.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
       "name": "Average Solver Time",
       "url": "Src/Pages/average_solver_time.html",
       "icons": [
