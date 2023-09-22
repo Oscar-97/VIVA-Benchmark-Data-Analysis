@@ -310,11 +310,11 @@ function HandleReportPage(
 	 */
 	saveLocalStorageButton.addEventListener("click", () => {
 		let newRawData = [];
-		
+
 		if (dataFileType === "trc") {
 			dataFileType = "json";
 		}
-		
+
 		if (traceDataFiltered.length === 0) {
 			newRawData = CreateDataTrc(traceData);
 		} else {
