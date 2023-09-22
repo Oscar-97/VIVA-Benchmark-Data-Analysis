@@ -37,14 +37,18 @@ task("release-web", function () {
 
 	const redirects = [
 		"/ /report.html 301",
+		"/absolute_performance_profile /Src/Pages/absolute_performance_profile",
 		"/average_solver_time /Src/Pages/average_solver_time 301",
 		"/solver_time /Src/Pages/solver_time 301",
 		"/number_of_nodes /Src/Pages/number_of_nodes 301",
 		"/number_of_iterations /Src/Pages/number_of_iterations 301",
+		"/termination_status /Src/Pages/termination_status 301",
+		"/Src/Pages/absolute_performance_profile.html /Src/Pages/absolute_performance_profile 301",
 		"/Src/Pages/average_solver_time.html /Src/Pages/average_solver_time 301",
 		"/Src/Pages/solver_time.html /Src/Pages/solver_time 301",
 		"/Src/Pages/number_of_nodes.html /Src/Pages/number_of_nodes 301",
-		"/Src/Pages/number_of_iterations.html /Src/Pages/number_of_iterations 301"
+		"/Src/Pages/number_of_iterations.html /Src/Pages/number_of_iterations 301",
+		"/Src/Pages/termination_status.html /Src/Pages/termination_status 301",
 	];
 	const redirectContent = redirects.join("\n");
 	const redirectFile = file("_redirect", redirectContent, { src: true });
