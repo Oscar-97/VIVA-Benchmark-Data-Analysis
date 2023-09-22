@@ -1,4 +1,4 @@
-import { viewPlotsButton, saveLocalStorageButton } from "../Elements/Elements";
+import { viewPlotsButton } from "../Elements/Elements";
 import {
 	AnalyzeDataByCategory,
 	ExtractStatusMessages,
@@ -40,7 +40,6 @@ export function PlotDataByCategory(
 		console.log("Data for chart", label, ": ", chartData);
 		CreateChart(type, chartData, label, title);
 		StatisticsTable(data, title);
-		saveLocalStorageButton.disabled = false;
 	});
 }
 
@@ -76,7 +75,6 @@ export function PlotStatusMessages(
 		}));
 
 		CreateChart(type, chartData, solverNames, title);
-		saveLocalStorageButton.disabled = false;
 	});
 }
 
@@ -87,7 +85,6 @@ export function PlotStatusMessages(
  */
 export function PlotAllSolverTimes(traceData: object[]): void {
 	viewPlotsButton.disabled = false;
-	saveLocalStorageButton.disabled = false;
 	viewPlotsButton.addEventListener("click", () => {
 		const solverTimes = ExtractAllSolverTimes(traceData);
 		const data = (
