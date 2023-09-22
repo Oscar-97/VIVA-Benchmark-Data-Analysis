@@ -37,6 +37,7 @@ import { RegisterServiceWorker } from "./PWA_Setup";
  */
 import {
 	PlotDataByCategory,
+	PlotStatusMessages,
 	PlotAllSolverTimes,
 	PlotAbsolutePerformanceProfileSolverTimes
 } from "./Chart/PlotDataByCategory";
@@ -220,6 +221,7 @@ function ManageData(): void {
 	 */
 	if (dataFileType == "json") {
 		[rawData, dataFileType] = GetUserConfiguration();
+		traceData = ExtractTrcData(rawData);
 	}
 
 	/**
@@ -291,13 +293,7 @@ function HandleReportPage(
 	viewTableButton.addEventListener("click", () => {
 		viewTableButton.disabled = true;
 		LoadingAnimation();
-		if (dataFileType === "trc") {
-			TableDisplayTrc(traceData);
-		} else if (dataFileType === "json") {
-			[rawData, dataFileType] = GetUserConfiguration();
-			traceData = ExtractTrcData(rawData);
-			TableDisplayTrc(traceData);
-		}
+		TableDisplayTrc(traceData);
 	});
 
 	/**
@@ -305,25 +301,26 @@ function HandleReportPage(
 	 */
 	filterSelectionButton.addEventListener("click", () => {
 		filterSelectionButton.disabled = true;
-		if (dataFileType === "trc") {
-			traceDataFiltered = UpdateResultsTrc();
-			TableDisplayTrc(traceDataFiltered);
-		}
+		traceDataFiltered = UpdateResultsTrc();
+		TableDisplayTrc(traceDataFiltered);
 	});
 
 	/**
 	 * Save to local storage when clicking on the "Save Data" button.
 	 */
 	saveLocalStorageButton.addEventListener("click", () => {
-		if (dataFileType === "trc" || dataFileType === "json") {
-			let newRawData = [];
-			if (traceDataFiltered.length === 0) {
-				newRawData = CreateDataTrc(traceData);
-			} else {
-				newRawData = CreateDataTrc(traceDataFiltered);
-			}
-			CreateUserConfiguration(newRawData, dataFileType);
+		let newRawData = [];
+
+		if (dataFileType === "trc") {
+			dataFileType = "json";
 		}
+
+		if (traceDataFiltered.length === 0) {
+			newRawData = CreateDataTrc(traceData);
+		} else {
+			newRawData = CreateDataTrc(traceDataFiltered);
+		}
+		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
 	});
@@ -344,23 +341,17 @@ function HandleReportPage(
  */
 function HandlePlotPages(traceData: object[]): void {
 	/**
-	 * Save to local storage functionality on the plot pages.
+	 * Save to local storage when clicking on the "Save Data" button.
 	 */
-	if (document.title != "Report") {
-		/**
-		 * Save to local storage when clicking on the relevant button.
-		 */
-		saveLocalStorageButton.addEventListener("click", () => {
-			if (dataFileType === "trc" || dataFileType === "json") {
-				let newRawData = [];
-				newRawData = CreateDataTrc(traceData);
-
-				CreateUserConfiguration(newRawData, dataFileType);
-			}
-			deleteLocalStorageButton.disabled = false;
-			downloadConfigurationButtonLayer.disabled = false;
-		});
-	}
+	saveLocalStorageButton.addEventListener("click", () => {
+		if (dataFileType === "trc") {
+			dataFileType = "json";
+		}
+		const newRawData = CreateDataTrc(traceData);
+		CreateUserConfiguration(newRawData, dataFileType);
+		deleteLocalStorageButton.disabled = false;
+		downloadConfigurationButtonLayer.disabled = false;
+	});
 
 	/**
 	 * Check if the user is on the Absolute Performance Profile.
@@ -413,6 +404,13 @@ function HandlePlotPages(traceData: object[]): void {
 			"NumberOfiterations.average",
 			"Average number of iterations"
 		);
+	}
+
+	/**
+	 * Check if the user is on the Termination Status page.
+	 */
+	if (document.title == "Termination Status") {
+		PlotStatusMessages(traceData, "bar", "Termination status by type");
 	}
 }
 

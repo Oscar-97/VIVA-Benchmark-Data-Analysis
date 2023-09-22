@@ -9,9 +9,9 @@
   <meta name="description"
     content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers.">
   <!-- Title and icon -->
-  <title id="ReportTitle">Absolute Performance Profile</title>
+  <title id="ReportTitle">Termination Status</title>
   <link rel="icon" href="../CSS/tab_icon.png">
-  <!-- Styling-->
+  <!-- Styling -->
   <link href="../../Dist/main.css" rel="stylesheet">
 </head>
 
@@ -35,11 +35,11 @@
             <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i
                 class="bi bi-bar-chart-steps"></i> Plots</a>
             <ul class="dropdown-menu mb-2" aria-labelledby="navbarDropdownMenuLink">
-              <li><span class="dropdown-item active"><i class="bi bi-graph-up-arrow"></i> Absolute Performance
-                  Profile</span></li>
+              <li><a class="dropdown-item" href="../Pages/absolute_performance_profile.html"><i
+                    class="bi bi-graph-up-arrow">
+                  </i>Absolute Performance Profile</a></li>
               <li><a class="dropdown-item" href="../Pages/average_solver_time.html"><i
-                    class="bi bi-bar-chart-line-fill"></i> Average
-                  Solver Time</a></li>
+                    class="bi bi-bar-chart-line-fill"></i> Average Solver Time</a></li>
               <li><a class="dropdown-item" href="../Pages/solver_time.html"><i class="bi bi-graph-up"></i> Solver
                   Time</a></li>
               <hr />
@@ -47,8 +47,7 @@
                   Number of Nodes</a></li>
               <li><a class="dropdown-item" href="../Pages/number_of_iterations.html"><i
                     class="bi bi-bar-chart-line"></i> Number of Iterations</a></li>
-              <li><a class="dropdown-item" href="../Pages/termination_status.html"><i class="bi bi-bar-chart-line"></i>
-                  Termination Status</a></li>
+              <li><span class="dropdown-item active"><i class="bi bi-bar-chart-line"></i> Termination Status</span></li>
             </ul>
           </li>
           <li class="nav-item">
@@ -91,7 +90,7 @@
   <div id="buttonContainer" class="d-flex flex-wrap justify-content-start gap-2">
     <div class="col-auto">
       <button class="btn btn-success btn-sm" type="submit" id="viewPlotsButton"><i class="bi bi-diagram-2"></i> View
-        Absolute Performance Profile</button>
+        Termination Status</button>
     </div>
     <div class="col-auto">
       <button class="btn btn-primary btn-sm" id="saveLocalStorageButton" disabled="true" data-toggle="tooltip"
@@ -120,7 +119,7 @@
   </div>
 
   <div id="statisticsTable">
-    <!-- Statistics table element will be created here. -->
+    <!-- statistics table element will be created here. -->
   </div>
   <!-- Modal with file information. -->
   <div class="modal fade" id="fileFormatInformationModal" tabindex="-1"

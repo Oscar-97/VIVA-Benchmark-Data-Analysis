@@ -112,6 +112,15 @@ describe("UI tests", () => {
 				path: "TestScreenshots/numberofiterations.png"
 			});
 
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[6]/a");
+			await page.waitForTimeout(2000);
+			const terminationStatusTitle = await page.title();
+			expect(terminationStatusTitle).toBe("Termination Status");
+			await page.screenshot({
+				path: "TestScreenshots/terminationstatus.png"
+			});
+
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[1]/a");
 			await page.waitForTimeout(2000);
 			expect(tableTitle).toBe("Report");
