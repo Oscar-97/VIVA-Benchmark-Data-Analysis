@@ -61,8 +61,8 @@ export function ElementStatusPlots(): void {
  *
  * @remarks
  *
- * This function is typically called after a data table is generated and displayed on the page. It's designed to:
- * 1. Enable various interactive buttons (filter selection, save local storage, download configuration,
+ * This function is typically called after a data table is generated and displayed on the page.
+ * It's designed to enable various interactive buttons (filter selection, save local storage, download configuration,
  *    delete local storage, clear table).
  */
 export function ElementStatusWithTable(): void {
@@ -71,4 +71,19 @@ export function ElementStatusWithTable(): void {
 	downloadConfigurationButtonLayer.disabled = false;
 	deleteLocalStorageButton.disabled = false;
 	clearTableButton.disabled = false;
+}
+
+/**
+ * Updates the status of several buttons when a data table is displayed.
+ *
+ * @remarks
+ *
+ * This function is typically called after a chart is generated and displayed on the page.
+ * It's designed to enable various interactive buttons (save local storage, download configuration,
+ * delete local storage).
+ */
+export function ElementStatusWithCharts(): void {
+	saveLocalStorageButton.disabled = false;
+	downloadConfigurationButtonLayer.disabled = false;
+	deleteLocalStorageButton.disabled = false;
 }

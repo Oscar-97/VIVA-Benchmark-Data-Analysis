@@ -1,4 +1,5 @@
 import { viewPlotsButton } from "../Elements/Elements";
+import { ElementStatusWithCharts } from "../Elements/ElementStatus";
 import {
 	AnalyzeDataByCategory,
 	ExtractStatusMessages,
@@ -27,8 +28,6 @@ export function PlotDataByCategory(
 	viewPlotsButton.disabled = false;
 	viewPlotsButton.addEventListener("click", () => {
 		const data = AnalyzeDataByCategory(traceData, category);
-		console.log("Data for category", category, ": ", data);
-
 		const colors = PickColor(20);
 		const chartData = Object.entries(data).map(([key, value], index) => ({
 			label: key,
@@ -37,15 +36,15 @@ export function PlotDataByCategory(
 			backgroundColor: colors[index % colors.length]
 		}));
 
-		console.log("Data for chart", label, ": ", chartData);
 		CreateChart(type, chartData, label, title);
 		StatisticsTable(data, title);
+		ElementStatusWithCharts();
 	});
 }
 
 /**
  * Prepares and plots all the termination status messages per solver.
- * 
+ *
  * @param traceData - Array of objects containing the data to be analyzed and plotted.
  * @param type - The type of the chart to be created (e.g., 'line', 'bar', 'pie').
  * @param title - The title of the chart.
@@ -62,10 +61,7 @@ export function PlotStatusMessages(
 		const statusKeys = Object.keys(data[0]).filter(
 			(key) => key !== "SolverName"
 		);
-
-		console.log("Data for extracted messages: ", data);
 		const colors = PickColor(20);
-
 		const chartData = statusKeys.map((key, index) => ({
 			label: key,
 			data: data.map((obj) => obj[key] || 0),
@@ -75,6 +71,7 @@ export function PlotStatusMessages(
 		}));
 
 		CreateChart(type, chartData, solverNames, title);
+		ElementStatusWithCharts();
 	});
 }
 
@@ -102,6 +99,7 @@ export function PlotAllSolverTimes(traceData: object[]): void {
 		}));
 
 		CreateChart("line", data, "InputFileName", "Solver times");
+		ElementStatusWithCharts();
 	});
 }
 
@@ -117,11 +115,8 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 	viewPlotsButton.addEventListener("click", () => {
 		const absolutePerformanceProfileSolverTimes =
 			ExtractAllSolverTimesNoFailedAndGapBelow1Percent(traceData);
-		console.log("Data: ", absolutePerformanceProfileSolverTimes);
-
 		const allLabels = [];
 		const allXValues: string[] = [];
-
 		const data = (
 			Object.entries(absolutePerformanceProfileSolverTimes) as [
 				string,
@@ -146,7 +141,7 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 				bucketCounts[bucket]++;
 			});
 
-			uniqueKeys.sort(((a: number, b: number) => a - b));
+			uniqueKeys.sort((a: number, b: number) => a - b);
 
 			let cumulativeCount = 0;
 			const cumulativeCounts: { x: string; y: number }[] = [];
@@ -204,5 +199,6 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 			allXValues,
 			"Absolute performance profile (primal gap <= 1.0% and not failed)"
 		);
+		ElementStatusWithCharts();
 	});
 }
