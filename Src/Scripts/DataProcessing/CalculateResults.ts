@@ -457,8 +457,23 @@ export function ExtractAllSolverTimes(traceData: object[]): object {
  * contains 'time' and 'InputFileName' property of the corresponding solver.
  */
 export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
-	traceData: object[]
+	traceData: object[],
+	defaultTime?: number | undefined
 ): object {
+	let defaultMaximumTime: number;
+
+	if (
+		!defaultTime ||
+		typeof defaultTime === "undefined" ||
+		isNaN(defaultTime)
+	) {
+		defaultMaximumTime = 1000.0;
+	} else {
+		defaultMaximumTime = defaultTime;
+	}
+
+	console.log("defaultMaximumTime:", defaultMaximumTime);
+
 	const result = traceData.reduce(
 		(
 			acc: { [key: string]: { time: number; InputFileName: string }[] },
@@ -470,7 +485,7 @@ export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 			if (!isNaN(Number(obj["SolverTime"]))) {
 				if (
 					obj["PrimalGap"] <= 0.01 &&
-					Number(obj["SolverTime"]) <= 1000.0 &&
+					Number(obj["SolverTime"]) <= defaultMaximumTime &&
 					(obj["TermStatus"] === "Normal" ||
 						obj["SolverStatus"] === "Normal Completion")
 				) {
@@ -481,7 +496,7 @@ export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 				}
 			} else {
 				acc[obj["SolverName"]].push({
-					time: 1000,
+					time: defaultMaximumTime,
 					InputFileName: obj["InputFileName"]
 				});
 			}

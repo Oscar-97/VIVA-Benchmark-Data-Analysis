@@ -109,12 +109,13 @@ export function PlotAllSolverTimes(traceData: object[]): void {
  * @param traceData - Array of objects containing the data to be analyzed and plotted.
  */
 export function PlotAbsolutePerformanceProfileSolverTimes(
-	traceData: object[]
+	traceData: object[],
+	defaultTime?: number | undefined
 ): void {
 	viewPlotsButton.disabled = false;
 	viewPlotsButton.addEventListener("click", () => {
 		const absolutePerformanceProfileSolverTimes =
-			ExtractAllSolverTimesNoFailedAndGapBelow1Percent(traceData);
+			ExtractAllSolverTimesNoFailedAndGapBelow1Percent(traceData, defaultTime);
 		const allLabels = [];
 		const allXValues: string[] = [];
 		const data = (

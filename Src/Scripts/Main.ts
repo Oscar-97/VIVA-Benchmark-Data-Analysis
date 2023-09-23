@@ -110,12 +110,14 @@ $(function () {
 RegisterServiceWorker();
 
 /**
- * @param DataFileType Type of file extension for the imported data. As of now, either .trc or .json. Text based files were removed.
- * @param RawData Raw data of the imported benchmark results.
- * @param RawInstanceInfoData Unprocessed instanceinfo.csv containing properties.
- * @param RawSoluData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
+ * @param dataFileType Type of file extension for the imported data. As of now, either .trc or .json. Text based files were removed.
+ * @param defaultTime The default time for the absolute performance profile chart.
+ * @param rawData Raw data of the imported benchmark results.
+ * @param rawInstanceInfoData Unprocessed instanceinfo.csv containing properties.
+ * @param rawSoluData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
  */
 let dataFileType = "";
+let defaultTime = undefined;
 let rawData: string[] = [];
 let rawInstanceInfoData: string[] = [];
 let rawSoluData: string[] = [];
@@ -125,11 +127,12 @@ let rawSoluData: string[] = [];
  */
 function InitializeProgram(): void {
 	/**
-	 * Resets the dataFileType and the three arrays holding the raw data,
+	 * Resets the dataFileType, defaultTime and the three arrays holding the raw data,
 	 * raw instance info data, and raw solution data to their initial states.
 	 * This occurs when the table is cleared and InitializeProgram() is run again.
 	 */
 	dataFileType = "";
+	defaultTime = "";
 	rawData = [];
 	rawInstanceInfoData = [];
 	rawSoluData = [];
@@ -153,7 +156,7 @@ function InitializeProgram(): void {
 	 * Configuration" buttons are enabled, and the ManageData() function is called.
 	 */
 	try {
-		[rawData, dataFileType] = GetUserConfiguration();
+		[rawData, dataFileType, defaultTime] = GetUserConfiguration();
 		ImportDataEvents("Found cached benchmark file!", "json");
 		saveLocalStorageButton.disabled = true;
 		deleteLocalStorageButton.disabled = false;
@@ -220,7 +223,7 @@ function ManageData(): void {
 	 * and updates the rawData and dataFileType variables.
 	 */
 	if (dataFileType == "json") {
-		[rawData, dataFileType] = GetUserConfiguration();
+		[rawData, dataFileType, defaultTime] = GetUserConfiguration();
 		traceData = ExtractTrcData(rawData);
 	}
 
@@ -347,7 +350,7 @@ function HandlePlotPages(traceData: object[]): void {
 		if (dataFileType === "trc") {
 			dataFileType = "json";
 		}
-		const newRawData = CreateDataTrc(traceData);
+		const newRawData: string[] = CreateDataTrc(traceData);
 		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
@@ -357,7 +360,7 @@ function HandlePlotPages(traceData: object[]): void {
 	 * Check if the user is on the Absolute Performance Profile.
 	 */
 	if (document.title == "Absolute Performance Profile") {
-		PlotAbsolutePerformanceProfileSolverTimes(traceData);
+		PlotAbsolutePerformanceProfileSolverTimes(traceData, defaultTime);
 	}
 
 	/**

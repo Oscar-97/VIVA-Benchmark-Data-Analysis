@@ -1,8 +1,5 @@
 import { fileInput, importDataButton } from "../Elements/Elements";
-import {
-	DisplayAlertNotification,
-	DisplayErrorNotification
-} from "../Elements/DisplayAlertNotification";
+import { DisplayErrorNotification } from "../Elements/DisplayAlertNotification";
 import { userData } from "../UserConfiguration/UserConfiguration";
 
 /**
@@ -162,8 +159,12 @@ export function ReadData(
 				) {
 					userData.dataSet = parsedData.dataSet;
 					userData.dataFileType = parsedData.dataFileType;
+
+					if (parsedData.hasOwnProperty("defaultTime")) {
+						userData.defaultTime = parsedData.defaultTime;
+					}
+
 					localStorage.setItem("UserConfiguration", JSON.stringify(userData));
-					DisplayAlertNotification("Stored uploaded UserConfiguration.");
 				} else {
 					DisplayErrorNotification("Invalid data structure in uploaded JSON.");
 					console.log("Invalid data structure in uploaded JSON.");
