@@ -424,7 +424,7 @@ export function ExtractAllSolverTimes(traceData: object[]): object {
 	const result = traceData.reduce(
 		(
 			acc: { [key: string]: { time: number; InputFileName: string }[] },
-			obj: any
+			obj: object
 		): { [key: string]: { time: number; InputFileName: string }[] } => {
 			if (!acc[obj["SolverName"]]) {
 				acc[obj["SolverName"]] = [];
@@ -477,7 +477,7 @@ export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 	const result = traceData.reduce(
 		(
 			acc: { [key: string]: { time: number; InputFileName: string }[] },
-			obj: any
+			obj: object
 		): { [key: string]: { time: number; InputFileName: string }[] } => {
 			if (!acc[obj["SolverName"]]) {
 				acc[obj["SolverName"]] = [];
