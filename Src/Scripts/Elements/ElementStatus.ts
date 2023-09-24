@@ -8,6 +8,7 @@ import {
 	deleteLocalStorageButton,
 	clearTableButton,
 	viewPlotsButton,
+	downloadChartDataButtonLayer,
 	loaderContainer,
 	dataTable
 } from "./Elements";
@@ -53,6 +54,7 @@ export function ElementStatusPlots(): void {
 	viewPlotsButton.disabled = true;
 	saveLocalStorageButton.disabled = true;
 	downloadConfigurationButtonLayer.disabled = true;
+	downloadChartDataButtonLayer.disabled = true;
 	deleteLocalStorageButton.disabled = true;
 }
 
@@ -85,5 +87,6 @@ export function ElementStatusWithTable(): void {
 export function ElementStatusWithCharts(): void {
 	saveLocalStorageButton.disabled = false;
 	downloadConfigurationButtonLayer.disabled = false;
+	downloadChartDataButtonLayer.disabled = false;
 	deleteLocalStorageButton.disabled = false;
 }

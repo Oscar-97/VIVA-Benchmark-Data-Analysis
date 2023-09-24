@@ -68,7 +68,11 @@ import { UpdateResultsTrc } from "./DataTable/UpdateResults";
 /**
  * Elements.
  */
-import { ElementStatus, ElementStatusPlots } from "./Elements/ElementStatus";
+import {
+	ElementStatus,
+	ElementStatusPlots,
+	ElementStatusWithCharts
+} from "./Elements/ElementStatus";
 import {
 	fileInput,
 	importDataButton,
@@ -79,7 +83,9 @@ import {
 	deleteLocalStorageButton,
 	clearTableButton,
 	downloadConfigurationButtonLayer,
-	demoDataButton
+	demoDataButton,
+	viewPlotsButton,
+	downloadChartDataButton
 } from "./Elements/Elements";
 import { LoadingAnimation } from "./Elements/LoadingAnimation";
 
@@ -94,6 +100,7 @@ import {
 } from "./UserConfiguration/UserConfiguration";
 
 import { demoData } from "./DemoData";
+import { DisplayErrorNotification } from "./Elements/DisplayAlertNotification";
 //#endregion
 
 /**
@@ -115,20 +122,22 @@ RegisterServiceWorker();
  * @param rawData Raw data of the imported benchmark results.
  * @param rawInstanceInfoData Unprocessed instanceinfo.csv containing properties.
  * @param rawSoluData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
+ * @param chartData Processed data used in the different charts.
  */
 let dataFileType = "";
 let defaultTime = undefined;
 let rawData: string[] = [];
 let rawInstanceInfoData: string[] = [];
 let rawSoluData: string[] = [];
+let chartData;
 
 /**
  * Initializing the methods that are needed to run the system.
  */
 function InitializeProgram(): void {
 	/**
-	 * Resets the dataFileType, defaultTime and the three arrays holding the raw data,
-	 * raw instance info data, and raw solution data to their initial states.
+	 * Resets the dataFileType, defaultTime and the four arrays holding the raw data,
+	 * raw instance info data, raw solution data, and chart data to their initial states.
 	 * This occurs when the table is cleared and InitializeProgram() is run again.
 	 */
 	dataFileType = "";
@@ -136,6 +145,7 @@ function InitializeProgram(): void {
 	rawData = [];
 	rawInstanceInfoData = [];
 	rawSoluData = [];
+	chartData = [];
 
 	/**
 	 * Sets the status of all buttons based on the current document title.
@@ -163,8 +173,8 @@ function InitializeProgram(): void {
 		downloadConfigurationButtonLayer.disabled = false;
 		sessionStorage.setItem("savedStorageNotification", "true");
 		ManageData();
-	} catch (err) {
-		console.log("No saved configuration data found. ", err);
+	} catch {
+		console.info("No saved configuration data found.");
 	}
 
 	/**
@@ -195,10 +205,12 @@ function InitializeProgram(): void {
 	/**
 	 * Adds an event listener to the "Demo-Mode" button that loads a demo data set and savet it to local storage.
 	 */
-	demoDataButton.addEventListener("click", () => {
-		localStorage.setItem("UserConfiguration", JSON.stringify(demoData));
-		location.reload();
-	});
+	if (document.title == "Report") {
+		demoDataButton.addEventListener("click", () => {
+			localStorage.setItem("UserConfiguration", JSON.stringify(demoData));
+			location.reload();
+		});
+	}
 }
 
 /**
@@ -357,64 +369,93 @@ function HandlePlotPages(traceData: object[]): void {
 	});
 
 	/**
-	 * Check if the user is on the Absolute Performance Profile.
+	 * View chart/plot when clicking on the view plot button per page.
 	 */
-	if (document.title == "Absolute Performance Profile") {
-		PlotAbsolutePerformanceProfileSolverTimes(traceData, defaultTime);
-	}
+	viewPlotsButton.disabled = false;
+	viewPlotsButton.addEventListener("click", () => {
+		/**
+		 * Check if the user is on the Absolute Performance Profile.
+		 */
+		if (document.title == "Absolute Performance Profile") {
+			chartData = PlotAbsolutePerformanceProfileSolverTimes(
+				traceData,
+				defaultTime
+			);
+		}
+
+		/**
+		 * Check if the user is on the Average Solver Time page.
+		 */
+		if (document.title == "Average Solver Time") {
+			chartData = PlotDataByCategory(
+				traceData,
+				"bar",
+				"SolverTime",
+				"SolverTime.average",
+				"Average solver time"
+			);
+		}
+
+		/**
+		 * Check if the user is on the Solver Time page.
+		 */
+		if (document.title == "Solver Time") {
+			chartData = PlotAllSolverTimes(traceData);
+		}
+
+		/**
+		 * Check if the user is on the Number of Nodes page.
+		 */
+		if (document.title == "Number of Nodes") {
+			chartData = PlotDataByCategory(
+				traceData,
+				"bar",
+				"NumberOfNodes",
+				"NumberOfNodes.average",
+				"Average number of nodes"
+			);
+		}
+
+		/**
+		 * Check if the user is on the Number of Iterations page.
+		 */
+		if (document.title == "Number of Iterations") {
+			chartData = PlotDataByCategory(
+				traceData,
+				"bar",
+				"NumberOfIterations",
+				"NumberOfiterations.average",
+				"Average number of iterations"
+			);
+		}
+
+		/**
+		 * Check if the user is on the Termination Status page.
+		 */
+		if (document.title == "Termination Status") {
+			chartData = PlotStatusMessages(
+				traceData,
+				"bar",
+				"Termination status by type"
+			);
+		}
+		ElementStatusWithCharts();
+	});
 
 	/**
-	 * Check if the user is on the Average Solver Time page.
+	 * Download the current chart data when clicking on the "Download Chart Data" button.
 	 */
-	if (document.title == "Average Solver Time") {
-		PlotDataByCategory(
-			traceData,
-			"bar",
-			"SolverTime",
-			"SolverTime.average",
-			"Average solver time"
-		);
-	}
+	downloadChartDataButton.addEventListener("click", () => {
+		if (chartData) {
+			const downloadAbleFile = JSON.stringify(chartData);
+			const blob = new Blob([downloadAbleFile], { type: "application/json" });
 
-	/**
-	 * Check if the user is on the Solver Time page.
-	 */
-	if (document.title == "Solver Time") {
-		PlotAllSolverTimes(traceData);
-	}
-
-	/**
-	 * Check if the user is on the Number of Nodes page.
-	 */
-	if (document.title == "Number of Nodes") {
-		PlotDataByCategory(
-			traceData,
-			"bar",
-			"NumberOfNodes",
-			"NumberOfNodes.average",
-			"Average number of nodes"
-		);
-	}
-
-	/**
-	 * Check if the user is on the Number of Iterations page.
-	 */
-	if (document.title == "Number of Iterations") {
-		PlotDataByCategory(
-			traceData,
-			"bar",
-			"NumberOfIterations",
-			"NumberOfiterations.average",
-			"Average number of iterations"
-		);
-	}
-
-	/**
-	 * Check if the user is on the Termination Status page.
-	 */
-	if (document.title == "Termination Status") {
-		PlotStatusMessages(traceData, "bar", "Termination status by type");
-	}
+			downloadChartDataButton.href = window.URL.createObjectURL(blob);
+			downloadChartDataButton.download = "ChartData.json";
+		} else {
+			DisplayErrorNotification("No chart data found!");
+		}
+	});
 }
 
 /**
