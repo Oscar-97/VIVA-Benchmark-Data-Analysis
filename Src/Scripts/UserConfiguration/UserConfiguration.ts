@@ -77,7 +77,6 @@ export function GetUserConfiguration(): [string[], string, number] {
 	let userConfig: UserData;
 	try {
 		userConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
-		console.log("Parsed userConfig from localStorage:", userConfig);
 	} catch (error) {
 		switch (error.message) {
 			case "SecurityError":
