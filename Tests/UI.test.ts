@@ -363,7 +363,7 @@ describe("UI tests", () => {
 		}, 60000);
 	});
 
-	describe("Plot Pages", () => {
+	describe.only("Plot Pages", () => {
 		async function RunPlotOperations(filePath: string): Promise<void> {
 			const absoluteFilePath: string = path.resolve(__dirname, filePath);
 			const fileUrl = `file://${absoluteFilePath}`;
@@ -382,6 +382,10 @@ describe("UI tests", () => {
 				timeout: 3000
 			});
 		}
+
+		test("Absolute Performance Profile Page", async () => {
+			await RunPlotOperations("../Src/Pages/absolute_performance_profile.html");
+		}, 10000);
 
 		test("Average Solver Time Page", async () => {
 			await RunPlotOperations("../Src/Pages/average_solver_time.html");
@@ -409,6 +413,10 @@ describe("UI tests", () => {
 				state: "visible",
 				timeout: 3000
 			});
+		}, 10000);
+
+		test("Termination Status Page", async () => {
+			await RunPlotOperations("../Src/Pages/termination_status.html");
 		}, 10000);
 	});
 });

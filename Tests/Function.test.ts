@@ -137,7 +137,7 @@ const minlpBenchmarksData = [
 		SolverName: "Scp2804s",
 		InputFileName: "flay06m",
 		PrimalBoundSolver: 6.693264e1,
-		DualBoundSolver: 6.0e1,
+		DualBoundSolver: 60,
 		PrimalBoundProblem: 6.69328e1,
 		DualBoundProblem: 6.517733e1,
 		Gap_Solver: 11.55,
