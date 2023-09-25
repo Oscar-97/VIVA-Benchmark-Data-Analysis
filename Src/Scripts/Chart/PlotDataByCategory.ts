@@ -99,7 +99,22 @@ export function PlotAllSolverTimes(
 		showLine: false
 	}));
 
-	CreateChart("line", chartData, "InputFileName", "Solver times");
+	const scaleOptions = {
+		x: {
+			title: {
+				display: true,
+				text: "Instance name"
+			}
+		},
+		y: {
+			title: {
+				display: true,
+				text: "Time to solve"
+			}
+		}
+	};
+
+	CreateChart("line", chartData, "InputFileName", "Solver times", scaleOptions);
 	return chartData;
 }
 
@@ -112,14 +127,14 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 	traceData: object[],
 	defaultTime?: number | undefined
 ): {
-	data: ({ x: string; y: number } | { x: any; y: any })[];
+	data: ({ x: string; y: number } | { x: number; y: number })[];
 	label: string;
 	showLine: boolean;
 }[] {
 	const absolutePerformanceProfileSolverTimes =
 		ExtractAllSolverTimesNoFailedAndGapBelow1Percent(traceData, defaultTime);
 	const allLabels = [];
-	const allXValues: string[] = [];
+	const allXValues: number[] = [];
 	const data = (
 		Object.entries(absolutePerformanceProfileSolverTimes) as [
 			string,
@@ -147,19 +162,19 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 		uniqueKeys.sort((a: number, b: number) => a - b);
 
 		let cumulativeCount = 0;
-		const cumulativeCounts: { x: string; y: number }[] = [];
+		const cumulativeCounts: { x: number; y: number }[] = [];
 
 		// Create cumulative counts.
 		uniqueKeys.forEach((key) => {
 			cumulativeCount += bucketCounts[key];
-			const label = `${key}s`;
-			cumulativeCounts.push({ x: label, y: cumulativeCount });
+			cumulativeCounts.push({ x: key, y: cumulativeCount });
 		});
 
 		return {
 			label: key,
 			data: cumulativeCounts,
-			showLine: true
+			showLine: true,
+			spanGaps: true
 		};
 	});
 
@@ -193,14 +208,40 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 		});
 	});
 
+	chartData.forEach((dataset) => {
+		dataset.data.sort((a, b) => parseFloat(a.x) - parseFloat(b.x));
+	});
+
 	// Sort all X axis values.
-	allXValues.sort((a, b) => parseFloat(a) - parseFloat(b));
+	allXValues.sort((a, b) => a - b);
+
+	const scaleOptions = {
+		x: {
+			title: {
+				display: true,
+				text: "SolverTime"
+			},
+			type: "linear",
+			min: 0,
+			max: defaultTime ? Number(defaultTime) + 100 : 1100,
+			ticks: {
+				stepSize: 50
+			}
+		},
+		y: {
+			title: {
+				display: true,
+				text: "Number of instances"
+			}
+		}
+	};
 
 	CreateChart(
 		"line",
 		chartData,
-		allXValues,
-		"Absolute performance profile (primal gap <= 1.0% and not failed)"
+		null,
+		"Absolute performance profile (primal gap <= 1.0% and not failed)",
+		scaleOptions
 	);
 	return chartData;
 }

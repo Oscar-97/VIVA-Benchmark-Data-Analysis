@@ -48,7 +48,13 @@ export function PickColor(numberOfColors: number): string[] {
  * CreateChart('bar', data, 'My Label', 'My Title');
  * ```
  */
-export function CreateChart(type, data, label, title): void {
+export function CreateChart(
+	type,
+	data,
+	label,
+	title,
+	scaleOptions = null
+): void {
 	/**
 	 * Destroy the chart if it already exist.
 	 */
@@ -65,6 +71,7 @@ export function CreateChart(type, data, label, title): void {
 		},
 		options: {
 			responsive: true,
+			scales: scaleOptions,
 			plugins: {
 				title: {
 					display: true,
