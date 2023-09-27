@@ -23,8 +23,9 @@ export const userData: UserData = {
 /**
  * This function creates a user configuration and stores it in the browser's local storage.
  *
- * @param rawData - An array of strings representing raw data to be saved.
+ * @param dataSet - An array of strings representing raw data to be saved.
  * @param dataFileType - A string representing the type of data file.
+ * @param defaultTime - Default time used in the the absolute performance profile chart.
  *
  * @example
  * CreateUserConfiguration(["raw data 1", "raw data 2"], "trc");
@@ -99,14 +100,14 @@ export function GetUserConfiguration(): [string[], string, number] {
 				break;
 		}
 	}
-	const rawData = [];
+	const unprocessedData = [];
 	userConfig.dataSet.forEach((value) => {
-		rawData.push(value);
+		unprocessedData.push(value);
 	});
 
 	const dataFileType = userConfig.dataFileType;
 	const defaultTime = userConfig.defaultTime;
-	return [rawData, dataFileType, defaultTime];
+	return [unprocessedData, dataFileType, defaultTime];
 }
 
 /**

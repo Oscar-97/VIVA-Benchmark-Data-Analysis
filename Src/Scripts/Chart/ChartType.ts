@@ -174,7 +174,8 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 			label: key,
 			data: cumulativeCounts,
 			showLine: true,
-			spanGaps: true
+			spanGaps: true,
+			stepped: true
 		};
 	});
 
@@ -219,7 +220,7 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 		x: {
 			title: {
 				display: true,
-				text: "SolverTime"
+				text: "SolverTime [s]"
 			},
 			type: "linear",
 			min: 0,

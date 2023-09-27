@@ -3,7 +3,7 @@ import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
 /**
  * Converts an array of strings into an array of objects representing instance information data.
  *
- * @param rawInstanceInfoData - Array of strings, where each string is a semicolon-separated representation of a row of data.
+ * @param unprocessedInstanceInformationData - Array of strings, where each string is a semicolon-separated representation of a row of data.
  * @returns Array of objects, where each object represents a row of instance information.
  *
  * @remarks
@@ -18,8 +18,8 @@ import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
  *
  * @example
  * ```typescript
- * const rawInstanceInfoData = [ "Column1;Column2", "Value1;Value2", ";Value4" ];
- * const result = GetInstanceInformation(rawInstanceInfoData);
+ * const unprocessedInstanceInformationData = [ "Column1;Column2", "Value1;Value2", ";Value4" ];
+ * const result = GetInstanceInformation(unprocessedInstanceInformationData);
  * // result = [
  * //   { "Column1": "Value1", "Column2": "Value2" },
  * //   { "Column1": "", "Column2": "Value4" },
@@ -27,14 +27,14 @@ import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
  * ```
  */
 export function GetInstanceInformation(
-	rawInstanceInfoData: string[]
+	unprocessedInstanceInformationData: string[]
 ): object[] {
 	const instanceInfo = [];
-	const header = rawInstanceInfoData[0].split(";");
+	const header = unprocessedInstanceInformationData[0].split(";");
 
-	for (let i = 1; i < rawInstanceInfoData.length; i++) {
+	for (let i = 1; i < unprocessedInstanceInformationData.length; i++) {
 		const obj = {};
-		const currentLine = rawInstanceInfoData[i].split(";");
+		const currentLine = unprocessedInstanceInformationData[i].split(";");
 		for (let j = 0; j < header.length; j++) {
 			obj[header[j]] = currentLine[j] || "";
 		}
@@ -47,7 +47,7 @@ export function GetInstanceInformation(
 /**
  * Extracts the best known primal and dual bounds from raw solu data.
  *
- * @param rawSoluData - Array of strings, each representing a line from a solu data file.
+ * @param unprocessedSolutionData - Array of strings, each representing a line from a solu data file.
  * @returns Array of objects, each representing a processed line of data with associated primal and/or dual bounds.
  *
  * @remarks
@@ -60,8 +60,8 @@ export function GetInstanceInformation(
  *
  * @example
  * ```typescript
- * const rawSoluData = [ "=best= FileName1 100", "=bestdual= FileName2 200", "=opt= FileName3 300" ];
- * const result = GetBestKnowBounds(rawSoluData);
+ * const unprocessedSolutionData = [ "=best= FileName1 100", "=bestdual= FileName2 200", "=opt= FileName3 300" ];
+ * const result = GetBestKnowBounds(unprocessedSolutionData);
  * // result = [
  * //   { "InputFileName": "FileName1", "PrimalBound Problem": 100 },
  * //   { "InputFileName": "FileName2", "DualBound Problem": 200 },
@@ -69,13 +69,13 @@ export function GetInstanceInformation(
  * // ];
  * ```
  */
-export function GetBestKnowBounds(rawSoluData: string[]): object[] {
+export function GetBestKnowBounds(unprocessedSolutionData: string[]): object[] {
 	const soluData = [];
 	const regexPattern = /^=(.*?)=\s+(.*?)\s+(.*?)$/;
 
-	for (let i = 0; i < rawSoluData.length; i++) {
+	for (let i = 0; i < unprocessedSolutionData.length; i++) {
 		const obj = {};
-		const match = regexPattern.exec(rawSoluData[i]);
+		const match = regexPattern.exec(unprocessedSolutionData[i]);
 		if (match !== null) {
 			obj["InputFileName"] = match[2];
 			switch (match[1]) {

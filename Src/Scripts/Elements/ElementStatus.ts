@@ -26,7 +26,7 @@ import {
  * 4. Disable various interactive buttons (import data, view all results, filter selection,
  *    save local storage, download configuration, delete local storage, clear table).
  */
-export function ElementStatus(): void {
+export function ElementStatesTablePage(): void {
 	loaderContainer.innerHTML = "";
 	dataTable.style.visibility = "hidden";
 	fileInput.value = "";
@@ -49,7 +49,7 @@ export function ElementStatus(): void {
  * 1. Clear the file input's value.
  * 2. Disable various interactive buttons (view plots, save local storage, download configuration, delete local storage).
  */
-export function ElementStatusPlots(): void {
+export function ElementStatesPlotPage(): void {
 	fileInput.value = "";
 	viewPlotsButton.disabled = true;
 	saveLocalStorageButton.disabled = true;
@@ -67,7 +67,7 @@ export function ElementStatusPlots(): void {
  * It's designed to enable various interactive buttons (filter selection, save local storage, download configuration,
  *    delete local storage, clear table).
  */
-export function ElementStatusWithTable(): void {
+export function ElementStateDisplayedTable(): void {
 	filterSelectionButton.disabled = false;
 	saveLocalStorageButton.disabled = false;
 	downloadConfigurationButtonLayer.disabled = false;
@@ -84,7 +84,7 @@ export function ElementStatusWithTable(): void {
  * It's designed to enable various interactive buttons (save local storage, download configuration,
  * delete local storage).
  */
-export function ElementStatusWithCharts(): void {
+export function ElementStateDisplayedChart(): void {
 	saveLocalStorageButton.disabled = false;
 	downloadConfigurationButtonLayer.disabled = false;
 	downloadChartDataButtonLayer.disabled = false;

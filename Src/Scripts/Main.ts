@@ -40,17 +40,17 @@ import {
 	PlotStatusMessages,
 	PlotAllSolverTimes,
 	PlotAbsolutePerformanceProfileSolverTimes
-} from "./Chart/PlotDataByCategory";
+} from "./Chart/ChartType";
 
 /**
  * Dataprocessing.
  */
 import { AddResultCategories } from "./DataProcessing/AddResultCategories";
-import { CreateDataTrc } from "./DataProcessing/CreateData";
+import { CreateNewTraceData } from "./DataProcessing/CreateData";
 import { ImportDataEvents } from "./Elements/ImportDataEvents";
 import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
 import { MergeData } from "./DataProcessing/MergeData";
-import { ExtractTrcData } from "./DataProcessing/FilterData";
+import { ExtractTraceData } from "./DataProcessing/FilterData";
 import {
 	GetInstanceInformation,
 	GetBestKnowBounds
@@ -60,18 +60,18 @@ import {
  * DataTable.
  */
 import {
-	TableDisplayTrc,
+	DisplayDataTable,
 	DestroyDataTable
 } from "./DataTable/DataTableWrapper";
-import { UpdateResultsTrc } from "./DataTable/UpdateResults";
+import { UpdateResults } from "./DataTable/UpdateResults";
 
 /**
  * Elements.
  */
 import {
-	ElementStatus,
-	ElementStatusPlots,
-	ElementStatusWithCharts
+	ElementStatesTablePage,
+	ElementStatesPlotPage,
+	ElementStateDisplayedChart
 } from "./Elements/ElementStatus";
 import {
 	fileInput,
@@ -119,16 +119,16 @@ RegisterServiceWorker();
 /**
  * @param dataFileType Type of file extension for the imported data. As of now, either .trc or .json. Text based files were removed.
  * @param defaultTime The default time for the absolute performance profile chart.
- * @param rawData Raw data of the imported benchmark results.
- * @param rawInstanceInfoData Unprocessed instanceinfo.csv containing properties.
- * @param rawSoluData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
+ * @param unprocessedData Raw data of the imported benchmark results.
+ * @param unprocessedInstanceInformationData Unprocessed instanceinfo.csv containing properties.
+ * @param unprocessedSolutionData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
  * @param chartData Processed data used in the different charts.
  */
 let dataFileType = "";
 let defaultTime = undefined;
-let rawData: string[] = [];
-let rawInstanceInfoData: string[] = [];
-let rawSoluData: string[] = [];
+let unprocessedData: string[] = [];
+let unprocessedInstanceInformationData: string[] = [];
+let unprocessedSolutionData: string[] = [];
 let chartData;
 
 /**
@@ -142,9 +142,9 @@ function InitializeProgram(): void {
 	 */
 	dataFileType = "";
 	defaultTime = "";
-	rawData = [];
-	rawInstanceInfoData = [];
-	rawSoluData = [];
+	unprocessedData = [];
+	unprocessedInstanceInformationData = [];
+	unprocessedSolutionData = [];
 	chartData = [];
 
 	/**
@@ -153,20 +153,20 @@ function InitializeProgram(): void {
 	 * depending on whether the title is "Report" or not.
 	 */
 	if (document.title == "Report") {
-		ElementStatus();
+		ElementStatesTablePage();
 	} else {
-		ElementStatusPlots();
+		ElementStatesPlotPage();
 	}
 
 	/**
 	 * Tries to retrieve stored configuration when arriving at
 	 * the page or refreshing the page. If data is found in local storage, the
-	 * rawData and dataFileType are updated, the ImportDataEvents() function is
+	 * unprocessedData and dataFileType are updated, the ImportDataEvents() function is
 	 * called with a success message, the "Delete Local Storage" and "Download
 	 * Configuration" buttons are enabled, and the ManageData() function is called.
 	 */
 	try {
-		[rawData, dataFileType, defaultTime] = GetUserConfiguration();
+		[unprocessedData, dataFileType, defaultTime] = GetUserConfiguration();
 		ImportDataEvents("Found cached benchmark file!", "json");
 		saveLocalStorageButton.disabled = true;
 		deleteLocalStorageButton.disabled = false;
@@ -183,12 +183,16 @@ function InitializeProgram(): void {
 
 	/**
 	 * Adds an event listener to the file input field that sets the dataFileType
-	 * variable and reads data into the rawData, rawInstanceInfoData, and rawSoluData
+	 * variable and reads data into the unprocessedData, unprocessedInstanceInformationData, and unprocessedSolutionData
 	 * arrays whenever the value of the file input field changes.
 	 */
 	fileInput.addEventListener("change", () => {
 		dataFileType = GetDataFileType();
-		ReadData(rawData, rawInstanceInfoData, rawSoluData);
+		ReadData(
+			unprocessedData,
+			unprocessedInstanceInformationData,
+			unprocessedSolutionData
+		);
 	});
 
 	/**
@@ -232,28 +236,30 @@ function ManageData(): void {
 
 	/**
 	 * If the uploaded data file is of type JSON, it retrieves the user configuration
-	 * and updates the rawData and dataFileType variables.
+	 * and updates the unprocessedData and dataFileType variables.
 	 */
 	if (dataFileType == "json") {
-		[rawData, dataFileType, defaultTime] = GetUserConfiguration();
-		traceData = ExtractTrcData(rawData);
+		[unprocessedData, dataFileType, defaultTime] = GetUserConfiguration();
+		traceData = ExtractTraceData(unprocessedData);
 	}
 
 	/**
-	 * If the uploaded data file is of type TRC, it extracts the trace data from the rawData,
+	 * If the uploaded data file is of type TRC, it extracts the trace data from the unprocessedData,
 	 * gets instance information if any, gets best known bounds if any, merges the data,
 	 * and adds result categories to the trace data.
 	 */
 	if (dataFileType === "trc") {
-		traceData = ExtractTrcData(rawData);
+		traceData = ExtractTraceData(unprocessedData);
 
-		if (rawInstanceInfoData.length !== 0) {
-			instanceInfoData = GetInstanceInformation(rawInstanceInfoData);
+		if (unprocessedInstanceInformationData.length !== 0) {
+			instanceInfoData = GetInstanceInformation(
+				unprocessedInstanceInformationData
+			);
 			traceData = MergeData(traceData, instanceInfoData);
 		}
 
-		if (rawSoluData.length !== 0) {
-			soluData = GetBestKnowBounds(rawSoluData);
+		if (unprocessedSolutionData.length !== 0) {
+			soluData = GetBestKnowBounds(unprocessedSolutionData);
 			traceData = MergeData(traceData, soluData);
 		}
 		AddResultCategories(traceData);
@@ -308,7 +314,7 @@ function HandleReportPage(
 	viewTableButton.addEventListener("click", () => {
 		viewTableButton.disabled = true;
 		LoadingAnimation();
-		TableDisplayTrc(traceData);
+		DisplayDataTable(traceData);
 	});
 
 	/**
@@ -316,8 +322,8 @@ function HandleReportPage(
 	 */
 	filterSelectionButton.addEventListener("click", () => {
 		filterSelectionButton.disabled = true;
-		traceDataFiltered = UpdateResultsTrc();
-		TableDisplayTrc(traceDataFiltered);
+		traceDataFiltered = UpdateResults();
+		DisplayDataTable(traceDataFiltered);
 	});
 
 	/**
@@ -331,9 +337,9 @@ function HandleReportPage(
 		}
 
 		if (traceDataFiltered.length === 0) {
-			newRawData = CreateDataTrc(traceData);
+			newRawData = CreateNewTraceData(traceData);
 		} else {
-			newRawData = CreateDataTrc(traceDataFiltered);
+			newRawData = CreateNewTraceData(traceDataFiltered);
 		}
 		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
@@ -362,7 +368,7 @@ function HandlePlotPages(traceData: object[]): void {
 		if (dataFileType === "trc") {
 			dataFileType = "json";
 		}
-		const newRawData: string[] = CreateDataTrc(traceData);
+		const newRawData: string[] = CreateNewTraceData(traceData);
 		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
@@ -439,7 +445,7 @@ function HandlePlotPages(traceData: object[]): void {
 				"Termination status by type"
 			);
 		}
-		ElementStatusWithCharts();
+		ElementStateDisplayedChart();
 	});
 
 	/**

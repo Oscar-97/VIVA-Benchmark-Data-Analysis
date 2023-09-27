@@ -10,7 +10,7 @@
  * in the array are used to create a header string that is prepended to the output array.
  * The header string is prefixed with an asterisk(*) character to match the .trc file format.
  */
-export function CreateDataTrc(traceData: object[]): string[] {
+export function CreateNewTraceData(traceData: object[]): string[] {
 	const exportData: string[] = [];
 	/**
 	 * Create headers line based on existing keys, then add the rest of the objects.
