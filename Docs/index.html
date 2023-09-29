@@ -69,8 +69,8 @@
 <a href="#json" id="json" style="color: inherit; text-decoration: none;">
   <h3>.json</h3>
 </a>
-<p>The file should include <code>dataSet</code> and <code>dataFileType</code>.</p>
-<pre><code class="language-json"><span class="hl-2">{</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;dataSet&quot;</span><span class="hl-2">: [</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;alan,MINLP,knitro,CONOPT,CPLEX,43365.479,min,8,9,4,24,3,1,8,Error,2.925,2.925,0.142,0,0,18,#,2.925,2.925,2.925,2.925,0,0,0,0,0&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk2_10,MINLP,knitro,CONOPT,CPLEX,43365.479,min,2,11,10,21,10,1,8,Error,0,2.22044604925031E-16,2.5,0,0,3070,#,0,2.22044604925031e-16,0,2.22044604925031e-16,0,0,0,0,0&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk2_30,MINLP,knitro,CONOPT,CPLEX,43365.479,min,2,31,30,61,30,1,2,Error,0,-26.887733399442,900.034,0,0,42269,#,0,-26.887733399442,0,-26.887733399442,Infinity,Infinity,0,0,0&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk3_10,MINLP,knitro,CONOPT,CPLEX,43365.489,min,2,11,10,21,10,1,13,Error,0,NA,NA,NA,NA,NA,#,0,-Infinity,0,-Infinity,Infinity,Infinity,0,NaN,NaN&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk3_20,MINLP,knitro,CONOPT,CPLEX,43365.49,min,2,21,20,41,20,1,6,Error,-21.6911427569375,-21.6911427569302,900.059,0,0,154017,#,-21.6911427569375,-21.6911427569302,-21.6911427569375,-21.6911427569302,0,0,0,0,0&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk3_30,MINLP,knitro,CONOPT,CPLEX,43365.5,min,2,31,30,61,30,1,6,Error,-32.4338272833906,-32.6214975320104,900.065,0,0,156536,#,-32.4338272833906,-32.6214975320104,-32.4338272833906,-32.6214975320104,0.57863,0.57863,0,0,0&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk4_05,MINLP,knitro,CONOPT,CPLEX,43365.51,min,2,11,10,21,10,1,13,Error,0,NA,NA,NA,NA,NA,#,0,-Infinity,0,-Infinity,Infinity,Infinity,0,NaN,NaN&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk4_10,MINLP,knitro,CONOPT,CPLEX,43365.514,min,2,21,20,41,20,1,6,Error,-14.6650988983745,-14.6650988983711,267.221,0,0,199351,#,-14.6650988983745,-14.6650988983711,-14.6650988983745,-14.6650988983711,0,0,0,0,0&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk4_15,MINLP,knitro,CONOPT,CPLEX,43365.517,min,2,31,30,61,30,1,6,Error,-33.6086573695247,-33.6086573695138,419.96,0,0,199353,#,-33.6086573695247,-33.6086573695138,-33.6086573695247,-33.6086573695138,0,0,0,0,0&quot;</span><br/><span class="hl-2">    ],</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;dataFileType&quot;</span><span class="hl-2">: </span><span class="hl-4">&quot;trc&quot;</span><br/><span class="hl-2">}</span>
+<p>The file should include <code>dataSet</code> and <code>dataFileType</code>, <code>defaultTime</code> is optional.</p>
+<pre><code class="language-json"><span class="hl-2">{</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;dataSet&quot;</span><span class="hl-2">: [</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;alan,MINLP,knitro,CONOPT,CPLEX,43365.479,min,8,9,4,24,3,1,8,Error,2.925,2.925,0.142,0,0,18,#,2.925,2.925,2.925,2.925,0,0,0,0,0&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk2_10,MINLP,knitro,CONOPT,CPLEX,43365.479,min,2,11,10,21,10,1,8,Error,0,2.22044604925031E-16,2.5,0,0,3070,#,0,2.22044604925031e-16,0,2.22044604925031e-16,0,0,0,0,0&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk2_30,MINLP,knitro,CONOPT,CPLEX,43365.479,min,2,31,30,61,30,1,2,Error,0,-26.887733399442,900.034,0,0,42269,#,0,-26.887733399442,0,-26.887733399442,Infinity,Infinity,0,0,0&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk3_10,MINLP,knitro,CONOPT,CPLEX,43365.489,min,2,11,10,21,10,1,13,Error,0,NA,NA,NA,NA,NA,#,0,-Infinity,0,-Infinity,Infinity,Infinity,0,NaN,NaN&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk3_20,MINLP,knitro,CONOPT,CPLEX,43365.49,min,2,21,20,41,20,1,6,Error,-21.6911427569375,-21.6911427569302,900.059,0,0,154017,#,-21.6911427569375,-21.6911427569302,-21.6911427569375,-21.6911427569302,0,0,0,0,0&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk3_30,MINLP,knitro,CONOPT,CPLEX,43365.5,min,2,31,30,61,30,1,6,Error,-32.4338272833906,-32.6214975320104,900.065,0,0,156536,#,-32.4338272833906,-32.6214975320104,-32.4338272833906,-32.6214975320104,0.57863,0.57863,0,0,0&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk4_05,MINLP,knitro,CONOPT,CPLEX,43365.51,min,2,11,10,21,10,1,13,Error,0,NA,NA,NA,NA,NA,#,0,-Infinity,0,-Infinity,Infinity,Infinity,0,NaN,NaN&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk4_10,MINLP,knitro,CONOPT,CPLEX,43365.514,min,2,21,20,41,20,1,6,Error,-14.6650988983745,-14.6650988983711,267.221,0,0,199351,#,-14.6650988983745,-14.6650988983711,-14.6650988983745,-14.6650988983711,0,0,0,0,0&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk4_15,MINLP,knitro,CONOPT,CPLEX,43365.517,min,2,31,30,61,30,1,6,Error,-33.6086573695247,-33.6086573695138,419.96,0,0,199353,#,-33.6086573695247,-33.6086573695138,-33.6086573695247,-33.6086573695138,0,0,0,0,0&quot;</span><br/><span class="hl-2">    ],</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;dataFileType&quot;</span><span class="hl-2">: </span><span class="hl-4">&quot;trc&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;defaultTime&quot;</span><span class="hl-2">: </span><span class="hl-5">900</span><br/><span class="hl-2">}</span>
 </code></pre>
 
 <a href="#working-with-the-codebase" id="working-with-the-codebase" style="color: inherit; text-decoration: none;">
@@ -81,7 +81,7 @@
   <h3>1. Prerequisites</h3>
 </a>
 <p>Before getting started, make sure you have the following software installed on your machine:</p>
-<pre><code><span class="hl-0">Node</span><span class="hl-2">.</span><span class="hl-0">js</span><span class="hl-2">: </span><span class="hl-5">https</span><span class="hl-2">:</span><span class="hl-6">//nodejs.org/</span><br/><span class="hl-5">TypeScript</span><span class="hl-2">: </span><span class="hl-5">https</span><span class="hl-2">:</span><span class="hl-6">//www.typescriptlang.org/</span><br/><span class="hl-5">Webpack</span><span class="hl-2">: </span><span class="hl-5">https</span><span class="hl-2">:</span><span class="hl-6">//webpack.js.org/</span>
+<pre><code><span class="hl-0">Node</span><span class="hl-2">.</span><span class="hl-0">js</span><span class="hl-2">: </span><span class="hl-6">https</span><span class="hl-2">:</span><span class="hl-7">//nodejs.org/</span><br/><span class="hl-6">TypeScript</span><span class="hl-2">: </span><span class="hl-6">https</span><span class="hl-2">:</span><span class="hl-7">//www.typescriptlang.org/</span><br/><span class="hl-6">Webpack</span><span class="hl-2">: </span><span class="hl-6">https</span><span class="hl-2">:</span><span class="hl-7">//webpack.js.org/</span>
 </code></pre>
 <p>Install the required packages by running: </p>
 <pre><code><span class="hl-0">npm</span><span class="hl-2"> </span><span class="hl-0">install</span>
@@ -99,25 +99,25 @@
   <h3>3. Other Scripts</h3>
 </a>
 <p>Run unit tests using Jest:</p>
-<pre><code><span class="hl-0">npm</span><span class="hl-2"> </span><span class="hl-0">run</span><span class="hl-2"> </span><span class="hl-5">test</span><span class="hl-2">:</span><span class="hl-0">functions</span>
+<pre><code><span class="hl-0">npm</span><span class="hl-2"> </span><span class="hl-0">run</span><span class="hl-2"> </span><span class="hl-6">test</span><span class="hl-2">:</span><span class="hl-0">functions</span>
 </code></pre>
 <p>Run UI tests with Playwright using Jest:</p>
-<pre><code><span class="hl-0">npm</span><span class="hl-2"> </span><span class="hl-0">run</span><span class="hl-2"> </span><span class="hl-5">test</span><span class="hl-2">:</span><span class="hl-0">ui</span>
+<pre><code><span class="hl-0">npm</span><span class="hl-2"> </span><span class="hl-0">run</span><span class="hl-2"> </span><span class="hl-6">test</span><span class="hl-2">:</span><span class="hl-0">ui</span>
 </code></pre>
 <p>Lint the project files using ESLint:</p>
 <pre><code><span class="hl-0">npm</span><span class="hl-2"> </span><span class="hl-0">run</span><span class="hl-2"> </span><span class="hl-0">lint</span>
 </code></pre>
 <p>To automatically fix linting issues:</p>
-<pre><code><span class="hl-0">npm</span><span class="hl-2"> </span><span class="hl-0">run</span><span class="hl-2"> </span><span class="hl-5">lint</span><span class="hl-2">:</span><span class="hl-0">fix</span>
+<pre><code><span class="hl-0">npm</span><span class="hl-2"> </span><span class="hl-0">run</span><span class="hl-2"> </span><span class="hl-6">lint</span><span class="hl-2">:</span><span class="hl-0">fix</span>
 </code></pre>
 <p>Generate documentation using TypeDoc:</p>
-<pre><code><span class="hl-0">npm</span><span class="hl-2"> </span><span class="hl-0">run</span><span class="hl-2"> </span><span class="hl-5">build</span><span class="hl-2">:</span><span class="hl-0">docs</span>
+<pre><code><span class="hl-0">npm</span><span class="hl-2"> </span><span class="hl-0">run</span><span class="hl-2"> </span><span class="hl-6">build</span><span class="hl-2">:</span><span class="hl-0">docs</span>
 </code></pre>
 <p>Create a slimmed down release build using gulp:</p>
 <pre><code><span class="hl-0">npm</span><span class="hl-2"> </span><span class="hl-0">run</span><span class="hl-2"> </span><span class="hl-0">release</span>
 </code></pre>
 <p>Create a slimmed down web release build using gulp:</p>
-<pre><code><span class="hl-0">npm</span><span class="hl-2"> </span><span class="hl-0">run</span><span class="hl-2"> </span><span class="hl-5">release</span><span class="hl-2">:</span><span class="hl-0">web</span>
+<pre><code><span class="hl-0">npm</span><span class="hl-2"> </span><span class="hl-0">run</span><span class="hl-2"> </span><span class="hl-6">release</span><span class="hl-2">:</span><span class="hl-0">web</span>
 </code></pre>
 </div></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -141,8 +141,8 @@
 <ul>
 <li class="current selected"><a href="modules.html">System <wbr/>Documentation</a>
 <ul>
+<li class="tsd-kind-module"><a href="modules/Chart_ChartType.html">Chart/<wbr/>Chart<wbr/>Type</a></li>
 <li class="tsd-kind-module"><a href="modules/Chart_CreateChart.html">Chart/<wbr/>Create<wbr/>Chart</a></li>
-<li class="tsd-kind-module"><a href="modules/Chart_PlotDataByCategory.html">Chart/<wbr/>Plot<wbr/>Data<wbr/>By<wbr/>Category</a></li>
 <li class="tsd-kind-module"><a href="modules/DataProcessing_AddResultCategories.html">Data<wbr/>Processing/<wbr/>Add<wbr/>Result<wbr/>Categories</a></li>
 <li class="tsd-kind-module"><a href="modules/DataProcessing_CalculateResults.html">Data<wbr/>Processing/<wbr/>Calculate<wbr/>Results</a></li>
 <li class="tsd-kind-module"><a href="modules/DataProcessing_CreateData.html">Data<wbr/>Processing/<wbr/>Create<wbr/>Data</a></li>
@@ -153,6 +153,7 @@
 <li class="tsd-kind-module"><a href="modules/DataTable_DataTableBase.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Base</a></li>
 <li class="tsd-kind-module"><a href="modules/DataTable_DataTableWrapper.html">Data<wbr/>Table/<wbr/>Data<wbr/>Table<wbr/>Wrapper</a></li>
 <li class="tsd-kind-module"><a href="modules/DataTable_UpdateResults.html">Data<wbr/>Table/<wbr/>Update<wbr/>Results</a></li>
+<li class="tsd-kind-module"><a href="modules/DemoData.html">Demo<wbr/>Data</a></li>
 <li class="tsd-kind-module"><a href="modules/Elements_DisplayAlertNotification.html">Elements/<wbr/>Display<wbr/>Alert<wbr/>Notification</a></li>
 <li class="tsd-kind-module"><a href="modules/Elements_ElementStatus.html">Elements/<wbr/>Element<wbr/>Status</a></li>
 <li class="tsd-kind-module"><a href="modules/Elements_Elements.html">Elements/<wbr/>Elements</a></li>
