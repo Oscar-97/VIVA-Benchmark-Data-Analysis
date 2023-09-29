@@ -31,6 +31,7 @@ export function PickColor(numberOfColors: number): string[] {
  * @param data - The data for the chart, which should be an array of objects.
  * @param label - The label/s for the data.
  * @param title - The title of the chart.
+ * @param scaleOptions - The scape options for the chart.
  *
  * @example
  * ```typescript
