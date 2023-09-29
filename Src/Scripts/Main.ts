@@ -1,10 +1,5 @@
 // #region Imports
 /**
- * jQuery (Fade in animation)
- */
-import $ from "jquery";
-
-/**
  * Bootstrap.
  */
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -87,7 +82,10 @@ import {
 	viewPlotsButton,
 	downloadChartDataButton
 } from "./Elements/Elements";
-import { LoadingAnimation } from "./Elements/LoadingAnimation";
+import {
+	BodyFadeLoadingAnimation,
+	TableLoadingAnimation
+} from "./Elements/LoadingAnimation";
 
 /**
  * User Configuration.
@@ -106,10 +104,7 @@ import { DisplayErrorNotification } from "./Elements/DisplayAlertNotification";
 /**
  * Fade effect on all children of the body element, except for nav.
  */
-$(function () {
-	$("body > :not(nav)").css("opacity", "1");
-	$("hr").css("opacity", "0.25");
-});
+BodyFadeLoadingAnimation();
 
 /**
  * Register service worker for PWA offline support.
@@ -313,7 +308,7 @@ function HandleReportPage(
 	 */
 	viewTableButton.addEventListener("click", () => {
 		viewTableButton.disabled = true;
-		LoadingAnimation();
+		TableLoadingAnimation();
 		DisplayDataTable(traceData);
 	});
 
