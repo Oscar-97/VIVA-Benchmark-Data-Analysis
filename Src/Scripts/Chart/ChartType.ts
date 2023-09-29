@@ -109,7 +109,7 @@ export function PlotAllSolverTimes(
 		y: {
 			title: {
 				display: true,
-				text: "Time to solve"
+				text: "SolverTime [s]"
 			}
 		}
 	};
