@@ -122,6 +122,20 @@ export const viewPlotsButton: HTMLButtonElement = document.getElementById(
 ) as HTMLButtonElement;
 
 /**
+ * `downloadChartDataButton` is a reference to the HTMLAnchorElement with the ID "downloadChartDataButton".
+ * @type {HTMLAnchorElement}
+ */
+export const downloadChartDataButton: HTMLAnchorElement =
+	document.getElementById("downloadChartDataButton") as HTMLAnchorElement;
+
+/**
+ * `downloadChartDataButtonLayer` is a reference to the HTMLButtonElement with the ID "downloadChartDataButtonLayer".
+ * @type {HTMLButtonElement}
+ */
+export const downloadChartDataButtonLayer: HTMLButtonElement =
+	document.getElementById("downloadChartDataButtonLayer") as HTMLButtonElement;
+
+/**
  * `demoModeButton` is a reference to the HTMLButtonElement with the ID "demoModeButton".
  * @type {HTMLButtonElement}
  */

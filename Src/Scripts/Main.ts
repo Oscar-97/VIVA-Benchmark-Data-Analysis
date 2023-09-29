@@ -1,10 +1,5 @@
 // #region Imports
 /**
- * jQuery (Fade in animation)
- */
-import $ from "jquery";
-
-/**
  * Bootstrap.
  */
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -37,18 +32,20 @@ import { RegisterServiceWorker } from "./PWA_Setup";
  */
 import {
 	PlotDataByCategory,
-	PlotAllSolverTimes
-} from "./Chart/PlotDataByCategory";
+	PlotStatusMessages,
+	PlotAllSolverTimes,
+	PlotAbsolutePerformanceProfileSolverTimes
+} from "./Chart/ChartType";
 
 /**
  * Dataprocessing.
  */
 import { AddResultCategories } from "./DataProcessing/AddResultCategories";
-import { CreateDataTrc } from "./DataProcessing/CreateData";
+import { CreateNewTraceData } from "./DataProcessing/CreateData";
 import { ImportDataEvents } from "./Elements/ImportDataEvents";
 import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
 import { MergeData } from "./DataProcessing/MergeData";
-import { ExtractTrcData } from "./DataProcessing/FilterData";
+import { ExtractTraceData } from "./DataProcessing/FilterData";
 import {
 	GetInstanceInformation,
 	GetBestKnowBounds
@@ -58,15 +55,19 @@ import {
  * DataTable.
  */
 import {
-	TableDisplayTrc,
+	DisplayDataTable,
 	DestroyDataTable
 } from "./DataTable/DataTableWrapper";
-import { UpdateResultsTrc } from "./DataTable/UpdateResults";
+import { UpdateResults } from "./DataTable/UpdateResults";
 
 /**
  * Elements.
  */
-import { ElementStatus, ElementStatusPlots } from "./Elements/ElementStatus";
+import {
+	ElementStatesTablePage,
+	ElementStatesPlotPage,
+	ElementStateDisplayedChart
+} from "./Elements/ElementStatus";
 import {
 	fileInput,
 	importDataButton,
@@ -77,9 +78,14 @@ import {
 	deleteLocalStorageButton,
 	clearTableButton,
 	downloadConfigurationButtonLayer,
-	demoDataButton
+	demoDataButton,
+	viewPlotsButton,
+	downloadChartDataButton
 } from "./Elements/Elements";
-import { LoadingAnimation } from "./Elements/LoadingAnimation";
+import {
+	BodyFadeLoadingAnimation,
+	TableLoadingAnimation
+} from "./Elements/LoadingAnimation";
 
 /**
  * User Configuration.
@@ -92,15 +98,13 @@ import {
 } from "./UserConfiguration/UserConfiguration";
 
 import { demoData } from "./DemoData";
+import { DisplayErrorNotification } from "./Elements/DisplayAlertNotification";
 //#endregion
 
 /**
  * Fade effect on all children of the body element, except for nav.
  */
-$(function () {
-	$("body > :not(nav)").css("opacity", "1");
-	$("hr").css("opacity", "0.25");
-});
+BodyFadeLoadingAnimation();
 
 /**
  * Register service worker for PWA offline support.
@@ -108,29 +112,35 @@ $(function () {
 RegisterServiceWorker();
 
 /**
- * @param DataFileType Type of file extension for the imported data. As of now, either .trc or .json. Text based files were removed.
- * @param RawData Raw data of the imported benchmark results.
- * @param RawInstanceInfoData Unprocessed instanceinfo.csv containing properties.
- * @param RawSoluData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
+ * @param dataFileType Type of file extension for the imported data. As of now, either .trc or .json. Text based files were removed.
+ * @param defaultTime The default time for the absolute performance profile chart.
+ * @param unprocessedData Raw data of the imported benchmark results.
+ * @param unprocessedInstanceInformationData Unprocessed instanceinfo.csv containing properties.
+ * @param unprocessedSolutionData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
+ * @param chartData Processed data used in the different charts.
  */
 let dataFileType = "";
-let rawData: string[] = [];
-let rawInstanceInfoData: string[] = [];
-let rawSoluData: string[] = [];
+let defaultTime = undefined;
+let unprocessedData: string[] = [];
+let unprocessedInstanceInformationData: string[] = [];
+let unprocessedSolutionData: string[] = [];
+let chartData;
 
 /**
  * Initializing the methods that are needed to run the system.
  */
 function InitializeProgram(): void {
 	/**
-	 * Resets the dataFileType and the three arrays holding the raw data,
-	 * raw instance info data, and raw solution data to their initial states.
+	 * Resets the dataFileType, defaultTime and the four arrays holding the raw data,
+	 * raw instance info data, raw solution data, and chart data to their initial states.
 	 * This occurs when the table is cleared and InitializeProgram() is run again.
 	 */
 	dataFileType = "";
-	rawData = [];
-	rawInstanceInfoData = [];
-	rawSoluData = [];
+	defaultTime = "";
+	unprocessedData = [];
+	unprocessedInstanceInformationData = [];
+	unprocessedSolutionData = [];
+	chartData = [];
 
 	/**
 	 * Sets the status of all buttons based on the current document title.
@@ -138,28 +148,28 @@ function InitializeProgram(): void {
 	 * depending on whether the title is "Report" or not.
 	 */
 	if (document.title == "Report") {
-		ElementStatus();
+		ElementStatesTablePage();
 	} else {
-		ElementStatusPlots();
+		ElementStatesPlotPage();
 	}
 
 	/**
 	 * Tries to retrieve stored configuration when arriving at
 	 * the page or refreshing the page. If data is found in local storage, the
-	 * rawData and dataFileType are updated, the ImportDataEvents() function is
+	 * unprocessedData and dataFileType are updated, the ImportDataEvents() function is
 	 * called with a success message, the "Delete Local Storage" and "Download
 	 * Configuration" buttons are enabled, and the ManageData() function is called.
 	 */
 	try {
-		[rawData, dataFileType] = GetUserConfiguration();
+		[unprocessedData, dataFileType, defaultTime] = GetUserConfiguration();
 		ImportDataEvents("Found cached benchmark file!", "json");
 		saveLocalStorageButton.disabled = true;
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
 		sessionStorage.setItem("savedStorageNotification", "true");
 		ManageData();
-	} catch (err) {
-		console.log("No saved configuration data found. ", err);
+	} catch {
+		console.info("No saved configuration data found.");
 	}
 
 	/**
@@ -168,12 +178,16 @@ function InitializeProgram(): void {
 
 	/**
 	 * Adds an event listener to the file input field that sets the dataFileType
-	 * variable and reads data into the rawData, rawInstanceInfoData, and rawSoluData
+	 * variable and reads data into the unprocessedData, unprocessedInstanceInformationData, and unprocessedSolutionData
 	 * arrays whenever the value of the file input field changes.
 	 */
 	fileInput.addEventListener("change", () => {
 		dataFileType = GetDataFileType();
-		ReadData(rawData, rawInstanceInfoData, rawSoluData);
+		ReadData(
+			unprocessedData,
+			unprocessedInstanceInformationData,
+			unprocessedSolutionData
+		);
 	});
 
 	/**
@@ -190,10 +204,12 @@ function InitializeProgram(): void {
 	/**
 	 * Adds an event listener to the "Demo-Mode" button that loads a demo data set and savet it to local storage.
 	 */
-	demoDataButton.addEventListener("click", () => {
-		localStorage.setItem("UserConfiguration", JSON.stringify(demoData));
-		location.reload();
-	});
+	if (document.title == "Report") {
+		demoDataButton.addEventListener("click", () => {
+			localStorage.setItem("UserConfiguration", JSON.stringify(demoData));
+			location.reload();
+		});
+	}
 }
 
 /**
@@ -215,27 +231,30 @@ function ManageData(): void {
 
 	/**
 	 * If the uploaded data file is of type JSON, it retrieves the user configuration
-	 * and updates the rawData and dataFileType variables.
+	 * and updates the unprocessedData and dataFileType variables.
 	 */
 	if (dataFileType == "json") {
-		[rawData, dataFileType] = GetUserConfiguration();
+		[unprocessedData, dataFileType, defaultTime] = GetUserConfiguration();
+		traceData = ExtractTraceData(unprocessedData);
 	}
 
 	/**
-	 * If the uploaded data file is of type TRC, it extracts the trace data from the rawData,
+	 * If the uploaded data file is of type TRC, it extracts the trace data from the unprocessedData,
 	 * gets instance information if any, gets best known bounds if any, merges the data,
 	 * and adds result categories to the trace data.
 	 */
 	if (dataFileType === "trc") {
-		traceData = ExtractTrcData(rawData);
+		traceData = ExtractTraceData(unprocessedData);
 
-		if (rawInstanceInfoData.length !== 0) {
-			instanceInfoData = GetInstanceInformation(rawInstanceInfoData);
+		if (unprocessedInstanceInformationData.length !== 0) {
+			instanceInfoData = GetInstanceInformation(
+				unprocessedInstanceInformationData
+			);
 			traceData = MergeData(traceData, instanceInfoData);
 		}
 
-		if (rawSoluData.length !== 0) {
-			soluData = GetBestKnowBounds(rawSoluData);
+		if (unprocessedSolutionData.length !== 0) {
+			soluData = GetBestKnowBounds(unprocessedSolutionData);
 			traceData = MergeData(traceData, soluData);
 		}
 		AddResultCategories(traceData);
@@ -289,14 +308,8 @@ function HandleReportPage(
 	 */
 	viewTableButton.addEventListener("click", () => {
 		viewTableButton.disabled = true;
-		LoadingAnimation();
-		if (dataFileType === "trc") {
-			TableDisplayTrc(traceData);
-		} else if (dataFileType === "json") {
-			[rawData, dataFileType] = GetUserConfiguration();
-			traceData = ExtractTrcData(rawData);
-			TableDisplayTrc(traceData);
-		}
+		TableLoadingAnimation();
+		DisplayDataTable(traceData);
 	});
 
 	/**
@@ -304,25 +317,26 @@ function HandleReportPage(
 	 */
 	filterSelectionButton.addEventListener("click", () => {
 		filterSelectionButton.disabled = true;
-		if (dataFileType === "trc") {
-			traceDataFiltered = UpdateResultsTrc();
-			TableDisplayTrc(traceDataFiltered);
-		}
+		traceDataFiltered = UpdateResults();
+		DisplayDataTable(traceDataFiltered);
 	});
 
 	/**
 	 * Save to local storage when clicking on the "Save Data" button.
 	 */
 	saveLocalStorageButton.addEventListener("click", () => {
-		if (dataFileType === "trc" || dataFileType === "json") {
-			let newRawData = [];
-			if (traceDataFiltered.length === 0) {
-				newRawData = CreateDataTrc(traceData);
-			} else {
-				newRawData = CreateDataTrc(traceDataFiltered);
-			}
-			CreateUserConfiguration(newRawData, dataFileType);
+		let newRawData = [];
+
+		if (dataFileType === "trc") {
+			dataFileType = "json";
 		}
+
+		if (traceDataFiltered.length === 0) {
+			newRawData = CreateNewTraceData(traceData);
+		} else {
+			newRawData = CreateNewTraceData(traceDataFiltered);
+		}
+		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
 	});
@@ -343,69 +357,106 @@ function HandleReportPage(
  */
 function HandlePlotPages(traceData: object[]): void {
 	/**
-	 * Save to local storage functionality on the plot pages.
+	 * Save to local storage when clicking on the "Save Data" button.
 	 */
-	if (document.title != "Report") {
+	saveLocalStorageButton.addEventListener("click", () => {
+		if (dataFileType === "trc") {
+			dataFileType = "json";
+		}
+		const newRawData: string[] = CreateNewTraceData(traceData);
+		CreateUserConfiguration(newRawData, dataFileType);
+		deleteLocalStorageButton.disabled = false;
+		downloadConfigurationButtonLayer.disabled = false;
+	});
+
+	/**
+	 * View chart/plot when clicking on the view plot button per page.
+	 */
+	viewPlotsButton.disabled = false;
+	viewPlotsButton.addEventListener("click", () => {
 		/**
-		 * Save to local storage when clicking on the relevant button.
+		 * Check if the user is on the Absolute Performance Profile.
 		 */
-		saveLocalStorageButton.addEventListener("click", () => {
-			if (dataFileType === "trc" || dataFileType === "json") {
-				let newRawData = [];
-				newRawData = CreateDataTrc(traceData);
+		if (document.title == "Absolute Performance Profile") {
+			chartData = PlotAbsolutePerformanceProfileSolverTimes(
+				traceData,
+				defaultTime
+			);
+		}
 
-				CreateUserConfiguration(newRawData, dataFileType);
-			}
-			deleteLocalStorageButton.disabled = false;
-			downloadConfigurationButtonLayer.disabled = false;
-		});
-	}
+		/**
+		 * Check if the user is on the Average Solver Time page.
+		 */
+		if (document.title == "Average Solver Time") {
+			chartData = PlotDataByCategory(
+				traceData,
+				"bar",
+				"SolverTime",
+				"SolverTime.average",
+				"Average solver time"
+			);
+		}
+
+		/**
+		 * Check if the user is on the Solver Time page.
+		 */
+		if (document.title == "Solver Time") {
+			chartData = PlotAllSolverTimes(traceData);
+		}
+
+		/**
+		 * Check if the user is on the Number of Nodes page.
+		 */
+		if (document.title == "Number of Nodes") {
+			chartData = PlotDataByCategory(
+				traceData,
+				"bar",
+				"NumberOfNodes",
+				"NumberOfNodes.average",
+				"Average number of nodes"
+			);
+		}
+
+		/**
+		 * Check if the user is on the Number of Iterations page.
+		 */
+		if (document.title == "Number of Iterations") {
+			chartData = PlotDataByCategory(
+				traceData,
+				"bar",
+				"NumberOfIterations",
+				"NumberOfiterations.average",
+				"Average number of iterations"
+			);
+		}
+
+		/**
+		 * Check if the user is on the Termination Status page.
+		 */
+		if (document.title == "Termination Status") {
+			chartData = PlotStatusMessages(
+				traceData,
+				"bar",
+				"Termination status by type"
+			);
+		}
+		ElementStateDisplayedChart();
+	});
 
 	/**
-	 * Check if the user is on the Average Solver Time page.
+	 * Download the current chart data when clicking on the "Download Chart Data" button.
 	 */
-	if (document.title == "Average Solver Time") {
-		PlotDataByCategory(
-			traceData,
-			"bar",
-			"SolverTime",
-			"SolverTime.average",
-			"Average solver time"
-		);
-	}
+	downloadChartDataButton.addEventListener("click", () => {
+		if (chartData) {
+			const downloadAbleFile = JSON.stringify(chartData);
+			const blob = new Blob([downloadAbleFile], { type: "application/json" });
 
-	/**
-	 * Check if the user is on the Solver Time page.
-	 */
-	if (document.title == "Solver Time") {
-		PlotAllSolverTimes(traceData);
-	}
-
-	/**
-	 * Check if the user is on the Number of Nodes page.
-	 */
-	if (document.title == "Number of Nodes") {
-		PlotDataByCategory(
-			traceData,
-			"bar",
-			"NumberOfNodes",
-			"NumberOfNodes.average",
-			"Average number of nodes"
-		);
-	}
-
-	/**
-	 * Check if the user is on the Number of Iterations page.
-	 */
-	if (document.title == "Number of Iterations") {
-		PlotDataByCategory(
-			traceData,
-			"bar",
-			"NumberOfIterations",
-			"NumberOfiterations.average",
-			"Average number of iterations"
-		);
-	}
+			downloadChartDataButton.href = window.URL.createObjectURL(blob);
+			downloadChartDataButton.download = "ChartData.json";
+		} else {
+			DisplayErrorNotification("No chart data found!");
+		}
+	});
 }
 
 /**

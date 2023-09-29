@@ -9,7 +9,7 @@
  * The keys of this object are the headers and the values are the corresponding cells' text content.
  * This way, it effectively "translates" the table data into a more easily manipulable format (an array of objects).
  */
-export function UpdateResultsTrc(): object[] {
+export function UpdateResults(): object[] {
 	const headers = Array.from(document.querySelectorAll(".thead-dark th")).map(
 		(header) => header.textContent
 	);

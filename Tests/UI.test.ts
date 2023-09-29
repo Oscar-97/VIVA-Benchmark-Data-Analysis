@@ -70,6 +70,17 @@ describe("UI tests", () => {
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[1]/a");
 			await page.waitForTimeout(2000);
+			const absolutePerformanceProfileTitle = await page.title();
+			expect(absolutePerformanceProfileTitle).toBe(
+				"Absolute Performance Profile"
+			);
+			await page.screenshot({
+				path: "TestScreenshots/absoluteperformanceprofilepage.png"
+			});
+
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[2]/a");
+			await page.waitForTimeout(2000);
 			const averageSolverTimeTitle = await page.title();
 			expect(averageSolverTimeTitle).toBe("Average Solver Time");
 			await page.screenshot({
@@ -77,14 +88,14 @@ describe("UI tests", () => {
 			});
 
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
-			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[2]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[3]/a");
 			await page.waitForTimeout(2000);
 			const solverTimeTitle = await page.title();
 			expect(solverTimeTitle).toBe("Solver Time");
 			await page.screenshot({ path: "TestScreenshots/solvertimepage.png" });
 
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
-			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[3]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[4]/a");
 			await page.waitForTimeout(2000);
 			const numberOfNodesTitle = await page.title();
 			expect(numberOfNodesTitle).toBe("Number of Nodes");
@@ -93,12 +104,21 @@ describe("UI tests", () => {
 			});
 
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
-			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[4]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[5]/a");
 			await page.waitForTimeout(2000);
 			const numberOfIterationsTitle = await page.title();
 			expect(numberOfIterationsTitle).toBe("Number of Iterations");
 			await page.screenshot({
 				path: "TestScreenshots/numberofiterations.png"
+			});
+
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[6]/a");
+			await page.waitForTimeout(2000);
+			const terminationStatusTitle = await page.title();
+			expect(terminationStatusTitle).toBe("Termination Status");
+			await page.screenshot({
+				path: "TestScreenshots/terminationstatus.png"
 			});
 
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[1]/a");
@@ -343,7 +363,7 @@ describe("UI tests", () => {
 		}, 60000);
 	});
 
-	describe("Plot Pages", () => {
+	describe.only("Plot Pages", () => {
 		async function RunPlotOperations(filePath: string): Promise<void> {
 			const absoluteFilePath: string = path.resolve(__dirname, filePath);
 			const fileUrl = `file://${absoluteFilePath}`;
@@ -362,6 +382,10 @@ describe("UI tests", () => {
 				timeout: 3000
 			});
 		}
+
+		test("Absolute Performance Profile Page", async () => {
+			await RunPlotOperations("../Src/Pages/absolute_performance_profile.html");
+		}, 10000);
 
 		test("Average Solver Time Page", async () => {
 			await RunPlotOperations("../Src/Pages/average_solver_time.html");
@@ -389,6 +413,10 @@ describe("UI tests", () => {
 				state: "visible",
 				timeout: 3000
 			});
+		}, 10000);
+
+		test("Termination Status Page", async () => {
+			await RunPlotOperations("../Src/Pages/termination_status.html");
 		}, 10000);
 	});
 });

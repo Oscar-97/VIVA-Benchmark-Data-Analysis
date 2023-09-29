@@ -12,7 +12,7 @@ import "datatables.net-buttons/js/buttons.print.mjs";
 import "datatables.net-datetime";
 
 import { TableDataTrc } from "./DataTableBase";
-import { ElementStatusWithTable } from "../Elements/ElementStatus";
+import { ElementStateDisplayedTable } from "../Elements/ElementStatus";
 
 /**
  * Function to display the trace data in a dynamically generated HTML table using the DataTables library for improved user interaction.
@@ -34,11 +34,11 @@ import { ElementStatusWithTable } from "../Elements/ElementStatus";
  *   {Solver: "SolverA", Runtime: 10, ObjectiveValue: 100},
  *   {Solver: "SolverB", Runtime: 20, ObjectiveValue: 200}
  * ];
- * TableDisplayTrc(traceData);
+ * DisplayDataTable(traceData);
  * ```
  * This example will generate a table with two rows and three columns (Solver, Runtime, and ObjectiveValue) and apply DataTables configuration to it.
  */
-export function TableDisplayTrc(traceData: object[]): void {
+export function DisplayDataTable(traceData: object[]): void {
 	setTimeout(() => {
 		/**
 		 * Create the table with the trc data.
@@ -53,7 +53,7 @@ export function TableDisplayTrc(traceData: object[]): void {
 			("#dataTableGenerated_wrapper");
 		});
 
-		ElementStatusWithTable();
+		ElementStateDisplayedTable();
 	}, 500);
 }
 

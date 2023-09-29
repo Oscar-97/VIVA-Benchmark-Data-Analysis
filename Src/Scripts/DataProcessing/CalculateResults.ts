@@ -376,6 +376,38 @@ export function AnalyzeDataByCategory(
 }
 
 /**
+ * `ExtractStatusMessages` function extracts the values of the termination message for each instance per solver, from the results data.
+ *
+ * @param {object[]} traceData - An array of objects where each object represents an instance of trace data.
+ * @returns  {string[]} - An object with solver names as keys. Each solver contains a counter of the instance status messages.
+ */
+
+export function ExtractStatusMessages(traceData: object[]): string[] {
+	const result = [];
+	const nameErrorMap = new Map();
+
+	traceData.forEach((obj) => {
+		const existingEntry = nameErrorMap.get(obj["SolverName"]);
+
+		if (existingEntry) {
+			existingEntry[obj["SolverStatus"]] =
+				(existingEntry[obj["SolverStatus"]] || 0) + 1;
+			existingEntry[obj["TermStatus"]] =
+				(existingEntry[obj["TermStatus"]] || 0) + 1;
+		} else {
+			const newEntry = {
+				SolverName: obj["SolverName"],
+				[obj["SolverStatus"]]: 1,
+				[obj["TermStatus"]]: 1
+			};
+			nameErrorMap.set(obj["SolverName"], newEntry);
+			result.push(newEntry);
+		}
+	});
+	return result;
+}
+
+/**
  * `ExtractAllSolverTimes` function is used to structure trace data (log of the solver) into a more accessible object
  * structure. It takes an array of objects (traceData) and returns an object.
  *
@@ -392,22 +424,85 @@ export function ExtractAllSolverTimes(traceData: object[]): object {
 	const result = traceData.reduce(
 		(
 			acc: { [key: string]: { time: number; InputFileName: string }[] },
-			obj: any
+			obj: object
 		): { [key: string]: { time: number; InputFileName: string }[] } => {
-			if (!acc[obj.SolverName]) {
-				acc[obj.SolverName] = [];
+			if (!acc[obj["SolverName"]]) {
+				acc[obj["SolverName"]] = [];
 			}
 			if (obj["SolverTime"] !== "NA") {
-				const time = math.bignumber(obj["SolverTime"]).toNumber();
+				const time = Number(obj["SolverTime"]);
 				if (!isNaN(time)) {
 					const inputFileName = obj["InputFileName"];
-					acc[obj.SolverName].push({ time, InputFileName: inputFileName });
+					acc[obj["SolverName"]].push({ time, InputFileName: inputFileName });
 				}
 			}
 			return acc;
 		},
 		{}
 	);
+	return result;
+}
 
+/**
+ * `ExtractAllSolverTimesNoFailedAndGapBelow1Percent` function is used to structure trace data (log of the solver) into a more accessible object
+ * structure. It takes an array of objects (traceData) and returns an object.
+ *
+ * The returned object has a unique key for each solver and the value is an array of objects, each containing a 'time'
+ * and 'InputFileName'. All results with missing SolverTime, or with a failed status, get a default value of 1000.
+ * A fail is if the termination or solver status is "Normal" or "Normal Completion".
+ *
+ * @param {object[]} traceData - An array of objects where each object represents an instance of trace data.
+ *
+ * @returns {object} - An object with solver names as keys. Each key points to an array of objects where each object
+ * contains 'time' and 'InputFileName' property of the corresponding solver.
+ */
+export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
+	traceData: object[],
+	defaultTime?: number | undefined
+): object {
+	let defaultMaximumTime: number;
+
+	if (
+		!defaultTime ||
+		typeof defaultTime === "undefined" ||
+		isNaN(defaultTime)
+	) {
+		defaultMaximumTime = 1000.0;
+	} else {
+		defaultMaximumTime = defaultTime;
+	}
+
+	console.log("defaultMaximumTime:", defaultMaximumTime);
+
+	const result = traceData.reduce(
+		(
+			acc: { [key: string]: { time: number; InputFileName: string }[] },
+			obj: object
+		): { [key: string]: { time: number; InputFileName: string }[] } => {
+			if (!acc[obj["SolverName"]]) {
+				acc[obj["SolverName"]] = [];
+			}
+			if (!isNaN(Number(obj["SolverTime"]))) {
+				if (
+					obj["PrimalGap"] <= 0.01 &&
+					Number(obj["SolverTime"]) <= defaultMaximumTime &&
+					(obj["TermStatus"] === "Normal" ||
+						obj["SolverStatus"] === "Normal Completion")
+				) {
+					acc[obj["SolverName"]].push({
+						time: Number(obj["SolverTime"]),
+						InputFileName: obj["InputFileName"]
+					});
+				}
+			} else {
+				acc[obj["SolverName"]].push({
+					time: defaultMaximumTime,
+					InputFileName: obj["InputFileName"]
+				});
+			}
+			return acc;
+		},
+		{}
+	);
 	return result;
 }

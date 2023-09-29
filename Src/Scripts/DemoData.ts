@@ -443,5 +443,6 @@ export const demoData: object = {
 		"vpphard,MIP,Balin,NA,min,47082,51472,51471,418741,0,Integer Solution,Resource Interrupt,2.300000e+1,0.000000e+0,3602,3602.69900006242,1401054,7048,2.300000e+1,0.000000e+0,Unknown Error,2.300000e+1,0.000000e+0,Infinity,Infinity,0,0,0",
 		"zib54-UUE,MIP,Balin,NA,min,1810,5151,81,15370,0,Optimal,Normal Completion,1.404895e+7,1.404895e+7,3.95,4.11700014956295,29332,123,1.404895e+7,1.404895e+7,Unknown Error,1.404895e+7,1.404895e+7,0,0,0,0,0"
 	],
-	dataFileType: "trc"
+	dataFileType: "json",
+	defaultTime: "1000"
 };

@@ -8,27 +8,37 @@ import { downloadConfigurationButton } from "../Elements/Elements";
 /**
  * UserData consists of dataset and file extension.
  */
-export const userData = {
+interface UserData {
+	dataSet: string[];
+	dataFileType: string;
+	defaultTime?: number | undefined;
+}
+
+export const userData: UserData = {
 	dataSet: [],
-	dataFileType: ""
+	dataFileType: "",
+	defaultTime: undefined
 };
 
 /**
  * This function creates a user configuration and stores it in the browser's local storage.
  *
- * @param rawData - An array of strings representing raw data to be saved.
+ * @param dataSet - An array of strings representing raw data to be saved.
  * @param dataFileType - A string representing the type of data file.
+ * @param defaultTime - Default time used in the the absolute performance profile chart.
  *
  * @example
  * CreateUserConfiguration(["raw data 1", "raw data 2"], "trc");
  * // This will store the given raw data and data file type in the userData object, and then save the userData object in local storage.
  */
 export function CreateUserConfiguration(
-	rawData: string[],
-	dataFileType: string
+	dataSet: string[],
+	dataFileType: string,
+	defaultTime?: number
 ): void {
-	userData.dataSet = rawData;
+	userData.dataSet = dataSet;
 	userData.dataFileType = dataFileType;
+	userData.defaultTime = defaultTime;
 	try {
 		localStorage.setItem("UserConfiguration", JSON.stringify(userData));
 	} catch (error) {
@@ -64,17 +74,10 @@ export function CreateUserConfiguration(
  * GetUserConfiguration();
  * // This will return an array that includes the raw data and the data file type from local storage.
  */
-export function GetUserConfiguration(): [string[], string] {
-	let userConfig: { dataSet: string[][]; dataFileType: string };
+export function GetUserConfiguration(): [string[], string, number] {
+	let userConfig: UserData;
 	try {
 		userConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
-		if (
-			!userConfig ||
-			!userConfig.dataSet ||
-			!Array.isArray(userConfig.dataSet)
-		) {
-			throw new Error("No saved configuration data found.");
-		}
 	} catch (error) {
 		switch (error.message) {
 			case "SecurityError":
@@ -93,20 +96,18 @@ export function GetUserConfiguration(): [string[], string] {
 				}
 				break;
 			default:
-				DisplayErrorNotification("Error occured: " + error);
+				DisplayErrorNotification(error);
 				break;
 		}
 	}
-	const rawData = [];
-	userConfig.dataSet.forEach((value: string[]) => {
-		rawData.push(value);
+	const unprocessedData = [];
+	userConfig.dataSet.forEach((value) => {
+		unprocessedData.push(value);
 	});
 
-	const dataFileType: string = userConfig.dataFileType;
-
-	console.log("RawData fron localStorage: ", rawData);
-	console.log("FileType of saved data: ", dataFileType);
-	return [rawData, dataFileType];
+	const dataFileType = userConfig.dataFileType;
+	const defaultTime = userConfig.defaultTime;
+	return [unprocessedData, dataFileType, defaultTime];
 }
 
 /**

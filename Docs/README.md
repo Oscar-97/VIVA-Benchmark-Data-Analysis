@@ -59,9 +59,8 @@ The following header structure and order should be used in conjunction with .trc
     UserComment
 
 
-
 ### .json
-The file should include `dataSet` and `dataFileType`.
+The file should include `dataSet` and `dataFileType`, `defaultTime` is optional.
 
 ```json
 {
@@ -76,7 +75,8 @@ The file should include `dataSet` and `dataFileType`.
         "ball_mk4_10,MINLP,knitro,CONOPT,CPLEX,43365.514,min,2,21,20,41,20,1,6,Error,-14.6650988983745,-14.6650988983711,267.221,0,0,199351,#,-14.6650988983745,-14.6650988983711,-14.6650988983745,-14.6650988983711,0,0,0,0,0",
         "ball_mk4_15,MINLP,knitro,CONOPT,CPLEX,43365.517,min,2,31,30,61,30,1,6,Error,-33.6086573695247,-33.6086573695138,419.96,0,0,199353,#,-33.6086573695247,-33.6086573695138,-33.6086573695247,-33.6086573695138,0,0,0,0,0"
     ],
-    "dataFileType": "trc"
+    "dataFileType": "trc",
+    "defaultTime": 900
 }
 ```
 

@@ -35,14 +35,20 @@
             <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i
                 class="bi bi-bar-chart-steps"></i> Plots</a>
             <ul class="dropdown-menu mb-2" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="../Pages/absolute_performance_profile.html"><i
+                    class="bi bi-graph-up-arrow">
+                  </i>Absolute Performance Profile</a></li>
               <li><a class="dropdown-item" href="../Pages/average_solver_time.html"><i
                     class="bi bi-bar-chart-line-fill"></i> Average Solver Time</a></li>
               <li><a class="dropdown-item" href="../Pages/solver_time.html"><i class="bi bi-graph-up"></i> Solver
                   Time</a></li>
+              <hr />
               <li><a class="dropdown-item" href="../Pages/number_of_nodes.html"><i class="bi bi-bar-chart-line"></i>
                   Number of Nodes</a></li>
               <li><span class="dropdown-item active"><i class="bi bi-bar-chart-line"></i> Number of Iterations</span>
               </li>
+              <li><a class="dropdown-item" href="../Pages/termination_status.html"><i class="bi bi-bar-chart-line"></i>
+                  Termination Status</a></li>
             </ul>
           </li>
           <li class="nav-item">
@@ -69,8 +75,8 @@
               target="_blank"><i class="bi bi-plus-square"></i> Submit Issue</a>
           </li>
           <li class="nav-item">
-            <button class="nav-link" aria-label="help" data-bs-toggle="modal" data-bs-target="#fileFormatInformationModal"
-              name="Help"> <i class="bi bi-question-circle-fill"></i> Help
+            <button class="nav-link" aria-label="help" data-bs-toggle="modal"
+              data-bs-target="#fileFormatInformationModal" name="Help"> <i class="bi bi-question-circle-fill"></i> Help
             </button>
           </li>
         </ul>
@@ -97,6 +103,11 @@
       <button class="btn btn-dark btn-sm" type="button" id="downloadConfigurationButtonLayer" disabled="true"><a
           id="downloadConfigurationButton" data-toggle="tooltip" data-placement="top"
           title="Download the user configuration."><i class="bi bi-download"></i> Download Saved Data</a></button>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-dark btn-sm" type="button" id="downloadChartDataButtonLayer" disabled="true"><a
+          id="downloadChartDataButton" data-toggle="tooltip" data-placement="top" title="Download the chart data."><i
+            class="bi bi-file-earmark-arrow-down"></i> Download Chart Data</a></button>
     </div>
     <div class="col-auto vertical-separator"></div>
     <div class="col-auto">

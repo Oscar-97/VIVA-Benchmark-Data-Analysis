@@ -19,7 +19,7 @@ export function RegisterServiceWorker(): void {
 					);
 				})
 				.catch((err) => {
-					console.log("ServiceWorker registration failed: ", err);
+					console.warn("ServiceWorker registration failed: ", err);
 				});
 		});
 	}

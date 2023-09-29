@@ -1,8 +1,5 @@
 import { fileInput, importDataButton } from "../Elements/Elements";
-import {
-	DisplayAlertNotification,
-	DisplayErrorNotification
-} from "../Elements/DisplayAlertNotification";
+import { DisplayErrorNotification } from "../Elements/DisplayAlertNotification";
 import { userData } from "../UserConfiguration/UserConfiguration";
 
 /**
@@ -119,23 +116,27 @@ function IsValidExtension(extension: string): boolean {
 /**
  * Reads data from multiple file inputs, returning the raw data, instance information data and solu data.
  *
- * @param rawData - An array to store the raw data from .trc files.
- * @param rawInstanceInfoData - An array to store the raw data from .csv files.
- * @param rawSoluData - An array to store the raw data from .solu files.
+ * @param unprocessedData - An array to store the raw data from .trc files.
+ * @param unprocessedInstanceInformationData - An array to store the raw data from .csv files.
+ * @param unprocessedSolutionData - An array to store the raw data from .solu files.
  * @returns An object containing arrays of raw data, instance information data, and solu data.
  *
  * @remarks
  * This function reads multiple files selected by the user, like trace1.trc, trace2.trc and minlp.solu.
  * It uses the FileReader API to read the content of each file.
  * Depending on the file extension (.json, .trc, .csv, .solu), it splits the file's content into an array of lines
- * and processes each line as required, storing the results in the relevant arrays (rawData, rawInstanceInfoData, rawSoluData).
+ * and processes each line as required, storing the results in the relevant arrays (unprocessedData, unprocessedInstanceInformationData, unprocessedSolutionData).
  * If the file extension is .json, the function stores the uploaded UserConfiguration in the localStorage.
  */
 export function ReadData(
-	rawData: string[],
-	rawInstanceInfoData: string[],
-	rawSoluData: string[]
-): { RawData: string[]; RawInstanceInfoData: string[]; RawSoluData: string[] } {
+	unprocessedData: string[],
+	unprocessedInstanceInformationData: string[],
+	unprocessedSolutionData: string[]
+): {
+	UnprocessedData: string[];
+	UnprocessedInstanceInformationData: string[];
+	UnprocessedSolutionData: string[];
+} {
 	importDataButton.disabled = false;
 
 	/**
@@ -156,37 +157,26 @@ export function ReadData(
 				const dataJSON = <string>reader.result;
 				const parsedData = JSON.parse(dataJSON);
 
-				if (
-					parsedData.hasOwnProperty("dataSet") &&
-					parsedData.hasOwnProperty("dataFileType")
-				) {
-					userData.dataSet = parsedData.dataSet;
-					userData.dataFileType = parsedData.dataFileType;
-					localStorage.setItem("UserConfiguration", JSON.stringify(userData));
-					DisplayAlertNotification("Stored uploaded UserConfiguration.");
-				} else {
-					DisplayErrorNotification("Invalid data structure in uploaded JSON.");
-					console.log("Invalid data structure in uploaded JSON.");
-				}
+				VerifyConfigurationProperties(parsedData);
 			} else if (fileExtension === "trc") {
 				const lines = (<string>reader.result)
 					.split(/\r?\n/)
 					.map((line) => line.trim());
 				for (let i = 0; i <= lines.length - 1; i++) {
 					const line = lines[i];
-					rawData.push(line);
+					unprocessedData.push(line);
 				}
 			} else if (fileExtension === "csv") {
 				const lines = (<string>reader.result).split("\n");
 				for (let i = 0; i <= lines.length - 1; i++) {
 					const line = lines[i];
-					rawInstanceInfoData.push(line);
+					unprocessedInstanceInformationData.push(line);
 				}
 			} else if (fileExtension === "solu") {
 				const lines = (<string>reader.result).split(/\r?\n/);
 				for (let i = 0; i <= lines.length - 1; i++) {
 					const line = lines[i];
-					rawSoluData.push(line);
+					unprocessedSolutionData.push(line);
 				}
 			}
 		});
@@ -195,8 +185,30 @@ export function ReadData(
 	}
 
 	return {
-		RawData: rawData,
-		RawInstanceInfoData: rawInstanceInfoData,
-		RawSoluData: rawSoluData
+		UnprocessedData: unprocessedData,
+		UnprocessedInstanceInformationData: unprocessedInstanceInformationData,
+		UnprocessedSolutionData: unprocessedSolutionData
 	};
+}
+
+/**
+ * Checks the properties of the data in the JSON file.
+ */
+function VerifyConfigurationProperties(parsedData): void {
+	if (
+		parsedData.hasOwnProperty("dataSet") &&
+		parsedData.hasOwnProperty("dataFileType")
+	) {
+		userData.dataSet = parsedData.dataSet;
+		userData.dataFileType = parsedData.dataFileType;
+
+		if (parsedData.hasOwnProperty("defaultTime")) {
+			userData.defaultTime = parsedData.defaultTime;
+		}
+
+		localStorage.setItem("UserConfiguration", JSON.stringify(userData));
+	} else {
+		DisplayErrorNotification("Invalid data structure in uploaded JSON.");
+		console.log("Invalid data structure in uploaded JSON.");
+	}
 }

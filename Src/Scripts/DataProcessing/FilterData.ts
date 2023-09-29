@@ -30,12 +30,12 @@ const defaultHeaders: string[] = [
  * Extracts headers from the array with raw data results.
  * Headers start with an asterisk (*) and are comma-separated.
  *
- * @param rawData - Array of strings, where each string is a comma-separated representation of a row of data.
+ * @param unprocessedData - Array of strings, where each string is a comma-separated representation of a row of data.
  * @returns An array of strings representing extracted headers.
  */
-function ExtractHeaders(rawData: string[]): string[] {
+function ExtractHeaders(unprocessedData: string[]): string[] {
 	let headers: string[] = [];
-	for (const line of rawData) {
+	for (const line of unprocessedData) {
 		if (line.startsWith("*")) {
 			const cleanLine = line.slice(1).trim();
 
@@ -55,24 +55,24 @@ function ExtractHeaders(rawData: string[]): string[] {
 /**
  * Processes an array of raw data lines, using header names to create objects. If the line contains an asterisk (*), it is skipped.
  *
- * If the header is "ObjectiveValue" or "ObjectiveValueEstimate", it will be truncated if the value exceeds 25.
+ * If the header is "ObjectiveValue" or "ObjectiveValueEstimate", it will be set to exponential format.
  *
  * @param headers - Array of strings representing the headers/keys for the resulting objects.
- * @param rawData - Array of strings, where each string is a comma-separated representation of a row of data.
- * @param startIdx - The index to start processing lines from rawData.
- * @returns An array of objects created from the rawData lines, where keys are taken from headers.
+ * @param unprocessedData - Array of strings, where each string is a comma-separated representation of a row of data.
+ * @param startIdx - The index to start processing lines from unprocessedData.
+ * @returns An array of objects created from the unprocessedData lines, where keys are taken from headers.
  */
 function ProcessLines(
 	headers: string[],
-	rawData: string[],
+	unprocessedData: string[],
 	startIdx: number
 ): object[] {
 	const traceData = [];
 	const previousRow = {};
-	for (let i = Math.max(startIdx, 0); i < rawData.length; i++) {
-		if (rawData[i].startsWith("*")) continue;
+	for (let i = Math.max(startIdx, 0); i < unprocessedData.length; i++) {
+		if (unprocessedData[i].startsWith("*")) continue;
 
-		const currentLine = rawData[i].split(",");
+		const currentLine = unprocessedData[i].split(",");
 		const fileName = currentLine[0];
 		const solverName = currentLine[2];
 
@@ -108,7 +108,7 @@ function ProcessLines(
 /**
  * Converts an array of strings into an array of objects representing .trc data.
  *
- * @param rawData - Array of strings, where each string is a comma-separated representation of a row of data.
+ * @param unprocessedData - Array of strings, where each string is a comma-separated representation of a row of data.
  * @returns Array of objects, where each object represents a row of data from the .trc file.
  *
  * @remarks
@@ -122,24 +122,24 @@ function ProcessLines(
  *
  * @example
  * ```typescript
- * const rawData = [ "* Column1,Column2", "Value1,Value2", "Value3,Value4" ];
- * const result = ExtractTrcData(rawData);
+ * const unprocessedData = [ "* Column1,Column2", "Value1,Value2", "Value3,Value4" ];
+ * const result = ExtractTraceData(unprocessedData);
  * // result = [
  * //   { "Column1": "Value1", "Column2": "Value2" },
  * //   { "Column1": "Value3", "Column2": "Value4" },
  * // ];
  * ```
  */
-export function ExtractTrcData(rawData: string[]): object[] {
-	const firstLine = rawData[0].split(",");
+export function ExtractTraceData(unprocessedData: string[]): object[] {
+	const firstLine = unprocessedData[0].split(",");
 	let traceData: object[] = [];
 
 	if (firstLine[0].startsWith("*")) {
-		const headers = ExtractHeaders(rawData);
-		const startIdx = rawData.findIndex((line) => !line.startsWith("*"));
-		traceData = ProcessLines(headers, rawData, startIdx);
+		const headers = ExtractHeaders(unprocessedData);
+		const startIdx = unprocessedData.findIndex((line) => !line.startsWith("*"));
+		traceData = ProcessLines(headers, unprocessedData, startIdx);
 	} else if (!firstLine[0].startsWith("*")) {
-		traceData = ProcessLines(defaultHeaders, rawData, 0);
+		traceData = ProcessLines(defaultHeaders, unprocessedData, 0);
 	}
 	return traceData;
 }

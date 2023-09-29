@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { loaderContainer } from "./Elements";
 
 /**
@@ -10,12 +11,22 @@ import { loaderContainer } from "./Elements";
  * The `loader` class should contain the styles and animations necessary for the loading animation.
  *
  * @example
- * LoadingAnimation(); // To start the loading animation
+ * TableLoadingAnimation(); // To start the loading animation
  */
-export function LoadingAnimation(): void {
+export function TableLoadingAnimation(): void {
 	const loader = document.createElement("div") as HTMLDivElement;
 	loader.className = "loader";
 	loaderContainer.innerHTML = "";
 	loaderContainer.appendChild(loader);
 	loaderContainer.style.display = "flex";
+}
+
+/**
+ * This function applies an fade effect on all children of the body element, except for nav.
+ */
+export function BodyFadeLoadingAnimation(): void {
+	$(function () {
+		$("body > :not(nav)").css("opacity", "1");
+		$("hr").css("opacity", "0.25");
+	});
 }
