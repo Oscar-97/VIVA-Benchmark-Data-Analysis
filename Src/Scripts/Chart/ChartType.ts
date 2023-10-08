@@ -179,42 +179,31 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 		};
 	});
 
-	// Update all labels.
-	data.forEach((dataset) => {
+	const chartData = data.map((dataset) => {
+		// Update all labels with unique x values.
 		dataset.data.forEach((point) => {
 			if (!allLabels.includes(point.x)) {
 				allLabels.push(point.x);
 			}
 		});
-	});
 
-	/**
-	 * Sorts the datasets based on the available labels.
-	 * @returns An array of sorted datasets.
-	 */
-	const chartData = data.map((dataset) => {
-		const sortedData = allLabels.map((label) => {
-			const point = dataset.data.find((d) => d.x === label);
-			return point || { x: label, y: null };
-		});
-		return { ...dataset, data: sortedData };
-	});
+		// Sort the data based on the labels.
+		const sortedData = allLabels
+			.map((label) => {
+				const point = dataset.data.find((d) => d.x === label);
+				return point || { x: label, y: null };
+			})
+			.sort((a, b) => parseFloat(a.x) - parseFloat(b.x));
 
-	// Update all X axis values.
-	chartData.forEach((dataset) => {
-		dataset.data.forEach((point) => {
+		// Update all X axis values from the sorted data.
+		sortedData.forEach((point) => {
 			if (!allXValues.includes(point.x)) {
 				allXValues.push(point.x);
 			}
 		});
-	});
 
-	chartData.forEach((dataset) => {
-		dataset.data.sort((a, b) => parseFloat(a.x) - parseFloat(b.x));
+		return { ...dataset, data: sortedData };
 	});
-
-	// Sort all X axis values.
-	allXValues.sort((a, b) => a - b);
 
 	const scaleOptions = {
 		x: {
