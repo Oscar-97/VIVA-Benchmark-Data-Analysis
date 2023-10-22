@@ -125,12 +125,12 @@ const minlpBenchmarksData = [
 		InputFileName: "ball_mk4_15",
 		PrimalBoundSolver: Infinity,
 		DualBoundSolver: -Infinity,
-		PrimalBoundProblem: NaN,
+		PrimalBoundProblem: Infinity,
 		DualBoundProblem: 2.121536e1,
 		Gap_Solver: Infinity,
-		Gap_Problem: NaN,
+		Gap_Problem: Infinity,
 		PrimalGap: Infinity,
-		DualGap: NaN,
+		DualGap: Infinity,
 		Direction: "min"
 	},
 	{
@@ -141,9 +141,9 @@ const minlpBenchmarksData = [
 		PrimalBoundProblem: 6.69328e1,
 		DualBoundProblem: 6.517733e1,
 		Gap_Solver: 11.55,
-		Gap_Problem: 1.75547,
-		PrimalGap: NaN,
-		DualGap: NaN,
+		Gap_Problem: 2.69,
+		PrimalGap: 0,
+		DualGap: 8.63,
 		Direction: "min"
 	},
 	{
@@ -154,9 +154,9 @@ const minlpBenchmarksData = [
 		PrimalBoundProblem: 2.13802e4,
 		DualBoundProblem: 1.851874e3,
 		Gap_Solver: Infinity,
-		Gap_Problem: 19528.326,
-		PrimalGap: NaN,
-		DualGap: NaN,
+		Gap_Problem: 1054.52,
+		PrimalGap: 32.96,
+		DualGap: Infinity,
 		Direction: "min"
 	},
 	{
@@ -167,9 +167,9 @@ const minlpBenchmarksData = [
 		PrimalBoundProblem: 1.088e2,
 		DualBoundProblem: 7.788233,
 		Gap_Solver: Infinity,
-		Gap_Problem: NaN,
-		PrimalGap: NaN,
-		DualGap: NaN,
+		Gap_Problem: 1296.98,
+		PrimalGap: Infinity,
+		DualGap: 18.23,
 		Direction: "min"
 	},
 	{
@@ -179,8 +179,8 @@ const minlpBenchmarksData = [
 		DualBoundSolver: Infinity,
 		PrimalBoundProblem: -4.574e3,
 		DualBoundProblem: -4.574e3,
-		Gap_Solver: 0.0,
-		Gap_Problem: NaN,
+		Gap_Solver: Infinity,
+		Gap_Problem: 0,
 		PrimalGap: Infinity,
 		DualGap: Infinity,
 		Direction: "min"
