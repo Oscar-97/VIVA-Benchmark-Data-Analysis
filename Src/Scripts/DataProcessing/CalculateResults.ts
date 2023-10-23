@@ -54,11 +54,11 @@ export function CalculatePrimalBound(
 				primalBound = -Infinity;
 				break;
 			default:
-				primalBound = Number(primalBound).toExponential(6);
+				primalBound = Number(primalBound);
 		}
 	}
 
-	return primalBound;
+	return primalBound.toExponential(6);
 }
 
 /**
@@ -96,11 +96,11 @@ export function CalculateDualBound(
 				dualBound = -Infinity;
 				break;
 			default:
-				dualBound = Number(dualBound).toExponential(6);
+				dualBound = Number(dualBound);
 		}
 	}
 
-	return dualBound;
+	return dualBound.toExponential(6);
 }
 
 /**
