@@ -98,7 +98,10 @@ import {
 } from "./UserConfiguration/UserConfiguration";
 
 import { demoData } from "./DemoData";
-import { DisplayErrorNotification } from "./Elements/DisplayAlertNotification";
+import {
+	DisplayErrorNotification,
+	DisplayWarningNotification
+} from "./Elements/DisplayAlertNotification";
 //#endregion
 
 /**
@@ -318,7 +321,13 @@ function HandleReportPage(
 	filterSelectionButton.addEventListener("click", () => {
 		filterSelectionButton.disabled = true;
 		traceDataFiltered = UpdateResults();
-		DisplayDataTable(traceDataFiltered);
+
+		if (traceDataFiltered.length === 0) {
+			DisplayWarningNotification("No rows selected for filtering.");
+			filterSelectionButton.disabled = false;
+		} else {
+			DisplayDataTable(traceDataFiltered);
+		}
 	});
 
 	/**
