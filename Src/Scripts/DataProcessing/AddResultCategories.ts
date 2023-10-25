@@ -44,14 +44,14 @@ export function AddResultCategories(traceData: object[]): void {
 			obj["SolverStatus"] as string | number
 		);
 
-		if (!obj.hasOwnProperty("PrimalBoundProblem")) {
+		if (!obj.hasOwnProperty("PrimalBoundProblem") || !obj["PrimalBoundProblem"]) {
 			obj["PrimalBoundProblem"] = CalculatePrimalBound(
 				obj["PrimalBoundSolver"],
 				obj["Direction"]
 			);
 		}
 
-		if (!obj.hasOwnProperty("DualBoundProblem")) {
+		if (!obj.hasOwnProperty("DualBoundProblem") || !obj["DualBoundProblem"]) {
 			obj["DualBoundProblem"] = CalculateDualBound(
 				obj["DualBoundSolver"],
 				obj["Direction"]
