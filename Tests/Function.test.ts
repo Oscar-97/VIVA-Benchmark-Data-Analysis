@@ -8,9 +8,11 @@ import {
 	ExtractAllSolverTimes
 } from "../Src/Scripts/DataProcessing/CalculateResults";
 
-jest.doMock("../Src/Scripts/DataProcessing/GetExtraData", () => ({
-	DOMElement: jest.fn()
-}));
+jest.doMock("../Src/Scripts/DataProcessing/GetExtraData", () => {
+	return {
+		DOMElement: jest.fn()
+	};
+});
 
 /**
  * Mockup data.
@@ -624,33 +626,33 @@ describe("Coverage in functions with mockup data.", () => {
 		it('should return -Infinity when PrimalBound is "", "NA", "nan", "-nan" and Direction is "max"', () => {
 			const testCases = ["", "NA", "nan", "-nan"];
 			testCases.forEach((testCase) => {
-				expect(CalculatePrimalBound(testCase, "max")).toBe(-Infinity);
+				expect(CalculatePrimalBound(testCase, "max")).toBe("-Infinity");
 			});
 		});
 
 		it('should return Infinity when PrimalBound is "", "NA", "nan", "-nan" and Direction is "min"', () => {
 			const testCases = ["", "NA", "nan", "-nan"];
 			testCases.forEach((testCase) => {
-				expect(CalculatePrimalBound(testCase, "min")).toBe(Infinity);
+				expect(CalculatePrimalBound(testCase, "min")).toBe("Infinity");
 			});
 		});
 
 		it('should return Infinity when PrimalBound is "inf" or "+inf" regardless of Direction', () => {
 			const testCases = ["inf", "+inf"];
 			testCases.forEach((testCase) => {
-				expect(CalculatePrimalBound(testCase, "max")).toBe(Infinity);
-				expect(CalculatePrimalBound(testCase, "min")).toBe(Infinity);
+				expect(CalculatePrimalBound(testCase, "max")).toBe("Infinity");
+				expect(CalculatePrimalBound(testCase, "min")).toBe("Infinity");
 			});
 		});
 
 		it('should return -Infinity when PrimalBound is "-inf" regardless of Direction', () => {
-			expect(CalculatePrimalBound("-inf", "max")).toBe(-Infinity);
-			expect(CalculatePrimalBound("-inf", "min")).toBe(-Infinity);
+			expect(CalculatePrimalBound("-inf", "max")).toBe("-Infinity");
+			expect(CalculatePrimalBound("-inf", "min")).toBe("-Infinity");
 		});
 
 		it("should return the same number when PrimalBound is a number", () => {
-			expect(CalculatePrimalBound(123, "max")).toBe(1.23e2);
-			expect(CalculatePrimalBound(123, "min")).toBe(1.23e2);
+			expect(CalculatePrimalBound(123, "max")).toBe("1.230000e+2");
+			expect(CalculatePrimalBound(123, "min")).toBe("1.230000e+2");
 		});
 	});
 
@@ -658,33 +660,33 @@ describe("Coverage in functions with mockup data.", () => {
 		it('should return Infinity when DualBound is "", "NA", "nan", "-nan" and Direction is "max"', () => {
 			const testCases = ["", "NA", "nan", "-nan"];
 			testCases.forEach((testCase) => {
-				expect(CalculateDualBound(testCase, "max")).toBe(Infinity);
+				expect(CalculateDualBound(testCase, "max")).toBe("Infinity");
 			});
 		});
 
 		it('should return -Infinity when DualBound is "", "NA", "nan", "-nan" and Direction is "min"', () => {
 			const testCases = ["", "NA", "nan", "-nan"];
 			testCases.forEach((testCase) => {
-				expect(CalculateDualBound(testCase, "min")).toBe(-Infinity);
+				expect(CalculateDualBound(testCase, "min")).toBe("-Infinity");
 			});
 		});
 
 		it('should return Infinity when DualBound is "inf" or "+inf" regardless of Direction', () => {
 			const testCases = ["inf", "+inf"];
 			testCases.forEach((testCase) => {
-				expect(CalculateDualBound(testCase, "max")).toBe(Infinity);
-				expect(CalculateDualBound(testCase, "min")).toBe(Infinity);
+				expect(CalculateDualBound(testCase, "max")).toBe("Infinity");
+				expect(CalculateDualBound(testCase, "min")).toBe("Infinity");
 			});
 		});
 
 		it('should return -Infinity when DualBound is "-inf" regardless of Direction', () => {
-			expect(CalculateDualBound("-inf", "max")).toBe(-Infinity);
-			expect(CalculateDualBound("-inf", "min")).toBe(-Infinity);
+			expect(CalculateDualBound("-inf", "max")).toBe("-Infinity");
+			expect(CalculateDualBound("-inf", "min")).toBe("-Infinity");
 		});
 
 		it("should return the same number when DualBound is a number", () => {
-			expect(CalculateDualBound(123, "max")).toBe(1.23e2);
-			expect(CalculateDualBound(123, "min")).toBe(1.23e2);
+			expect(CalculateDualBound(123, "max")).toBe("1.230000e+2");
+			expect(CalculateDualBound(123, "min")).toBe("1.230000e+2");
 		});
 	});
 

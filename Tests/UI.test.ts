@@ -247,7 +247,9 @@ describe("UI tests", () => {
 
 			const rowCount = await page.$$eval(
 				"table#dataTableGenerated" + " > tbody > tr",
-				(rows) => rows.length
+				(rows) => {
+					return rows.length;
+				}
 			);
 			const expectedRowCount = 3;
 			expect(rowCount).toBe(expectedRowCount);
@@ -356,14 +358,16 @@ describe("UI tests", () => {
 				.type("watercontamination");
 			const rowCount = await page.$$eval(
 				"table#dataTableGenerated" + " > tbody > tr",
-				(rows) => rows.length
+				(rows) => {
+					return rows.length;
+				}
 			);
 			const expectedRowCount = 4;
 			expect(rowCount).toBe(expectedRowCount);
 		}, 60000);
 	});
 
-	describe.only("Plot Pages", () => {
+	describe("Plot Pages", () => {
 		async function RunPlotOperations(filePath: string): Promise<void> {
 			const absoluteFilePath: string = path.resolve(__dirname, filePath);
 			const fileUrl = `file://${absoluteFilePath}`;
