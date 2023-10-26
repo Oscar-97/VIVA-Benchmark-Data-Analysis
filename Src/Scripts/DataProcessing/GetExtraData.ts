@@ -102,22 +102,22 @@ export function GetBestKnowBounds(unprocessedSolutionData: string[]): object[] {
 					break;
 				case "best":
 					try {
-						obj["PrimalBoundProblem"] = Number(match[3]);
+						obj["PrimalBoundProblem"] = Number(match[3]).toExponential(6);
 					} catch (err) {
 						console.log(err)["PrimalBoundProblem"] = NaN;
 					}
 					break;
 				case "bestdual":
 					try {
-						obj["DualBoundProblem"] = Number(match[3]);
+						obj["DualBoundProblem"] = Number(match[3]).toExponential(6);
 					} catch (err) {
 						console.log(err)["DualBoundProblem"] = NaN;
 					}
 					break;
 				case "opt":
 					try {
-						obj["PrimalBoundProblem"] = Number(match[3]);
-						obj["DualBoundProblem"] = Number(match[3]);
+						obj["PrimalBoundProblem"] = Number(match[3]).toExponential(6);
+						obj["DualBoundProblem"] = Number(match[3]).toExponential(6);
 					} catch (err) {
 						console.log(err);
 						obj["PrimalBoundProblem"] = NaN;
