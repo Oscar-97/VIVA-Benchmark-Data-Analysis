@@ -10,7 +10,7 @@ import * as math from "mathjs";
  */
 export function CalculateDirection(direction: number | string): string {
 	direction = 1 - 2 * Number(direction);
-	if (direction == -1) {
+	if (direction === -1) {
 		direction = "max";
 		return direction;
 	} else {
@@ -57,7 +57,6 @@ export function CalculatePrimalBound(
 				primalBound = Number(primalBound);
 		}
 	}
-
 	return primalBound.toExponential(6);
 }
 
@@ -99,7 +98,6 @@ export function CalculateDualBound(
 				dualBound = Number(dualBound);
 		}
 	}
-
 	return dualBound.toExponential(6);
 }
 

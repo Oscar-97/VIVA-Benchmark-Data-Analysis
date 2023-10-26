@@ -43,13 +43,20 @@ function ExtractHeaders(unprocessedData: string[]): string[] {
 				break;
 			}
 			if (cleanLine.includes(",")) {
-				headers = [...headers, ...cleanLine.split(",").map((h) => h.trim())];
+				headers = [
+					...headers,
+					...cleanLine.split(",").map((h) => {
+						return h.trim();
+					})
+				];
 			}
 		} else {
 			break;
 		}
 	}
-	return headers.filter((header) => header);
+	return headers.filter((header) => {
+		return header;
+	});
 }
 
 /**
@@ -81,7 +88,11 @@ function ProcessLines(
 		}
 		previousRow[fileName] = solverName;
 
-		if (currentLine.some((cell) => cell.trim() !== "")) {
+		if (
+			currentLine.some((cell) => {
+				return cell.trim() !== "";
+			})
+		) {
 			const obj = {};
 			for (let j = 0; j < headers.length; j++) {
 				let value = currentLine[j];
@@ -136,7 +147,9 @@ export function ExtractTraceData(unprocessedData: string[]): object[] {
 
 	if (firstLine[0].startsWith("*")) {
 		const headers = ExtractHeaders(unprocessedData);
-		const startIdx = unprocessedData.findIndex((line) => !line.startsWith("*"));
+		const startIdx = unprocessedData.findIndex((line) => {
+			return !line.startsWith("*");
+		});
 		traceData = ProcessLines(headers, unprocessedData, startIdx);
 	} else if (!firstLine[0].startsWith("*")) {
 		traceData = ProcessLines(defaultHeaders, unprocessedData, 0);

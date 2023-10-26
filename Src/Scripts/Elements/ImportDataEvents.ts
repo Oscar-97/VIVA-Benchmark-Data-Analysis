@@ -53,7 +53,7 @@ export function ImportDataEvents(
 		console.log("Could not remove elements: ", err);
 	}
 
-	if (document.title == "Report") {
+	if (document.title === "Report") {
 		viewTableButton.disabled = false;
 		filterSelectionButton.disabled = true;
 		importDataButton.disabled = true;
@@ -61,7 +61,7 @@ export function ImportDataEvents(
 		if (fileExtensionType === "json") {
 			deleteLocalStorageButton.disabled = false;
 		}
-	} else if (document.title != "Report") {
+	} else if (document.title !== "Report") {
 		viewPlotsButton.disabled = false;
 		importDataButton.disabled = true;
 		saveLocalStorageButton.disabled = true;

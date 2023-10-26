@@ -40,9 +40,9 @@ export function GetDataFileType(): string {
 		throw new Error("No .trc, .json or .solu files found.");
 	}
 
-	const hasTRCOrJSON = extensions.some(
-		(ext) => ext === "trc" || ext === "json"
-	);
+	const hasTRCOrJSON = extensions.some((ext) => {
+		return ext === "trc" || ext === "json";
+	});
 
 	if (!hasTRCOrJSON) {
 		DisplayErrorNotification("At least one .trc or .json file required.");
@@ -56,7 +56,9 @@ export function GetDataFileType(): string {
 		throw new Error("Cannot upload both .trc and .json files simultaneously.");
 	}
 
-	return extensions.find((ext) => ext === "trc" || ext === "json");
+	return extensions.find((ext) => {
+		return ext === "trc" || ext === "json";
+	});
 }
 
 /**
@@ -159,9 +161,9 @@ export function ReadData(
 
 				VerifyConfigurationProperties(parsedData);
 			} else if (fileExtension === "trc") {
-				const lines = (<string>reader.result)
-					.split(/\r?\n/)
-					.map((line) => line.trim());
+				const lines = (<string>reader.result).split(/\r?\n/).map((line) => {
+					return line.trim();
+				});
 				for (let i = 0; i <= lines.length - 1; i++) {
 					const line = lines[i];
 					unprocessedData.push(line);

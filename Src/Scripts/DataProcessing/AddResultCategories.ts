@@ -44,7 +44,10 @@ export function AddResultCategories(traceData: object[]): void {
 			obj["SolverStatus"] as string | number
 		);
 
-		if (!obj.hasOwnProperty("PrimalBoundProblem") || !obj["PrimalBoundProblem"]) {
+		if (
+			!obj.hasOwnProperty("PrimalBoundProblem") ||
+			!obj["PrimalBoundProblem"]
+		) {
 			obj["PrimalBoundProblem"] = CalculatePrimalBound(
 				obj["PrimalBoundSolver"],
 				obj["Direction"]
