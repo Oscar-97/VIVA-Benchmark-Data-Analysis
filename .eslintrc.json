@@ -36,6 +36,12 @@
         "max": 10
       }
     ],
+    "eqeqeq": "error",
+    "no-useless-catch": "error",
+    "arrow-body-style": ["error", "always"],
+    "vars-on-top": "error",
+    "no-lonely-if": "error",
+    "max-lines": ["warn", {"max": 300, "skipComments": true}],
     "prettier/prettier": [
       "error",
       {
