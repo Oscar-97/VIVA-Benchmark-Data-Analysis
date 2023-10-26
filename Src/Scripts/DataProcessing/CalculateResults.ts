@@ -10,7 +10,7 @@ import * as math from "mathjs";
  */
 export function CalculateDirection(direction: number | string): string {
 	direction = 1 - 2 * Number(direction);
-	if (direction == -1) {
+	if (direction === -1) {
 		direction = "max";
 		return direction;
 	} else {
@@ -54,11 +54,10 @@ export function CalculatePrimalBound(
 				primalBound = -Infinity;
 				break;
 			default:
-				primalBound = Number(primalBound).toExponential(6);
+				primalBound = Number(primalBound);
 		}
 	}
-
-	return primalBound;
+	return primalBound.toExponential(6);
 }
 
 /**
@@ -96,11 +95,10 @@ export function CalculateDualBound(
 				dualBound = -Infinity;
 				break;
 			default:
-				dualBound = Number(dualBound).toExponential(6);
+				dualBound = Number(dualBound);
 		}
 	}
-
-	return dualBound;
+	return dualBound.toExponential(6);
 }
 
 /**
@@ -124,10 +122,6 @@ export function CalculateGap(
 	dir: string,
 	tol = 1e-9
 ): number {
-	if (isNaN(a) || isNaN(b)) {
-		return Infinity;
-	}
-
 	// If dir is negative, switch the values to do DualBound - PrimalBound.
 	if (dir === "max") {
 		[a, b] = [b, a];
@@ -139,7 +133,10 @@ export function CalculateGap(
 	}
 
 	if (
+		isNaN(a) ||
+		isNaN(b) ||
 		Math.min(Math.abs(a), Math.abs(b)) < tol ||
+		(a === Infinity && b === Infinity) ||
 		a === Infinity ||
 		b === Infinity ||
 		a * b < 0

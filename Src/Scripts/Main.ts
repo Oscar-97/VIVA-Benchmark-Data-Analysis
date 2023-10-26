@@ -98,7 +98,10 @@ import {
 } from "./UserConfiguration/UserConfiguration";
 
 import { demoData } from "./DemoData";
-import { DisplayErrorNotification } from "./Elements/DisplayAlertNotification";
+import {
+	DisplayErrorNotification,
+	DisplayWarningNotification
+} from "./Elements/DisplayAlertNotification";
 //#endregion
 
 /**
@@ -147,7 +150,7 @@ function InitializeProgram(): void {
 	 * Different functions, ElementStatus() and ElementStatusPlots(), are called
 	 * depending on whether the title is "Report" or not.
 	 */
-	if (document.title == "Report") {
+	if (document.title === "Report") {
 		ElementStatesTablePage();
 	} else {
 		ElementStatesPlotPage();
@@ -204,7 +207,7 @@ function InitializeProgram(): void {
 	/**
 	 * Adds an event listener to the "Demo-Mode" button that loads a demo data set and savet it to local storage.
 	 */
-	if (document.title == "Report") {
+	if (document.title === "Report") {
 		demoDataButton.addEventListener("click", () => {
 			localStorage.setItem("UserConfiguration", JSON.stringify(demoData));
 			location.reload();
@@ -233,7 +236,7 @@ function ManageData(): void {
 	 * If the uploaded data file is of type JSON, it retrieves the user configuration
 	 * and updates the unprocessedData and dataFileType variables.
 	 */
-	if (dataFileType == "json") {
+	if (dataFileType === "json") {
 		[unprocessedData, dataFileType, defaultTime] = GetUserConfiguration();
 		traceData = ExtractTraceData(unprocessedData);
 	}
@@ -280,7 +283,7 @@ function ManageData(): void {
 	 * If the document title is "Report", it handles the report page functionality using
 	 * the traceData and traceDataFiltered variables.
 	 */
-	if (document.title == "Report") {
+	if (document.title === "Report") {
 		HandleReportPage(traceData, traceDataFiltered);
 	}
 
@@ -288,7 +291,7 @@ function ManageData(): void {
 	 * If the document title is not "Report", it handles the plot page functionality using
 	 * the traceData variable.
 	 */
-	if (document.title != "Report") {
+	if (document.title !== "Report") {
 		HandlePlotPages(traceData);
 	}
 }
@@ -318,7 +321,13 @@ function HandleReportPage(
 	filterSelectionButton.addEventListener("click", () => {
 		filterSelectionButton.disabled = true;
 		traceDataFiltered = UpdateResults();
-		DisplayDataTable(traceDataFiltered);
+
+		if (traceDataFiltered.length === 0) {
+			DisplayWarningNotification("No rows selected for filtering.");
+			filterSelectionButton.disabled = false;
+		} else {
+			DisplayDataTable(traceDataFiltered);
+		}
 	});
 
 	/**
@@ -377,7 +386,7 @@ function HandlePlotPages(traceData: object[]): void {
 		/**
 		 * Check if the user is on the Absolute Performance Profile.
 		 */
-		if (document.title == "Absolute Performance Profile") {
+		if (document.title === "Absolute Performance Profile") {
 			chartData = PlotAbsolutePerformanceProfileSolverTimes(
 				traceData,
 				defaultTime
@@ -387,7 +396,7 @@ function HandlePlotPages(traceData: object[]): void {
 		/**
 		 * Check if the user is on the Average Solver Time page.
 		 */
-		if (document.title == "Average Solver Time") {
+		if (document.title === "Average Solver Time") {
 			chartData = PlotDataByCategory(
 				traceData,
 				"bar",
@@ -400,14 +409,14 @@ function HandlePlotPages(traceData: object[]): void {
 		/**
 		 * Check if the user is on the Solver Time page.
 		 */
-		if (document.title == "Solver Time") {
+		if (document.title === "Solver Time") {
 			chartData = PlotAllSolverTimes(traceData);
 		}
 
 		/**
 		 * Check if the user is on the Number of Nodes page.
 		 */
-		if (document.title == "Number of Nodes") {
+		if (document.title === "Number of Nodes") {
 			chartData = PlotDataByCategory(
 				traceData,
 				"bar",
@@ -420,7 +429,7 @@ function HandlePlotPages(traceData: object[]): void {
 		/**
 		 * Check if the user is on the Number of Iterations page.
 		 */
-		if (document.title == "Number of Iterations") {
+		if (document.title === "Number of Iterations") {
 			chartData = PlotDataByCategory(
 				traceData,
 				"bar",
@@ -433,7 +442,7 @@ function HandlePlotPages(traceData: object[]): void {
 		/**
 		 * Check if the user is on the Termination Status page.
 		 */
-		if (document.title == "Termination Status") {
+		if (document.title === "Termination Status") {
 			chartData = PlotStatusMessages(
 				traceData,
 				"bar",

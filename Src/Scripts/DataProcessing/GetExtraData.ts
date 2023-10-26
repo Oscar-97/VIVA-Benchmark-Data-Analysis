@@ -12,6 +12,7 @@ import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
  *
  * The function then iterates through each line of data, splitting it into separate elements
  * based on the semicolon delimiter, and creating an object from these elements with the corresponding headers as keys.
+ * If the headers are named PrimalBound or Dualbound, they are renamed to PrimalBoundProblem and DualBoundProblem.
  * If a cell in the data is empty, it assigns an empty string to the corresponding object property.
  *
  * Finally, it displays a notification about successful loading of instance information.
@@ -30,7 +31,17 @@ export function GetInstanceInformation(
 	unprocessedInstanceInformationData: string[]
 ): object[] {
 	const instanceInfo = [];
-	const header = unprocessedInstanceInformationData[0].split(";");
+	let header = unprocessedInstanceInformationData[0].split(";");
+
+	header = header.map((x) => {
+		if (x === "primalbound") {
+			return "PrimalBoundProblem";
+		}
+		if (x === "dualbound") {
+			return "DualBoundProblem";
+		}
+		return x;
+	});
 
 	for (let i = 1; i < unprocessedInstanceInformationData.length; i++) {
 		const obj = {};
@@ -91,22 +102,22 @@ export function GetBestKnowBounds(unprocessedSolutionData: string[]): object[] {
 					break;
 				case "best":
 					try {
-						obj["PrimalBoundProblem"] = Number(match[3]);
+						obj["PrimalBoundProblem"] = Number(match[3]).toExponential(6);
 					} catch (err) {
 						console.log(err)["PrimalBoundProblem"] = NaN;
 					}
 					break;
 				case "bestdual":
 					try {
-						obj["DualBoundProblem"] = Number(match[3]);
+						obj["DualBoundProblem"] = Number(match[3]).toExponential(6);
 					} catch (err) {
 						console.log(err)["DualBoundProblem"] = NaN;
 					}
 					break;
 				case "opt":
 					try {
-						obj["PrimalBoundProblem"] = Number(match[3]);
-						obj["DualBoundProblem"] = Number(match[3]);
+						obj["PrimalBoundProblem"] = Number(match[3]).toExponential(6);
+						obj["DualBoundProblem"] = Number(match[3]).toExponential(6);
 					} catch (err) {
 						console.log(err);
 						obj["PrimalBoundProblem"] = NaN;

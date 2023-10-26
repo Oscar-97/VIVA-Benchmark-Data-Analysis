@@ -30,12 +30,14 @@ export function PlotDataByCategory(
 }[] {
 	const data = AnalyzeDataByCategory(traceData, category);
 	const colors = PickColor(20);
-	const chartData = Object.entries(data).map(([key, value], index) => ({
-		label: key,
-		data: [value.average],
-		borderColor: colors[index % colors.length],
-		backgroundColor: colors[index % colors.length]
-	}));
+	const chartData = Object.entries(data).map(([key, value], index) => {
+		return {
+			label: key,
+			data: [value.average],
+			borderColor: colors[index % colors.length],
+			backgroundColor: colors[index % colors.length]
+		};
+	});
 
 	CreateChart(type, chartData, label, title);
 	StatisticsTable(data, title);
@@ -61,16 +63,24 @@ export function PlotStatusMessages(
 	stack: string;
 }[] {
 	const data = ExtractStatusMessages(traceData);
-	const solverNames = data.map((obj) => obj["SolverName"]);
-	const statusKeys = Object.keys(data[0]).filter((key) => key !== "SolverName");
+	const solverNames = data.map((obj) => {
+		return obj["SolverName"];
+	});
+	const statusKeys = Object.keys(data[0]).filter((key) => {
+		return key !== "SolverName";
+	});
 	const colors = PickColor(20);
-	const chartData = statusKeys.map((key, index) => ({
-		label: key,
-		data: data.map((obj) => obj[key] || 0),
-		borderColor: colors[index % colors.length],
-		backgroundColor: colors[index % colors.length],
-		stack: "Stack 0"
-	}));
+	const chartData = statusKeys.map((key, index) => {
+		return {
+			label: key,
+			data: data.map((obj) => {
+				return obj[key] || 0;
+			}),
+			borderColor: colors[index % colors.length],
+			backgroundColor: colors[index % colors.length],
+			stack: "Stack 0"
+		};
+	});
 
 	CreateChart(type, chartData, solverNames, title);
 	return chartData;
@@ -90,14 +100,18 @@ export function PlotAllSolverTimes(
 			string,
 			{ time: number; InputFileName: string }[]
 		][]
-	).map(([key, values]) => ({
-		label: key,
-		data: values.map(({ time, InputFileName: inputFileName }) => ({
-			x: inputFileName,
-			y: time
-		})),
-		showLine: false
-	}));
+	).map(([key, values]) => {
+		return {
+			label: key,
+			data: values.map(({ time, InputFileName: inputFileName }) => {
+				return {
+					x: inputFileName,
+					y: time
+				};
+			}),
+			showLine: false
+		};
+	});
 
 	const scaleOptions = {
 		x: {
@@ -159,7 +173,9 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 			bucketCounts[bucket]++;
 		});
 
-		uniqueKeys.sort((a: number, b: number) => a - b);
+		uniqueKeys.sort((a: number, b: number) => {
+			return a - b;
+		});
 
 		let cumulativeCount = 0;
 		const cumulativeCounts: { x: number; y: number }[] = [];
@@ -179,42 +195,35 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 		};
 	});
 
-	// Update all labels.
-	data.forEach((dataset) => {
+	const chartData = data.map((dataset) => {
+		// Update all labels with unique x values.
 		dataset.data.forEach((point) => {
 			if (!allLabels.includes(point.x)) {
 				allLabels.push(point.x);
 			}
 		});
-	});
 
-	/**
-	 * Sorts the datasets based on the available labels.
-	 * @returns An array of sorted datasets.
-	 */
-	const chartData = data.map((dataset) => {
-		const sortedData = allLabels.map((label) => {
-			const point = dataset.data.find((d) => d.x === label);
-			return point || { x: label, y: null };
-		});
-		return { ...dataset, data: sortedData };
-	});
+		// Sort the data based on the labels.
+		const sortedData = allLabels
+			.map((label) => {
+				const point = dataset.data.find((d) => {
+					return d.x === label;
+				});
+				return point || { x: label, y: null };
+			})
+			.sort((a, b) => {
+				return parseFloat(a.x) - parseFloat(b.x);
+			});
 
-	// Update all X axis values.
-	chartData.forEach((dataset) => {
-		dataset.data.forEach((point) => {
+		// Update all X axis values from the sorted data.
+		sortedData.forEach((point) => {
 			if (!allXValues.includes(point.x)) {
 				allXValues.push(point.x);
 			}
 		});
-	});
 
-	chartData.forEach((dataset) => {
-		dataset.data.sort((a, b) => parseFloat(a.x) - parseFloat(b.x));
+		return { ...dataset, data: sortedData };
 	});
-
-	// Sort all X axis values.
-	allXValues.sort((a, b) => a - b);
 
 	const scaleOptions = {
 		x: {

@@ -11,17 +11,19 @@
  */
 export function UpdateResults(): object[] {
 	const headers = Array.from(document.querySelectorAll(".thead-dark th")).map(
-		(header) => header.textContent
+		(header) => {
+			return header.textContent;
+		}
 	);
 
 	const traceData = Array.from(
 		document.querySelectorAll(".row-selected-problems")
-	).map((row) =>
-		Array.from(row.querySelectorAll("td")).reduce((obj, cell, j) => {
+	).map((row) => {
+		return Array.from(row.querySelectorAll("td")).reduce((obj, cell, j) => {
 			obj[headers[j]] = cell.textContent;
 			return obj;
-		}, {})
-	);
+		}, {});
+	});
 
 	return traceData;
 }

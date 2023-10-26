@@ -37,9 +37,9 @@ export function TableDataTrc(traceData: object[]): void {
 	 * @param DataTableHeaders Thead created from the categories.
 	 */
 	const headerRow = document.createElement("tr");
-	const sortedKeys = Object.keys(traceData[0]).filter(
-		(k) => k !== "InputFileName" && k !== "SolverName"
-	);
+	const sortedKeys = Object.keys(traceData[0]).filter((k) => {
+		return k !== "InputFileName" && k !== "SolverName";
+	});
 	sortedKeys.sort();
 	sortedKeys.unshift("InputFileName", "SolverName");
 	for (const key of sortedKeys) {
@@ -56,9 +56,9 @@ export function TableDataTrc(traceData: object[]): void {
 	const dataTableContent = document.createElement("tbody");
 	for (const obj of traceData) {
 		const resultRow = document.createElement("tr");
-		const sortedKeys = Object.keys(obj).filter(
-			(k) => k !== "InputFileName" && k !== "SolverName"
-		);
+		const sortedKeys = Object.keys(obj).filter((k) => {
+			return k !== "InputFileName" && k !== "SolverName";
+		});
 		sortedKeys.sort();
 		sortedKeys.unshift("InputFileName", "SolverName");
 		for (const key of sortedKeys) {

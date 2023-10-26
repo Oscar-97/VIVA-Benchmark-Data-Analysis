@@ -203,8 +203,6 @@ function DataTablesConfiguration(): void {
 				"SolverTime",
 				"NumberOfIterations",
 				"NumberOfNodes",
-				"ObjectiveValue",
-				"ObjectiveValueEstimate",
 				"PrimalBoundProblem",
 				"DualBoundSolver",
 				"dualbound",
