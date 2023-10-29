@@ -142,3 +142,11 @@ export const downloadChartDataButtonLayer: HTMLButtonElement =
 export const demoDataButton: HTMLButtonElement = document.getElementById(
 	"demoModeButton"
 ) as HTMLButtonElement;
+
+/**
+ * `releaseVersionTag` is a reference to the HTMLSpanElement with the ID "releaseVersionTagSpan".
+ * @type {HTMLButtonElement}
+ */
+export const releaseVersionTag: HTMLSpanElement = document.getElementById(
+	"releaseVersionTagSpan"
+) as HTMLSpanElement;

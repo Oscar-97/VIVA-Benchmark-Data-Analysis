@@ -102,7 +102,13 @@ import {
 	DisplayErrorNotification,
 	DisplayWarningNotification
 } from "./Elements/DisplayAlertNotification";
+import { ReleaseVersionTag } from "./Elements/ReleaseVersionTag";
 //#endregion
+
+/**
+ * Fetches and displays the latest release of the application.
+ */
+ReleaseVersionTag();
 
 /**
  * Fade effect on all children of the body element, except for nav.
