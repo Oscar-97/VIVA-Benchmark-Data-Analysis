@@ -24,6 +24,7 @@ export const alertNotification: HTMLDivElement = document.getElementById(
 
 /**
  * `alertIcon` is a reference to the HTMLElement with the id "alertIcon".
+ * @type {HTMLElement}
  */
 export const alertIcon: HTMLElement = document.getElementById(
 	"alertIcon"
@@ -31,13 +32,15 @@ export const alertIcon: HTMLElement = document.getElementById(
 
 /**
  * `alertMessage` is a reference to the HTMLSpanElement with the ID "alertMessage".
+ * @type {HTMLSpanElement}
  */
 export const alertMessage: HTMLSpanElement = document.getElementById(
 	"alertMessage"
 ) as HTMLSpanElement;
 
 /**
- * `closeAlertButton` is a reference to the HTMLButtonElement with the ID "closeAlertButton".
+ * `closeAlertButton` is a reference to the HTMLButtonElement with the ID "closeAlertButton".'
+ * @type {HTMLButtonElement}
  */
 export const closeAlertButton: HTMLButtonElement = document.getElementById(
 	"closeAlertButton"
@@ -80,6 +83,22 @@ export const downloadConfigurationButton: HTMLAnchorElement =
 export const downloadConfigurationButtonLayer: HTMLButtonElement =
 	document.getElementById(
 		"downloadConfigurationButtonLayer"
+	) as HTMLButtonElement;
+
+/**
+ * `downloadCustomConfigurationButton` is a reference to the HTMLButtonElement with the ID "downloadCustomConfigurationButton".
+ * @type {HTMLAnchorElement}
+ */
+export const downloadCustomConfigurationButton: HTMLAnchorElement =
+	document.getElementById("downloadCustomConfigurationButton") as HTMLAnchorElement;
+
+/**
+ * `downloadCustomConfigurationButtonLayer` is a reference to the HTMLButtonElement with the ID "downloadCustomConfigurationButtonLayer".
+ * @type {HTMLButtonElement}
+ */
+export const downloadCustomConfigurationButtonLayer: HTMLButtonElement =
+	document.getElementById(
+		"downloadCustomConfigurationButton"
 	) as HTMLButtonElement;
 
 /**
@@ -145,8 +164,23 @@ export const demoDataButton: HTMLButtonElement = document.getElementById(
 
 /**
  * `releaseVersionTag` is a reference to the HTMLSpanElement with the ID "releaseVersionTagSpan".
- * @type {HTMLButtonElement}
+ * @type {HTMLSpanElement}
  */
 export const releaseVersionTag: HTMLSpanElement = document.getElementById(
 	"releaseVersionTagSpan"
 ) as HTMLSpanElement;
+
+/**
+ * `solverSelector` is a reference to the HTMLSelectElement with the ID "solverSelector".
+ * @type {HTMLSelectElement}
+ */
+export const solverSelector: HTMLSelectElement = document.getElementById(
+	"solverSelector"
+) as HTMLSelectElement;
+
+/**
+ * `defaultTimeInput` is a reference the HTMLInputElement with the ID "defaultTimeInput".
+ */
+export const defaultTimeInput: HTMLInputElement = document.getElementById(
+	"defaultTimeInput"
+) as HTMLInputElement;

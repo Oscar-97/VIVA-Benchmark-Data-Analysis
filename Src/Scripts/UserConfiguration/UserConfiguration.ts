@@ -3,13 +3,17 @@ import {
 	DisplayWarningNotification,
 	DisplayErrorNotification
 } from "../Elements/DisplayAlertNotification";
-import { downloadConfigurationButton } from "../Elements/Elements";
+import {
+	downloadConfigurationButton,
+	downloadCustomConfigurationButton,
+	downloadCustomConfigurationButtonLayer
+} from "../Elements/Elements";
 
 /**
  * UserData consists of dataset and file extension.
  */
 interface UserData {
-	dataSet: string[];
+	dataSet: object[];
 	dataFileType: string;
 	defaultTime?: number | undefined;
 }
@@ -32,7 +36,7 @@ export const userData: UserData = {
  * // This will store the given raw data and data file type in the userData object, and then save the userData object in local storage.
  */
 export function CreateUserConfiguration(
-	dataSet: string[],
+	dataSet: object[],
 	dataFileType: string,
 	defaultTime?: number
 ): void {
@@ -155,4 +159,44 @@ export function DownloadUserConfiguration(): void {
 	} else {
 		DisplayErrorNotification("No saved configuration found!");
 	}
+}
+
+/**
+ * This function downloads a customized user configuration as a JSON file.
+ *
+ * @remarks
+ * The function assumes the existence of a global variable or a previously defined `downloadCustomConfigurationButton`
+ * which should be a reference to an HTML anchor (`<a>`) element used to trigger the file download.
+ *
+ * @param traceData - Array of objects, where each object represents a row of data.
+ * @param selectedValues - Array or string of selected solvers.
+ * @param defaultTime  - Default time that will be used on all results with missing SolverTime or with a failed status.
+ *
+ * @example
+ * DownloadCustomizedUserConfiguration(traceData, selectedSolvers, Number(defaultTimeInput.textContent));
+ * This will initiate the download of a customized user configuration.
+ */
+export function DownloadCustomizedUserConfiguration(
+	traceData: object[],
+	selectedValues: string | string[],
+	defaultTime: number
+): void {
+	const customizedTraceData = traceData.filter((solver) => {
+		return selectedValues.includes(solver["SolverName"]);
+	});
+
+	if (!defaultTime) {
+		defaultTime === 1000;
+	}
+
+	const userData: UserData = {
+		dataSet: customizedTraceData,
+		dataFileType: "json",
+		defaultTime: defaultTime
+	};
+	const downloadAbleFile = JSON.stringify(userData);
+	const blob = new Blob([downloadAbleFile], { type: "application/json" });
+
+	downloadCustomConfigurationButton.href = window.URL.createObjectURL(blob);
+	downloadCustomConfigurationButton.download = "UserConfiguration.json";
 }

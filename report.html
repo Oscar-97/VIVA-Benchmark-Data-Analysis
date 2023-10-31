@@ -93,7 +93,6 @@
       </div>
     </div>
   </nav>
-  </div>
   <div class="alert alert-dismissible" role="alert" id="alertNotification">
     <i id="alertIcon" class="bi" style="margin-right: 10px;"></i>
     <span id="alertMessage"></span>
@@ -121,6 +120,10 @@
       <button class="btn btn-dark btn-sm" type="button" id="downloadConfigurationButtonLayer" disabled="true"><a
           id="downloadConfigurationButton" data-toggle="tooltip" data-placement="top"
           title="Download the user configuration."><i class="bi bi-download"></i> Download Saved Data</a></button>
+      <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="modal"
+        data-bs-target="#configurationSettingsModal" id="ConfigurationSettingsButton" enabled="true"
+        data-toggle="tooltip" data-placement="top" title="Customize the downloadable user configuration file.">
+        <i class="bi bi-gear"></i> Download Data</button>
     </div>
     <div class="col-auto vertical-separator"></div>
     <div class="col-auto">
@@ -187,6 +190,46 @@
               <li class="list-group-item">NumberOfNodes</li>
               <li class="list-group-item">UserComment</li>
             </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal with configuration file options. -->
+  <div class="modal fade" id="configurationSettingsModal" tabindex="-1"
+    aria-labelledby="configurationSettingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="fileFormatInformationModalLabel"><i class="bi bi-gear-fill"></i> UserConfiguration
+            Settings</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Configure the <b>UserConfiguration.js</b> to be downloaded.
+          </p>
+
+          <i>Required</i>
+          <div class="mb-3">
+            <label for="solverList" class="form-label">Select the solvers to save the instances for.</label>
+            <select class="form-select" multiple aria-label="Multiple select example" id="solverSelector"></select>
+          </div>
+
+          <i>Optional</i>
+          <p>Set the defaultTime that will be used on all results with missing SolverTime or with a failed status. The
+            default fallback value is 1000.</p>
+          <div class="form-floating mb-3">
+            <input type="number" class="form-control" placeholder="Enter a defaultTime." aria-label="defaultTime"
+              aria-describedby="basic-addon1" min="1" id="defaultTimeInput">
+            <label for="defaultTimeInput">defaultTime</label>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="downloadCustomConfigurationButtonLayer">
+              <a id="downloadCustomConfigurationButton" data-toggle="tooltip" data-placement="top"
+                title="Download a customized user configuration."><i class="bi bi-download"></i> Download Data</a>
+            </button>
           </div>
         </div>
       </div>

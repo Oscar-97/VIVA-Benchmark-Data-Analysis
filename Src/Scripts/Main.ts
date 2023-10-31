@@ -42,7 +42,10 @@ import {
  */
 import { AddResultCategories } from "./DataProcessing/AddResultCategories";
 import { CreateNewTraceData } from "./DataProcessing/CreateData";
-import { ImportDataEvents } from "./Elements/ImportDataEvents";
+import {
+	FillSolverSelectorList,
+	ImportDataEvents
+} from "./Elements/ImportDataEvents";
 import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
 import { MergeData } from "./DataProcessing/MergeData";
 import { ExtractTraceData } from "./DataProcessing/FilterData";
@@ -80,7 +83,11 @@ import {
 	downloadConfigurationButtonLayer,
 	demoDataButton,
 	viewPlotsButton,
-	downloadChartDataButton
+	downloadChartDataButton,
+	downloadCustomConfigurationButton,
+	solverSelector,
+	defaultTimeInput,
+	downloadCustomConfigurationButtonLayer
 } from "./Elements/Elements";
 import {
 	BodyFadeLoadingAnimation,
@@ -94,7 +101,8 @@ import {
 	CreateUserConfiguration,
 	GetUserConfiguration,
 	DeleteUserConfiguration,
-	DownloadUserConfiguration
+	DownloadUserConfiguration,
+	DownloadCustomizedUserConfiguration
 } from "./UserConfiguration/UserConfiguration";
 
 import { demoData } from "./DemoData";
@@ -239,6 +247,11 @@ function ManageData(): void {
 	let soluData: object[] = [];
 
 	/**
+	 * selectedValues holds the selected solvers.
+	 */
+	let selectedSolvers: string[];
+
+	/**
 	 * If the uploaded data file is of type JSON, it retrieves the user configuration
 	 * and updates the unprocessedData and dataFileType variables.
 	 */
@@ -270,6 +283,20 @@ function ManageData(): void {
 	}
 
 	/**
+	 * Fill the solver selector with solvers and update the values in selectedSolvers when the user selects them.
+	 */
+	FillSolverSelectorList(traceData);
+	solverSelector.addEventListener("change", () => {
+		selectedSolvers = Array.from(solverSelector.options)
+			.filter((option) => {
+				return option.selected;
+			})
+			.map((option) => {
+				return option.value;
+			});
+	});
+
+	/**
 	 * Download the current configuration when clicking on the "Download Configuration" button.
 	 */
 	downloadConfigurationButton.addEventListener("click", () => {
@@ -283,6 +310,22 @@ function ManageData(): void {
 		DeleteUserConfiguration();
 		deleteLocalStorageButton.disabled = true;
 		downloadConfigurationButtonLayer.disabled = true;
+	});
+
+	/**
+	 * Download a customized version of the user configuration.
+	 */
+	downloadCustomConfigurationButton.addEventListener("click", () => {
+		console.log("clicked.")
+		if (selectedSolvers === undefined) {
+			DisplayWarningNotification("No solvers selected from the list.");
+		}
+
+		DownloadCustomizedUserConfiguration(
+			traceData,
+			selectedSolvers,
+			Number(defaultTimeInput.value)
+		);
 	});
 
 	/**
@@ -378,7 +421,7 @@ function HandlePlotPages(traceData: object[]): void {
 		if (dataFileType === "trc") {
 			dataFileType = "json";
 		}
-		const newRawData: string[] = CreateNewTraceData(traceData);
+		const newRawData: object[] = CreateNewTraceData(traceData);
 		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
