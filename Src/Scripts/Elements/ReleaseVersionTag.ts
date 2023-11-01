@@ -17,17 +17,21 @@ export function ReleaseVersionTag(): void {
 
 		FetchLatestRelease().then((version) => {
 			if (version === null || version === undefined) {
-				version === "Releases";
+				version = "Releases";
 			}
 			releaseVersionTag.innerHTML = `<i class="bi bi-git"></i> ${version}`;
 			localStorage.setItem("releaseVersion", version);
 			sessionStorage.setItem("releaseVersionFetched", "true");
 		});
 	} else {
-		const releaseVersion = localStorage.getItem("releaseVersion");
+		let releaseVersion = localStorage.getItem("releaseVersion");
 
-		if (releaseVersion === null || releaseVersion === undefined) {
-			releaseVersion === "Releases";
+		if (
+			releaseVersion === null ||
+			releaseVersion === undefined ||
+			releaseVersionTag.innerHTML === `<i class="bi bi-git"></i> null`
+		) {
+			releaseVersion = "Releases";
 		}
 		releaseVersionTag.innerHTML = `<i class="bi bi-git"></i> ${releaseVersion}`;
 	}
