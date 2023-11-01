@@ -5,8 +5,7 @@ import {
 } from "../Elements/DisplayAlertNotification";
 import {
 	downloadConfigurationButton,
-	downloadCustomConfigurationButton,
-	downloadCustomConfigurationButtonLayer
+	downloadCustomConfigurationButton
 } from "../Elements/Elements";
 
 /**
@@ -178,22 +177,12 @@ export function DownloadUserConfiguration(): void {
  */
 export function DownloadCustomizedUserConfiguration(
 	traceData: object[],
-	selectedValues: string | string[],
 	defaultTime: number
 ): void {
-	const customizedTraceData = traceData.filter((solver) => {
-		return selectedValues.includes(solver["SolverName"]);
-	});
+	userData.dataSet = traceData;
+	userData.dataFileType = "json";
+	userData.defaultTime = defaultTime;
 
-	if (!defaultTime) {
-		defaultTime === 1000;
-	}
-
-	const userData: UserData = {
-		dataSet: customizedTraceData,
-		dataFileType: "json",
-		defaultTime: defaultTime
-	};
 	const downloadAbleFile = JSON.stringify(userData);
 	const blob = new Blob([downloadAbleFile], { type: "application/json" });
 

@@ -87,7 +87,7 @@ import {
 	downloadCustomConfigurationButton,
 	solverSelector,
 	defaultTimeInput,
-	downloadCustomConfigurationButtonLayer
+	configurationSettingsButton
 } from "./Elements/Elements";
 import {
 	BodyFadeLoadingAnimation,
@@ -295,6 +295,7 @@ function ManageData(): void {
 				return option.value;
 			});
 	});
+	configurationSettingsButton.disabled = false;
 
 	/**
 	 * Download the current configuration when clicking on the "Download Configuration" button.
@@ -314,16 +315,23 @@ function ManageData(): void {
 
 	/**
 	 * Download a customized version of the user configuration.
+	 * Filters by the solvers selected in the form selector and gets the default time from the number input.
 	 */
 	downloadCustomConfigurationButton.addEventListener("click", () => {
-		console.log("clicked.")
 		if (selectedSolvers === undefined) {
 			DisplayWarningNotification("No solvers selected from the list.");
 		}
+		const customizedTraceData = traceData.filter((solver) => {
+			return selectedSolvers.includes(solver["SolverName"]);
+		});
+		const newRawData: object[] = CreateNewTraceData(customizedTraceData);
+
+		if (!defaultTime) {
+			defaultTime === 1000;
+		}
 
 		DownloadCustomizedUserConfiguration(
-			traceData,
-			selectedSolvers,
+			newRawData,
 			Number(defaultTimeInput.value)
 		);
 	});
