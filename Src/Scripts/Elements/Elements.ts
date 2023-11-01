@@ -86,11 +86,20 @@ export const downloadConfigurationButtonLayer: HTMLButtonElement =
 	) as HTMLButtonElement;
 
 /**
+ * `configurationSettingsButton` is a reference to the HTMLButtonElement with the ID "configurationSettingsButton".
+ * @type {HTMLButtonElement}
+ */
+export const configurationSettingsButton: HTMLButtonElement =
+	document.getElementById("configurationSettingsButton") as HTMLButtonElement;
+
+/**
  * `downloadCustomConfigurationButton` is a reference to the HTMLButtonElement with the ID "downloadCustomConfigurationButton".
  * @type {HTMLAnchorElement}
  */
 export const downloadCustomConfigurationButton: HTMLAnchorElement =
-	document.getElementById("downloadCustomConfigurationButton") as HTMLAnchorElement;
+	document.getElementById(
+		"downloadCustomConfigurationButton"
+	) as HTMLAnchorElement;
 
 /**
  * `downloadCustomConfigurationButtonLayer` is a reference to the HTMLButtonElement with the ID "downloadCustomConfigurationButtonLayer".

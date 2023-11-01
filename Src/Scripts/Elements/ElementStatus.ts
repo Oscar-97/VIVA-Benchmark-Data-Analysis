@@ -5,6 +5,7 @@ import {
 	filterSelectionButton,
 	saveLocalStorageButton,
 	downloadConfigurationButtonLayer,
+	configurationSettingsButton,
 	deleteLocalStorageButton,
 	clearTableButton,
 	viewPlotsButton,
@@ -35,6 +36,7 @@ export function ElementStatesTablePage(): void {
 	filterSelectionButton.disabled = true;
 	saveLocalStorageButton.disabled = true;
 	downloadConfigurationButtonLayer.disabled = true;
+	configurationSettingsButton.disabled = true;
 	deleteLocalStorageButton.disabled = true;
 	clearTableButton.disabled = true;
 }
