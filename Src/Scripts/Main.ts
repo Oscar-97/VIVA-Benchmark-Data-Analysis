@@ -324,7 +324,7 @@ function ManageData(): void {
 		const customizedTraceData = traceData.filter((solver) => {
 			return selectedSolvers.includes(solver["SolverName"]);
 		});
-		const newRawData: object[] = CreateNewTraceData(customizedTraceData);
+		const newRawData: string[] = CreateNewTraceData(customizedTraceData);
 
 		if (!defaultTime) {
 			defaultTime === 1000;
@@ -429,7 +429,7 @@ function HandlePlotPages(traceData: object[]): void {
 		if (dataFileType === "trc") {
 			dataFileType = "json";
 		}
-		const newRawData: object[] = CreateNewTraceData(traceData);
+		const newRawData: string[] = CreateNewTraceData(traceData);
 		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;

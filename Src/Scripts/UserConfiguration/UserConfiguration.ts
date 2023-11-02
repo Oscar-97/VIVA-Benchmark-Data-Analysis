@@ -12,7 +12,7 @@ import {
  * UserData consists of dataset and file extension.
  */
 interface UserData {
-	dataSet: object[];
+	dataSet: string[] | object[];
 	dataFileType: string;
 	defaultTime?: number | undefined;
 }
@@ -35,7 +35,7 @@ export const userData: UserData = {
  * // This will store the given raw data and data file type in the userData object, and then save the userData object in local storage.
  */
 export function CreateUserConfiguration(
-	dataSet: object[],
+	dataSet: string[],
 	dataFileType: string,
 	defaultTime?: number
 ): void {
@@ -176,7 +176,7 @@ export function DownloadUserConfiguration(): void {
  * This will initiate the download of a customized user configuration.
  */
 export function DownloadCustomizedUserConfiguration(
-	traceData: object[],
+	traceData: string[],
 	defaultTime: number
 ): void {
 	userData.dataSet = traceData;

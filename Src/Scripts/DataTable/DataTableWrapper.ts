@@ -70,11 +70,12 @@ export function DisplayDataTable(traceData: object[]): void {
  * defining fixed columns, setting button options and more.
  * Note that after configuring, the function makes some changes to CSS classes and moves the search panes container.
  */
+
 function DataTablesConfiguration(): void {
 	const table = $("#dataTableGenerated").DataTable({
 		destroy: true,
 		stateSave: true,
-		// @ts-ignore
+		// @ts-expect-error Add proper types.
 		searchPanes: {
 			layout: "auto"
 		},
@@ -115,11 +116,10 @@ function DataTablesConfiguration(): void {
 			}
 		],
 		language: {
-			// @ts-ignore
 			searchBuilder: {
 				button: "<i class='bi bi-search'></i> Advanced Search"
 			}
-		},
+		} as DataTables.LanguageSettings,
 		buttons: [
 			{
 				extend: "collection",
@@ -154,7 +154,7 @@ function DataTablesConfiguration(): void {
 			{
 				text: "<i class='bi bi-filter-square'></i> Toggle Filters",
 				action: function (): void {
-					// @ts-ignore
+					// @ts-expect-error Add proper types.
 					table.searchPanes.container().toggle();
 				},
 				className: "rounded btn-sm"
@@ -230,11 +230,11 @@ function DataTablesConfiguration(): void {
 	});
 
 	$(".dataTables_length select").addClass("custom-select custom-select-sm");
-	// @ts-ignore
+	// @ts-expect-error Remake in the future.
 	table.searchPanes.container().prependTo(table.table().container());
-	// @ts-ignore
+	// @ts-expect-error Remake in the future.
 	table.searchPanes.resizePanes();
-	// @ts-ignore
+	// @ts-expect-error Remake in the future.
 	table.searchPanes.container().toggle();
 }
 
