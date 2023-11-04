@@ -42,7 +42,10 @@ import {
  */
 import { AddResultCategories } from "./DataProcessing/AddResultCategories";
 import { CreateNewTraceData } from "./DataProcessing/CreateData";
-import { ImportDataEvents } from "./Elements/ImportDataEvents";
+import {
+	FillSolverSelectorList,
+	ImportDataEvents
+} from "./Elements/ImportDataEvents";
 import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
 import { MergeData } from "./DataProcessing/MergeData";
 import { ExtractTraceData } from "./DataProcessing/FilterData";
@@ -80,7 +83,11 @@ import {
 	downloadConfigurationButtonLayer,
 	demoDataButton,
 	viewPlotsButton,
-	downloadChartDataButton
+	downloadChartDataButton,
+	downloadCustomConfigurationButton,
+	solverSelector,
+	defaultTimeInput,
+	configurationSettingsButton
 } from "./Elements/Elements";
 import {
 	BodyFadeLoadingAnimation,
@@ -94,7 +101,8 @@ import {
 	CreateUserConfiguration,
 	GetUserConfiguration,
 	DeleteUserConfiguration,
-	DownloadUserConfiguration
+	DownloadUserConfiguration,
+	DownloadCustomizedUserConfiguration
 } from "./UserConfiguration/UserConfiguration";
 
 import { demoData } from "./DemoData";
@@ -102,7 +110,13 @@ import {
 	DisplayErrorNotification,
 	DisplayWarningNotification
 } from "./Elements/DisplayAlertNotification";
+import { ReleaseVersionTag } from "./Elements/ReleaseVersionTag";
 //#endregion
+
+/**
+ * Fetches and displays the latest release of the application.
+ */
+ReleaseVersionTag();
 
 /**
  * Fade effect on all children of the body element, except for nav.
@@ -233,6 +247,11 @@ function ManageData(): void {
 	let soluData: object[] = [];
 
 	/**
+	 * selectedValues holds the selected solvers.
+	 */
+	let selectedSolvers: string[];
+
+	/**
 	 * If the uploaded data file is of type JSON, it retrieves the user configuration
 	 * and updates the unprocessedData and dataFileType variables.
 	 */
@@ -264,6 +283,21 @@ function ManageData(): void {
 	}
 
 	/**
+	 * Fill the solver selector with solvers and update the values in selectedSolvers when the user selects them.
+	 */
+	FillSolverSelectorList(traceData);
+	solverSelector.addEventListener("change", () => {
+		selectedSolvers = Array.from(solverSelector.options)
+			.filter((option) => {
+				return option.selected;
+			})
+			.map((option) => {
+				return option.value;
+			});
+	});
+	configurationSettingsButton.disabled = false;
+
+	/**
 	 * Download the current configuration when clicking on the "Download Configuration" button.
 	 */
 	downloadConfigurationButton.addEventListener("click", () => {
@@ -277,6 +311,29 @@ function ManageData(): void {
 		DeleteUserConfiguration();
 		deleteLocalStorageButton.disabled = true;
 		downloadConfigurationButtonLayer.disabled = true;
+	});
+
+	/**
+	 * Download a customized version of the user configuration.
+	 * Filters by the solvers selected in the form selector and gets the default time from the number input.
+	 */
+	downloadCustomConfigurationButton.addEventListener("click", () => {
+		if (selectedSolvers === undefined) {
+			DisplayWarningNotification("No solvers selected from the list.");
+		}
+		const customizedTraceData = traceData.filter((solver) => {
+			return selectedSolvers.includes(solver["SolverName"]);
+		});
+		const newRawData: string[] = CreateNewTraceData(customizedTraceData);
+
+		if (!defaultTime) {
+			defaultTime === 1000;
+		}
+
+		DownloadCustomizedUserConfiguration(
+			newRawData,
+			Number(defaultTimeInput.value)
+		);
 	});
 
 	/**

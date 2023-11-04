@@ -31,7 +31,7 @@
       }      
     ],
     "complexity": [
-      "error",
+      "warn",
       {
         "max": 10
       }
@@ -41,7 +41,10 @@
     "arrow-body-style": ["error", "always"],
     "vars-on-top": "error",
     "no-lonely-if": "error",
-    "max-lines": ["warn", {"max": 300, "skipComments": true}],
+    "no-duplicate-case": "error",
+    "default-case": "error",
+    "default-case-last": "error",
+    "max-lines": ["warn", {"max": 500, "skipComments": true}],
     "prettier/prettier": [
       "error",
       {

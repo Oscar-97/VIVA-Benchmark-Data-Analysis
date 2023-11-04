@@ -4,7 +4,8 @@ import {
 	viewTableButton,
 	viewPlotsButton,
 	deleteLocalStorageButton,
-	saveLocalStorageButton
+	saveLocalStorageButton,
+	solverSelector
 } from "./Elements";
 import { DisplayAlertNotification } from "./DisplayAlertNotification";
 
@@ -73,4 +74,34 @@ export function ImportDataEvents(
 	if (!sessionStorage.getItem("savedStorageNotification")) {
 		DisplayAlertNotification(message);
 	}
+}
+
+/**
+ * Fills the selector list with solvers from the currently loaded results.
+ * @param traceData - Array of objects, where each object represents a row of data.
+ */
+export function FillSolverSelectorList(traceData: object[]): void {
+	solverSelector.innerHTML = "";
+	let isSelectedSet = false;
+
+	const uniqueSolvers = traceData
+		.map((solver) => {
+			return solver["SolverName"];
+		}) // First, extract all usernames
+		.filter((solverName, index, self) => {
+			return self.indexOf(solverName) === index;
+		}); // Then filter out duplicates
+
+	uniqueSolvers.forEach((solver: string) => {
+		const option = document.createElement("option");
+		option.value = solver; // Assuming the value is also the UserName
+		option.textContent = solver;
+
+		if (!isSelectedSet) {
+			option.selected = true;
+			isSelectedSet = true; // Ensure only the first option is set as selected
+		}
+
+		solverSelector.appendChild(option);
+	});
 }

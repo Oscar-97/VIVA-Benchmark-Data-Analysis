@@ -263,6 +263,7 @@ describe("UI tests", () => {
 				"#filterSelectionButton",
 				"#saveLocalStorageButton",
 				"#downloadConfigurationButtonLayer",
+				"#configurationSettingsButton",
 				"#deleteLocalStorageButton",
 				"#clearTableButton"
 			];

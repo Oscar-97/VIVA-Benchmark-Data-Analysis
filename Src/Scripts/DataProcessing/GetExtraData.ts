@@ -124,6 +124,8 @@ export function GetBestKnowBounds(unprocessedSolutionData: string[]): object[] {
 						obj["DualBoundProblem"] = NaN;
 					}
 					break;
+				default:
+					break;
 			}
 		}
 		soluData.push(obj);

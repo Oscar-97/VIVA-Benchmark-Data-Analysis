@@ -3,13 +3,16 @@ import {
 	DisplayWarningNotification,
 	DisplayErrorNotification
 } from "../Elements/DisplayAlertNotification";
-import { downloadConfigurationButton } from "../Elements/Elements";
+import {
+	downloadConfigurationButton,
+	downloadCustomConfigurationButton
+} from "../Elements/Elements";
 
 /**
  * UserData consists of dataset and file extension.
  */
 interface UserData {
-	dataSet: string[];
+	dataSet: string[] | object[];
 	dataFileType: string;
 	defaultTime?: number | undefined;
 }
@@ -155,4 +158,34 @@ export function DownloadUserConfiguration(): void {
 	} else {
 		DisplayErrorNotification("No saved configuration found!");
 	}
+}
+
+/**
+ * This function downloads a customized user configuration as a JSON file.
+ *
+ * @remarks
+ * The function assumes the existence of a global variable or a previously defined `downloadCustomConfigurationButton`
+ * which should be a reference to an HTML anchor (`<a>`) element used to trigger the file download.
+ *
+ * @param traceData - Array of objects, where each object represents a row of data.
+ * @param selectedValues - Array or string of selected solvers.
+ * @param defaultTime  - Default time that will be used on all results with missing SolverTime or with a failed status.
+ *
+ * @example
+ * DownloadCustomizedUserConfiguration(traceData, selectedSolvers, Number(defaultTimeInput.textContent));
+ * This will initiate the download of a customized user configuration.
+ */
+export function DownloadCustomizedUserConfiguration(
+	traceData: string[],
+	defaultTime: number
+): void {
+	userData.dataSet = traceData;
+	userData.dataFileType = "json";
+	userData.defaultTime = defaultTime;
+
+	const downloadAbleFile = JSON.stringify(userData);
+	const blob = new Blob([downloadAbleFile], { type: "application/json" });
+
+	downloadCustomConfigurationButton.href = window.URL.createObjectURL(blob);
+	downloadCustomConfigurationButton.download = "UserConfiguration.json";
 }
