@@ -1019,65 +1019,64 @@ describe("Status mapping", () => {
 			expect(SetModelStatus(0)).toBe("Unknown Error");
 			expect(SetModelStatus("invalid")).toBe("Unknown Error");
 		});
-
-	})
+	});
 
 	describe("SetSolverStatus", () => {
 		it("should return Normal Completion if the value is 1", () => {
 			expect(SetSolverStatus(1)).toBe("Normal Completion");
 		});
-	
+
 		it("should return Iteration Interrupt if the value is 2", () => {
 			expect(SetSolverStatus(2)).toBe("Iteration Interrupt");
 		});
-	
+
 		it("should return Resource Interrupt if the value is 3", () => {
 			expect(SetSolverStatus(3)).toBe("Resource Interrupt");
 		});
-	
+
 		it("should return Terminated By Solver if the value is 4", () => {
 			expect(SetSolverStatus(4)).toBe("Terminated By Solver");
 		});
-	
+
 		it("should return Evaluation Interrupt if the value is 5", () => {
 			expect(SetSolverStatus(5)).toBe("Evaluation Interrupt");
 		});
-	
+
 		it("should return Capability Problems if the value is 6", () => {
 			expect(SetSolverStatus(6)).toBe("Capability Problems");
 		});
-	
+
 		it("should return Licensing Problems if the value is 7", () => {
 			expect(SetSolverStatus(7)).toBe("Licensing Problems");
 		});
-	
+
 		it("should return User Interrupt if the value is 8", () => {
 			expect(SetSolverStatus(8)).toBe("User Interrupt");
 		});
-	
+
 		it("should return Error Setup Failure if the value is 9", () => {
 			expect(SetSolverStatus(9)).toBe("Error Setup Failure");
 		});
-	
+
 		it("should return Error Solver Failure if the value is 10", () => {
 			expect(SetSolverStatus(10)).toBe("Error Solver Failure");
 		});
-	
+
 		it("should return Error Internal Solver Failure if the value is 11", () => {
 			expect(SetSolverStatus(11)).toBe("Error Internal Solver Failure");
 		});
-	
+
 		it("should return Solve Processing Skipped if the value is 12", () => {
 			expect(SetSolverStatus(12)).toBe("Solve Processing Skipped");
 		});
-	
+
 		it("should return Error System Failure if the value is 13", () => {
 			expect(SetSolverStatus(13)).toBe("Error System Failure");
 		});
-	
+
 		it("should return Unknown Error if the value is not in the statusMap", () => {
 			expect(SetSolverStatus(0)).toBe("Unknown Error");
 			expect(SetSolverStatus("invalid")).toBe("Unknown Error");
 		});
 	});
-})
+});
