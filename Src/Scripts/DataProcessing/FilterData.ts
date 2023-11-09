@@ -1,30 +1,7 @@
 /**
  * Default headers for the trace file.
  */
-const defaultHeaders: string[] = [
-	"InputFileName",
-	"ModelType",
-	"SolverName",
-	"NLP",
-	"MIP",
-	"JulianDate",
-	"Direction",
-	"NumberOfEquations",
-	"NumberOfVariables",
-	"NumberOfDiscreteVariables",
-	"NumberOfNonZeros",
-	"NumberOfNonlinearNonZeros",
-	"OptionFile",
-	"ModelStatus",
-	"TermStatus",
-	"ObjectiveValue",
-	"ObjectiveValueEstimate",
-	"SolverTime",
-	"NumberOfIterations",
-	"NumberOfDomainViolations",
-	"NumberOfNodes",
-	"UserComment"
-];
+import { DEFAULT_HEADERS } from "../TraceHeaders";
 
 /**
  * Extracts headers from the array with raw data results.
@@ -152,7 +129,7 @@ export function ExtractTraceData(unprocessedData: string[]): object[] {
 		});
 		traceData = ProcessLines(headers, unprocessedData, startIdx);
 	} else if (!firstLine[0].startsWith("*")) {
-		traceData = ProcessLines(defaultHeaders, unprocessedData, 0);
+		traceData = ProcessLines(DEFAULT_HEADERS, unprocessedData, 0);
 	}
 	return traceData;
 }
