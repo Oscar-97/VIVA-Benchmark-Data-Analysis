@@ -30,7 +30,7 @@ export function DisplayAlertNotification(message: string): void {
 			alertNotification.style.display = "none";
 			alertNotification.classList.remove("alert-success");
 		});
-	}, 3500);
+	}, 10000);
 }
 
 /**
@@ -57,7 +57,7 @@ export function DisplayWarningNotification(message: string): void {
 			alertNotification.style.display = "none";
 			alertNotification.classList.remove("alert-warning");
 		});
-	}, 2500);
+	}, 5000);
 }
 
 /**
@@ -84,5 +84,5 @@ export function DisplayErrorNotification(message: string): void {
 			alertNotification.style.display = "none";
 			alertNotification.classList.remove("alert-danger");
 		});
-	}, 4500);
+	}, 5000);
 }
