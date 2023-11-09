@@ -129,7 +129,7 @@ BodyFadeLoadingAnimation();
 RegisterServiceWorker();
 
 /**
- * @param dataFileType Type of file extension for the imported data. As of now, either .trc or .json. Text based files were removed.
+ * @param dataFileType Type of file extension for the imported data. As of now, either one or more .trc or a single .json. Text based files were removed.
  * @param defaultTime The default time for the absolute performance profile chart.
  * @param unprocessedData Raw data of the imported benchmark results.
  * @param unprocessedInstanceInformationData Unprocessed instanceinfo.csv containing properties.
@@ -209,12 +209,19 @@ function InitializeProgram(): void {
 
 	/**
 	 * Adds an event listener to the "Import Data" button that calls the
-	 * ImportDataEvents() function with a success message and the ManageData()
-	 * function whenever the button is clicked.
+	 * ImportDataEvents() function with a success message containing the list of files loaded
+	 * and the ManageData() function whenever the button is clicked.
 	 */
 	importDataButton.addEventListener("click", () => {
 		sessionStorage.removeItem("savedStorageNotification");
-		ImportDataEvents("Benchmark file succesfully loaded!");
+		const fileNames = Array.from(fileInput.files)
+			.map((file) => {
+				return file.name;
+			})
+			.join(", ");
+		ImportDataEvents(
+			"Benchmarks loaded with following files: \n".concat(fileNames)
+		);
 		ManageData();
 	});
 
