@@ -334,7 +334,7 @@ function ManageData(): void {
 		const newRawData: string[] = CreateNewTraceData(customizedTraceData);
 
 		if (!defaultTime) {
-			defaultTime === 1000;
+			defaultTime = 1000;
 		}
 
 		DownloadCustomizedUserConfiguration(
