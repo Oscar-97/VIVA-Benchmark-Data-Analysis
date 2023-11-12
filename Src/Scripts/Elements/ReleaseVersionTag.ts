@@ -6,15 +6,15 @@ import { releaseVersionTag } from "./Elements";
  * If it has already been fetched, it retrieves the value from local storage.
  */
 export function ReleaseVersionTag(): void {
-	if (!sessionStorage.getItem("releaseVersionFetched")) {
-		async function FetchLatestRelease(): Promise<string> {
-			const response = await fetch(
-				"https://api.github.com/repos/Oscar-97/VIVA-Benchmark-Data-Analysis/releases/latest"
-			);
-			const data = await response.json();
-			return data.tag_name;
-		}
+	async function FetchLatestRelease(): Promise<string> {
+		const response = await fetch(
+			"https://api.github.com/repos/Oscar-97/VIVA-Benchmark-Data-Analysis/releases/latest"
+		);
+		const data = await response.json();
+		return data.tag_name;
+	}
 
+	if (!sessionStorage.getItem("releaseVersionFetched")) {
 		FetchLatestRelease().then((version) => {
 			if (version === null || version === undefined) {
 				version = "Releases";
