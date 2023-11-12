@@ -1,5 +1,5 @@
 /**
- * Mapping for the headers to a more readable format for the end users.
+ * Mapping and sort order for the headers to a more readable format for the end users.
  */
 export enum TraceHeaderMap {
 	InputFileName = "Problem",
@@ -7,7 +7,7 @@ export enum TraceHeaderMap {
 	ModelType = "ModelType",
 	DualBoundProblem = "ProblemDualBound",
 	PrimalBoundProblem = "ProblemPrimalBound",
-	GapProblem = "ProblemGap",
+	Gap_Problem = "ProblemGap",
 	NumberOfVariables = "#Variables",
 	NumberOfDiscreteVariables = "#DiscreteVariables",
 	NumberOfEquations = "#Equations",
@@ -22,9 +22,10 @@ export enum TraceHeaderMap {
 	PrimalBoundSolver = "SolverPrimalBound",
 	PrimalGap = "SolverPrimalGap[%]",
 	Gap_Solver = "SolverGap",
+	"Gap[%]" = "Gap[%]",
 	SolverTime = "SolverTime",
 	NumberOfIterations = "#SolverIterations",
-	NumberOfNodes = "#SolverNodes"
+	NumberOfNodes = "#SolverNodes",
 }
 
 /**
