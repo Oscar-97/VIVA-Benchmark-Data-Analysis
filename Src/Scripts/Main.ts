@@ -349,6 +349,9 @@ function ManageData(): void {
 	 */
 	if (document.title === "Report") {
 		HandleReportPage(traceData, traceDataFiltered);
+		if (dataFileType === "json") {
+			viewTableButton.click();
+		}
 	}
 
 	/**
@@ -357,6 +360,9 @@ function ManageData(): void {
 	 */
 	if (document.title !== "Report") {
 		HandlePlotPages(traceData);
+		if (dataFileType === "json") {
+			viewPlotsButton.click();
+		}
 	}
 }
 
