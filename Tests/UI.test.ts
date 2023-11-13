@@ -28,7 +28,7 @@ describe("UI tests", () => {
 		if (!isDisabled) {
 			await element?.click();
 		} else {
-			console.log(`The element ${selector} is still disabled.`);
+			console.error(`The element ${selector} is still disabled.`);
 		}
 	}
 
@@ -150,6 +150,18 @@ describe("UI tests", () => {
 			});
 		}
 
+		async function RunTableOperationsJSON(
+			page: Page,
+			notification: string
+		): Promise<void> {
+			await CheckNotification(page, "#alertNotification", notification);
+
+			await page.waitForSelector("#dataTableGenerated_wrapper", {
+				state: "visible",
+				timeout: 60000
+			});
+		}
+
 		test("Handle multiple trace files", async () => {
 			await UploadFile(page, [
 				"./TestData/TraceFiles/shotALL.trc",
@@ -176,7 +188,7 @@ describe("UI tests", () => {
 
 		test("Handle JSON-file", async () => {
 			await UploadFile(page, ["./TestData/UserConfiguration.json"]);
-			await RunTableOperations(
+			await RunTableOperationsJSON(
 				page,
 				"Benchmarks loaded with following files: UserConfiguration.json"
 			);
@@ -200,7 +212,6 @@ describe("UI tests", () => {
 				"Found cached benchmark file!"
 			);
 			const buttonIDs = [
-				"#viewTableButton",
 				"#downloadConfigurationButtonLayer",
 				"#deleteLocalStorageButton"
 			];
@@ -211,7 +222,7 @@ describe("UI tests", () => {
 				expect(isEnabled).toBeTruthy();
 			}
 			await page.waitForTimeout(3000);
-			const deleteLocalStorageButton = await page.$(buttonIDs[2]);
+			const deleteLocalStorageButton = await page.$(buttonIDs[1]);
 			await deleteLocalStorageButton?.click();
 			await page.waitForTimeout(500);
 			await CheckNotification(
@@ -305,7 +316,7 @@ describe("UI tests", () => {
 					download.suggestedFilename()
 				);
 				await download.saveAs(downloadPath);
-				console.log(`File downloaded at: ${downloadPath}`);
+				console.info(`File downloaded at: ${downloadPath}`);
 			});
 
 			await WaitForElementAndClick(page, "#downloadConfigurationButton");
