@@ -41,22 +41,21 @@ self.addEventListener("install", function (event) {
  * In this event, we're handling the request by trying to fetch from the network first.
  * If that fails (which it will when the app is offline), we return the offline fallback page.
  */
-self.addEventListener("fetch", function(event) {
-    event.respondWith(
-        caches.match(event.request).then(function(response) {
-            if (response) {
-                console.log("Found in cache:", event.request.url);
-                return response;
-            }
-            console.log("Not in cache, fetching:", event.request.url);
-            return fetch(event.request).catch(function(error) {
-                console.error("Failed fetch request:", error);
-                return new Response("Offline", { status: 503, statusText: "Offline" });
-            });
-        })
-    );
+self.addEventListener("fetch", function (event) {
+	event.respondWith(
+		caches.match(event.request).then(function (response) {
+			if (response) {
+				console.log("Found in cache:", event.request.url);
+				return response;
+			}
+			console.log("Not in cache, fetching:", event.request.url);
+			return fetch(event.request).catch(function (error) {
+				console.error("Failed fetch request:", error);
+				return new Response("Offline", { status: 503, statusText: "Offline" });
+			});
+		})
+	);
 });
-
 
 /**
  * The 'activate' event is fired when the service worker starts up.
