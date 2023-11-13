@@ -250,7 +250,7 @@ export function SetSolverStatus(solverStatus: number | string): string {
  * `AnalyzeDataByCategory` function extracts the values of the specified category for each solver from the results data,
  * calculates the statistical measures, and returns these statistics in a structured format.
  *
- * @param {any[]} resultsData - The array of result objects where each object corresponds to a particular solver's output.
+ * @param {object[]} resultsData - The array of result objects where each object corresponds to a particular solver's output.
  * @param {string} category - The category whose values are to be analyzed. The category could be time, memory, etc.
  *
  * @returns {object} An object with solver names as keys. Each key points to an object that represents the statistical
@@ -259,7 +259,7 @@ export function SetSolverStatus(solverStatus: number | string): string {
  * the category is not a finite number, the instance is not added to the final result.
  */
 export function AnalyzeDataByCategory(
-	resultsData: any[],
+	resultsData: object[],
 	category: string
 ): {
 	[SolverName: string]: {
@@ -275,20 +275,17 @@ export function AnalyzeDataByCategory(
 		percentile_90: number;
 	};
 } {
-	const categoryValues: { [SolverName: string]: number[] } = resultsData.reduce(
-		(acc, curr) => {
-			const parsedValue = Number(curr[category]);
+	const categoryValues = resultsData.reduce((acc, curr) => {
+		const parsedValue = Number(curr[category]);
 
-			if (isFinite(parsedValue)) {
-				if (!acc[curr.SolverName]) {
-					acc[curr.SolverName] = [];
-				}
-				acc[curr.SolverName].push(parsedValue);
+		if (isFinite(parsedValue)) {
+			if (!acc[curr["SolverName"]]) {
+				acc[curr["SolverName"]] = [];
 			}
-			return acc;
-		},
-		{}
-	);
+			acc[curr["SolverName"]].push(parsedValue);
+		}
+		return acc;
+	}, {});
 
 	const solverCategoryStats: {
 		[SolverName: string]: {
