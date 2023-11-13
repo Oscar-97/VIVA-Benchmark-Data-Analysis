@@ -51,7 +51,7 @@ export function ImportDataEvents(
 			tableElement.remove();
 		}
 	} catch (err) {
-		console.log("Could not remove elements: ", err);
+		console.error("Could not remove elements: ", err);
 	}
 
 	if (document.title === "Report") {

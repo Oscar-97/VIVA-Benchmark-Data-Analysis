@@ -90,7 +90,7 @@ export function GetUserConfiguration(): [string[], string, number] {
 				break;
 			case "No saved configuration data found.":
 				if (sessionStorage.getItem("alertedStorage")) {
-					console.log(
+					console.info(
 						"User has previously visited this page in this session/tab."
 					);
 				} else {

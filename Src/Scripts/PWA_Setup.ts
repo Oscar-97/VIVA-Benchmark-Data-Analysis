@@ -13,7 +13,7 @@ export function RegisterServiceWorker(): void {
 			navigator.serviceWorker
 				.register("/service-worker.js")
 				.then((registration) => {
-					console.log(
+					console.info(
 						"ServiceWorker registration successful with scope: ",
 						registration.scope
 					);
