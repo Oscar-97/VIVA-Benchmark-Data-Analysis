@@ -1,50 +1,50 @@
 {
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "html", "prettier"],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
-  ],
-  "rules": {
-    "@typescript-eslint/explicit-function-return-type": "error",
-    "@typescript-eslint/naming-convention": [
-      "error",
-      {
-        "selector": "variable",
-        "format": ["camelCase", "UPPER_CASE"]
-      },
-      {
-        "selector": "function",
-        "format": ["PascalCase"]
-      },
-      {
-        "selector": "parameter",
-        "format": ["camelCase"],
-        "leadingUnderscore": "allow"
-      },
-      {
-        "selector": "class",
-        "format": ["PascalCase"]
-      }      
-    ],
-    "complexity": [
-      "warn",
-      {
-        "max": 10
-      }
-    ],
-    "max-lines": ["warn", {"max": 500, "skipComments": true}],
-    "prettier/prettier": [
-      "error",
-      {
-        "endOfLine": "auto",
-        "printWidth": 80,
-        "useTabs": true,
-        "semi": true,
-        "singleQuote": false,
-        "trailingComma": "none"
-      }
-    ]
-  }
+	"parser": "@typescript-eslint/parser",
+	"plugins": ["@typescript-eslint", "html", "prettier"],
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:prettier/recommended"
+	],
+	"rules": {
+		"@typescript-eslint/explicit-function-return-type": "error",
+		"@typescript-eslint/naming-convention": [
+			"error",
+			{
+				"selector": "variable",
+				"format": ["camelCase", "UPPER_CASE"]
+			},
+			{
+				"selector": "function",
+				"format": ["PascalCase"]
+			},
+			{
+				"selector": "parameter",
+				"format": ["camelCase"],
+				"leadingUnderscore": "allow"
+			},
+			{
+				"selector": "class",
+				"format": ["PascalCase"]
+			}
+		],
+		"complexity": [
+			"warn",
+			{
+				"max": 10
+			}
+		],
+		"max-lines": ["warn", { "max": 500, "skipComments": true }],
+		"prettier/prettier": [
+			"error",
+			{
+				"endOfLine": "auto",
+				"printWidth": 80,
+				"useTabs": true,
+				"semi": true,
+				"singleQuote": false,
+				"trailingComma": "none"
+			}
+		]
+	}
 }
