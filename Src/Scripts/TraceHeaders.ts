@@ -22,10 +22,9 @@ export enum TraceHeaderMap {
 	PrimalBoundSolver = "SolverPrimalBound",
 	PrimalGap = "SolverPrimalGap[%]",
 	Gap_Solver = "SolverGap",
-	"Gap[%]" = "Gap[%]",
 	SolverTime = "SolverTime",
 	NumberOfIterations = "#SolverIterations",
-	NumberOfNodes = "#SolverNodes",
+	NumberOfNodes = "#SolverNodes"
 }
 
 /**
