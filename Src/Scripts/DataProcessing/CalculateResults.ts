@@ -112,8 +112,10 @@ export function CalculateDualBound(
  *
  * @returns {number} - Returns the gap between `a` and `b`.
  * If `a` and `b` are approximately equal (within `tol`), it returns 0.
- * If the minimum absolute value of `a` and `b` is less than `tol`, or if either `a` or `b` is Infinity, or if `a` and `b` have different signs, or if either `a` or `b` is NaN, it returns Infinity.
- * Otherwise, it returns the relative difference between `a` and `b` divided by the minimum absolute value of `a` and `b`, rounded to 7 decimal places.
+ * If the minimum absolute value of `a` and `b` is less than `tol`, or if either `a` or `b` is Infinity,
+ * or if `a` and `b` have different signs, or if either `a` or `b` is NaN, it returns Infinity.
+ * Otherwise, it returns the relative difference between `a` and `b` divided by the minimum absolute
+ * value of `a` and `b`, rounded to 7 decimal places.
  * If the result is -0, it converts it to 0.
  */
 export function CalculateGap(
@@ -150,34 +152,6 @@ export function CalculateGap(
 	);
 
 	return result;
-}
-
-/**
- * Calculates the relative difference between two numbers, `a` and `b`, to a precision of 7 decimal places.
- * The relative difference is computed as (a - b) divided by the maximum absolute value of the two numbers
- * (or 1 if both are 0). If either number is infinite and both numbers are not the same, the absolute
- * difference is returned.
- *
- * @param a - The first number for the calculation.
- * @param b - The second number for the calculation.
- * @returns The relative difference between `a` and `b` if neither are infinite and not the same.
- * If either `a` or `b` is infinite and they are not the same, returns the difference between them.
- * Otherwise, returns 0.0.
- */
-export function CalculateGapDifference(a: number, b: number): number {
-	if (Math.abs(a) === Infinity || Math.abs(b) === Infinity) {
-		if (a === b) {
-			return 0.0;
-		} else {
-			return a - b;
-		}
-	} else {
-		return (
-			Math.round(
-				Math.abs((a - b) / Math.max(Math.abs(a), Math.abs(b), 1.0)) * 100
-			) / 100
-		);
-	}
 }
 
 /**
@@ -468,8 +442,6 @@ export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 	} else {
 		defaultMaximumTime = defaultTime;
 	}
-
-	console.log("defaultMaximumTime:", defaultMaximumTime);
 
 	const result = traceData.reduce(
 		(

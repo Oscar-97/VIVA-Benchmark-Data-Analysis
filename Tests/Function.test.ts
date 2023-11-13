@@ -3,7 +3,6 @@ import {
 	CalculatePrimalBound,
 	CalculateDualBound,
 	CalculateGap,
-	CalculateGapDifference,
 	AnalyzeDataByCategory,
 	ExtractAllSolverTimes,
 	SetTermStatus,
@@ -765,21 +764,6 @@ describe("Coverage in computation functions with mockup data.", () => {
 			expect(CalculateGap(-1, 1, "min")).toBe(Infinity);
 			expect(CalculateGap(1, -1, "max")).toBe(Infinity);
 			expect(CalculateGap(1, -1, "min")).toBe(Infinity);
-		});
-	});
-
-	describe("CalculateGapDifference", () => {
-		it("should return 0.0 when both numbers are Infinity", () => {
-			expect(CalculateGapDifference(Infinity, Infinity)).toBe(0.0);
-		});
-
-		it("should return the difference between a and b when either a or b is Infinity but not both", () => {
-			expect(CalculateGapDifference(Infinity, 10)).toBe(Infinity - 10);
-		});
-
-		it("should return the correct gap difference when neither a nor b is Infinity", () => {
-			expect(CalculateGapDifference(0, 0.1)).toBe(0.1);
-			expect(CalculateGapDifference(0.09, 0.07)).toBe(0.02);
 		});
 	});
 

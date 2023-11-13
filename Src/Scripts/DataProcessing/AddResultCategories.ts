@@ -5,8 +5,7 @@ import {
 	SetTermStatus,
 	SetModelStatus,
 	SetSolverStatus,
-	CalculateGap,
-	CalculateGapDifference
+	CalculateGap
 } from "./CalculateResults";
 
 /**
@@ -45,7 +44,7 @@ export function AddResultCategories(traceData: object[]): void {
 		);
 
 		if (
-			!obj.hasOwnProperty("PrimalBoundProblem") ||
+			!obj.hasOwnProperty.call("PrimalBoundProblem") ||
 			!obj["PrimalBoundProblem"]
 		) {
 			obj["PrimalBoundProblem"] = CalculatePrimalBound(
@@ -54,7 +53,10 @@ export function AddResultCategories(traceData: object[]): void {
 			);
 		}
 
-		if (!obj.hasOwnProperty("DualBoundProblem") || !obj["DualBoundProblem"]) {
+		if (
+			!obj.hasOwnProperty.call("DualBoundProblem") ||
+			!obj["DualBoundProblem"]
+		) {
 			obj["DualBoundProblem"] = CalculateDualBound(
 				obj["DualBoundSolver"],
 				obj["Direction"]
@@ -84,7 +86,5 @@ export function AddResultCategories(traceData: object[]): void {
 			obj["DualBoundProblem"],
 			obj["Direction"]
 		);
-
-		obj["Gap[%]"] = CalculateGapDifference(obj["PrimalGap"], obj["DualGap"]);
 	}
 }
