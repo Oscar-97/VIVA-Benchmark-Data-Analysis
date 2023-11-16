@@ -71,8 +71,7 @@ export function TableDataTrc(traceData: object[]): void {
 
 	for (const key of sortedKeys) {
 		const th = document.createElement("th");
-		th.textContent = th.textContent =
-			TraceHeaderMap[key as keyof typeof TraceHeaderMap] || key;
+		th.textContent = TraceHeaderMap[key as keyof typeof TraceHeaderMap] || key;
 		headerRow.appendChild(th);
 	}
 	dataTableHeaders.appendChild(headerRow);
