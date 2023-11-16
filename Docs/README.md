@@ -39,8 +39,6 @@ This project is developed using TypeScript, DataTables.js, Chart.js and Webpack.
 
 ### .trc
 
-See: https://www.gamsworld.org/performance/trace.htm
-
 The following header structure and order should be used in conjunction with .trc files:
 
     InputFileName
@@ -66,6 +64,7 @@ The following header structure and order should be used in conjunction with .trc
     NumberOfNodes
     UserComment
 
+For further information, see https://gams.com/latest/docs/UG_SolverUsage.html#UG_SolverUsage_TraceFile.
 
 ### .json
 The file should include `dataSet` and `dataFileType`, `defaultTime` is optional.

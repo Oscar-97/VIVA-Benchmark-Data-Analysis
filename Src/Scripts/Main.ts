@@ -75,7 +75,7 @@ import {
 	fileInput,
 	importDataButton,
 	viewTableButton,
-	filterSelectionButton,
+	showSelectedRowsButton,
 	saveLocalStorageButton,
 	downloadConfigurationButton,
 	deleteLocalStorageButton,
@@ -111,6 +111,7 @@ import {
 	DisplayWarningNotification
 } from "./Elements/DisplayAlertNotification";
 import { ReleaseVersionTag } from "./Elements/ReleaseVersionTag";
+import { ReversedTraceHeaderMap } from "./TraceHeaders";
 //#endregion
 
 /**
@@ -129,7 +130,7 @@ BodyFadeLoadingAnimation();
 RegisterServiceWorker();
 
 /**
- * @param dataFileType Type of file extension for the imported data. As of now, either .trc or .json. Text based files were removed.
+ * @param dataFileType Type of file extension for the imported data. As of now, either one or more .trc or a single .json. Text based files were removed.
  * @param defaultTime The default time for the absolute performance profile chart.
  * @param unprocessedData Raw data of the imported benchmark results.
  * @param unprocessedInstanceInformationData Unprocessed instanceinfo.csv containing properties.
@@ -209,12 +210,19 @@ function InitializeProgram(): void {
 
 	/**
 	 * Adds an event listener to the "Import Data" button that calls the
-	 * ImportDataEvents() function with a success message and the ManageData()
-	 * function whenever the button is clicked.
+	 * ImportDataEvents() function with a success message containing the list of files loaded
+	 * and the ManageData() function whenever the button is clicked.
 	 */
 	importDataButton.addEventListener("click", () => {
 		sessionStorage.removeItem("savedStorageNotification");
-		ImportDataEvents("Benchmark file succesfully loaded!");
+		const fileNames = Array.from(fileInput.files)
+			.map((file) => {
+				return file.name;
+			})
+			.join(", ");
+		ImportDataEvents(
+			"Benchmarks loaded with following files: \n".concat(fileNames)
+		);
 		ManageData();
 	});
 
@@ -258,6 +266,8 @@ function ManageData(): void {
 	if (dataFileType === "json") {
 		[unprocessedData, dataFileType, defaultTime] = GetUserConfiguration();
 		traceData = ExtractTraceData(unprocessedData);
+
+		// Remap
 	}
 
 	/**
@@ -327,7 +337,7 @@ function ManageData(): void {
 		const newRawData: string[] = CreateNewTraceData(customizedTraceData);
 
 		if (!defaultTime) {
-			defaultTime === 1000;
+			defaultTime = 1000;
 		}
 
 		DownloadCustomizedUserConfiguration(
@@ -342,6 +352,9 @@ function ManageData(): void {
 	 */
 	if (document.title === "Report") {
 		HandleReportPage(traceData, traceDataFiltered);
+		if (dataFileType === "json") {
+			viewTableButton.click();
+		}
 	}
 
 	/**
@@ -350,6 +363,9 @@ function ManageData(): void {
 	 */
 	if (document.title !== "Report") {
 		HandlePlotPages(traceData);
+		if (dataFileType === "json") {
+			viewPlotsButton.click();
+		}
 	}
 }
 
@@ -375,13 +391,13 @@ function HandleReportPage(
 	/**
 	 * Shows the selected problems when clicking on the "View Selected Problems" button.
 	 */
-	filterSelectionButton.addEventListener("click", () => {
-		filterSelectionButton.disabled = true;
+	showSelectedRowsButton.addEventListener("click", () => {
+		showSelectedRowsButton.disabled = true;
 		traceDataFiltered = UpdateResults();
 
 		if (traceDataFiltered.length === 0) {
 			DisplayWarningNotification("No rows selected for filtering.");
-			filterSelectionButton.disabled = false;
+			showSelectedRowsButton.disabled = false;
 		} else {
 			DisplayDataTable(traceDataFiltered);
 		}
@@ -389,8 +405,21 @@ function HandleReportPage(
 
 	/**
 	 * Save to local storage when clicking on the "Save Data" button.
+	 * If the results have been filtered it remaps the object properties
+	 * based on `ReversedTraceHeaderMap` before saving the data.
 	 */
 	saveLocalStorageButton.addEventListener("click", () => {
+		function RemapObjectProperties(traceData: object[]): object[] {
+			return traceData.map((obj) => {
+				const remappedObj = {};
+				for (const key in obj) {
+					const newKey = ReversedTraceHeaderMap[key] || key;
+					remappedObj[newKey] = obj[key];
+				}
+				return remappedObj;
+			});
+		}
+
 		let newRawData = [];
 
 		if (dataFileType === "trc") {
@@ -400,7 +429,8 @@ function HandleReportPage(
 		if (traceDataFiltered.length === 0) {
 			newRawData = CreateNewTraceData(traceData);
 		} else {
-			newRawData = CreateNewTraceData(traceDataFiltered);
+			const remappedData = RemapObjectProperties(traceDataFiltered);
+			newRawData = CreateNewTraceData(remappedData);
 		}
 		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;

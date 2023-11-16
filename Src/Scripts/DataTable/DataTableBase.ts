@@ -1,4 +1,34 @@
 import { dataTable } from "../Elements/Elements";
+import { TraceHeaderMap } from "../TraceHeaders";
+
+/**
+ * Sorts the keys by an enumeration and then by alphabetical order for non-enumeration keys.
+ *
+ * @param obj - The object whose keys are to be sorted.
+ * @returns An array of strings representing the sorted keys of the object.
+ *          First, the keys that are present in the `TraceHeaderMap` enum are sorted based on their order in the enum.
+ *          Then, the remaining keys not in the enum are sorted alphabetically.
+ */
+function SortKeysByEnum(obj): string[] {
+	const enumKeys = Object.keys(TraceHeaderMap);
+	const objKeys = Object.keys(obj);
+
+	const sortedEnumKeys = objKeys
+		.filter((key) => {
+			return enumKeys.includes(key);
+		})
+		.sort((a, b) => {
+			return enumKeys.indexOf(a) - enumKeys.indexOf(b);
+		});
+
+	const nonEnumKeys = objKeys
+		.filter((key) => {
+			return !enumKeys.includes(key);
+		})
+		.sort();
+
+	return [...sortedEnumKeys, ...nonEnumKeys];
+}
 
 /**
  * Function to dynamically create and display a HTML table based on the provided trace data.
@@ -37,14 +67,11 @@ export function TableDataTrc(traceData: object[]): void {
 	 * @param DataTableHeaders Thead created from the categories.
 	 */
 	const headerRow = document.createElement("tr");
-	const sortedKeys = Object.keys(traceData[0]).filter((k) => {
-		return k !== "InputFileName" && k !== "SolverName";
-	});
-	sortedKeys.sort();
-	sortedKeys.unshift("InputFileName", "SolverName");
+	const sortedKeys = SortKeysByEnum(traceData[0]);
+
 	for (const key of sortedKeys) {
 		const th = document.createElement("th");
-		th.textContent = key || "NA";
+		th.textContent = TraceHeaderMap[key as keyof typeof TraceHeaderMap] || key;
 		headerRow.appendChild(th);
 	}
 	dataTableHeaders.appendChild(headerRow);
@@ -56,11 +83,7 @@ export function TableDataTrc(traceData: object[]): void {
 	const dataTableContent = document.createElement("tbody");
 	for (const obj of traceData) {
 		const resultRow = document.createElement("tr");
-		const sortedKeys = Object.keys(obj).filter((k) => {
-			return k !== "InputFileName" && k !== "SolverName";
-		});
-		sortedKeys.sort();
-		sortedKeys.unshift("InputFileName", "SolverName");
+		const sortedKeys = SortKeysByEnum(obj);
 		for (const key of sortedKeys) {
 			const value = obj[key];
 			const td = document.createElement("td");

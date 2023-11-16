@@ -3,9 +3,11 @@ import {
 	CalculatePrimalBound,
 	CalculateDualBound,
 	CalculateGap,
-	CalculateGapDifference,
 	AnalyzeDataByCategory,
-	ExtractAllSolverTimes
+	ExtractAllSolverTimes,
+	SetTermStatus,
+	SetModelStatus,
+	SetSolverStatus
 } from "../Src/Scripts/DataProcessing/CalculateResults";
 
 jest.doMock("../Src/Scripts/DataProcessing/GetExtraData", () => {
@@ -192,7 +194,7 @@ const minlpBenchmarksData = [
 /**
  * Test calculations to get correct gap values according to existing benchmarks.
  */
-describe("Gap values from real benchmarks.", () => {
+describe("Gap computation from real benchmarks.", () => {
 	describe("Gap_Solver", () => {
 		it("Solver Scp2804s and problem alan", () => {
 			expect(
@@ -605,7 +607,7 @@ describe("Gap values from real benchmarks.", () => {
 /**
  * Test functions with mockup data.
  */
-describe("Coverage in functions with mockup data.", () => {
+describe("Coverage in computation functions with mockup data.", () => {
 	describe("CalculateDirection", () => {
 		it('should return "max" when Direction is 1 or "1"', () => {
 			const testCases = [1, "1"];
@@ -765,21 +767,6 @@ describe("Coverage in functions with mockup data.", () => {
 		});
 	});
 
-	describe("CalculateGapDifference", () => {
-		it("should return 0.0 when both numbers are Infinity", () => {
-			expect(CalculateGapDifference(Infinity, Infinity)).toBe(0.0);
-		});
-
-		it("should return the difference between a and b when either a or b is Infinity but not both", () => {
-			expect(CalculateGapDifference(Infinity, 10)).toBe(Infinity - 10);
-		});
-
-		it("should return the correct gap difference when neither a nor b is Infinity", () => {
-			expect(CalculateGapDifference(0, 0.1)).toBe(0.1);
-			expect(CalculateGapDifference(0.09, 0.07)).toBe(0.02);
-		});
-	});
-
 	describe("ExtractAllSolverTimes", () => {
 		test("Extracts solver times correctly.", () => {
 			const result = ExtractAllSolverTimes(mockupTraceData);
@@ -886,6 +873,194 @@ describe("Coverage in functions with mockup data.", () => {
 				percentile_75: 677.2088,
 				percentile_90: 811.4661
 			});
+		});
+	});
+});
+
+/**
+ * Quick check for status mapping.
+ */
+describe("Status mapping", () => {
+	describe("SetTermStatus", () => {
+		it("should return Normal if the value is 1", () => {
+			expect(SetTermStatus(1)).toBe("Normal");
+		});
+
+		it("should return Iteration Limit if the value is 2", () => {
+			expect(SetTermStatus(2)).toBe("Iteration Limit");
+		});
+
+		it("should return Time Limit if the value is 3", () => {
+			expect(SetTermStatus(3)).toBe("Time Limit");
+		});
+
+		it("should return Other Limit if the value is 5", () => {
+			expect(SetTermStatus(5)).toBe("Other Limit");
+		});
+
+		it("should return Capability Problem if the value is 6", () => {
+			expect(SetTermStatus(6)).toBe("Capability Problem");
+		});
+
+		it("should return Other if the value is 7", () => {
+			expect(SetTermStatus(7)).toBe("Other");
+		});
+
+		it("should return User Interrupt if the value is 8", () => {
+			expect(SetTermStatus(8)).toBe("User Interrupt");
+		});
+
+		it("should return Normal if the value is 4, 7 or 12", () => {
+			expect(SetTermStatus(4)).toBe("Other");
+			expect(SetTermStatus(7)).toBe("Other");
+			expect(SetTermStatus(12)).toBe("Other");
+		});
+
+		it("should return Unknown Error if the value is any other number", () => {
+			expect(SetTermStatus(0)).toBe("Unknown Error");
+			expect(SetTermStatus("invalid")).toBe("Unknown Error");
+		});
+	});
+
+	describe("SetModelStatus", () => {
+		it("should return Optimal if the value is 1", () => {
+			expect(SetModelStatus(1)).toBe("Optimal");
+		});
+
+		it("should return Locally Optimal if the value is 2", () => {
+			expect(SetModelStatus(2)).toBe("Locally Optimal");
+		});
+
+		it("should return Unbounded if the value is 3", () => {
+			expect(SetModelStatus(3)).toBe("Unbounded");
+		});
+
+		it("should return Infeasible if the value is 4", () => {
+			expect(SetModelStatus(4)).toBe("Infeasible");
+		});
+
+		it("should return Locally Infeasible if the value is 5", () => {
+			expect(SetModelStatus(5)).toBe("Locally Infeasible");
+		});
+
+		it("should return Intermediate Infeasible if the value is 6", () => {
+			expect(SetModelStatus(6)).toBe("Intermediate Infeasible");
+		});
+
+		it("should return Feasible Solution if the value is 7", () => {
+			expect(SetModelStatus(7)).toBe("Feasible Solution");
+		});
+
+		it("should return Integer Solution if the value is 8", () => {
+			expect(SetModelStatus(8)).toBe("Integer Solution");
+		});
+
+		it("should return Intermediate Non-integer if the value is 9", () => {
+			expect(SetModelStatus(9)).toBe("Intermediate Non-integer");
+		});
+
+		it("should return Integer Infeasible if the value is 10", () => {
+			expect(SetModelStatus(10)).toBe("Integer Infeasible");
+		});
+
+		it("should return Lic Problem - No Solution if the value is 11", () => {
+			expect(SetModelStatus(11)).toBe("Lic Problem - No Solution");
+		});
+
+		it("should return Error Unknown if the value is 12", () => {
+			expect(SetModelStatus(12)).toBe("Error Unknown");
+		});
+
+		it("should return Error No Solution if the value is 13", () => {
+			expect(SetModelStatus(13)).toBe("Error No Solution");
+		});
+
+		it("should return No Solution Returned if the value is 14", () => {
+			expect(SetModelStatus(14)).toBe("No Solution Returned");
+		});
+
+		it("should return Solved Unique if the value is 15", () => {
+			expect(SetModelStatus(15)).toBe("Solved Unique");
+		});
+
+		it("should return Solved if the value is 16", () => {
+			expect(SetModelStatus(16)).toBe("Solved");
+		});
+
+		it("should return Solved Singular if the value is 17", () => {
+			expect(SetModelStatus(17)).toBe("Solved Singular");
+		});
+
+		it("should return Unbounded - No Solution if the value is 18", () => {
+			expect(SetModelStatus(18)).toBe("Unbounded - No Solution");
+		});
+
+		it("should return Infeasible - No Solution if the value is 19", () => {
+			expect(SetModelStatus(19)).toBe("Infeasible - No Solution");
+		});
+
+		it("should return Unknown Error if the value is not in the statusMap", () => {
+			expect(SetModelStatus(0)).toBe("Unknown Error");
+			expect(SetModelStatus("invalid")).toBe("Unknown Error");
+		});
+	});
+
+	describe("SetSolverStatus", () => {
+		it("should return Normal Completion if the value is 1", () => {
+			expect(SetSolverStatus(1)).toBe("Normal Completion");
+		});
+
+		it("should return Iteration Interrupt if the value is 2", () => {
+			expect(SetSolverStatus(2)).toBe("Iteration Interrupt");
+		});
+
+		it("should return Resource Interrupt if the value is 3", () => {
+			expect(SetSolverStatus(3)).toBe("Resource Interrupt");
+		});
+
+		it("should return Terminated By Solver if the value is 4", () => {
+			expect(SetSolverStatus(4)).toBe("Terminated By Solver");
+		});
+
+		it("should return Evaluation Interrupt if the value is 5", () => {
+			expect(SetSolverStatus(5)).toBe("Evaluation Interrupt");
+		});
+
+		it("should return Capability Problems if the value is 6", () => {
+			expect(SetSolverStatus(6)).toBe("Capability Problems");
+		});
+
+		it("should return Licensing Problems if the value is 7", () => {
+			expect(SetSolverStatus(7)).toBe("Licensing Problems");
+		});
+
+		it("should return User Interrupt if the value is 8", () => {
+			expect(SetSolverStatus(8)).toBe("User Interrupt");
+		});
+
+		it("should return Error Setup Failure if the value is 9", () => {
+			expect(SetSolverStatus(9)).toBe("Error Setup Failure");
+		});
+
+		it("should return Error Solver Failure if the value is 10", () => {
+			expect(SetSolverStatus(10)).toBe("Error Solver Failure");
+		});
+
+		it("should return Error Internal Solver Failure if the value is 11", () => {
+			expect(SetSolverStatus(11)).toBe("Error Internal Solver Failure");
+		});
+
+		it("should return Solve Processing Skipped if the value is 12", () => {
+			expect(SetSolverStatus(12)).toBe("Solve Processing Skipped");
+		});
+
+		it("should return Error System Failure if the value is 13", () => {
+			expect(SetSolverStatus(13)).toBe("Error System Failure");
+		});
+
+		it("should return Unknown Error if the value is not in the statusMap", () => {
+			expect(SetSolverStatus(0)).toBe("Unknown Error");
+			expect(SetSolverStatus("invalid")).toBe("Unknown Error");
 		});
 	});
 });

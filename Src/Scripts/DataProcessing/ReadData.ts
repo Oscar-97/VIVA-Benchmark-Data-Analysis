@@ -198,13 +198,13 @@ export function ReadData(
  */
 function VerifyConfigurationProperties(parsedData): void {
 	if (
-		parsedData.hasOwnProperty("dataSet") &&
-		parsedData.hasOwnProperty("dataFileType")
+		parsedData.hasOwnProperty.call(parsedData, "dataSet") &&
+		parsedData.hasOwnProperty.call(parsedData, "dataFileType")
 	) {
 		userData.dataSet = parsedData.dataSet;
 		userData.dataFileType = parsedData.dataFileType;
 
-		if (parsedData.hasOwnProperty("defaultTime")) {
+		if (parsedData.hasOwnProperty.call("defaultTime")) {
 			userData.defaultTime = parsedData.defaultTime;
 		}
 

@@ -112,8 +112,10 @@ export function CalculateDualBound(
  *
  * @returns {number} - Returns the gap between `a` and `b`.
  * If `a` and `b` are approximately equal (within `tol`), it returns 0.
- * If the minimum absolute value of `a` and `b` is less than `tol`, or if either `a` or `b` is Infinity, or if `a` and `b` have different signs, or if either `a` or `b` is NaN, it returns Infinity.
- * Otherwise, it returns the relative difference between `a` and `b` divided by the minimum absolute value of `a` and `b`, rounded to 7 decimal places.
+ * If the minimum absolute value of `a` and `b` is less than `tol`, or if either `a` or `b` is Infinity,
+ * or if `a` and `b` have different signs, or if either `a` or `b` is NaN, it returns Infinity.
+ * Otherwise, it returns the relative difference between `a` and `b` divided by the minimum absolute
+ * value of `a` and `b`, rounded to 7 decimal places.
  * If the result is -0, it converts it to 0.
  */
 export function CalculateGap(
@@ -150,34 +152,6 @@ export function CalculateGap(
 	);
 
 	return result;
-}
-
-/**
- * Calculates the relative difference between two numbers, `a` and `b`, to a precision of 7 decimal places.
- * The relative difference is computed as (a - b) divided by the maximum absolute value of the two numbers
- * (or 1 if both are 0). If either number is infinite and both numbers are not the same, the absolute
- * difference is returned.
- *
- * @param a - The first number for the calculation.
- * @param b - The second number for the calculation.
- * @returns The relative difference between `a` and `b` if neither are infinite and not the same.
- * If either `a` or `b` is infinite and they are not the same, returns the difference between them.
- * Otherwise, returns 0.0.
- */
-export function CalculateGapDifference(a: number, b: number): number {
-	if (Math.abs(a) === Infinity || Math.abs(b) === Infinity) {
-		if (a === b) {
-			return 0.0;
-		} else {
-			return a - b;
-		}
-	} else {
-		return (
-			Math.round(
-				Math.abs((a - b) / Math.max(Math.abs(a), Math.abs(b), 1.0)) * 100
-			) / 100
-		);
-	}
 }
 
 /**
@@ -276,7 +250,7 @@ export function SetSolverStatus(solverStatus: number | string): string {
  * `AnalyzeDataByCategory` function extracts the values of the specified category for each solver from the results data,
  * calculates the statistical measures, and returns these statistics in a structured format.
  *
- * @param {any[]} resultsData - The array of result objects where each object corresponds to a particular solver's output.
+ * @param {object[]} resultsData - The array of result objects where each object corresponds to a particular solver's output.
  * @param {string} category - The category whose values are to be analyzed. The category could be time, memory, etc.
  *
  * @returns {object} An object with solver names as keys. Each key points to an object that represents the statistical
@@ -285,7 +259,7 @@ export function SetSolverStatus(solverStatus: number | string): string {
  * the category is not a finite number, the instance is not added to the final result.
  */
 export function AnalyzeDataByCategory(
-	resultsData: any[],
+	resultsData: object[],
 	category: string
 ): {
 	[SolverName: string]: {
@@ -301,20 +275,17 @@ export function AnalyzeDataByCategory(
 		percentile_90: number;
 	};
 } {
-	const categoryValues: { [SolverName: string]: number[] } = resultsData.reduce(
-		(acc, curr) => {
-			const parsedValue = Number(curr[category]);
+	const categoryValues = resultsData.reduce((acc, curr) => {
+		const parsedValue = Number(curr[category]);
 
-			if (isFinite(parsedValue)) {
-				if (!acc[curr.SolverName]) {
-					acc[curr.SolverName] = [];
-				}
-				acc[curr.SolverName].push(parsedValue);
+		if (isFinite(parsedValue)) {
+			if (!acc[curr["SolverName"]]) {
+				acc[curr["SolverName"]] = [];
 			}
-			return acc;
-		},
-		{}
-	);
+			acc[curr["SolverName"]].push(parsedValue);
+		}
+		return acc;
+	}, {});
 
 	const solverCategoryStats: {
 		[SolverName: string]: {
@@ -468,8 +439,6 @@ export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 	} else {
 		defaultMaximumTime = defaultTime;
 	}
-
-	console.log("defaultMaximumTime:", defaultMaximumTime);
 
 	const result = traceData.reduce(
 		(

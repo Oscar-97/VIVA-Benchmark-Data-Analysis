@@ -28,7 +28,7 @@ describe("UI tests", () => {
 		if (!isDisabled) {
 			await element?.click();
 		} else {
-			console.log(`The element ${selector} is still disabled.`);
+			console.error(`The element ${selector} is still disabled.`);
 		}
 	}
 
@@ -45,7 +45,8 @@ describe("UI tests", () => {
 		expect(isVisible).toBeTruthy();
 
 		const notificationText = await notificationElement?.innerText();
-		expect(notificationText).toContain(expectedText);
+		const normalizedText = notificationText?.trim().replace(/\s+/g, " ");
+		expect(normalizedText).toContain(expectedText);
 	}
 
 	async function UploadFile(page: Page, fileNames: string[]): Promise<void> {
@@ -149,13 +150,28 @@ describe("UI tests", () => {
 			});
 		}
 
+		async function RunTableOperationsJSON(
+			page: Page,
+			notification: string
+		): Promise<void> {
+			await CheckNotification(page, "#alertNotification", notification);
+
+			await page.waitForSelector("#dataTableGenerated_wrapper", {
+				state: "visible",
+				timeout: 60000
+			});
+		}
+
 		test("Handle multiple trace files", async () => {
 			await UploadFile(page, [
 				"./TestData/TraceFiles/shotALL.trc",
 				"./TestData/TraceFiles/scipALL.trc",
 				"./TestData/TraceFiles/pavitoALL.trc"
 			]);
-			await RunTableOperations(page, "Benchmark file succesfully loaded!");
+			await RunTableOperations(
+				page,
+				"Benchmarks loaded with following files: shotALL.trc, scipALL.trc, pavitoALL.trc"
+			);
 		}, 60000);
 
 		test("Instance information and best known bound values files", async () => {
@@ -172,7 +188,10 @@ describe("UI tests", () => {
 
 		test("Handle JSON-file", async () => {
 			await UploadFile(page, ["./TestData/UserConfiguration.json"]);
-			await RunTableOperations(page, "Benchmark file succesfully loaded!");
+			await RunTableOperationsJSON(
+				page,
+				"Benchmarks loaded with following files: UserConfiguration.json"
+			);
 		}, 60000);
 
 		test("Save to, load from and remove local storage", async () => {
@@ -180,7 +199,10 @@ describe("UI tests", () => {
 				localStorage.clear();
 			});
 			await UploadFile(page, ["./TestData/TraceFiles/shotALL.trc"]);
-			await RunTableOperations(page, "Benchmark file succesfully loaded!");
+			await RunTableOperations(
+				page,
+				"Benchmarks loaded with following files: shotALL.trc"
+			);
 			await WaitForElementAndClick(page, "#saveLocalStorageButton");
 			await page.reload();
 			await page.waitForTimeout(1000);
@@ -190,7 +212,6 @@ describe("UI tests", () => {
 				"Found cached benchmark file!"
 			);
 			const buttonIDs = [
-				"#viewTableButton",
 				"#downloadConfigurationButtonLayer",
 				"#deleteLocalStorageButton"
 			];
@@ -201,7 +222,7 @@ describe("UI tests", () => {
 				expect(isEnabled).toBeTruthy();
 			}
 			await page.waitForTimeout(3000);
-			const deleteLocalStorageButton = await page.$(buttonIDs[2]);
+			const deleteLocalStorageButton = await page.$(buttonIDs[1]);
 			await deleteLocalStorageButton?.click();
 			await page.waitForTimeout(500);
 			await CheckNotification(
@@ -225,7 +246,10 @@ describe("UI tests", () => {
 
 		test("Select rows and filter table", async () => {
 			await UploadFile(page, ["./TestData/TraceFiles/shotALL.trc"]);
-			await RunTableOperations(page, "Benchmark file succesfully loaded!");
+			await RunTableOperations(
+				page,
+				"Benchmarks loaded with following files: shotALL.trc"
+			);
 			const rowSelectors = [
 				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[1]",
 				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]",
@@ -237,7 +261,7 @@ describe("UI tests", () => {
 				await row.click();
 			}
 			await page.waitForTimeout(5000);
-			WaitForElementAndClick(page, "#filterSelectionButton");
+			WaitForElementAndClick(page, "#showSelectedRowsButton");
 			await page.waitForTimeout(5000);
 			await page.waitForSelector("#dataTableGenerated_wrapper", {
 				state: "visible",
@@ -257,10 +281,13 @@ describe("UI tests", () => {
 
 		test("Button status after viewing a table", async () => {
 			await UploadFile(page, ["./TestData/TraceFiles/shotALL.trc"]);
-			await RunTableOperations(page, "Benchmark file succesfully loaded!");
+			await RunTableOperations(
+				page,
+				"Benchmarks loaded with following files: shotALL.trc"
+			);
 			await page.waitForTimeout(5000);
 			const buttonIDs = [
-				"#filterSelectionButton",
+				"#showSelectedRowsButton",
 				"#saveLocalStorageButton",
 				"#downloadConfigurationButtonLayer",
 				"#configurationSettingsButton",
@@ -277,7 +304,10 @@ describe("UI tests", () => {
 
 		test("Download data", async () => {
 			await UploadFile(page, ["./TestData/TraceFiles/shotALL.trc"]);
-			await RunTableOperations(page, "Benchmark file succesfully loaded!");
+			await RunTableOperations(
+				page,
+				"Benchmarks loaded with following files: shotALL.trc"
+			);
 
 			page.on("download", async (download: Download) => {
 				const downloadPath: string = path.join(
@@ -286,7 +316,7 @@ describe("UI tests", () => {
 					download.suggestedFilename()
 				);
 				await download.saveAs(downloadPath);
-				console.log(`File downloaded at: ${downloadPath}`);
+				console.info(`File downloaded at: ${downloadPath}`);
 			});
 
 			await WaitForElementAndClick(page, "#downloadConfigurationButton");
@@ -294,7 +324,10 @@ describe("UI tests", () => {
 
 		test("Sort table and hide columns", async () => {
 			await UploadFile(page, ["./TestData/TraceFiles/shotALL.trc"]);
-			await RunTableOperations(page, "Benchmark file succesfully loaded!");
+			await RunTableOperations(
+				page,
+				"Benchmarks loaded with following files: shotALL.trc"
+			);
 			await WaitForElementAndClick(
 				page,
 				"//html/body/div[4]/div/div[3]/div/div/div[1]/div/table/thead/tr/th[1]"
@@ -324,12 +357,15 @@ describe("UI tests", () => {
 				"//html/body/div[4]/div/div[3]/div/div/div[1]/div/table/thead/tr/th[1]"
 			);
 			const firstHeaderValueText = await firstHeaderValue?.innerText();
-			expect(firstHeaderValueText).toBe("InputFileName");
+			expect(firstHeaderValueText).toBe("Problem");
 		}, 60000);
 
 		test("Use pagination on the table", async () => {
 			await UploadFile(page, ["./TestData/TraceFiles/shotALL.trc"]);
-			await RunTableOperations(page, "Benchmark file succesfully loaded!");
+			await RunTableOperations(
+				page,
+				"Benchmarks loaded with following files: shotALL.trc"
+			);
 
 			await WaitForElementAndClick(
 				page,
@@ -353,7 +389,10 @@ describe("UI tests", () => {
 
 		test("Search in the displayed data", async () => {
 			await UploadFile(page, ["./TestData/TraceFiles/shotALL.trc"]);
-			await RunTableOperations(page, "Benchmark file succesfully loaded!");
+			await RunTableOperations(
+				page,
+				"Benchmarks loaded with following files: shotALL.trc"
+			);
 			await page
 				.locator("//html/body/div[4]/div/div[2]/div[2]/div/label/input")
 				.type("watercontamination");
@@ -378,7 +417,7 @@ describe("UI tests", () => {
 			await CheckNotification(
 				page,
 				"#alertNotification",
-				"Benchmark file succesfully loaded!"
+				"Benchmarks loaded with following files: shotALL.trc"
 			);
 			await WaitForElementAndClick(page, "#viewPlotsButton");
 

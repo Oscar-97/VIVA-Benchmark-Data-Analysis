@@ -1,6 +1,6 @@
 import {
 	importDataButton,
-	filterSelectionButton,
+	showSelectedRowsButton,
 	viewTableButton,
 	viewPlotsButton,
 	deleteLocalStorageButton,
@@ -51,14 +51,14 @@ export function ImportDataEvents(
 			tableElement.remove();
 		}
 	} catch (err) {
-		console.log("Could not remove elements: ", err);
+		console.error("Could not remove elements: ", err);
 	}
 
 	if (document.title === "Report") {
 		viewTableButton.disabled = false;
-		filterSelectionButton.disabled = true;
+		showSelectedRowsButton.disabled = true;
 		importDataButton.disabled = true;
-		filterSelectionButton.disabled = true;
+		showSelectedRowsButton.disabled = true;
 		if (fileExtensionType === "json") {
 			deleteLocalStorageButton.disabled = false;
 		}

@@ -13,6 +13,7 @@ import "datatables.net-datetime";
 
 import { TableDataTrc } from "./DataTableBase";
 import { ElementStateDisplayedTable } from "../Elements/ElementStatus";
+import { DEFAULT_VISIBLE_HEADERS } from "../TraceHeaders";
 
 /**
  * Function to display the trace data in a dynamically generated HTML table using the DataTables library for improved user interaction.
@@ -187,37 +188,7 @@ function DataTablesConfiguration(): void {
 				.css("opacity", "0")
 				.css("visibility", "visible")
 				.animate({ opacity: 1 }, 500);
-			const columnNamesToShow = [
-				"InputFileName",
-				"name",
-				"SolverName",
-				"Direction",
-				"ModelType",
-				"conscurvature",
-				"convex",
-				"objsense",
-				"objtype",
-				"ModelStatus",
-				"SolverStatus",
-				"TermStatus",
-				"SolverTime",
-				"NumberOfIterations",
-				"NumberOfNodes",
-				"PrimalBoundProblem",
-				"DualBoundSolver",
-				"dualbound",
-				"primalbound",
-				"gap",
-				"objcurvature",
-				"probtype",
-				"DualBoundProblem",
-				"PrimalBoundSolver",
-				"Gap[%]",
-				"PrimalGap",
-				"DualGap",
-				"Gap_Problem",
-				"Gap_Solver"
-			];
+			const columnNamesToShow = DEFAULT_VISIBLE_HEADERS;
 			this.api()
 				.columns()
 				.every(function () {
