@@ -261,7 +261,7 @@ describe("UI tests", () => {
 				await row.click();
 			}
 			await page.waitForTimeout(5000);
-			WaitForElementAndClick(page, "#filterSelectionButton");
+			WaitForElementAndClick(page, "#showSelectedRowsButton");
 			await page.waitForTimeout(5000);
 			await page.waitForSelector("#dataTableGenerated_wrapper", {
 				state: "visible",
@@ -287,7 +287,7 @@ describe("UI tests", () => {
 			);
 			await page.waitForTimeout(5000);
 			const buttonIDs = [
-				"#filterSelectionButton",
+				"#showSelectedRowsButton",
 				"#saveLocalStorageButton",
 				"#downloadConfigurationButtonLayer",
 				"#configurationSettingsButton",

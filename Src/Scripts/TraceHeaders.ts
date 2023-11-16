@@ -28,6 +28,36 @@ export enum TraceHeaderMap {
 }
 
 /**
+ * Reverse mapping for the headers.
+ * Used when the data has been filtered.
+ */
+export enum ReversedTraceHeaderMap {
+	Problem = "InputFileName",
+	Direction = "Direction",
+	ModelType = "ModelType",
+	ProblemDualBound = "DualBoundProblem",
+	ProblemPrimalBound = "PrimalBoundProblem",
+	ProblemGap = "Gap_Problem",
+	"#Variables" = "NumberOfVariables",
+	"#DiscreteVariables" = "NumberOfDiscreteVariables",
+	"#Equations" = "NumberOfEquations",
+	"#NonZeros" = "NumberOfNonzeros",
+	"#NonlinearNonZeroes" = "NumberOfNonlinearNonZeros",
+	Solver = "SolverName",
+	ModelStatus = "ModelStatus",
+	SolverStatus = "SolverStatus",
+	SolverTermStatus = "TermStatus",
+	SolverDualBound = "DualBoundSolver",
+	"SolverDualGap[%]" = "DualGap",
+	SolverPrimalBound = "PrimalBoundSolver",
+	"SolverPrimalGap[%]" = "PrimalGap",
+	SolverGap = "Gap_Solver",
+	SolverTime = "SolverTime",
+	"#SolverIterations" = "NumberOfIterations",
+	"#SolverNodes" = "NumberOfNodes"
+}
+
+/**
  * Default headers to fall back, if no headers are included in the trace files.
  * Based on: https://gams.com/latest/docs/UG_SolverUsage.html#UG_SolverUsage_TraceRecordFields
  */

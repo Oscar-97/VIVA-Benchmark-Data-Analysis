@@ -2,7 +2,7 @@ import {
 	fileInput,
 	importDataButton,
 	viewTableButton,
-	filterSelectionButton,
+	showSelectedRowsButton,
 	saveLocalStorageButton,
 	downloadConfigurationButtonLayer,
 	configurationSettingsButton,
@@ -33,7 +33,7 @@ export function ElementStatesTablePage(): void {
 	fileInput.value = "";
 	importDataButton.disabled = true;
 	viewTableButton.disabled = true;
-	filterSelectionButton.disabled = true;
+	showSelectedRowsButton.disabled = true;
 	saveLocalStorageButton.disabled = true;
 	downloadConfigurationButtonLayer.disabled = true;
 	configurationSettingsButton.disabled = true;
@@ -70,7 +70,7 @@ export function ElementStatesPlotPage(): void {
  *    delete local storage, clear table).
  */
 export function ElementStateDisplayedTable(): void {
-	filterSelectionButton.disabled = false;
+	showSelectedRowsButton.disabled = false;
 	saveLocalStorageButton.disabled = false;
 	downloadConfigurationButtonLayer.disabled = false;
 	deleteLocalStorageButton.disabled = false;

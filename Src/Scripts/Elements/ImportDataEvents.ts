@@ -1,6 +1,6 @@
 import {
 	importDataButton,
-	filterSelectionButton,
+	showSelectedRowsButton,
 	viewTableButton,
 	viewPlotsButton,
 	deleteLocalStorageButton,
@@ -56,9 +56,9 @@ export function ImportDataEvents(
 
 	if (document.title === "Report") {
 		viewTableButton.disabled = false;
-		filterSelectionButton.disabled = true;
+		showSelectedRowsButton.disabled = true;
 		importDataButton.disabled = true;
-		filterSelectionButton.disabled = true;
+		showSelectedRowsButton.disabled = true;
 		if (fileExtensionType === "json") {
 			deleteLocalStorageButton.disabled = false;
 		}

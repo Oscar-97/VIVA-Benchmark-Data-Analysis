@@ -55,12 +55,11 @@ export const viewTableButton: HTMLButtonElement = document.getElementById(
 ) as HTMLButtonElement;
 
 /**
- * `filterSelectionButton` is a reference to the HTMLButtonElement with the ID "filterSelectionButton".
+ * `showSelectedRowsButton` is a reference to the HTMLButtonElement with the ID "showSelectedRowsButton".
  * @type {HTMLButtonElement}
  */
-export const filterSelectionButton: HTMLButtonElement = document.getElementById(
-	"filterSelectionButton"
-) as HTMLButtonElement;
+export const showSelectedRowsButton: HTMLButtonElement =
+	document.getElementById("showSelectedRowsButton") as HTMLButtonElement;
 
 /**
  * `saveLocalStorageButton` is a reference to the HTMLButtonElement with the ID "saveLocalStorageButton".
