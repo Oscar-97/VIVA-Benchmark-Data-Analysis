@@ -56,6 +56,7 @@ export function ElementStatesPlotPage(): void {
 	viewPlotsButton.disabled = true;
 	saveLocalStorageButton.disabled = true;
 	downloadConfigurationButtonLayer.disabled = true;
+	configurationSettingsButton.disabled = true;
 	downloadChartDataButtonLayer.disabled = true;
 	deleteLocalStorageButton.disabled = true;
 }
