@@ -111,7 +111,7 @@ import {
 	DisplayWarningNotification
 } from "./Elements/DisplayAlertNotification";
 import { ReleaseVersionTag } from "./Elements/ReleaseVersionTag";
-import { ReversedTraceHeaderMap } from "./TraceHeaders";
+import { ReversedTraceHeaderMap, TraceHeaderMap } from "./TraceHeaders";
 //#endregion
 
 /**
@@ -488,7 +488,7 @@ function HandlePlotPages(traceData: object[]): void {
 				traceData,
 				"bar",
 				"SolverTime",
-				"SolverTime.average",
+				`${TraceHeaderMap.SolverTime}.average`,
 				"Average solver time"
 			);
 		}
@@ -508,7 +508,7 @@ function HandlePlotPages(traceData: object[]): void {
 				traceData,
 				"bar",
 				"NumberOfNodes",
-				"NumberOfNodes.average",
+				`${TraceHeaderMap.NumberOfNodes}.average`,
 				"Average number of nodes"
 			);
 		}
@@ -521,7 +521,7 @@ function HandlePlotPages(traceData: object[]): void {
 				traceData,
 				"bar",
 				"NumberOfIterations",
-				"NumberOfiterations.average",
+				`${TraceHeaderMap.NumberOfIterations}.average`,
 				"Average number of iterations"
 			);
 		}

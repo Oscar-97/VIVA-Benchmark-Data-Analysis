@@ -76,7 +76,11 @@ export function CreateChart(
 			plugins: {
 				title: {
 					display: true,
-					text: title
+					text: title,
+					font: {
+						size: 16,
+						family: `system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"`
+					}
 				}
 			},
 			tooltips: {

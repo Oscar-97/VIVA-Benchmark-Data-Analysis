@@ -2287,6 +2287,7 @@ a {
 
 #chartContainer {
 	height: auto;
+	max-height: 85vh;
 	width: auto;
 	margin-left: 1rem;
 }
@@ -2302,6 +2303,11 @@ hr {
 .form-check {
 	width: 150px;
 	height: 40px;
+}
+
+table.table-bordered.dataTable th:first-child,
+table.table-bordered.dataTable td:first-child {
+	border-left-width: 0px;
 }
 
 tbody tr.even td.dtfc-fixed-left {
