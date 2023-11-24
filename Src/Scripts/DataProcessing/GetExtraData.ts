@@ -72,7 +72,7 @@ export function GetInstanceInformation(
  * @example
  * ```typescript
  * const unprocessedSolutionData = [ "=best= FileName1 100", "=bestdual= FileName2 200", "=opt= FileName3 300" ];
- * const result = GetBestKnowBounds(unprocessedSolutionData);
+ * const result = GetBestKnownBounds(unprocessedSolutionData);
  * // result = [
  * //   { "InputFileName": "FileName1", "PrimalBound Problem": 100 },
  * //   { "InputFileName": "FileName2", "DualBound Problem": 200 },
@@ -80,7 +80,9 @@ export function GetInstanceInformation(
  * // ];
  * ```
  */
-export function GetBestKnowBounds(unprocessedSolutionData: string[]): object[] {
+export function GetBestKnownBounds(
+	unprocessedSolutionData: string[]
+): object[] {
 	const soluData = [];
 	const regexPattern = /^=(.*?)=\s+(.*?)\s+(.*?)$/;
 
@@ -104,14 +106,16 @@ export function GetBestKnowBounds(unprocessedSolutionData: string[]): object[] {
 					try {
 						obj["PrimalBoundProblem"] = Number(match[3]).toExponential(6);
 					} catch (err) {
-						console.error(err)["PrimalBoundProblem"] = NaN;
+						console.error(err);
+						obj["PrimalBoundProblem"] = NaN;
 					}
 					break;
 				case "bestdual":
 					try {
 						obj["DualBoundProblem"] = Number(match[3]).toExponential(6);
 					} catch (err) {
-						console.error(err)["DualBoundProblem"] = NaN;
+						console.error(err);
+						obj["DualBoundProblem"] = NaN;
 					}
 					break;
 				case "opt":
