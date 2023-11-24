@@ -51,7 +51,7 @@ import { MergeData } from "./DataProcessing/MergeData";
 import { ExtractTraceData } from "./DataProcessing/FilterData";
 import {
 	GetInstanceInformation,
-	GetBestKnowBounds
+	GetBestKnownBounds
 } from "./DataProcessing/GetExtraData";
 
 /**
@@ -87,7 +87,10 @@ import {
 	downloadCustomConfigurationButton,
 	solverSelector,
 	defaultTimeInput,
-	configurationSettingsButton
+	configurationSettingsButton,
+	defaultTimeDirectInput,
+	primalGapDirectInput,
+	primalGapInput
 } from "./Elements/Elements";
 import {
 	BodyFadeLoadingAnimation,
@@ -132,6 +135,7 @@ RegisterServiceWorker();
 /**
  * @param dataFileType Type of file extension for the imported data. As of now, either one or more .trc or a single .json. Text based files were removed.
  * @param defaultTime The default time for the absolute performance profile chart.
+ * @param primalGapLimit Primal gap value for the absolute performance profile chart.
  * @param unprocessedData Raw data of the imported benchmark results.
  * @param unprocessedInstanceInformationData Unprocessed instanceinfo.csv containing properties.
  * @param unprocessedSolutionData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
@@ -139,6 +143,7 @@ RegisterServiceWorker();
  */
 let dataFileType = "";
 let defaultTime = undefined;
+let primalGapLimit = undefined;
 let unprocessedData: string[] = [];
 let unprocessedInstanceInformationData: string[] = [];
 let unprocessedSolutionData: string[] = [];
@@ -155,6 +160,7 @@ function InitializeProgram(): void {
 	 */
 	dataFileType = "";
 	defaultTime = "";
+	primalGapLimit = "";
 	unprocessedData = [];
 	unprocessedInstanceInformationData = [];
 	unprocessedSolutionData = [];
@@ -179,8 +185,14 @@ function InitializeProgram(): void {
 	 * Configuration" buttons are enabled, and the ManageData() function is called.
 	 */
 	try {
-		[unprocessedData, dataFileType, defaultTime] = GetUserConfiguration();
-		ImportDataEvents("Found cached benchmark file!", "json");
+		[unprocessedData, dataFileType, defaultTime, primalGapLimit] =
+			GetUserConfiguration();
+		if (localStorage.getItem("DemoData") === "true") {
+			ImportDataEvents("Using demo mode!", "json");
+			NotifyDemoMode();
+		} else {
+			ImportDataEvents("Found cached benchmark file!", "json");
+		}
 		saveLocalStorageButton.disabled = true;
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
@@ -231,9 +243,22 @@ function InitializeProgram(): void {
 	 */
 	if (document.title === "Report") {
 		demoDataButton.addEventListener("click", () => {
-			localStorage.setItem("UserConfiguration", JSON.stringify(demoData));
-			location.reload();
+			ActivateDemoMode();
 		});
+	}
+
+	function ActivateDemoMode(): void {
+		localStorage.setItem("UserConfiguration", JSON.stringify(demoData));
+		localStorage.setItem("DemoData", "true");
+		location.reload();
+	}
+
+	function NotifyDemoMode(): void {
+		ImportDataEvents("Using demo mode!", "json");
+		if (document.title === "Report") {
+			demoDataButton.style.color = "#198754";
+			demoDataButton.disabled = true;
+		}
 	}
 }
 
@@ -257,17 +282,16 @@ function ManageData(): void {
 	/**
 	 * selectedValues holds the selected solvers.
 	 */
-	let selectedSolvers: string[];
+	let selectedSolvers: string[] = [];
 
 	/**
 	 * If the uploaded data file is of type JSON, it retrieves the user configuration
 	 * and updates the unprocessedData and dataFileType variables.
 	 */
 	if (dataFileType === "json") {
-		[unprocessedData, dataFileType, defaultTime] = GetUserConfiguration();
+		[unprocessedData, dataFileType, defaultTime, primalGapLimit] =
+			GetUserConfiguration();
 		traceData = ExtractTraceData(unprocessedData);
-
-		// Remap
 	}
 
 	/**
@@ -286,7 +310,7 @@ function ManageData(): void {
 		}
 
 		if (unprocessedSolutionData.length !== 0) {
-			soluData = GetBestKnowBounds(unprocessedSolutionData);
+			soluData = GetBestKnownBounds(unprocessedSolutionData);
 			traceData = MergeData(traceData, soluData);
 		}
 		AddResultCategories(traceData);
@@ -304,6 +328,7 @@ function ManageData(): void {
 			.map((option) => {
 				return option.value;
 			});
+		console.log(selectedSolvers);
 	});
 	configurationSettingsButton.disabled = false;
 
@@ -325,24 +350,33 @@ function ManageData(): void {
 
 	/**
 	 * Download a customized version of the user configuration.
-	 * Filters by the solvers selected in the form selector and gets the default time from the number input.
+	 * Filters by the solvers selected in the form selector and gets
+	 * the default time and primal gap percentage from the number input.
 	 */
 	downloadCustomConfigurationButton.addEventListener("click", () => {
-		if (selectedSolvers === undefined) {
-			DisplayWarningNotification("No solvers selected from the list.");
+		console.log(selectedSolvers);
+		if (selectedSolvers.length === 0) {
+			selectedSolvers[0] = solverSelector.value;
 		}
 		const customizedTraceData = traceData.filter((solver) => {
 			return selectedSolvers.includes(solver["SolverName"]);
 		});
 		const newRawData: string[] = CreateNewTraceData(customizedTraceData);
 
+		defaultTime = Number(defaultTimeInput.value);
 		if (!defaultTime) {
 			defaultTime = 1000;
 		}
 
+		primalGapLimit = Number(primalGapInput.value);
+		if (!primalGapLimit) {
+			primalGapLimit = 0.01;
+		}
+
 		DownloadCustomizedUserConfiguration(
 			newRawData,
-			Number(defaultTimeInput.value)
+			defaultTime,
+			primalGapLimit
 		);
 	});
 
@@ -474,9 +508,13 @@ function HandlePlotPages(traceData: object[]): void {
 		 * Check if the user is on the Absolute Performance Profile.
 		 */
 		if (document.title === "Absolute Performance Profile") {
+			defaultTime = defaultTimeDirectInput.value;
+			primalGapLimit = primalGapDirectInput.value;
+
 			chartData = PlotAbsolutePerformanceProfileSolverTimes(
 				traceData,
-				defaultTime
+				defaultTime,
+				primalGapLimit
 			);
 		}
 

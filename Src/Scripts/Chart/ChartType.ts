@@ -139,14 +139,19 @@ export function PlotAllSolverTimes(
  */
 export function PlotAbsolutePerformanceProfileSolverTimes(
 	traceData: object[],
-	defaultTime?: number | undefined
+	defaultTime?: number | undefined,
+	primalGapLimit?: number | undefined
 ): {
 	data: ({ x: string; y: number } | { x: number; y: number })[];
 	label: string;
 	showLine: boolean;
 }[] {
 	const absolutePerformanceProfileSolverTimes =
-		ExtractAllSolverTimesNoFailedAndGapBelow1Percent(traceData, defaultTime);
+		ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
+			traceData,
+			defaultTime,
+			primalGapLimit
+		);
 	const allLabels = [];
 	const allXValues: number[] = [];
 	const data = (
@@ -250,7 +255,9 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 		"line",
 		chartData,
 		null,
-		"Absolute performance profile (primal gap <= 1.0% and not failed)",
+		`Absolute performance profile (primal gap <= ${
+			primalGapLimit || 0.01
+		}% and not failed)`,
 		scaleOptions
 	);
 	return chartData;

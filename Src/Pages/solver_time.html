@@ -404,9 +404,11 @@
 
 						<i>Optional</i>
 						<p>
-							Set the defaultTime that will be used on all results with missing
-							SolverTime or with a failed status. The default fallback value is
-							1000.
+							Set the defaultTime for the to be used for all results with
+							missing SolverTime or with a failed status. The default fallback
+							value is 1000.
+							<br /><b>NOTE!</b> Only takes effect on the absolute performance
+							profile chart.
 						</p>
 						<div class="form-floating mb-3">
 							<input
@@ -419,6 +421,26 @@
 								id="defaultTimeInput"
 							/>
 							<label for="defaultTimeInput">defaultTime</label>
+						</div>
+
+						<i>Optional</i>
+						<p>
+							Specify the primalGap percentage to use for filtering results.
+							<br /><b>NOTE!</b> Only takes effect on the absolute performance
+							profile chart.
+						</p>
+						<div class="form-floating mb-3">
+							<input
+								type="number"
+								class="form-control"
+								placeholder="Enter a primalGap."
+								aria-label="primalGap"
+								aria-describedby="basic-addon1"
+								min="0"
+								step="0.01"
+								id="primalGapInput"
+							/>
+							<label for="primalGapInput">primalGap</label>
 						</div>
 
 						<div class="modal-footer">

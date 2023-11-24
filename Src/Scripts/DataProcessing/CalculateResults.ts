@@ -1,4 +1,8 @@
 import * as math from "mathjs";
+import {
+	defaultTimeDirectInput,
+	primalGapDirectInput
+} from "../Elements/Elements";
 
 /**
  * This function calculates a direction, based on an input parameter 'direction'.
@@ -426,16 +430,22 @@ export function ExtractAllSolverTimes(traceData: object[]): object {
  */
 export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 	traceData: object[],
-	defaultTime?: number | undefined
+	defaultTime?: number | undefined,
+	primalGapLimit?: number | undefined
 ): object {
 	let defaultMaximumTime: number;
+	let primalGapToCompare: number;
 
-	if (
-		!defaultTime ||
-		typeof defaultTime === "undefined" ||
-		isNaN(defaultTime)
-	) {
+	if (!primalGapLimit || primalGapLimit < 0) {
+		primalGapToCompare = 0.01;
+		primalGapDirectInput.value = "0.01";
+	} else {
+		primalGapToCompare = primalGapLimit;
+	}
+
+	if (!defaultTime || defaultTime < 0) {
 		defaultMaximumTime = 1000.0;
+		defaultTimeDirectInput.value = "1000";
 	} else {
 		defaultMaximumTime = defaultTime;
 	}
@@ -450,7 +460,7 @@ export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 			}
 			if (!isNaN(Number(obj["SolverTime"]))) {
 				if (
-					obj["PrimalGap"] <= 0.01 &&
+					obj["PrimalGap"] <= primalGapToCompare &&
 					Number(obj["SolverTime"]) <= defaultMaximumTime &&
 					(obj["TermStatus"] === "Normal" ||
 						obj["SolverStatus"] === "Normal Completion")

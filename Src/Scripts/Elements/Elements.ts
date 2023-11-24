@@ -192,3 +192,24 @@ export const solverSelector: HTMLSelectElement = document.getElementById(
 export const defaultTimeInput: HTMLInputElement = document.getElementById(
 	"defaultTimeInput"
 ) as HTMLInputElement;
+
+/**
+ * `primalGapInput` is a reference the HTMLInputElement with the ID "primalGapInput".
+ */
+export const primalGapInput: HTMLInputElement = document.getElementById(
+	"primalGapInput"
+) as HTMLInputElement;
+
+/**
+ * `defaultTimeDirectInput` is a reference the HTMLInputElement with the ID "defaultTimeDirectInput".
+ */
+export const defaultTimeDirectInput: HTMLInputElement = document.getElementById(
+	"defaultTimeDirectInput"
+) as HTMLInputElement;
+
+/**
+ * `primalGapDirectInput` is a reference the HTMLInputElement with the ID "primalGapDirectInput".
+ */
+export const primalGapDirectInput: HTMLInputElement = document.getElementById(
+	"primalGapDirectInput"
+) as HTMLInputElement;

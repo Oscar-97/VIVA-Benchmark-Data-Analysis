@@ -11,7 +11,9 @@ import {
 	viewPlotsButton,
 	downloadChartDataButtonLayer,
 	loaderContainer,
-	dataTable
+	dataTable,
+	defaultTimeDirectInput,
+	primalGapDirectInput
 } from "./Elements";
 
 /**
@@ -59,6 +61,10 @@ export function ElementStatesPlotPage(): void {
 	configurationSettingsButton.disabled = true;
 	downloadChartDataButtonLayer.disabled = true;
 	deleteLocalStorageButton.disabled = true;
+	if (document.title === "Absolute Performance Profile") {
+		defaultTimeDirectInput.value = "";
+		primalGapDirectInput.value = "";
+	}
 }
 
 /**
