@@ -15,12 +15,14 @@ interface UserData {
 	dataSet: string[] | object[];
 	dataFileType: string;
 	defaultTime?: number | undefined;
+	primalGapLimit?: number | undefined;
 }
 
 export const userData: UserData = {
 	dataSet: [],
 	dataFileType: "",
-	defaultTime: undefined
+	defaultTime: undefined,
+	primalGapLimit: undefined
 };
 
 /**
@@ -37,11 +39,13 @@ export const userData: UserData = {
 export function CreateUserConfiguration(
 	dataSet: string[],
 	dataFileType: string,
-	defaultTime?: number
+	defaultTime?: number,
+	primalGapLimit?: number
 ): void {
 	userData.dataSet = dataSet;
 	userData.dataFileType = dataFileType;
 	userData.defaultTime = defaultTime;
+	userData.primalGapLimit = primalGapLimit;
 	try {
 		localStorage.setItem("UserConfiguration", JSON.stringify(userData));
 	} catch (error) {
@@ -77,7 +81,7 @@ export function CreateUserConfiguration(
  * GetUserConfiguration();
  * // This will return an array that includes the raw data and the data file type from local storage.
  */
-export function GetUserConfiguration(): [string[], string, number] {
+export function GetUserConfiguration(): [string[], string, number, number] {
 	let userConfig: UserData;
 	try {
 		userConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
@@ -110,7 +114,8 @@ export function GetUserConfiguration(): [string[], string, number] {
 
 	const dataFileType = userConfig.dataFileType;
 	const defaultTime = userConfig.defaultTime;
-	return [unprocessedData, dataFileType, defaultTime];
+	const primalGapLimit = userConfig.primalGapLimit;
+	return [unprocessedData, dataFileType, defaultTime, primalGapLimit];
 }
 
 /**
@@ -119,6 +124,7 @@ export function GetUserConfiguration(): [string[], string, number] {
 export function DeleteUserConfiguration(): void {
 	try {
 		localStorage.removeItem("UserConfiguration");
+		localStorage.removeItem("DemoData");
 	} catch (error) {
 		switch (error.name) {
 			case "SecurityError":
@@ -177,11 +183,13 @@ export function DownloadUserConfiguration(): void {
  */
 export function DownloadCustomizedUserConfiguration(
 	traceData: string[],
-	defaultTime: number
+	defaultTime: number,
+	primalGapLimit: number
 ): void {
 	userData.dataSet = traceData;
 	userData.dataFileType = "json";
 	userData.defaultTime = defaultTime;
+	userData.primalGapLimit = primalGapLimit;
 
 	const downloadAbleFile = JSON.stringify(userData);
 	const blob = new Blob([downloadAbleFile], { type: "application/json" });
