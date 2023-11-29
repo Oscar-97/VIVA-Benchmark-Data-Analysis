@@ -2,7 +2,6 @@ import {
 	CalculateDirection,
 	CalculatePrimalBound,
 	CalculateDualBound,
-	SetTermStatus,
 	SetModelStatus,
 	SetSolverStatus,
 	CalculateGap
@@ -34,8 +33,6 @@ export function AddResultCategories(traceData: object[]): void {
 			obj["ObjectiveValueEstimate"],
 			obj["Direction"]
 		);
-
-		obj["TermStatus"] = SetTermStatus(obj["TermStatus"] as string | number);
 
 		obj["ModelStatus"] = SetModelStatus(obj["ModelStatus"] as string | number);
 

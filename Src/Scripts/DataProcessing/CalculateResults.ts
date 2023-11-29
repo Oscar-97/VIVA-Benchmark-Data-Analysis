@@ -159,32 +159,6 @@ export function CalculateGap(
 }
 
 /**
- * This function sets a termination status message based on an input parameter 'terminationStatus'.
- *
- * @param {number | string} terminationStatus - A number or string input that represents the initial termination status.
- *
- * @returns {string} terminationStatus - The calculated termination status message in form of a string.
- */
-export function SetTermStatus(terminationStatus: number | string): string {
-	const statusMap: { [key: number]: string } = {
-		1: "Normal",
-		2: "Iteration Limit",
-		3: "Time Limit",
-		4: "Other",
-		5: "Other Limit",
-		6: "Capability Problem",
-		7: "Other",
-		8: "User Interrupt",
-		12: "Other"
-	};
-
-	if (typeof terminationStatus === "string") {
-		terminationStatus = parseInt(terminationStatus);
-	}
-	return statusMap[terminationStatus] || "Unknown Error";
-}
-
-/**
  * This function sets a model status message based on an input parameter 'modelStatus'.
  *
  * @param {number | string} modelStatus - A number or string input that represents the initial model status.
@@ -364,13 +338,10 @@ export function ExtractStatusMessages(traceData: object[]): string[] {
 		if (existingEntry) {
 			existingEntry[obj["SolverStatus"]] =
 				(existingEntry[obj["SolverStatus"]] || 0) + 1;
-			existingEntry[obj["TermStatus"]] =
-				(existingEntry[obj["TermStatus"]] || 0) + 1;
 		} else {
 			const newEntry = {
 				SolverName: obj["SolverName"],
-				[obj["SolverStatus"]]: 1,
-				[obj["TermStatus"]]: 1
+				[obj["SolverStatus"]]: 1
 			};
 			nameErrorMap.set(obj["SolverName"], newEntry);
 			result.push(newEntry);
@@ -462,8 +433,7 @@ export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 				if (
 					obj["PrimalGap"] <= primalGapToCompare &&
 					Number(obj["SolverTime"]) <= defaultMaximumTime &&
-					(obj["TermStatus"] === "Normal" ||
-						obj["SolverStatus"] === "Normal Completion")
+					obj["SolverStatus"] === "Normal Completion"
 				) {
 					acc[obj["SolverName"]].push({
 						time: Number(obj["SolverTime"]),

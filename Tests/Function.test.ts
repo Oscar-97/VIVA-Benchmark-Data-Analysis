@@ -1,3 +1,14 @@
+jest.mock("../Src/Scripts/Elements/Elements", () => ({
+	defaultTimeDirectInput: jest.fn(),
+	primalGapDirectInput: jest.fn()
+}));
+
+jest.doMock("../Src/Scripts/DataProcessing/GetExtraData", () => {
+	return {
+		DOMElement: jest.fn()
+	};
+});
+
 import {
 	CalculateDirection,
 	CalculatePrimalBound,
@@ -5,16 +16,9 @@ import {
 	CalculateGap,
 	AnalyzeDataByCategory,
 	ExtractAllSolverTimes,
-	SetTermStatus,
 	SetModelStatus,
 	SetSolverStatus
 } from "../Src/Scripts/DataProcessing/CalculateResults";
-
-jest.doMock("../Src/Scripts/DataProcessing/GetExtraData", () => {
-	return {
-		DOMElement: jest.fn()
-	};
-});
 
 /**
  * Mockup data.
@@ -881,47 +885,6 @@ describe("Coverage in computation functions with mockup data.", () => {
  * Quick check for status mapping.
  */
 describe("Status mapping", () => {
-	describe("SetTermStatus", () => {
-		it("should return Normal if the value is 1", () => {
-			expect(SetTermStatus(1)).toBe("Normal");
-		});
-
-		it("should return Iteration Limit if the value is 2", () => {
-			expect(SetTermStatus(2)).toBe("Iteration Limit");
-		});
-
-		it("should return Time Limit if the value is 3", () => {
-			expect(SetTermStatus(3)).toBe("Time Limit");
-		});
-
-		it("should return Other Limit if the value is 5", () => {
-			expect(SetTermStatus(5)).toBe("Other Limit");
-		});
-
-		it("should return Capability Problem if the value is 6", () => {
-			expect(SetTermStatus(6)).toBe("Capability Problem");
-		});
-
-		it("should return Other if the value is 7", () => {
-			expect(SetTermStatus(7)).toBe("Other");
-		});
-
-		it("should return User Interrupt if the value is 8", () => {
-			expect(SetTermStatus(8)).toBe("User Interrupt");
-		});
-
-		it("should return Normal if the value is 4, 7 or 12", () => {
-			expect(SetTermStatus(4)).toBe("Other");
-			expect(SetTermStatus(7)).toBe("Other");
-			expect(SetTermStatus(12)).toBe("Other");
-		});
-
-		it("should return Unknown Error if the value is any other number", () => {
-			expect(SetTermStatus(0)).toBe("Unknown Error");
-			expect(SetTermStatus("invalid")).toBe("Unknown Error");
-		});
-	});
-
 	describe("SetModelStatus", () => {
 		it("should return Optimal if the value is 1", () => {
 			expect(SetModelStatus(1)).toBe("Optimal");
