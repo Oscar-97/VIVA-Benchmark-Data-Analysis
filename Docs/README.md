@@ -67,7 +67,7 @@ The following header structure and order should be used in conjunction with .trc
 For further information, see https://gams.com/latest/docs/UG_SolverUsage.html#UG_SolverUsage_TraceFile.
 
 ### .json
-The file should include `dataSet` and `dataFileType`, `defaultTime` is optional.
+The file should include `dataSet` and `dataFileType`, `defaultTime` and `primalGap ` are optional.
 
 ```json
 {
@@ -83,7 +83,8 @@ The file should include `dataSet` and `dataFileType`, `defaultTime` is optional.
         "ball_mk4_15,MINLP,knitro,CONOPT,CPLEX,43365.517,min,2,31,30,61,30,1,6,Error,-33.6086573695247,-33.6086573695138,419.96,0,0,199353,#,-33.6086573695247,-33.6086573695138,-33.6086573695247,-33.6086573695138,0,0,0,0,0"
     ],
     "dataFileType": "trc",
-    "defaultTime": 900
+    "defaultTime": 900,
+    "primalGap": 0.1
 }
 ```
 
