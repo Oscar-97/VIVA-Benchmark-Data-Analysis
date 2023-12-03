@@ -13,7 +13,7 @@ import {
 	loaderContainer,
 	dataTable,
 	defaultTimeDirectInput,
-	primalGapDirectInput
+	gapLimitDirectInput
 } from "./Elements";
 
 /**
@@ -63,7 +63,7 @@ export function ElementStatesPlotPage(): void {
 	deleteLocalStorageButton.disabled = true;
 	if (document.title === "Absolute Performance Profile") {
 		defaultTimeDirectInput.value = "";
-		primalGapDirectInput.value = "";
+		gapLimitDirectInput.value = "";
 	}
 }
 

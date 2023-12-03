@@ -1,7 +1,7 @@
 import * as math from "mathjs";
 import {
 	defaultTimeDirectInput,
-	primalGapDirectInput
+	gapLimitDirectInput
 } from "../Elements/Elements";
 
 /**
@@ -401,17 +401,18 @@ export function ExtractAllSolverTimes(traceData: object[]): object {
  */
 export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 	traceData: object[],
+	selectedGapType: string,
 	defaultTime?: number | undefined,
-	primalGapLimit?: number | undefined
+	gapLimit?: number | undefined
 ): object {
 	let defaultMaximumTime: number;
 	let primalGapToCompare: number;
 
-	if (!primalGapLimit || primalGapLimit < 0) {
+	if (!gapLimit || gapLimit < 0) {
 		primalGapToCompare = 0.01;
-		primalGapDirectInput.value = "0.01";
+		gapLimitDirectInput.value = "0.01";
 	} else {
-		primalGapToCompare = primalGapLimit;
+		primalGapToCompare = gapLimit;
 	}
 
 	if (!defaultTime || defaultTime < 0) {
@@ -431,7 +432,7 @@ export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 			}
 			if (!isNaN(Number(obj["SolverTime"]))) {
 				if (
-					obj["PrimalGap"] <= primalGapToCompare &&
+					obj[selectedGapType] <= primalGapToCompare &&
 					Number(obj["SolverTime"]) <= defaultMaximumTime &&
 					obj["SolverStatus"] === "Normal Completion"
 				) {

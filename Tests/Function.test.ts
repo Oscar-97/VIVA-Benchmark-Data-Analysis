@@ -1,6 +1,6 @@
 jest.mock("../Src/Scripts/Elements/Elements", () => ({
 	defaultTimeDirectInput: jest.fn(),
-	primalGapDirectInput: jest.fn()
+	gapLimitDirectInput: jest.fn()
 }));
 
 jest.doMock("../Src/Scripts/DataProcessing/GetExtraData", () => {

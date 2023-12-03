@@ -194,10 +194,10 @@ export const defaultTimeInput: HTMLInputElement = document.getElementById(
 ) as HTMLInputElement;
 
 /**
- * `primalGapInput` is a reference the HTMLInputElement with the ID "primalGapInput".
+ * `gapLimitInput` is a reference the HTMLInputElement with the ID "gapLimitInput".
  */
-export const primalGapInput: HTMLInputElement = document.getElementById(
-	"primalGapInput"
+export const gapLimitInput: HTMLInputElement = document.getElementById(
+	"gapLimitInput"
 ) as HTMLInputElement;
 
 /**
@@ -208,8 +208,16 @@ export const defaultTimeDirectInput: HTMLInputElement = document.getElementById(
 ) as HTMLInputElement;
 
 /**
- * `primalGapDirectInput` is a reference the HTMLInputElement with the ID "primalGapDirectInput".
+ * `gapLimitDirectInput` is a reference the HTMLInputElement with the ID "gapLimitDirectInput".
  */
-export const primalGapDirectInput: HTMLInputElement = document.getElementById(
-	"primalGapDirectInput"
+export const gapLimitDirectInput: HTMLInputElement = document.getElementById(
+	"gapLimitDirectInput"
 ) as HTMLInputElement;
+
+/**
+ * `gapTypeSelector` is a reference to the HTMLSelectElement with the ID "gapTypeSelector".
+ * @type {HTMLSelectElement}
+ */
+export const gapTypeSelector: HTMLSelectElement = document.getElementById(
+	"gapTypeSelector"
+) as HTMLSelectElement;

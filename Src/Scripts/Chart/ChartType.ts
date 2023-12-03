@@ -6,6 +6,7 @@ import {
 } from "../DataProcessing/CalculateResults";
 import { PickColor, CreateChart } from "./CreateChart";
 import { StatisticsTable } from "../DataTable/DataTableBase";
+import { gapTypeSelector } from "../Elements/Elements";
 
 /**
  * Prepares and plots data by a specific category.
@@ -133,24 +134,26 @@ export function PlotAllSolverTimes(
 }
 
 /**
- * Prepares and plots the absolute performance profile of solver time, where the instances have a primal gap <= 1.0% and not failed.
+ * Prepares and plots the absolute performance profile of solver time, where the instances have a gap <= 1.0% and not failed.
  *
  * @param traceData - Array of objects containing the data to be analyzed and plotted.
  */
 export function PlotAbsolutePerformanceProfileSolverTimes(
 	traceData: object[],
 	defaultTime?: number | undefined,
-	primalGapLimit?: number | undefined
+	gapLimit?: number | undefined
 ): {
 	data: ({ x: string; y: number } | { x: number; y: number })[];
 	label: string;
 	showLine: boolean;
 }[] {
+	const selectedGapType = gapTypeSelector.value;
 	const absolutePerformanceProfileSolverTimes =
 		ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 			traceData,
+			selectedGapType,
 			defaultTime,
-			primalGapLimit
+			gapLimit
 		);
 	const allLabels = [];
 	const allXValues: number[] = [];
@@ -255,8 +258,8 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 		"line",
 		chartData,
 		null,
-		`Absolute performance profile (primal gap <= ${
-			primalGapLimit || 0.01
+		`Absolute performance profile (${selectedGapType} <= ${
+			gapLimit || 0.01
 		}% and not failed)`,
 		scaleOptions
 	);
