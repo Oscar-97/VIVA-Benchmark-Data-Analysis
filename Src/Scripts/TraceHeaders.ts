@@ -91,7 +91,7 @@ export const DEFAULT_VISIBLE_HEADERS: string[] = [
 	"Problem",
 	"Direction",
 	"ModelType",
-	"Gap[%]",
+	"ProblemGap",
 	"Solver",
 	"ModelStatus",
 	"SolverStatus",
@@ -100,5 +100,5 @@ export const DEFAULT_VISIBLE_HEADERS: string[] = [
 	"SolverPrimalBound",
 	"SolverPrimalGap[%]",
 	"SolverTime",
-	"SolverGap[%]"
+	"SolverGap"
 ];

@@ -15,14 +15,14 @@ interface UserData {
 	dataSet: string[] | object[];
 	dataFileType: string;
 	defaultTime?: number | undefined;
-	primalGapLimit?: number | undefined;
+	gapLimit?: number | undefined;
 }
 
 export const userData: UserData = {
 	dataSet: [],
 	dataFileType: "",
 	defaultTime: undefined,
-	primalGapLimit: undefined
+	gapLimit: undefined
 };
 
 /**
@@ -31,6 +31,7 @@ export const userData: UserData = {
  * @param dataSet - An array of strings representing raw data to be saved.
  * @param dataFileType - A string representing the type of data file.
  * @param defaultTime - Default time used in the the absolute performance profile chart.
+ * @param gapLimit - Gap limit used in the the absolute performance profile chart.
  *
  * @example
  * CreateUserConfiguration(["raw data 1", "raw data 2"], "trc");
@@ -40,12 +41,12 @@ export function CreateUserConfiguration(
 	dataSet: string[],
 	dataFileType: string,
 	defaultTime?: number,
-	primalGapLimit?: number
+	gapLimit?: number
 ): void {
 	userData.dataSet = dataSet;
 	userData.dataFileType = dataFileType;
 	userData.defaultTime = defaultTime;
-	userData.primalGapLimit = primalGapLimit;
+	userData.gapLimit = gapLimit;
 	try {
 		localStorage.setItem("UserConfiguration", JSON.stringify(userData));
 	} catch (error) {
@@ -114,8 +115,8 @@ export function GetUserConfiguration(): [string[], string, number, number] {
 
 	const dataFileType = userConfig.dataFileType;
 	const defaultTime = userConfig.defaultTime;
-	const primalGapLimit = userConfig.primalGapLimit;
-	return [unprocessedData, dataFileType, defaultTime, primalGapLimit];
+	const gapLimit = userConfig.gapLimit;
+	return [unprocessedData, dataFileType, defaultTime, gapLimit];
 }
 
 /**
@@ -184,12 +185,12 @@ export function DownloadUserConfiguration(): void {
 export function DownloadCustomizedUserConfiguration(
 	traceData: string[],
 	defaultTime: number,
-	primalGapLimit: number
+	gapLimit: number
 ): void {
 	userData.dataSet = traceData;
 	userData.dataFileType = "json";
 	userData.defaultTime = defaultTime;
-	userData.primalGapLimit = primalGapLimit;
+	userData.gapLimit = gapLimit;
 
 	const downloadAbleFile = JSON.stringify(userData);
 	const blob = new Blob([downloadAbleFile], { type: "application/json" });

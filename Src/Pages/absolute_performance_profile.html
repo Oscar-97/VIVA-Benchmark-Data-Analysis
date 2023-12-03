@@ -208,11 +208,11 @@
 						type="number"
 						class="form-control form-control-sm"
 						placeholder="Enter a primal gap"
-						aria-label="primalGap"
+						aria-label="gapLimit"
 						aria-describedby="basic-addon1"
 						min="0"
 						step="0.01"
-						id="primalGapDirectInput"
+						id="gapLimitDirectInput"
 					/>
 					<span class="input-group-text" style="font-size: small">%</span>
 				</div>
@@ -317,7 +317,7 @@
 							min="1"
 							id="defaultTimeDirectInput"
 						/>
-						<label for="primalGapDirectInput">defaultTime</label>
+						<label for="gapLimitDirectInput">defaultTime</label>
 					</div>
 					<span class="input-group-text" style="font-size: small">s</span>
 				</div>
@@ -329,15 +329,31 @@
 							type="number"
 							class="form-control form-control-sm"
 							placeholder="Enter a primal gap"
-							aria-label="primalGap"
+							aria-label="gapLimit"
 							aria-describedby="basic-addon1"
 							min="0"
 							step="0.01"
-							id="primalGapDirectInput"
+							id="gapLimitDirectInput"
 						/>
-						<label for="primalGapDirectInput">primalGap</label>
+						<label for="gapLimitDirectInput">gapLimit</label>
 					</div>
 					<span class="input-group-text" style="font-size: small">%</span>
+				</div>
+			</div>
+			<div class="col-auto">
+				<div class="input-group mb-1">
+					<div class="form-floating">
+						<select
+							class="form-control form-control-sm"
+							id="gapTypeSelector"
+							aria-label="gapType"
+						>
+							<option value="PrimalGap">Primal Gap</option>
+							<option value="DualGap">Dual Gap</option>
+							<option value="Gap_Solver">Solver Gap</option>
+						</select>
+						<label for="gapTypeSelector">Gap Type</label>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -493,7 +509,7 @@
 
 						<i>Optional</i>
 						<p>
-							Specify the primalGap percentage to use for filtering results.
+							Specify the gapLimit percentage to use for filtering results.
 							<br /><b>NOTE!</b> Only takes effect on the absolute performance
 							profile chart.
 						</p>
@@ -501,14 +517,14 @@
 							<input
 								type="number"
 								class="form-control"
-								placeholder="Enter a primalGap."
-								aria-label="primalGap"
+								placeholder="Enter a gapLimit."
+								aria-label="gapLimit"
 								aria-describedby="basic-addon1"
 								min="0"
 								step="0.01"
-								id="primalGapInput"
+								id="gapLimitInput"
 							/>
-							<label for="primalGapInput">primalGap</label>
+							<label for="gapLimitInput">gapLimit</label>
 						</div>
 
 						<div class="modal-footer">

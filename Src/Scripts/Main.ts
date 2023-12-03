@@ -89,8 +89,8 @@ import {
 	defaultTimeInput,
 	configurationSettingsButton,
 	defaultTimeDirectInput,
-	primalGapDirectInput,
-	primalGapInput
+	gapLimitDirectInput,
+	gapLimitInput
 } from "./Elements/Elements";
 import {
 	BodyFadeLoadingAnimation,
@@ -135,7 +135,7 @@ RegisterServiceWorker();
 /**
  * @param dataFileType Type of file extension for the imported data. As of now, either one or more .trc or a single .json. Text based files were removed.
  * @param defaultTime The default time for the absolute performance profile chart.
- * @param primalGapLimit Primal gap value for the absolute performance profile chart.
+ * @param gapLimit Gap limit value for the absolute performance profile chart.
  * @param unprocessedData Raw data of the imported benchmark results.
  * @param unprocessedInstanceInformationData Unprocessed instanceinfo.csv containing properties.
  * @param unprocessedSolutionData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
@@ -143,7 +143,7 @@ RegisterServiceWorker();
  */
 let dataFileType = "";
 let defaultTime = undefined;
-let primalGapLimit = undefined;
+let gapLimit = undefined;
 let unprocessedData: string[] = [];
 let unprocessedInstanceInformationData: string[] = [];
 let unprocessedSolutionData: string[] = [];
@@ -160,7 +160,7 @@ function InitializeProgram(): void {
 	 */
 	dataFileType = "";
 	defaultTime = "";
-	primalGapLimit = "";
+	gapLimit = "";
 	unprocessedData = [];
 	unprocessedInstanceInformationData = [];
 	unprocessedSolutionData = [];
@@ -185,7 +185,7 @@ function InitializeProgram(): void {
 	 * Configuration" buttons are enabled, and the ManageData() function is called.
 	 */
 	try {
-		[unprocessedData, dataFileType, defaultTime, primalGapLimit] =
+		[unprocessedData, dataFileType, defaultTime, gapLimit] =
 			GetUserConfiguration();
 		if (localStorage.getItem("DemoData") === "true") {
 			ImportDataEvents("Using demo mode!", "json");
@@ -289,7 +289,7 @@ function ManageData(): void {
 	 * and updates the unprocessedData and dataFileType variables.
 	 */
 	if (dataFileType === "json") {
-		[unprocessedData, dataFileType, defaultTime, primalGapLimit] =
+		[unprocessedData, dataFileType, defaultTime, gapLimit] =
 			GetUserConfiguration();
 		traceData = ExtractTraceData(unprocessedData);
 	}
@@ -328,7 +328,6 @@ function ManageData(): void {
 			.map((option) => {
 				return option.value;
 			});
-		console.log(selectedSolvers);
 	});
 	configurationSettingsButton.disabled = false;
 
@@ -351,10 +350,9 @@ function ManageData(): void {
 	/**
 	 * Download a customized version of the user configuration.
 	 * Filters by the solvers selected in the form selector and gets
-	 * the default time and primal gap percentage from the number input.
+	 * the default time and gap percentage from the number input.
 	 */
 	downloadCustomConfigurationButton.addEventListener("click", () => {
-		console.log(selectedSolvers);
 		if (selectedSolvers.length === 0) {
 			selectedSolvers[0] = solverSelector.value;
 		}
@@ -368,16 +366,12 @@ function ManageData(): void {
 			defaultTime = 1000;
 		}
 
-		primalGapLimit = Number(primalGapInput.value);
-		if (!primalGapLimit) {
-			primalGapLimit = 0.01;
+		gapLimit = Number(gapLimitInput.value);
+		if (!gapLimit) {
+			gapLimit = 0.01;
 		}
 
-		DownloadCustomizedUserConfiguration(
-			newRawData,
-			defaultTime,
-			primalGapLimit
-		);
+		DownloadCustomizedUserConfiguration(newRawData, defaultTime, gapLimit);
 	});
 
 	/**
@@ -509,12 +503,12 @@ function HandlePlotPages(traceData: object[]): void {
 		 */
 		if (document.title === "Absolute Performance Profile") {
 			defaultTime = defaultTimeDirectInput.value;
-			primalGapLimit = primalGapDirectInput.value;
+			gapLimit = gapLimitDirectInput.value;
 
 			chartData = PlotAbsolutePerformanceProfileSolverTimes(
 				traceData,
 				defaultTime,
-				primalGapLimit
+				gapLimit
 			);
 		}
 
