@@ -16,6 +16,46 @@ body > :not(nav, hr) {
 	}
 }
 
+#alertNotification {
+	display: none;
+	width: auto;
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+#buttonContainer {
+	margin-left: 1rem;
+	margin-top: 0.5rem;
+}
+
+#chartContainer {
+	height: auto;
+	max-height: 85vh;
+	width: auto;
+	margin-left: 1rem;
+}
+
+#dataTable {
+	visibility: hidden;
+	padding: 1rem;
+	padding-top: 0rem;
+}
+
+#loaderContainer {
+	display: none;
+}
+
+#statisticsTable {
+	visibility: visible;
+	padding: 1rem;
+	padding-top: 1rem;
+}
+
+.form-check {
+	width: 150px;
+	height: 40px;
+}
+
 .loader {
 	margin-top: 1rem;
 	border: 16px solid #ccc;
@@ -26,8 +66,8 @@ body > :not(nav, hr) {
 	animation: spinner 2s linear infinite;
 }
 
-#loaderContainer {
-	display: none;
+.nav-link {
+    white-space: nowrap;
 }
 
 .navbar-brand {
@@ -46,48 +86,12 @@ a {
 	color: #ffffff;
 }
 
-#alertNotification {
-	display: none;
-	width: auto;
-	margin-left: 1rem;
-	margin-right: 1rem;
-}
-
-#buttonContainer {
-	margin-left: 1rem;
-	margin-top: 0.5rem;
-}
-
-#dataTable {
-	visibility: hidden;
-	padding: 1rem;
-	padding-top: 0rem;
-}
-
-#statisticsTable {
-	visibility: visible;
-	padding: 1rem;
-	padding-top: 1rem;
-}
-
-#chartContainer {
-	height: auto;
-	max-height: 85vh;
-	width: auto;
-	margin-left: 1rem;
-}
-
 hr {
 	margin-left: 1rem;
 	margin-right: 1rem;
 	opacity: 0;
 	visibility: visible;
 	transition: opacity 1s;
-}
-
-.form-check {
-	width: 150px;
-	height: 40px;
 }
 
 table.table-bordered.dataTable th:first-child,
