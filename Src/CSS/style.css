@@ -10,6 +10,21 @@ body > :not(nav, hr) {
 	}
 }
 
+@media (max-width: 1399px) {
+	#librarySelectorGroup {
+		margin-top: 0.5rem;
+		margin-left: 0px;
+	}
+  }
+
+@media (min-width: 1400px) {
+    #librarySelectorGroup {
+        margin-left: 10px;
+		/* The UL on the right side in the navbar is not pushed away with margin. */
+		padding-right: 10px;
+    }
+}
+
 @keyframes spinner {
 	to {
 		transform: rotate(360deg);
@@ -41,6 +56,12 @@ body > :not(nav, hr) {
 	padding-top: 0rem;
 }
 
+#librarySelectorGroup {
+	flex-wrap: nowrap;
+	min-width: 170px;
+	max-width: 500px;
+}
+
 #loaderContainer {
 	display: none;
 }
@@ -49,6 +70,13 @@ body > :not(nav, hr) {
 	visibility: visible;
 	padding: 1rem;
 	padding-top: 1rem;
+}
+
+#uploadFileGroup {
+	white-space: nowrap;
+	flex-wrap: nowrap;
+	min-width: 350px;
+	max-width: 500px;
 }
 
 .form-check {

@@ -7,6 +7,14 @@ export const fileInput: HTMLInputElement = document.getElementById(
 ) as HTMLInputElement;
 
 /**
+ * `librarySelector` is a reference to the HTMLSelectElement with the ID "librarySelector".
+ * @type {HTMLSelectElement}
+ */
+export const librarySelector: HTMLSelectElement = document.getElementById(
+	"librarySelector"
+) as HTMLSelectElement;
+
+/**
  * `importDataButton` is a reference to the HTMLButtonElement with the ID "importDataButton".
  * @type {HTMLButtonElement}
  */

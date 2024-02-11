@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 jest.mock("../Src/Scripts/Elements/Elements", () => ({
 	defaultTimeDirectInput: jest.fn(),
 	gapLimitDirectInput: jest.fn()

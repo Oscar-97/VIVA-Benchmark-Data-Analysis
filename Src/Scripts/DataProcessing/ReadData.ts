@@ -1,4 +1,8 @@
-import { fileInput, importDataButton } from "../Elements/Elements";
+import {
+	fileInput,
+	librarySelector,
+	importDataButton
+} from "../Elements/Elements";
 import { DisplayErrorNotification } from "../Elements/DisplayAlertNotification";
 import { userData } from "../UserConfiguration/UserConfiguration";
 
@@ -140,6 +144,7 @@ export function ReadData(
 	UnprocessedSolutionData: string[];
 } {
 	importDataButton.disabled = false;
+	librarySelector.disabled = false;
 
 	/**
 	 * Input multiple files.

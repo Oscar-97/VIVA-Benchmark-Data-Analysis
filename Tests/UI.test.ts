@@ -8,7 +8,9 @@ describe("UI tests", () => {
 
 	beforeAll(async () => {
 		browser = await chromium.launch({ headless: true });
-		context = await browser.newContext();
+		context = await browser.newContext({
+			viewport: { width: 2560, height: 1440 }
+		});
 		page = await context.newPage();
 	});
 

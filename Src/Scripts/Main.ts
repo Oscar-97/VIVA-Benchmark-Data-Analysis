@@ -73,6 +73,7 @@ import {
 } from "./Elements/ElementStatus";
 import {
 	fileInput,
+	librarySelector,
 	importDataButton,
 	viewTableButton,
 	showSelectedRowsButton,
@@ -108,7 +109,11 @@ import {
 	DownloadCustomizedUserConfiguration
 } from "./UserConfiguration/UserConfiguration";
 
-import { demoData } from "./DemoData";
+import {
+	DEMO_DATA,
+	MINLPLIB_SOLUTION_DATA,
+	MIPLIB_2017_SOLUTION_DATA
+} from "./DemoData";
 import {
 	DisplayErrorNotification,
 	DisplayWarningNotification
@@ -203,7 +208,7 @@ function InitializeProgram(): void {
 	}
 
 	/**
-	 * Arguably the actions the sequence of events below is not correct, as the "load" button actually acts as a confirm button.
+	 * Arguably the actions sequence of the events below is not correct, as the "load" button actually acts as a confirm button.
 	 */
 
 	/**
@@ -248,7 +253,7 @@ function InitializeProgram(): void {
 	}
 
 	function ActivateDemoMode(): void {
-		localStorage.setItem("UserConfiguration", JSON.stringify(demoData));
+		localStorage.setItem("UserConfiguration", JSON.stringify(DEMO_DATA));
 		localStorage.setItem("DemoData", "true");
 		location.reload();
 	}
@@ -296,8 +301,8 @@ function ManageData(): void {
 
 	/**
 	 * If the uploaded data file is of type TRC, it extracts the trace data from the unprocessedData,
-	 * gets instance information if any, gets best known bounds if any, merges the data,
-	 * and adds result categories to the trace data.
+	 * gets instance information if any, gets best known bounds if any .solu file is loaded or a library is selected,
+	 * merges the data, and adds result categories to the trace data.
 	 */
 	if (dataFileType === "trc") {
 		traceData = ExtractTraceData(unprocessedData);
@@ -311,8 +316,18 @@ function ManageData(): void {
 
 		if (unprocessedSolutionData.length !== 0) {
 			soluData = GetBestKnownBounds(unprocessedSolutionData);
+		} else if (librarySelector.value === "MINLPLib") {
+			soluData = MINLPLIB_SOLUTION_DATA;
+			librarySelector.disabled = true;
+		} else if (librarySelector.value === "MIPLIB") {
+			soluData = MIPLIB_2017_SOLUTION_DATA;
+			librarySelector.disabled = true;
+		}
+
+		if (soluData) {
 			traceData = MergeData(traceData, soluData);
 		}
+
 		AddResultCategories(traceData);
 	}
 
