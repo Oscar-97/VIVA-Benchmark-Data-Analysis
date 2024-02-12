@@ -1,117 +1,126 @@
 {
-  "name": "VIVA",
-  "categories": [
-    "utilities", 
-    "development",
-    "education"
-  ],
-  "description": "Benchmark data analysis for optimization solvers.",
-  "screenshots": [
-    {
-      "src": "Docs/Images/OverView_system_new.png",
-      "type": "image/png",
-      "sizes": "1252x659",
-      "purpose": "any"
-    }
-  ],
-  "icons": [
-    {
-      "src": "Src/CSS/tab_icon.png",
-      "type": "image/png",
-      "sizes": "512x512",
-      "purpose": "any"
-    },
-    {
-      "src": "Src/CSS/icon_maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ],
-  "start_url": "/report.html",
-  "display": "standalone",
-  "orientation": "landscape",
-  "theme_color": "white",
-  "background_color": "white",
-  "shortcuts": [
-    {
-      "name": "Report",
-      "short_name": "Reports",
-      "description": "View the latest reports",
-      "url": "report.html",
-      "icons": [
-        {
-          "src": "Src/CSS/icon_maskable.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Absolute Performance Profile",
-      "url": "Src/Pages/absolute_performance_profile.html",
-      "icons": [
-        {
-          "src": "Src/CSS/icon_maskable.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Average Solver Time",
-      "url": "Src/Pages/average_solver_time.html",
-      "icons": [
-        {
-          "src": "Src/CSS/icon_maskable.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Solver Time",
-      "url": "Src/Pages/solver_time.html",
-      "icons": [
-        {
-          "src": "Src/CSS/icon_maskable.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Number of Iterations",
-      "url": "Src/Pages/number_of_iterations.html",
-      "icons": [
-        {
-          "src": "Src/CSS/icon_maskable.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Number of Nodes",
-      "url": "Src/Pages/number_of_nodes.html",
-      "icons": [
-        {
-          "src": "Src/CSS/icon_maskable.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Termination Status",
-      "url": "Src/Pages/termination_status.html",
-      "icons": [
-        {
-          "src": "Src/CSS/icon_maskable.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    }
-  ]
+	"name": "VIVA: Visualize and Analyze Optimization Solver Benchmarks",
+	"short_name": "VIVA",
+	"categories": [
+		"utilities",
+		"development",
+		"education",
+		"mathematical optimization"
+	],
+	"description": "Application for comparison and visualization of benchmark results from mathematical optimization solvers.",
+	"screenshots": [
+		{
+			"src": "Docs/Images/OverView_system_new.png",
+			"type": "image/png",
+			"sizes": "1252x659",
+			"purpose": "any"
+		}
+	],
+	"icons": [
+		{
+			"src": "Src/CSS/tab_icon.png",
+			"type": "image/png",
+			"sizes": "512x512",
+			"purpose": "any"
+		},
+		{
+			"src": "Src/CSS/icon_maskable.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "maskable"
+		}
+	],
+	"start_url": "/report.html",
+	"display": "standalone",
+	"display_override": "minimal-ui",
+	"related_applications": [
+		{
+			"platform": "windows",
+			"url": "https://github.com/coin-or/Paver"
+		}
+	],
+	"orientation": "landscape",
+	"theme_color": "#FFFFFF",
+	"background_color": "#FFFFFF",
+	"shortcuts": [
+		{
+			"name": "Report",
+			"short_name": "Reports",
+			"description": "View the latest reports",
+			"url": "report.html",
+			"icons": [
+				{
+					"src": "Src/CSS/icon_maskable.png",
+					"sizes": "192x192",
+					"type": "image/png"
+				}
+			]
+		},
+		{
+			"name": "Absolute Performance Profile",
+			"url": "Src/Pages/absolute_performance_profile.html",
+			"icons": [
+				{
+					"src": "Src/CSS/icon_maskable.png",
+					"sizes": "192x192",
+					"type": "image/png"
+				}
+			]
+		},
+		{
+			"name": "Average Solver Time",
+			"url": "Src/Pages/average_solver_time.html",
+			"icons": [
+				{
+					"src": "Src/CSS/icon_maskable.png",
+					"sizes": "192x192",
+					"type": "image/png"
+				}
+			]
+		},
+		{
+			"name": "Solver Time",
+			"url": "Src/Pages/solver_time.html",
+			"icons": [
+				{
+					"src": "Src/CSS/icon_maskable.png",
+					"sizes": "192x192",
+					"type": "image/png"
+				}
+			]
+		},
+		{
+			"name": "Number of Iterations",
+			"url": "Src/Pages/number_of_iterations.html",
+			"icons": [
+				{
+					"src": "Src/CSS/icon_maskable.png",
+					"sizes": "192x192",
+					"type": "image/png"
+				}
+			]
+		},
+		{
+			"name": "Number of Nodes",
+			"url": "Src/Pages/number_of_nodes.html",
+			"icons": [
+				{
+					"src": "Src/CSS/icon_maskable.png",
+					"sizes": "192x192",
+					"type": "image/png"
+				}
+			]
+		},
+		{
+			"name": "Termination Status",
+			"url": "Src/Pages/termination_status.html",
+			"icons": [
+				{
+					"src": "Src/CSS/icon_maskable.png",
+					"sizes": "192x192",
+					"type": "image/png"
+				}
+			]
+		}
+	]
 }

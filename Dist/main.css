@@ -2225,10 +2225,78 @@ body > :not(nav, hr) {
 	}
 }
 
+@media (max-width: 1399px) {
+	#librarySelectorGroup {
+		margin-top: 0.5rem;
+		margin-left: 0px;
+	}
+  }
+
+@media (min-width: 1400px) {
+    #librarySelectorGroup {
+        margin-left: 10px;
+		/* The UL on the right side in the navbar is not pushed away with margin. */
+		padding-right: 10px;
+    }
+}
+
 @keyframes spinner {
 	to {
 		transform: rotate(360deg);
 	}
+}
+
+#alertNotification {
+	display: none;
+	width: auto;
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+#buttonContainer {
+	margin-left: 1rem;
+	margin-top: 0.5rem;
+}
+
+#chartContainer {
+	height: auto;
+	max-height: 85vh;
+	width: auto;
+	margin-left: 1rem;
+}
+
+#dataTable {
+	visibility: hidden;
+	padding: 1rem;
+	padding-top: 0rem;
+}
+
+#librarySelectorGroup {
+	flex-wrap: nowrap;
+	min-width: 170px;
+	max-width: 500px;
+}
+
+#loaderContainer {
+	display: none;
+}
+
+#statisticsTable {
+	visibility: visible;
+	padding: 1rem;
+	padding-top: 1rem;
+}
+
+#uploadFileGroup {
+	white-space: nowrap;
+	flex-wrap: nowrap;
+	min-width: 350px;
+	max-width: 500px;
+}
+
+.form-check {
+	width: 150px;
+	height: 40px;
 }
 
 .loader {
@@ -2241,8 +2309,8 @@ body > :not(nav, hr) {
 	animation: spinner 2s linear infinite;
 }
 
-#loaderContainer {
-	display: none;
+.nav-link {
+    white-space: nowrap;
 }
 
 .navbar-brand {
@@ -2261,48 +2329,12 @@ a {
 	color: #ffffff;
 }
 
-#alertNotification {
-	display: none;
-	width: auto;
-	margin-left: 1rem;
-	margin-right: 1rem;
-}
-
-#buttonContainer {
-	margin-left: 1rem;
-	margin-top: 0.5rem;
-}
-
-#dataTable {
-	visibility: hidden;
-	padding: 1rem;
-	padding-top: 0rem;
-}
-
-#statisticsTable {
-	visibility: visible;
-	padding: 1rem;
-	padding-top: 1rem;
-}
-
-#chartContainer {
-	height: auto;
-	max-height: 85vh;
-	width: auto;
-	margin-left: 1rem;
-}
-
 hr {
 	margin-left: 1rem;
 	margin-right: 1rem;
 	opacity: 0;
 	visibility: visible;
 	transition: opacity 1s;
-}
-
-.form-check {
-	width: 150px;
-	height: 40px;
 }
 
 table.table-bordered.dataTable th:first-child,

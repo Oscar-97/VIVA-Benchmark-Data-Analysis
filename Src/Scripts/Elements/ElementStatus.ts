@@ -1,5 +1,6 @@
 import {
 	fileInput,
+	librarySelector,
 	importDataButton,
 	viewTableButton,
 	showSelectedRowsButton,
@@ -26,13 +27,15 @@ import {
  * 1. Clear the loader container's inner HTML.
  * 2. Hide the data table.
  * 3. Clear the file input's value.
- * 4. Disable various interactive buttons (import data, view all results, filter selection,
+ * 4. Disable various interactive buttons (import data, library selector, view all results, filter selection,
  *    save local storage, download configuration, delete local storage, clear table).
  */
 export function ElementStatesTablePage(): void {
 	loaderContainer.innerHTML = "";
 	dataTable.style.visibility = "hidden";
 	fileInput.value = "";
+	librarySelector.value = "none";
+	librarySelector.disabled = true;
 	importDataButton.disabled = true;
 	viewTableButton.disabled = true;
 	showSelectedRowsButton.disabled = true;
@@ -51,10 +54,13 @@ export function ElementStatesTablePage(): void {
  *
  * This function is typically called when the plot page is first loaded or refreshed. It's designed to:
  * 1. Clear the file input's value.
- * 2. Disable various interactive buttons (view plots, save local storage, download configuration, delete local storage).
+ * 2. Disable various interactive buttons (import data, library selector, view plots, save local storage,
+ * 	  download configuration, delete local storage).
  */
 export function ElementStatesPlotPage(): void {
 	fileInput.value = "";
+	librarySelector.value = "none";
+	librarySelector.disabled = true;
 	viewPlotsButton.disabled = true;
 	saveLocalStorageButton.disabled = true;
 	downloadConfigurationButtonLayer.disabled = true;

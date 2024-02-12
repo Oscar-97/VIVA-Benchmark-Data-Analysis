@@ -1,4 +1,5 @@
 import {
+	librarySelector,
 	importDataButton,
 	showSelectedRowsButton,
 	viewTableButton,
@@ -53,7 +54,7 @@ export function ImportDataEvents(
 	} catch (err) {
 		console.error("Could not remove elements: ", err);
 	}
-
+	librarySelector.disabled = true;
 	if (document.title === "Report") {
 		viewTableButton.disabled = false;
 		showSelectedRowsButton.disabled = true;
