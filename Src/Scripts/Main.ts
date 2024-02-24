@@ -110,16 +110,15 @@ import {
 } from "./UserConfiguration/UserConfiguration";
 
 import {
-	DEMO_DATA,
-	MINLPLIB_SOLUTION_DATA,
-	MIPLIB_2017_SOLUTION_DATA
-} from "./DemoData";
+	DEMO_DATA} from "./Datasets/DemoData";
+import { MINLPLIB_SOLUTION_DATA } from "./Datasets/MINLPLIB";
+import { MIPLIB_2017_SOLUTION_DATA } from "./Datasets/MIPLIB_2017";
 import {
 	DisplayErrorNotification,
 	DisplayWarningNotification
 } from "./Elements/DisplayAlertNotification";
 import { ReleaseVersionTag } from "./Elements/ReleaseVersionTag";
-import { ReversedTraceHeaderMap, TraceHeaderMap } from "./TraceHeaders";
+import { ReversedTraceHeaderMap, TraceHeaderMap } from "./Constants/TraceHeaders";
 //#endregion
 
 /**

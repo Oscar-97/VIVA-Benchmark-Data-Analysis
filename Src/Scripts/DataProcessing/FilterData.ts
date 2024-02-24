@@ -1,7 +1,7 @@
 /**
  * Default headers for the trace file.
  */
-import { DEFAULT_HEADERS } from "../TraceHeaders";
+import { DEFAULT_HEADERS } from "../Constants/TraceHeaders";
 
 /**
  * Extracts headers from the array with raw data results.
