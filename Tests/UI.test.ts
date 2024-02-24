@@ -7,7 +7,7 @@ describe("UI tests", () => {
 	let page: Page;
 
 	beforeAll(async () => {
-		browser = await chromium.launch({ headless: true });
+		browser = await chromium.launch({ headless: false });
 		context = await browser.newContext({
 			viewport: { width: 2560, height: 1440 }
 		});
@@ -407,6 +407,44 @@ describe("UI tests", () => {
 			const expectedRowCount = 4;
 			expect(rowCount).toBe(expectedRowCount);
 		}, 60000);
+
+		test.only("MINLPLib", async () => {
+			await page.waitForSelector("#fileInput");
+			await page.click("#fileInput");
+			await page.waitForSelector('input[type="file"]');
+			await page.setInputFiles('input[type="file"]', "./TestData/TraceFiles/shotALL.trc");
+			await page.waitForTimeout(2000);
+			await page.selectOption('#librarySelector', 'MINLPLib');
+			await WaitForElementAndClick(page, "#importDataButton");
+			await RunTableOperations(
+				page,
+				"Benchmarks loaded with following files: shotALL.trc"
+			);
+
+			// TODO:
+			// Get cell value
+			// Compare
+
+		}, 60000)
+
+		test.only("MIPLIB", async () => {
+			await page.waitForSelector("#fileInput");
+			await page.click("#fileInput");
+			await page.waitForSelector('input[type="file"]');
+			await page.setInputFiles('input[type="file"]', "./TestData/TraceFiles/shotALL.trc");
+			await page.waitForTimeout(2000);
+			await page.selectOption('#librarySelector', 'MIPLIB');
+			await WaitForElementAndClick(page, "#importDataButton");
+			await RunTableOperations(
+				page,
+				"Benchmarks loaded with following files: shotALL.trc"
+			);
+
+			// TODO:
+			// Get cell value
+			// Compare
+
+		}, 60000)
 	});
 
 	describe("Plot Pages", () => {
