@@ -13,7 +13,7 @@ import "datatables.net-datetime";
 
 import { TableDataTrc } from "./DataTableBase";
 import { ElementStateDisplayedTable } from "../Elements/ElementStatus";
-import { DEFAULT_VISIBLE_HEADERS } from "../TraceHeaders";
+import { DEFAULT_VISIBLE_HEADERS } from "../Constants/TraceHeaders";
 
 /**
  * Function to display the trace data in a dynamically generated HTML table using the DataTables library for improved user interaction.
@@ -84,6 +84,7 @@ function DataTablesConfiguration(): void {
 			"<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'f>>" +
 			"<'row'<'col-sm-12'tr>>" +
 			"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 mt-2'p>>",
+		pagingType: "numbers",
 		lengthChange: true,
 		lengthMenu: [
 			[10, 25, 50, 100, -1],

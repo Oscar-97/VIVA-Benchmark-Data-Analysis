@@ -1,5 +1,5 @@
 import { dataTable } from "../Elements/Elements";
-import { TraceHeaderMap } from "../TraceHeaders";
+import { TraceHeaderMap } from "../Constants/TraceHeaders";
 
 /**
  * Sorts the keys by an enumeration and then by alphabetical order for non-enumeration keys.
@@ -146,12 +146,16 @@ export function StatisticsTable(
 		"statisticsTable"
 	) as HTMLDivElement;
 	statisticsTableDiv.innerHTML = "";
+	statisticsTableDiv.classList.add(
+		"table-responsive",
+		"me-3",
+		"ms-1"
+	);
 
 	const statisticsTable = document.createElement("table");
 	statisticsTable.classList.add(
 		"table",
 		"table-bordered",
-		"table-responsive",
 		"table-hover",
 		"table-sm"
 	);

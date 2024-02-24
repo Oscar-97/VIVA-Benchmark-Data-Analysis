@@ -4,6 +4,11 @@ body > :not(nav, hr) {
 	transition: opacity 0.5s;
 }
 
+/* body, html {
+    overflow-x: hidden; 
+    max-width: 100%;
+} */
+
 @media (max-width: 1250px) {
 	.dt-buttons button {
 		margin-bottom: 5px;
@@ -45,8 +50,11 @@ body > :not(nav, hr) {
 
 #chartContainer {
 	height: auto;
-	max-height: 85vh;
-	width: auto;
+	width: 100%;
+	min-height: 350px;
+	min-width: 530px;
+
+	overflow-x: auto;
 	margin-left: 1rem;
 }
 
@@ -54,6 +62,11 @@ body > :not(nav, hr) {
 	visibility: hidden;
 	padding: 1rem;
 	padding-top: 0rem;
+}
+
+.pagination {
+	margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 #librarySelectorGroup {
