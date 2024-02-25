@@ -1,6 +1,7 @@
 node_modules
 Release
-TestData
+/TestData/
+!/Test/TestData/
 TestScreenshots
 Tests/downloads
 .vscode/settings.json

@@ -164,11 +164,30 @@ describe("UI tests", () => {
 			});
 		}
 
+		async function ShowProblemCells(): Promise<void> {
+			await WaitForElementAndClick(
+				page,
+				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]"
+			);
+			await WaitForElementAndClick(
+				page,
+				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div/div[2]"
+			);
+			await WaitForElementAndClick(
+				page,
+				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div/a[4]"
+			);
+			await WaitForElementAndClick(
+				page,
+				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div/a[5]"
+			);
+		}
+
 		test("Handle multiple trace files", async () => {
 			await UploadFile(page, [
-				"./TestData/TraceFiles/shotALL.trc",
-				"./TestData/TraceFiles/scipALL.trc",
-				"./TestData/TraceFiles/pavitoALL.trc"
+				"./Tests/TestData/shotALL.trc",
+				"./Tests/TestData/scipALL.trc",
+				"./Tests/TestData/pavitoALL.trc"
 			]);
 			await RunTableOperations(
 				page,
@@ -176,11 +195,10 @@ describe("UI tests", () => {
 			);
 		}, 60000);
 
-		test("Instance information and best known bound values files", async () => {
+		test("Handle instance information file", async () => {
 			await UploadFile(page, [
-				"./TestData/TraceFiles/shotALL.trc",
-				"./TestData/TraceFiles/minlp.solu",
-				"./TestData/TraceFiles/instancedata.csv"
+				"./Tests/TestData/shotALL.trc",
+				"./Tests/TestData/instancedata.csv"
 			]);
 			await RunTableOperations(
 				page,
@@ -188,8 +206,19 @@ describe("UI tests", () => {
 			);
 		}, 60000);
 
+		test("Handle solution file", async () => {
+			await UploadFile(page, [
+				"./Tests/TestData/shotALL.trc",
+				"./Tests/TestData/minlp.solu"
+			]);
+			await RunTableOperations(
+				page,
+				"Benchmarks loaded with following files: shotALL.trc, minlp.solu"
+			);
+		}, 60000);
+
 		test("Handle JSON-file", async () => {
-			await UploadFile(page, ["./TestData/UserConfiguration.json"]);
+			await UploadFile(page, ["./Tests/TestData/UserConfiguration.json"]);
 			await RunTableOperationsJSON(
 				page,
 				"Benchmarks loaded with following files: UserConfiguration.json"
@@ -200,7 +229,7 @@ describe("UI tests", () => {
 			await page.evaluate(() => {
 				localStorage.clear();
 			});
-			await UploadFile(page, ["./TestData/TraceFiles/shotALL.trc"]);
+			await UploadFile(page, ["./Tests/TestData/shotALL.trc"]);
 			await RunTableOperations(
 				page,
 				"Benchmarks loaded with following files: shotALL.trc"
@@ -238,7 +267,10 @@ describe("UI tests", () => {
 			await page.waitForSelector("#fileInput");
 			await page.click("#fileInput");
 			await page.waitForSelector('input[type="file"]');
-			await page.setInputFiles('input[type="file"]', "./TestData/error.png");
+			await page.setInputFiles(
+				'input[type="file"]',
+				"./Tests/TestData/error.png"
+			);
 			await CheckNotification(
 				page,
 				"#alertNotification",
@@ -247,7 +279,7 @@ describe("UI tests", () => {
 		}, 60000);
 
 		test("Select rows and filter table", async () => {
-			await UploadFile(page, ["./TestData/TraceFiles/shotALL.trc"]);
+			await UploadFile(page, ["./Tests/TestData/shotALL.trc"]);
 			await RunTableOperations(
 				page,
 				"Benchmarks loaded with following files: shotALL.trc"
@@ -282,7 +314,7 @@ describe("UI tests", () => {
 		}, 60000);
 
 		test("Button status after viewing a table", async () => {
-			await UploadFile(page, ["./TestData/TraceFiles/shotALL.trc"]);
+			await UploadFile(page, ["./Tests/TestData/shotALL.trc"]);
 			await RunTableOperations(
 				page,
 				"Benchmarks loaded with following files: shotALL.trc"
@@ -305,7 +337,7 @@ describe("UI tests", () => {
 		}, 60000);
 
 		test("Download data", async () => {
-			await UploadFile(page, ["./TestData/TraceFiles/shotALL.trc"]);
+			await UploadFile(page, ["./Tests/TestData/shotALL.trc"]);
 			await RunTableOperations(
 				page,
 				"Benchmarks loaded with following files: shotALL.trc"
@@ -325,7 +357,7 @@ describe("UI tests", () => {
 		}, 60000);
 
 		test("Sort table and hide columns", async () => {
-			await UploadFile(page, ["./TestData/TraceFiles/shotALL.trc"]);
+			await UploadFile(page, ["./Tests/TestData/shotALL.trc"]);
 			await RunTableOperations(
 				page,
 				"Benchmarks loaded with following files: shotALL.trc"
@@ -362,8 +394,8 @@ describe("UI tests", () => {
 			expect(firstHeaderValueText).toBe("Problem");
 		}, 60000);
 
-		test("Use pagination on the table", async () => {
-			await UploadFile(page, ["./TestData/TraceFiles/shotALL.trc"]);
+		test.only("Use pagination on the table", async () => {
+			await UploadFile(page, ["./Tests/TestData/shotALL.trc"]);
 			await RunTableOperations(
 				page,
 				"Benchmarks loaded with following files: shotALL.trc"
@@ -371,26 +403,26 @@ describe("UI tests", () => {
 
 			await WaitForElementAndClick(
 				page,
-				"//html/body/div[4]/div/div[4]/div[2]/div/ul/li[9]/a"
+				"//html/body/div[4]/div/div[4]/div[2]/div/ul/li[2]/a"
 			);
 			await WaitForElementAndClick(
 				page,
-				"//html/body/div[4]/div/div[4]/div[2]/div/ul/li[9]/a"
+				"//html/body/div[4]/div/div[4]/div[2]/div/ul/li[7]/a"
 			);
 			await WaitForElementAndClick(
 				page,
-				"//html/body/div[4]/div/div[4]/div[2]/div/ul/li[1]/a"
+				"//html/body/div[4]/div/div[4]/div[2]/div/ul/li[3]/a"
 			);
 
 			const currentPageValue = await page.$(
-				"//html/body/div[4]/div/div[4]/div[2]/div/ul/li[3]/a"
+				"//html/body/div[4]/div/div[4]/div[2]/div/ul/li[4]/a"
 			);
 			const currentPageValueText = await currentPageValue?.innerText();
-			expect(currentPageValueText).toBe("2");
+			expect(currentPageValueText).toBe("30");
 		}, 60000);
 
 		test("Search in the displayed data", async () => {
-			await UploadFile(page, ["./TestData/TraceFiles/shotALL.trc"]);
+			await UploadFile(page, ["./Tests/TestData/shotALL.trc"]);
 			await RunTableOperations(
 				page,
 				"Benchmarks loaded with following files: shotALL.trc"
@@ -408,43 +440,68 @@ describe("UI tests", () => {
 			expect(rowCount).toBe(expectedRowCount);
 		}, 60000);
 
-		test.only("MINLPLib", async () => {
+		test("Use MINLPLib option", async () => {
 			await page.waitForSelector("#fileInput");
 			await page.click("#fileInput");
 			await page.waitForSelector('input[type="file"]');
-			await page.setInputFiles('input[type="file"]', "./TestData/TraceFiles/shotALL.trc");
+			await page.setInputFiles(
+				'input[type="file"]',
+				"./TestData/library_test.trc"
+			);
 			await page.waitForTimeout(2000);
-			await page.selectOption('#librarySelector', 'MINLPLib');
+			await page.selectOption("#librarySelector", "MINLPLib");
 			await WaitForElementAndClick(page, "#importDataButton");
 			await RunTableOperations(
 				page,
-				"Benchmarks loaded with following files: shotALL.trc"
+				"Benchmarks loaded with following files: library_test.trc"
 			);
 
-			// TODO:
-			// Get cell value
-			// Compare
+			await ShowProblemCells();
 
-		}, 60000)
+			const primalBoundProblemCellValue = await page.$(
+				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[5]"
+			);
+			const dualBoundProblemCellValue = await page.$(
+				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[4]"
+			);
 
-		test.only("MIPLIB", async () => {
+			// Check if 'alkylation' problem contains the values from MINLPLib.
+			expect(await primalBoundProblemCellValue?.innerText()).toBe(
+				"1.768807e+3"
+			);
+			expect(await dualBoundProblemCellValue?.innerText()).toBe("1.768807e+3");
+		}, 60000);
+
+		test("Use MIPLIB option", async () => {
 			await page.waitForSelector("#fileInput");
 			await page.click("#fileInput");
 			await page.waitForSelector('input[type="file"]');
-			await page.setInputFiles('input[type="file"]', "./TestData/TraceFiles/shotALL.trc");
+			await page.setInputFiles(
+				'input[type="file"]',
+				"./TestData/library_test.trc"
+			);
 			await page.waitForTimeout(2000);
-			await page.selectOption('#librarySelector', 'MIPLIB');
+			await page.selectOption("#librarySelector", "MIPLIB");
 			await WaitForElementAndClick(page, "#importDataButton");
 			await RunTableOperations(
 				page,
-				"Benchmarks loaded with following files: shotALL.trc"
+				"Benchmarks loaded with following files: library_test.trc"
 			);
 
-			// TODO:
-			// Get cell value
-			// Compare
+			await ShowProblemCells();
+			const primalBoundProblemCellValue = await page.$(
+				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[1]/td[5]"
+			);
+			const dualBoundProblemCellValue = await page.$(
+				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[1]/td[4]"
+			);
 
-		}, 60000)
+			// Check if '50v-10' problem contains the values from MIPLIB.
+			expect(await primalBoundProblemCellValue?.innerText()).toBe(
+				"3.311180e+3"
+			);
+			expect(await dualBoundProblemCellValue?.innerText()).toBe("3.311180e+3");
+		}, 60000);
 	});
 
 	describe("Plot Pages", () => {
@@ -453,7 +510,7 @@ describe("UI tests", () => {
 			const fileUrl = `file://${absoluteFilePath}`;
 
 			await page.goto(fileUrl);
-			await UploadFile(page, ["./TestData/TraceFiles/shotALL.trc"]);
+			await UploadFile(page, ["./Tests/TestData/shotALL.trc"]);
 			await CheckNotification(
 				page,
 				"#alertNotification",

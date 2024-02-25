@@ -1,0 +1,11 @@
+{
+    "dataSet": [
+        "* InputFileName,Direction,ModelType,Gap_Problem,SolverName,ModelStatus,SolverStatus,DualBoundSolver,DualGap,PrimalBoundSolver,PrimalGap,Gap_Solver,SolverTime",
+        "ball_mk3_20,min,MINLP,Infinity,shot,Intermediate Infeasible,Resource Interrupt,-1.924197e+1,Infinity,Infinity,Infinity,Infinity,900.04",
+        "ball_mk3_30,min,MINLP,Infinity,shot,Intermediate Infeasible,Resource Interrupt,-3.391684e+1,Infinity,Infinity,Infinity,Infinity,900.05",
+        "ball_mk4_10,min,MINLP,Infinity,shot,Intermediate Infeasible,Resource Interrupt,4.800000e+1,Infinity,Infinity,Infinity,Infinity,900.08",
+        "ball_mk4_15,min,MINLP,Infinity,shot,Intermediate Infeasible,Resource Interrupt,4.100000e+1,26.83,Infinity,Infinity,Infinity,900.08",
+        "tls12,min,MINLP,Infinity,shot,Intermediate Infeasible,Resource Interrupt,9.885837e+0,Infinity,Infinity,Infinity,Infinity,900.03"
+    ],
+    "dataFileType": "json"
+}
