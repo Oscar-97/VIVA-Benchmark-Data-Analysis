@@ -109,16 +109,18 @@ import {
 	DownloadCustomizedUserConfiguration
 } from "./UserConfiguration/UserConfiguration";
 
-import {
-	DEMO_DATA} from "./Datasets/DemoData";
-import { MINLPLIB_SOLUTION_DATA } from "./Datasets/MINLPLIB";
+import { DEMO_DATA } from "./Datasets/DemoData";
+import { MINLPLIB_SOLUTION_DATA } from "./Datasets/MINLPLib";
 import { MIPLIB_2017_SOLUTION_DATA } from "./Datasets/MIPLIB_2017";
 import {
 	DisplayErrorNotification,
 	DisplayWarningNotification
 } from "./Elements/DisplayAlertNotification";
 import { ReleaseVersionTag } from "./Elements/ReleaseVersionTag";
-import { ReversedTraceHeaderMap, TraceHeaderMap } from "./Constants/TraceHeaders";
+import {
+	ReversedTraceHeaderMap,
+	TraceHeaderMap
+} from "./Constants/TraceHeaders";
 //#endregion
 
 /**
@@ -305,7 +307,6 @@ function ManageData(): void {
 	 */
 	if (dataFileType === "trc") {
 		traceData = ExtractTraceData(unprocessedData);
-
 		if (unprocessedInstanceInformationData.length !== 0) {
 			instanceInfoData = GetInstanceInformation(
 				unprocessedInstanceInformationData
@@ -326,7 +327,6 @@ function ManageData(): void {
 		if (soluData) {
 			traceData = MergeData(traceData, soluData);
 		}
-
 		AddResultCategories(traceData);
 	}
 

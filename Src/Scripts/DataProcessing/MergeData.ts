@@ -23,6 +23,12 @@ export function MergeData(
 	data: CategoriesObj[]
 ): object[] {
 	const mergedData = [];
+	const allProps = new Set<string>();
+
+	traceData.forEach((obj) =>
+		Object.keys(obj).forEach((key) => allProps.add(key))
+	);
+	data.forEach((obj) => Object.keys(obj).forEach((key) => allProps.add(key)));
 
 	for (const traceDataObj of traceData) {
 		let isMatchFound = false;
@@ -32,14 +38,25 @@ export function MergeData(
 					traceDataObj["InputFileName"] === dataObj["InputFileName"]) ||
 				(dataObj["name"] && traceDataObj["InputFileName"] === dataObj["name"])
 			) {
-				const mergedObj = Object.assign({}, traceDataObj, dataObj);
+				const mergedObj = { ...traceDataObj, ...dataObj };
+				allProps.forEach((prop) => {
+					if (mergedObj[prop] === undefined) {
+						mergedObj[prop] = null;
+					}
+				});
 				mergedData.push(mergedObj);
 				isMatchFound = true;
 				break;
 			}
 		}
 		if (!isMatchFound) {
-			mergedData.push(traceDataObj);
+			const objWithAllProps = { ...traceDataObj };
+			allProps.forEach((prop) => {
+				if (objWithAllProps[prop] === undefined) {
+					objWithAllProps[prop] = null;
+				}
+			});
+			mergedData.push(objWithAllProps);
 		}
 	}
 	return mergedData;

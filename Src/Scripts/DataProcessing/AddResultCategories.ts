@@ -41,7 +41,7 @@ export function AddResultCategories(traceData: object[]): void {
 		);
 
 		if (
-			!obj.hasOwnProperty.call("PrimalBoundProblem") ||
+			!obj.hasOwnProperty("PrimalBoundProblem") ||
 			!obj["PrimalBoundProblem"]
 		) {
 			obj["PrimalBoundProblem"] = CalculatePrimalBound(
@@ -50,10 +50,7 @@ export function AddResultCategories(traceData: object[]): void {
 			);
 		}
 
-		if (
-			!obj.hasOwnProperty.call("DualBoundProblem") ||
-			!obj["DualBoundProblem"]
-		) {
+		if (!obj.hasOwnProperty("DualBoundProblem") || !obj["DualBoundProblem"]) {
 			obj["DualBoundProblem"] = CalculateDualBound(
 				obj["DualBoundSolver"],
 				obj["Direction"]
