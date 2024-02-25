@@ -146,11 +146,7 @@ export function StatisticsTable(
 		"statisticsTable"
 	) as HTMLDivElement;
 	statisticsTableDiv.innerHTML = "";
-	statisticsTableDiv.classList.add(
-		"table-responsive",
-		"me-3",
-		"ms-1"
-	);
+	statisticsTableDiv.classList.add("table-responsive", "me-3", "ms-1");
 
 	const statisticsTable = document.createElement("table");
 	statisticsTable.classList.add(
