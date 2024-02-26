@@ -72,6 +72,7 @@ export function CreateChart(
 		},
 		options: {
 			responsive: true,
+			maintainAspectRatio: false,
 			scales: scaleOptions,
 			plugins: {
 				title: {
