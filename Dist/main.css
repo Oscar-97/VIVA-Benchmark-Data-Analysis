@@ -2219,11 +2219,6 @@ body > :not(nav, hr) {
 	transition: opacity 0.5s;
 }
 
-/* body, html {
-    overflow-x: hidden; 
-    max-width: 100%;
-} */
-
 @media (max-width: 1250px) {
 	.dt-buttons button {
 		margin-bottom: 5px;
@@ -2264,13 +2259,13 @@ body > :not(nav, hr) {
 }
 
 #chartContainer {
-	height: auto;
-	width: 100%;
-	min-height: 350px;
-	min-width: 530px;
-
-	overflow-x: auto;
-	margin-left: 1rem;
+    height: auto;
+    width: 95%;
+    max-width: 95vw;
+    min-height: 500px;
+    margin-left: 1rem;
+	margin-right: 1rem;
+	overflow: hidden;
 }
 
 #dataTable {
