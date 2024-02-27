@@ -236,7 +236,7 @@ describe("UI tests", () => {
 			);
 			await WaitForElementAndClick(page, "#saveLocalStorageButton");
 			await page.reload();
-			await page.waitForTimeout(1000);
+			await page.waitForTimeout(3000);
 			await CheckNotification(
 				page,
 				"#alertNotification",
@@ -394,7 +394,7 @@ describe("UI tests", () => {
 			expect(firstHeaderValueText).toBe("Problem");
 		}, 60000);
 
-		test.only("Use pagination on the table", async () => {
+		test("Use pagination on the table", async () => {
 			await UploadFile(page, ["./Tests/TestData/shotALL.trc"]);
 			await RunTableOperations(
 				page,
@@ -446,7 +446,7 @@ describe("UI tests", () => {
 			await page.waitForSelector('input[type="file"]');
 			await page.setInputFiles(
 				'input[type="file"]',
-				"./TestData/library_test.trc"
+				"./Tests/TestData/library_test.trc"
 			);
 			await page.waitForTimeout(2000);
 			await page.selectOption("#librarySelector", "MINLPLib");
@@ -478,7 +478,7 @@ describe("UI tests", () => {
 			await page.waitForSelector('input[type="file"]');
 			await page.setInputFiles(
 				'input[type="file"]',
-				"./TestData/library_test.trc"
+				"./Tests/TestData/library_test.trc"
 			);
 			await page.waitForTimeout(2000);
 			await page.selectOption("#librarySelector", "MIPLIB");

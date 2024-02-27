@@ -318,10 +318,8 @@ function ManageData(): void {
 			soluData = GetBestKnownBounds(unprocessedSolutionData);
 		} else if (librarySelector.value === "MINLPLib") {
 			soluData = MINLPLIB_SOLUTION_DATA;
-			librarySelector.disabled = true;
 		} else if (librarySelector.value === "MIPLIB") {
 			soluData = MIPLIB_2017_SOLUTION_DATA;
-			librarySelector.disabled = true;
 		}
 
 		if (soluData) {

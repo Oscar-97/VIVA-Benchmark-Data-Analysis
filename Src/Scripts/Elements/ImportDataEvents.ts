@@ -6,7 +6,9 @@ import {
 	viewPlotsButton,
 	deleteLocalStorageButton,
 	saveLocalStorageButton,
-	solverSelector
+	solverSelector,
+	dataTableGeneratedWrapper,
+	dataTableGenerated
 } from "./Elements";
 import { DisplayAlertNotification } from "./DisplayAlertNotification";
 
@@ -40,16 +42,12 @@ export function ImportDataEvents(
 	fileExtensionType?: string
 ): void {
 	try {
-		const tableElementWrapper = document.getElementById(
-			"dataTableGenerated_wrapper"
-		);
-		if (tableElementWrapper) {
-			tableElementWrapper.remove();
+		if (dataTableGeneratedWrapper) {
+			dataTableGeneratedWrapper.remove();
 		}
 
-		const tableElement = document.getElementById("dataTableGenerated");
-		if (tableElement) {
-			tableElement.remove();
+		if (dataTableGenerated) {
+			dataTableGenerated.remove();
 		}
 	} catch (err) {
 		console.error("Could not remove elements: ", err);

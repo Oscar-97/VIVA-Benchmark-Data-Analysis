@@ -149,6 +149,36 @@ export const dataTable: HTMLDivElement = document.getElementById(
 ) as HTMLDivElement;
 
 /**
+ * `dataTableGenerated` is a reference to the HTMLTableElement with the ID "dataTableGenerated".
+ * @type {HTMLTableElement}
+ */
+export const dataTableGenerated = document.getElementById("dataTableGenerated");
+
+/**
+ * `dataTableGeneratedWrapper` is a reference to the HTMLDivElement with the ID "dataTableGenerated_wrapper".
+ * @type {HTMLDivElement}
+ */
+export const dataTableGeneratedWrapper = document.getElementById(
+	"dataTableGenerated_wrapper"
+);
+
+/**
+ * `statisticsTableDiv` is a reference to the HTMLDivElement with the ID "statisticsTable".
+ * @type {HTMLDivElement}
+ */
+export const statisticsTableDiv: HTMLDivElement = document.getElementById(
+	"statisticsTable"
+) as HTMLDivElement;
+
+/**
+ * `chartCanvas` is a reference to the HTMLCanvasElement with the UD "myChart".
+ * @type {HTMLCanvasElement}
+ */
+export const chartCanvas: HTMLCanvasElement = document.getElementById(
+	"myChart"
+) as HTMLCanvasElement;
+
+/**
  * `viewPlotsButton` is a reference to the HTMLButtonElement with the ID "viewPlotsButton".
  * @type {HTMLButtonElement}
  */

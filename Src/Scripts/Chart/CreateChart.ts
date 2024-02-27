@@ -1,4 +1,5 @@
 import Chart from "chart.js/auto";
+import { chartCanvas } from "../Elements/Elements";
 let myChart = null;
 
 /**
@@ -63,7 +64,6 @@ export function CreateChart(
 		myChart.destroy();
 	}
 
-	const chartCanvas = document.getElementById("myChart") as HTMLCanvasElement;
 	myChart = new Chart(chartCanvas, {
 		type: type,
 		data: {

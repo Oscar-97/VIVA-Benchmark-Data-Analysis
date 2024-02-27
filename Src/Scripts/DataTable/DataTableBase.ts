@@ -1,4 +1,4 @@
-import { dataTable } from "../Elements/Elements";
+import { dataTable, statisticsTableDiv } from "../Elements/Elements";
 import { TraceHeaderMap } from "../Constants/TraceHeaders";
 
 /**
@@ -142,9 +142,6 @@ export function StatisticsTable(
 	},
 	title: string
 ): void {
-	const statisticsTableDiv = document.getElementById(
-		"statisticsTable"
-	) as HTMLDivElement;
 	statisticsTableDiv.innerHTML = "";
 	statisticsTableDiv.classList.add("table-responsive", "me-3", "ms-1");
 

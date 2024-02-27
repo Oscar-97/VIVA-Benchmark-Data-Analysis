@@ -1,4 +1,3 @@
-//const jq = require("jquery");
 import $ from "jquery";
 import "datatables.net-bs5";
 import "datatables.net-fixedcolumns-bs5";
@@ -12,6 +11,10 @@ import "datatables.net-buttons/js/buttons.print.mjs";
 import "datatables.net-datetime";
 
 import { TableDataTrc } from "./DataTableBase";
+import {
+	dataTableGenerated,
+	dataTableGeneratedWrapper
+} from "../Elements/Elements";
 import { ElementStateDisplayedTable } from "../Elements/ElementStatus";
 import { DEFAULT_VISIBLE_HEADERS } from "../Constants/TraceHeaders";
 
@@ -225,15 +228,11 @@ export function DestroyDataTable(): void {
 	table.destroy();
 	table.state.clear();
 
-	const tableElementWrapper = document.getElementById(
-		"dataTableGenerated_wrapper"
-	);
-	if (tableElementWrapper) {
-		tableElementWrapper.remove();
+	if (dataTableGeneratedWrapper) {
+		dataTableGeneratedWrapper.remove();
 	}
 
-	const tableElement = document.getElementById("dataTableGenerated");
-	if (tableElement) {
-		tableElement.remove();
+	if (dataTableGenerated) {
+		dataTableGenerated.remove();
 	}
 }
