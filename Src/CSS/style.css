@@ -55,8 +55,13 @@ body > :not(nav, hr) {
 
 #comparisonTable {
 	visibility: visible;
+	max-width: 400px;
 	padding: 1rem;
-	padding-top: 1rem;
+}
+
+#comparisonTable th, #comparisonTable td {
+	text-align: center;
+  	word-wrap: break-word;
 }
 
 #dataTable {
@@ -84,7 +89,7 @@ body > :not(nav, hr) {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
-	max-width: 100vw;
+	max-width: 95vw;
   }
 
 #statisticsTable {
