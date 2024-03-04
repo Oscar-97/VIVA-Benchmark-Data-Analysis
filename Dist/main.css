@@ -2268,6 +2268,12 @@ body > :not(nav, hr) {
 	overflow: hidden;
 }
 
+#comparisonTable {
+	visibility: visible;
+	padding: 1rem;
+	padding-top: 1rem;
+}
+
 #dataTable {
 	visibility: hidden;
 	padding: 1rem;
@@ -2288,6 +2294,13 @@ body > :not(nav, hr) {
 #loaderContainer {
 	display: none;
 }
+
+#solverOptions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	max-width: 100vw;
+  }
 
 #statisticsTable {
 	visibility: visible;
