@@ -8,7 +8,8 @@ import {
 	saveLocalStorageButton,
 	solverSelector,
 	dataTableGeneratedWrapper,
-	dataTableGenerated
+	dataTableGenerated,
+	compareSolversButton
 } from "./Elements";
 import { DisplayAlertNotification } from "./DisplayAlertNotification";
 
@@ -61,7 +62,14 @@ export function ImportDataEvents(
 		if (fileExtensionType === "json") {
 			deleteLocalStorageButton.disabled = false;
 		}
-	} else if (document.title !== "Report") {
+	} else if (document.title === "Compare Solvers") {
+		compareSolversButton.disabled = false;
+		importDataButton.disabled = true;
+		saveLocalStorageButton.disabled = true;
+		if (fileExtensionType === "json") {
+			deleteLocalStorageButton.disabled = false;
+		}
+	} else {
 		viewPlotsButton.disabled = false;
 		importDataButton.disabled = true;
 		saveLocalStorageButton.disabled = true;
@@ -86,19 +94,19 @@ export function FillSolverSelectorList(traceData: object[]): void {
 	const uniqueSolvers = traceData
 		.map((solver) => {
 			return solver["SolverName"];
-		}) // First, extract all usernames
+		})
 		.filter((solverName, index, self) => {
 			return self.indexOf(solverName) === index;
-		}); // Then filter out duplicates
+		});
 
 	uniqueSolvers.forEach((solver: string) => {
 		const option = document.createElement("option");
-		option.value = solver; // Assuming the value is also the UserName
+		option.value = solver;
 		option.textContent = solver;
 
 		if (!isSelectedSet) {
 			option.selected = true;
-			isSelectedSet = true; // Ensure only the first option is set as selected
+			isSelectedSet = true;
 		}
 
 		solverSelector.appendChild(option);

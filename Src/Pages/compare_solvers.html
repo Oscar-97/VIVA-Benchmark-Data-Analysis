@@ -10,7 +10,7 @@
 			content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers."
 		/>
 		<!-- Title and icon -->
-		<title id="ReportTitle">Termination Status</title>
+		<title id="ReportTitle">Compare Solvers</title>
 		<link rel="icon" href="../CSS/tab_icon.png" />
 		<!-- Styling -->
 		<link href="../../Dist/main.css" rel="stylesheet" />
@@ -49,7 +49,7 @@
 						</li>
 						<li class="nav-item dropdown">
 							<a
-								class="nav-link dropdown-toggle active"
+								class="nav-link dropdown-toggle"
 								role="button"
 								data-bs-toggle="dropdown"
 								aria-expanded="false"
@@ -82,7 +82,10 @@
 								</li>
 								<hr />
 								<li>
-									<a class="dropdown-item" href="../Pages/number_of_nodes.html"
+									<a 
+										class="dropdown-item"
+										href="../Pages/number_of_nodes.html"
+
 										><i class="bi bi-bar-chart-line"></i> Number of Nodes</a
 									>
 								</li>
@@ -95,16 +98,17 @@
 									>
 								</li>
 								<li>
-									<span class="dropdown-item active"
-										><i class="bi bi-bar-chart-line"></i> Termination
-										Status</span
+									<a
+										class="dropdown-item"
+										href="../Pages/termination_status.html"
+										><i class="bi bi-bar-chart-line"></i> Termination Status</a
 									>
 								</li>
 							</ul>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" aria-current="page" href="../Pages/compare_solvers.html"
-								><i class="bi bi-view-stacked"></i> Compare Solvers</a
+							<span class="nav-link active" aria-current="page"
+								><i class="bi bi-view-stacked"></i> Compare Solvers</span
 							>
 						</li>
 						<li class="nav-item">
@@ -208,9 +212,9 @@
 				<button
 					class="btn btn-success btn-sm"
 					type="submit"
-					id="viewPlotsButton"
+					id="compareSolversButton"
 				>
-					<i class="bi bi-diagram-2"></i> View Termination Status
+					<i class="bi bi-grid"></i> Compare Solvers
 				</button>
 			</div>
 			<div class="col-auto">
@@ -257,23 +261,6 @@
 					<i class="bi bi-gear"></i> Download Data
 				</button>
 			</div>
-			<div class="col-auto">
-				<button
-					class="btn btn-dark btn-sm"
-					type="button"
-					id="downloadChartDataButtonLayer"
-					disabled="true"
-				>
-					<a
-						id="downloadChartDataButton"
-						data-toggle="tooltip"
-						data-placement="top"
-						title="Download the chart data."
-						><i class="bi bi-file-earmark-arrow-down"></i> Download Chart
-						Data</a
-					>
-				</button>
-			</div>
 			<div class="col-auto vertical-separator"></div>
 			<div class="col-auto">
 				<button
@@ -285,19 +272,49 @@
 				>
 					<i class="bi bi-trash"></i> Delete Data
 				</button>
+			</div>		
+		</div>
+
+		<div
+		class="d-flex flex-wrap justify-content-start gap-2"
+		style="margin-left: 1rem; margin-top: 1rem"
+	>
+		<div class="col-auto">
+			<div class="input-group mb-1">
+				<div class="input-group mb-1" id="solverOptions">
+					<!-- Checkboxes will be added here dynamically -->
+				</div>		
 			</div>
+		</div>
 		</div>
 		<hr />
 
-		<div id="chartContainer">
-			<canvas id="myChart" class="chart">
-				<!-- Content created with Chart.js will be displayed here. -->
-			</canvas>
+		<div id="comparisonTable">
+			<!-- Table with the comparison data. -->
+		</div>
+		<!-- Modal for solver comparison. -->
+		<div 
+		class="modal fade" 
+		id="solverComparisonModal" 
+		tabindex="-1" 
+		aria-labelledby="solverComparisonModalLabel" 
+		aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="solverComparisonModalLabel"></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body" id="solverComparisonModalBody">
+						<!-- Details will be inserted here. -->
+					</div>
+					<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
 		</div>
 
-		<div id="statisticsTable">
-			<!-- statistics table element will be created here. -->
-		</div>
 		<!-- Modal with file information. -->
 		<div
 			class="modal fade"

@@ -171,6 +171,14 @@ export const statisticsTableDiv: HTMLDivElement = document.getElementById(
 ) as HTMLDivElement;
 
 /**
+ * `comparisonTableDiv` is a reference to the HTMLDivElement with the ID "comparisonTable".
+ * @type {HTMLDivElement}
+ */
+export const comparisonTableDiv: HTMLDivElement = document.getElementById(
+	"comparisonTable"
+) as HTMLDivElement;
+
+/**
  * `chartCanvas` is a reference to the HTMLCanvasElement with the UD "myChart".
  * @type {HTMLCanvasElement}
  */
@@ -184,6 +192,14 @@ export const chartCanvas: HTMLCanvasElement = document.getElementById(
  */
 export const viewPlotsButton: HTMLButtonElement = document.getElementById(
 	"viewPlotsButton"
+) as HTMLButtonElement;
+
+/**
+ * `compareSolversButton` is a reference to the HTMLButtonElement with the ID "compareSolversButton".
+ * @type {HTMLButtonElement}
+ */
+export const compareSolversButton: HTMLButtonElement = document.getElementById(
+	"compareSolversButton"
 ) as HTMLButtonElement;
 
 /**
@@ -259,3 +275,25 @@ export const gapLimitDirectInput: HTMLInputElement = document.getElementById(
 export const gapTypeSelector: HTMLSelectElement = document.getElementById(
 	"gapTypeSelector"
 ) as HTMLSelectElement;
+
+/**
+ * 'solverComparisonModal' is a reference to the HTMLDivElement with the ID "solverComparisonModal".
+ * @type {HTMLDivElement}
+ */
+export const solverComparisonModal: HTMLDivElement = document.getElementById(
+	"solverComparisonModal"
+) as HTMLDivElement;
+
+/**
+ * 'solverComparisonModalLabel' is a reference to the HTMLHeadingElement with the ID "solverComparisonModalLabel".
+ * @type {HTMLHeadingElement}
+ */
+export const solverComparisonModalLabel: HTMLHeadingElement =
+	document.getElementById("solverComparisonModalLabel") as HTMLHeadingElement;
+
+/**
+ * 'solverComparisonModalBody' is a reference to the HTMLDivElement with the ID "solverComparisonModalBody".
+ * @type {HTMLDivElement}
+ */
+export const solverComparisonModalBody: HTMLDivElement =
+	document.getElementById("solverComparisonModalBody") as HTMLDivElement;

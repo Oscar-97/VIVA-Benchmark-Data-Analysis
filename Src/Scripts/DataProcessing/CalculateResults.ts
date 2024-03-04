@@ -387,7 +387,7 @@ export function ExtractAllSolverTimes(traceData: object[]): object {
 }
 
 /**
- * `ExtractAllSolverTimesNoFailedAndGapBelow1Percent` function is used to structure trace data (log of the solver) into a more accessible object
+ * `ExtractAllSolverTimesGapType` function is used to structure trace data (log of the solver) into a more accessible object
  * structure. It takes an array of objects (traceData) and returns an object.
  *
  * The returned object has a unique key for each solver and the value is an array of objects, each containing a 'time'
@@ -399,7 +399,7 @@ export function ExtractAllSolverTimes(traceData: object[]): object {
  * @returns {object} - An object with solver names as keys. Each key points to an array of objects where each object
  * contains 'time' and 'InputFileName' property of the corresponding solver.
  */
-export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
+export function ExtractAllSolverTimesGapType(
 	traceData: object[],
 	selectedGapType: string,
 	defaultTime?: number | undefined,
@@ -452,4 +452,62 @@ export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 		{}
 	);
 	return result;
+}
+
+/**
+ * `CompareSolvers` function is used to structure trace data (log of the solver) into a more accessible object
+ * structure. It takes an array of objects (traceData) and returns an object.
+ *
+ * The returned object has a unique key for each solver and the value is an array of objects, each containing a 'time'
+ * @param solver1 - The name of the first solver to compare.
+ * @param solver2 - The name of the second solver to compare.
+ * @param solverTimes - An object with 'time' and 'InputFileName' properties.
+ * @returns {object} - An object with solver names as keys. Each key points to an array of objects where each object
+ * contains 'time1', 'time2', 'InputFileName', 'comparison' property of the corresponding solver.
+ */
+export function CompareSolvers(
+	solver1: string,
+	solver2: string,
+	solverTimes
+): { better: number; worse: number; equal: number; details: object[] } {
+	const results1 = solverTimes[solver1];
+	const results2 = solverTimes[solver2];
+
+	const comparisonSummary = { better: 0, worse: 0, equal: 0, details: [] };
+
+	results1.forEach((result1: { InputFileName: string; time: number }) => {
+		const result2 = results2.find(
+			(r: { InputFileName: string }) =>
+				r.InputFileName === result1.InputFileName
+		);
+		if (result2) {
+			if (result1.time < result2.time) {
+				comparisonSummary.better++;
+				comparisonSummary.details.push({
+					InputFileName: result1.InputFileName,
+					time1: result1.time,
+					time2: result2.time,
+					comparison: "better"
+				});
+			} else if (result1.time > result2.time) {
+				comparisonSummary.worse++;
+				comparisonSummary.details.push({
+					InputFileName: result1.InputFileName,
+					time1: result1.time,
+					time2: result2.time,
+					comparison: "worse"
+				});
+			} else {
+				comparisonSummary.equal++;
+				comparisonSummary.details.push({
+					InputFileName: result1.InputFileName,
+					time1: result1.time,
+					time2: result2.time,
+					comparison: "equal"
+				});
+			}
+		}
+	});
+
+	return comparisonSummary;
 }

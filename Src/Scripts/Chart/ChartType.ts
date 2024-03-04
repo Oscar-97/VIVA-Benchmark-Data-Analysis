@@ -2,7 +2,7 @@ import {
 	AnalyzeDataByCategory,
 	ExtractStatusMessages,
 	ExtractAllSolverTimes,
-	ExtractAllSolverTimesNoFailedAndGapBelow1Percent
+	ExtractAllSolverTimesGapType
 } from "../DataProcessing/CalculateResults";
 import { PickColor, CreateChart } from "./CreateChart";
 import { StatisticsTable } from "../DataTable/DataTableBase";
@@ -148,13 +148,12 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 	showLine: boolean;
 }[] {
 	const selectedGapType = gapTypeSelector.value;
-	const absolutePerformanceProfileSolverTimes =
-		ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
-			traceData,
-			selectedGapType,
-			defaultTime,
-			gapLimit
-		);
+	const absolutePerformanceProfileSolverTimes = ExtractAllSolverTimesGapType(
+		traceData,
+		selectedGapType,
+		defaultTime,
+		gapLimit
+	);
 	const allLabels = [];
 	const allXValues: number[] = [];
 	const data = (

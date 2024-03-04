@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { chromium, Browser, Page, BrowserContext, Download } from "playwright";
 import * as path from "path";
 
@@ -122,6 +123,14 @@ describe("UI tests", () => {
 			expect(terminationStatusTitle).toBe("Termination Status");
 			await page.screenshot({
 				path: "TestScreenshots/terminationstatus.png"
+			});
+
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[3]/a");
+			await page.waitForTimeout(2000);
+			const compareSolversTitle = await page.title();
+			expect(compareSolversTitle).toBe("Compare Solvers");
+			await page.screenshot({
+				path: "TestScreenshots/comparesolvers.png"
 			});
 
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[1]/a");
@@ -558,6 +567,104 @@ describe("UI tests", () => {
 
 		test("Termination Status Page", async () => {
 			await RunPlotOperations("../Src/Pages/termination_status.html");
+		}, 10000);
+	});
+
+	describe("Compare Solvers Page", () => {
+		async function RunCompareSolversOperations(): Promise<void> {
+			const filePath = "../Src/Pages/compare_solvers.html";
+			const absoluteFilePath: string = path.resolve(__dirname, filePath);
+			const fileUrl = `file://${absoluteFilePath}`;
+
+			await page.goto(fileUrl);
+
+			await UploadFile(page, [
+				"./Tests/TestData/shotALL.trc",
+				"./Tests/TestData/scipALL.trc",
+				"./Tests/TestData/pavitoALL.trc"
+			]);
+
+			await CheckNotification(
+				page,
+				"#alertNotification",
+				"Benchmarks loaded with following files: shotALL.trc, scipALL.trc, pavitoALL.trc"
+			);
+			await page.waitForTimeout(2000);
+			const closeButton = await page.$("#closeAlertButton");
+			closeButton?.click();
+			await page.waitForTimeout(1000);
+			await page.waitForSelector("#solverOptions", {
+				state: "visible",
+				timeout: 3000
+			});
+			await page.waitForTimeout(1000);
+		}
+
+		test("Select solvers and compare them", async () => {
+			RunCompareSolversOperations();
+
+			await WaitForElementAndClick(page, "#scip");
+			await WaitForElementAndClick(page, "#shot");
+
+			await WaitForElementAndClick(page, "#compareSolversButton");
+			await page.waitForSelector("#comparisonTable", {
+				state: "visible",
+				timeout: 3000
+			});
+
+			// TODO: Column order is not set. Update to some better paths later on.
+			const cell1 = await page.$(
+				"//tbody/tr[td[contains(text(), 'Better')]]/td[contains(@class, 'table-success') and contains(text(), '119')]"
+			);
+			expect(await cell1?.innerText()).toBe("119");
+
+			const cell2 = await page.$(
+				"//tbody/tr[td[contains(text(), 'Better')]]/td[contains(@class, 'table-success') and contains(text(), '212')]"
+			);
+			expect(await cell2?.innerText()).toBe("212");
+
+			const cell3 = await page.$(
+				"//tbody/tr[td[contains(text(), 'Worse')]]/td[contains(@class, 'table-danger') and contains(text(), '212')]"
+			);
+			expect(await cell3?.innerText()).toBe("212");
+
+			const cell4 = await page.$(
+				"//tbody/tr[td[contains(text(), 'Worse')]]/td[contains(@class, 'table-danger') and contains(text(), '119')]"
+			);
+			expect(await cell4?.innerText()).toBe("119");
+
+			const cell5 = await page.$(
+				"//tbody/tr[td[contains(text(), 'Equal')]]/td[contains(@class, 'table-warning') and contains(text(), '4')]"
+			);
+			expect(await cell5?.innerText()).toBe("4");
+
+			const cell6 = await page.$(
+				"//tbody/tr[td[contains(text(), 'Equal')]]/td[contains(@class, 'table-warning') and contains(text(), '4')]"
+			);
+			expect(await cell6?.innerText()).toBe("4");
+		}, 10000);
+
+		test("Select one solver and try to compare", async () => {
+			RunCompareSolversOperations();
+			await WaitForElementAndClick(page, "#shot");
+			await WaitForElementAndClick(page, "#compareSolversButton");
+			await CheckNotification(
+				page,
+				"#alertNotification",
+				"Please select exactly two solvers to compare."
+			);
+		}, 60000);
+
+		test("Select three solvers and try to compare", async () => {
+			await WaitForElementAndClick(page, "#shot");
+			await WaitForElementAndClick(page, "#scip");
+			await WaitForElementAndClick(page, "#pavito");
+			await WaitForElementAndClick(page, "#compareSolversButton");
+			await CheckNotification(
+				page,
+				"#alertNotification",
+				"Please select exactly two solvers to compare."
+			);
 		}, 10000);
 	});
 });

@@ -57,6 +57,7 @@ import {
 /**
  * DataTable.
  */
+import { ComparisonSummaryTable } from "./DataTable/DataTableBase";
 import {
 	DisplayDataTable,
 	DestroyDataTable
@@ -67,9 +68,15 @@ import { UpdateResults } from "./DataTable/UpdateResults";
  * Elements.
  */
 import {
+	PopulateCheckboxes,
+	GetSelectedCheckboxValues
+} from "./Elements/DynamicCheckboxes";
+import {
 	ElementStatesTablePage,
 	ElementStatesPlotPage,
-	ElementStateDisplayedChart
+	ElementStateDisplayedChart,
+	ElementStatesCompareSolversPage,
+	ElementStateDisplayedComparisonTable
 } from "./Elements/ElementStatus";
 import {
 	fileInput,
@@ -91,7 +98,8 @@ import {
 	configurationSettingsButton,
 	defaultTimeDirectInput,
 	gapLimitDirectInput,
-	gapLimitInput
+	gapLimitInput,
+	compareSolversButton
 } from "./Elements/Elements";
 import {
 	BodyFadeLoadingAnimation,
@@ -121,6 +129,10 @@ import {
 	ReversedTraceHeaderMap,
 	TraceHeaderMap
 } from "./Constants/TraceHeaders";
+import {
+	ExtractAllSolverTimes,
+	CompareSolvers
+} from "./DataProcessing/CalculateResults";
 //#endregion
 
 /**
@@ -179,6 +191,8 @@ function InitializeProgram(): void {
 	 */
 	if (document.title === "Report") {
 		ElementStatesTablePage();
+	} else if (document.title === "Compare Solvers") {
+		ElementStatesCompareSolversPage();
 	} else {
 		ElementStatesPlotPage();
 	}
@@ -398,10 +412,18 @@ function ManageData(): void {
 	}
 
 	/**
+	 * If the document title is "Compare Solvers", it handles the compare solvers page functionality using
+	 * the traceData variable.
+	 */
+	if (document.title === "Compare Solvers") {
+		HandleCompareSolversPage(traceData);
+	}
+
+	/**
 	 * If the document title is not "Report", it handles the plot page functionality using
 	 * the traceData variable.
 	 */
-	if (document.title !== "Report") {
+	if (document.title !== "Report" && document.title !== "Compare Solvers") {
 		HandlePlotPages(traceData);
 		if (dataFileType === "json") {
 			viewPlotsButton.click();
@@ -596,6 +618,51 @@ function HandlePlotPages(traceData: object[]): void {
 		} else {
 			DisplayErrorNotification("No chart data found!");
 		}
+	});
+}
+
+function HandleCompareSolversPage(traceData: object[]): void {
+	const solverTimes = ExtractAllSolverTimes(traceData);
+	PopulateCheckboxes(solverTimes);
+
+	/**
+	 * Save to local storage when clicking on the "Save Data" button.
+	 */
+	saveLocalStorageButton.addEventListener("click", () => {
+		if (dataFileType === "trc") {
+			dataFileType = "json";
+		}
+		const newRawData: string[] = CreateNewTraceData(traceData);
+		CreateUserConfiguration(newRawData, dataFileType);
+		deleteLocalStorageButton.disabled = false;
+		downloadConfigurationButtonLayer.disabled = false;
+	});
+
+	/**
+	 * Event listener for the compare solvers button.
+	 */
+	compareSolversButton.addEventListener("click", () => {
+		const selectedSolvers = GetSelectedCheckboxValues();
+		if (selectedSolvers.length !== 2) {
+			DisplayErrorNotification("Please select exactly two solvers to compare.");
+		}
+		const comparisonSummary = CompareSolvers(
+			selectedSolvers[0],
+			selectedSolvers[1],
+			solverTimes
+		);
+		const inverseComparisonSummary = CompareSolvers(
+			selectedSolvers[1],
+			selectedSolvers[0],
+			solverTimes
+		);
+		ComparisonSummaryTable(
+			comparisonSummary,
+			inverseComparisonSummary,
+			selectedSolvers[0],
+			selectedSolvers[1]
+		);
+		ElementStateDisplayedComparisonTable();
 	});
 }
 

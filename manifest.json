@@ -79,6 +79,17 @@
 			]
 		},
 		{
+			"name": "Compare Solvers",
+			"url": "Src/Pages/compare_solvers.html",
+			"icons": [
+				{
+					"src": "Src/CSS/icon_maskable.png",
+					"sizes": "192x192",
+					"type": "image/png"
+				}
+			]
+		},
+		{
 			"name": "Solver Time",
 			"url": "Src/Pages/solver_time.html",
 			"icons": [

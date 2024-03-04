@@ -14,7 +14,8 @@ import {
 	loaderContainer,
 	dataTable,
 	defaultTimeDirectInput,
-	gapLimitDirectInput
+	gapLimitDirectInput,
+	compareSolversButton
 } from "./Elements";
 
 /**
@@ -27,7 +28,7 @@ import {
  * 1. Clear the loader container's inner HTML.
  * 2. Hide the data table.
  * 3. Clear the file input's value.
- * 4. Disable various interactive buttons (import data, library selector, view all results, filter selection,
+ * 4. Disable various interactive buttons (library selector, view all results, filter selection,
  *    save local storage, download configuration, delete local storage, clear table).
  */
 export function ElementStatesTablePage(): void {
@@ -54,7 +55,7 @@ export function ElementStatesTablePage(): void {
  *
  * This function is typically called when the plot page is first loaded or refreshed. It's designed to:
  * 1. Clear the file input's value.
- * 2. Disable various interactive buttons (import data, library selector, view plots, save local storage,
+ * 2. Disable various interactive buttons (library selector, view plots, save local storage,
  * 	  download configuration, delete local storage).
  */
 export function ElementStatesPlotPage(): void {
@@ -71,6 +72,28 @@ export function ElementStatesPlotPage(): void {
 		defaultTimeDirectInput.value = "";
 		gapLimitDirectInput.value = "";
 	}
+}
+
+/**
+ * Resets the status of several elements to their initial state when the user first arrives at,
+ * or reloads, the compare solvers page.
+ *
+ * @remarks
+ *
+ * This function is typically called when the compare solvers page is first loaded or refreshed. It's designed to:
+ * 1. Clear the file input's value.
+ * 2. Disable various interactive buttons (library selector, compare solvers, save local storage,
+ * 	  download configuration, delete local storage).
+ */
+export function ElementStatesCompareSolversPage(): void {
+	fileInput.value = "";
+	librarySelector.value = "none";
+	librarySelector.disabled = true;
+	compareSolversButton.disabled = true;
+	saveLocalStorageButton.disabled = true;
+	downloadConfigurationButtonLayer.disabled = true;
+	configurationSettingsButton.disabled = true;
+	deleteLocalStorageButton.disabled = true;
 }
 
 /**
@@ -103,5 +126,18 @@ export function ElementStateDisplayedChart(): void {
 	saveLocalStorageButton.disabled = false;
 	downloadConfigurationButtonLayer.disabled = false;
 	downloadChartDataButtonLayer.disabled = false;
+	deleteLocalStorageButton.disabled = false;
+}
+
+/**
+ * Updates the status of several buttons when a comparison table is displayed.
+ *
+ * @remarks
+ *
+ * This function is typically called after a comparison table is generated and displayed on the page.
+ */
+export function ElementStateDisplayedComparisonTable(): void {
+	saveLocalStorageButton.disabled = false;
+	downloadConfigurationButtonLayer.disabled = false;
 	deleteLocalStorageButton.disabled = false;
 }

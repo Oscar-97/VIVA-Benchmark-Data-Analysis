@@ -1,6 +1,14 @@
-import { dataTable, statisticsTableDiv } from "../Elements/Elements";
+import {
+	comparisonTableDiv,
+	dataTable,
+	solverComparisonModal,
+	solverComparisonModalBody,
+	solverComparisonModalLabel,
+	statisticsTableDiv
+} from "../Elements/Elements";
 import { TraceHeaderMap } from "../Constants/TraceHeaders";
-
+import "bootstrap/dist/css/bootstrap.min.css";
+import Modal from "bootstrap/js/dist/modal";
 /**
  * Sorts the keys by an enumeration and then by alphabetical order for non-enumeration keys.
  *
@@ -210,4 +218,153 @@ export function StatisticsTable(
 
 	statisticsTable.appendChild(tableBody);
 	statisticsTableDiv.appendChild(statisticsTable);
+}
+
+/**
+ * Function to dynamically create and display a HTML table based on the comparison summary of two solvers.
+ * The cell values are clickable and display a list of instances where the solver time was better, worse, or equal, depending on the clicked cell.
+ *
+ * @param comparisonSummary An object that holds the comparison summary of two solvers.
+ * The object has three keys: better, worse, and equal, and each key holds the number of instances where the first solver was better, worse, or equal to the second solver.
+ * @param comparisonSummaryInverse Inverse comparison summary of the two solvers.
+ * @param solver1Name The name of the first solver.
+ * @param solver2Name The name of the second solver.
+ *
+ * @remarks
+ * This function generates a new table displaying the comparison summary of two solvers. The table is added to the 'comparisonTableContainer' HTML div.
+ */
+export function ComparisonSummaryTable(
+	comparisonSummary,
+	comparisonSummaryInverse,
+	solver1Name: string,
+	solver2Name: string
+): void {
+	if (!comparisonTableDiv) return;
+
+	comparisonTableDiv.innerHTML = "";
+	comparisonTableDiv.classList.add("table-responsive", "me-3", "ms-1");
+
+	const comparisonTable = document.createElement("table");
+	comparisonTable.classList.add(
+		"table",
+		"table-bordered",
+		"table-hover",
+		"table-sm"
+	);
+
+	const tableCaption = document.createElement("caption");
+	tableCaption.textContent =
+		"Direct comparison on how many instances the solver time was better, worse or equal.";
+	comparisonTable.appendChild(tableCaption);
+
+	const header = document.createElement("thead");
+	header.classList.add("table-light");
+
+	const headerRow = document.createElement("tr");
+	headerRow.appendChild(document.createElement("th"));
+	headerRow.appendChild(CreateHeaderCell(solver1Name));
+	headerRow.appendChild(CreateHeaderCell(solver2Name));
+	header.appendChild(headerRow);
+
+	comparisonTable.appendChild(header);
+
+	const tableBody = document.createElement("tbody");
+	const comparisons = ["Better", "Worse", "Equal"];
+	comparisons.forEach((comparison) => {
+		const row = document.createElement("tr");
+		row.appendChild(CreateCell(comparison));
+
+		let value1: number, value2: number;
+		switch (comparison) {
+			case "Better":
+				value1 = comparisonSummary.better;
+				value2 = comparisonSummaryInverse.better;
+				break;
+			case "Worse":
+				value1 = comparisonSummary.worse;
+				value2 = comparisonSummaryInverse.worse;
+				break;
+			case "Equal":
+				value1 = comparisonSummary.equal;
+				value2 = comparisonSummaryInverse.equal;
+				break;
+		}
+
+		row.appendChild(
+			CreateClickableCell(value1, comparison, comparisonSummary.details)
+		);
+		row.appendChild(
+			CreateClickableCell(value2, comparison, comparisonSummaryInverse.details)
+		);
+
+		tableBody.appendChild(row);
+	});
+
+	comparisonTable.appendChild(tableBody);
+	comparisonTableDiv.appendChild(comparisonTable);
+}
+
+function CreateHeaderCell(text: string): HTMLTableCellElement {
+	const th = document.createElement("th");
+	th.textContent = text;
+	return th;
+}
+
+function CreateCell(text: string): HTMLTableCellElement {
+	const td = document.createElement("td");
+	td.classList.add("fw-bold");
+	td.textContent = text;
+	return td;
+}
+
+function CreateClickableCell(
+	value,
+	comparisonType,
+	details
+): HTMLTableCellElement {
+	const td = document.createElement("td");
+
+	switch (comparisonType) {
+		case "Better":
+			td.classList.add("table-success");
+			break;
+		case "Worse":
+			td.classList.add("table-danger");
+			break;
+		case "Equal":
+			td.classList.add("table-warning");
+			break;
+	}
+	td.textContent = value.toString();
+	td.style.cursor = "pointer";
+	td.onclick = (): void => DisplayDetails(comparisonType, details);
+	return td;
+}
+
+function DisplayDetails(comparisonType, details): void {
+	const filteredDetails = details.filter(
+		(detail) => detail.comparison === comparisonType.toLowerCase()
+	);
+
+	if (solverComparisonModalLabel)
+		solverComparisonModalLabel.innerHTML = `<i class="bi bi-clock-history"></i> Instances were solver times were: ${comparisonType}`;
+	if (solverComparisonModalBody) {
+		solverComparisonModalBody.innerHTML = "";
+		const listGroup = document.createElement("ul");
+		listGroup.className = "list-group";
+
+		filteredDetails.forEach((detail) => {
+			const listItem = document.createElement("li");
+			listItem.className = "list-group-item";
+			listItem.innerHTML = `${detail.InputFileName}, <b>${detail.time1}</b> compared to <b>${detail.time2}</b>`;
+			listGroup.appendChild(listItem);
+		});
+
+		solverComparisonModalBody.appendChild(listGroup);
+	}
+
+	const modal = new Modal(solverComparisonModal, {
+		keyboard: true
+	});
+	modal.show();
 }

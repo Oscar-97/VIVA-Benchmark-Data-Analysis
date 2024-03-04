@@ -11,6 +11,7 @@ const filesToCache = [
 	"Src/CSS/tab_icon.png",
 	"Src/Pages/absolute_performance_profile.html",
 	"Src/Pages/average_solver_time.html",
+	"Src/Pages/compare_solvers.html",
 	"Src/Pages/number_of_iterations.html",
 	"Src/Pages/number_of_nodes.html",
 	"Src/Pages/solver_time.html",
