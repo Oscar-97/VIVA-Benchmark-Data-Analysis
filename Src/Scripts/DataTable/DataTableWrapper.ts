@@ -17,6 +17,7 @@ import {
 } from "../Elements/Elements";
 import { ElementStateDisplayedTable } from "../Elements/ElementStatus";
 import { DEFAULT_VISIBLE_HEADERS } from "../Constants/TraceHeaders";
+import { ShowPWANotification } from "../PWA/PWA-utils";
 
 /**
  * Function to display the trace data in a dynamically generated HTML table using the DataTables library for improved user interaction.
@@ -58,6 +59,12 @@ export function DisplayDataTable(traceData: object[]): void {
 		});
 
 		ElementStateDisplayedTable();
+
+		ShowPWANotification("Datatable ready!", {
+			body: "Datatable has been successfully generated and is ready for use.",
+			icon: "../../CSS/icon_maskable.png",
+			silent: true
+		});
 	}, 500);
 }
 

@@ -1,5 +1,6 @@
 import Chart from "chart.js/auto";
 import { chartCanvas } from "../Elements/Elements";
+import { ShowPWANotification } from "../PWA/PWA-utils";
 let myChart = null;
 
 /**
@@ -100,5 +101,11 @@ export function CreateChart(
 				}
 			}
 		}
+	});
+
+	ShowPWANotification("VIVA: Chart ready!", {
+		body: "Chart has been successfully generated and is ready for use.",
+		icon: "../../CSS/icon_maskable.png",
+		silent: true
 	});
 }

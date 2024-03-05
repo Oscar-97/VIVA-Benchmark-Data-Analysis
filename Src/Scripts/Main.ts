@@ -25,7 +25,10 @@ import "../css/style.css";
 /**
  * PWA Setup.
  */
-import { RegisterServiceWorker } from "./PWA_Setup";
+import {
+	RegisterServiceWorker,
+	RequestPWANotificationPermission
+} from "./PWA/PWA-utils";
 
 /**
  * Chart.
@@ -146,9 +149,10 @@ ReleaseVersionTag();
 BodyFadeLoadingAnimation();
 
 /**
- * Register service worker for PWA offline support.
+ * Register service worker for PWA offline support and request permission for PWA notifications.
  */
 RegisterServiceWorker();
+RequestPWANotificationPermission();
 
 /**
  * @param dataFileType Type of file extension for the imported data. As of now, either one or more .trc or a single .json. Text based files were removed.
