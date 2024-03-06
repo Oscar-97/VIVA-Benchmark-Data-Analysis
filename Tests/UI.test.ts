@@ -8,7 +8,7 @@ describe("UI tests", () => {
 	let page: Page;
 
 	beforeAll(async () => {
-		browser = await chromium.launch({ headless: false });
+		browser = await chromium.launch({ headless: true });
 		context = await browser.newContext({
 			viewport: { width: 2560, height: 1440 }
 		});
@@ -249,7 +249,7 @@ describe("UI tests", () => {
 			await CheckNotification(
 				page,
 				"#alertNotification",
-				"Found cached benchmark file!"
+				"Found stored configuration!"
 			);
 			const buttonIDs = [
 				"#downloadConfigurationButtonLayer",
