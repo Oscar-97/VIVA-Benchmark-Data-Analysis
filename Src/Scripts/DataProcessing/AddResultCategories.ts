@@ -10,7 +10,7 @@ import {
 /**
  * Adds result categories to each object in the traceData array.
  *
- * @param traceData - Array of objects containing the data to be processed.
+ * @param {object[]} traceData - Array of objects containing the data to be processed.
  *
  * @remarks
  * This function modifies the passed `traceData` array by adding calculated properties to each object.

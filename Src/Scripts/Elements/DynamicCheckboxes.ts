@@ -1,11 +1,12 @@
+import { ErrorMessages } from "../Constants/Messages";
 import { DisplayErrorNotification } from "./DisplayAlertNotification";
 
 /**
  * Populates checkboxes for solvers.
  *
- * @param solvers - An object containing solver names as keys.
+ * @param {object} solvers - An object containing solver names as keys.
  */
-export function PopulateCheckboxes(solvers): void {
+export function PopulateCheckboxes(solvers: object): void {
 	const container = document.getElementById("solverOptions");
 
 	Object.keys(solvers).forEach((solverName) => {
@@ -36,8 +37,8 @@ export function PopulateCheckboxes(solvers): void {
 /**
  * Enforces the checkbox limit.
  *
- * @param container - The container element that holds the checkboxes.
- * @param maxLimit - The maximum number of checkboxes that can be checked.
+ * @param {HTMLElement} container - The container element that holds the checkboxes.
+ * @param {number} maxLimit - The maximum number of checkboxes that can be checked.
  */
 function EnforceCheckboxLimit(container: HTMLElement, maxLimit: number): void {
 	container.addEventListener("change", (event) => {
@@ -46,7 +47,7 @@ function EnforceCheckboxLimit(container: HTMLElement, maxLimit: number): void {
 		);
 		if (checkedCheckboxes.length > maxLimit) {
 			(event.target as HTMLInputElement).checked = false;
-			DisplayErrorNotification(`Please select exactly two solvers to compare.`);
+			DisplayErrorNotification(ErrorMessages.SELECT_SOLVER_AMOUNT);
 		}
 	});
 }

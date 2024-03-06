@@ -1,3 +1,4 @@
+import { Keys } from "../Constants/Keys";
 import { releaseVersionTag } from "./Elements";
 
 /**
@@ -14,17 +15,17 @@ export function ReleaseVersionTag(): void {
 		return data.tag_name;
 	}
 
-	if (!sessionStorage.getItem("releaseVersionFetched")) {
+	if (!sessionStorage.getItem(Keys.RELEASE_VERSION_FETCHED)) {
 		FetchLatestRelease().then((version) => {
 			if (version === null || version === undefined) {
 				version = "Releases";
 			}
 			releaseVersionTag.innerHTML = `<i class="bi bi-git"></i> ${version}`;
-			localStorage.setItem("releaseVersion", version);
-			sessionStorage.setItem("releaseVersionFetched", "true");
+			localStorage.setItem(Keys.RELEASE_VERSION, version);
+			sessionStorage.setItem(Keys.RELEASE_VERSION_FETCHED, "true");
 		});
 	} else {
-		let releaseVersion = localStorage.getItem("releaseVersion");
+		let releaseVersion = localStorage.getItem(Keys.RELEASE_VERSION);
 
 		if (
 			releaseVersion === null ||

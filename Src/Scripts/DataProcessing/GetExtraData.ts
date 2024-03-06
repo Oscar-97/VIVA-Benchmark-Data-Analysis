@@ -1,9 +1,10 @@
+import { InfoMessages } from "../Constants/Messages";
 import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
 
 /**
  * Converts an array of strings into an array of objects representing instance information data.
  *
- * @param unprocessedInstanceInformationData - Array of strings, where each string is a semicolon-separated representation of a row of data.
+ * @param {string[]} unprocessedInstanceInformationData - Array of strings, where each string is a semicolon-separated representation of a row of data.
  * @returns Array of objects, where each object represents a row of instance information.
  *
  * @remarks
@@ -51,14 +52,14 @@ export function GetInstanceInformation(
 		}
 		instanceInfo.push(obj);
 	}
-	DisplayAlertNotification("Instance information succesfully loaded!");
+	DisplayAlertNotification(InfoMessages.INSTANCE_INFO_LOADED);
 	return instanceInfo;
 }
 
 /**
  * Extracts the best known primal and dual bounds from raw solu data.
  *
- * @param unprocessedSolutionData - Array of strings, each representing a line from a solu data file.
+ * @param {string[]} unprocessedSolutionData - Array of strings, each representing a line from a solu data file.
  * @returns Array of objects, each representing a processed line of data with associated primal and/or dual bounds.
  *
  * @remarks

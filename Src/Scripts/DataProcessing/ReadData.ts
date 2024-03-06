@@ -5,6 +5,8 @@ import {
 } from "../Elements/Elements";
 import { DisplayErrorNotification } from "../Elements/DisplayAlertNotification";
 import { userData } from "../UserConfiguration/UserConfiguration";
+import { Keys } from "../Constants/Keys";
+import { ErrorMessages } from "../Constants/Messages";
 
 /**
  * Retrieves the type of the data file inputted by the user.
@@ -40,8 +42,8 @@ export function GetDataFileType(): string {
 	}
 
 	if (extensions.length === 0) {
-		DisplayErrorNotification("No .trc, .json or .solu files found.");
-		throw new Error("No .trc, .json or .solu files found.");
+		DisplayErrorNotification(ErrorMessages.WRONG_EXTENSIONS);
+		throw new Error(ErrorMessages.WRONG_EXTENSIONS);
 	}
 
 	const hasTRCOrJSON = extensions.some((ext) => {
@@ -49,15 +51,13 @@ export function GetDataFileType(): string {
 	});
 
 	if (!hasTRCOrJSON) {
-		DisplayErrorNotification("At least one .trc or .json file required.");
-		throw new Error("At least one .trc or .json file required.");
+		DisplayErrorNotification(ErrorMessages.NEITHER_EXTENSIONS);
+		throw new Error(ErrorMessages.NEITHER_EXTENSIONS);
 	}
 
 	if (extensions.includes("trc") && extensions.includes("json")) {
-		DisplayErrorNotification(
-			"Cannot upload both .trc and .json files simultaneously."
-		);
-		throw new Error("Cannot upload both .trc and .json files simultaneously.");
+		DisplayErrorNotification(ErrorMessages.BOTH_EXTENSIONS);
+		throw new Error(ErrorMessages.BOTH_EXTENSIONS);
 	}
 
 	return extensions.find((ext) => {
@@ -68,7 +68,7 @@ export function GetDataFileType(): string {
 /**
  * Validates the extension of the given file and updates the file counts accordingly.
  *
- * @param file - The file for which to check the extension.
+ * @param {File} file - The file for which to check the extension.
  * @param fileCounts - An object that tracks the count of each file extension encountered.
  * @returns The valid file extension of the provided file.
  * @throws Error if an invalid extension is encountered or if multiple files of the same extension are uploaded.
@@ -90,12 +90,8 @@ function CheckFileExtension(
 	const extension = file.name.split(".").pop();
 
 	if (!IsValidExtension(extension)) {
-		DisplayErrorNotification(
-			"Invalid file extension. Only .trc, .json, .solu, and .csv allowed."
-		);
-		throw new Error(
-			"Invalid file extension. Only .trc, .json, .solu, and .csv allowed."
-		);
+		DisplayErrorNotification(ErrorMessages.INVALID_EXTENSION);
+		throw new Error(ErrorMessages.INVALID_EXTENSION);
 	}
 
 	if (extension in fileCounts) {
@@ -112,7 +108,7 @@ function CheckFileExtension(
 /**
  * Checks if a file extension is valid.
  *
- * @param extension - The file extension to check.
+ * @param {string} extension - The file extension to check.
  * @returns Boolean value indicating if the file extension is valid.
  */
 function IsValidExtension(extension: string): boolean {
@@ -122,9 +118,9 @@ function IsValidExtension(extension: string): boolean {
 /**
  * Reads data from multiple file inputs, returning the raw data, instance information data and solu data.
  *
- * @param unprocessedData - An array to store the raw data from .trc files.
- * @param unprocessedInstanceInformationData - An array to store the raw data from .csv files.
- * @param unprocessedSolutionData - An array to store the raw data from .solu files.
+ * @param {string[]} unprocessedData - An array to store the raw data from .trc files.
+ * @param {string[]} unprocessedInstanceInformationData - An array to store the raw data from .csv files.
+ * @param {string[]} unprocessedSolutionData - An array to store the raw data from .solu files.
  * @returns An object containing arrays of raw data, instance information data, and solu data.
  *
  * @remarks
@@ -213,9 +209,9 @@ function VerifyConfigurationProperties(parsedData): void {
 			userData.defaultTime = parsedData.defaultTime;
 		}
 
-		localStorage.setItem("UserConfiguration", JSON.stringify(userData));
+		localStorage.setItem(Keys.USER_CONFIGURATION, JSON.stringify(userData));
 	} else {
-		DisplayErrorNotification("Invalid data structure in uploaded JSON.");
-		console.log("Invalid data structure in uploaded JSON.");
+		DisplayErrorNotification(ErrorMessages.INVALID_DATA_STRUCTURE);
+		console.log(ErrorMessages.INVALID_DATA_STRUCTURE);
 	}
 }

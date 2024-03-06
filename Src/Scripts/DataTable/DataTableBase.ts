@@ -9,6 +9,7 @@ import {
 import { TraceHeaderMap } from "../Constants/TraceHeaders";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "bootstrap/js/dist/modal";
+import { Captions } from "../Constants/Messages";
 /**
  * Sorts the keys by an enumeration and then by alphabetical order for non-enumeration keys.
  *
@@ -41,7 +42,7 @@ function SortKeysByEnum(obj): string[] {
 /**
  * Function to dynamically create and display a HTML table based on the provided trace data.
  *
- * @param traceData An array of objects where each object represents a row in the table, and the keys/values within the object represent columns and cell values.
+ * @param {object[]} traceData - An array of objects where each object represents a row in the table, and the keys/values within the object represent columns and cell values.
  *
  * @returns The function doesn't return anything.
  *
@@ -63,7 +64,7 @@ function SortKeysByEnum(obj): string[] {
  */
 export function TableDataTrc(traceData: object[]): void {
 	/**
-	 * @param DataTableDiv Div that contains the data table.
+	 * Div that contains the data table.
 	 */
 	const dataTableDiv = dataTable;
 	dataTableDiv.innerHTML = "";
@@ -72,7 +73,7 @@ export function TableDataTrc(traceData: object[]): void {
 	dataTableHeaders.classList.add("thead-dark");
 
 	/**
-	 * @param DataTableHeaders Thead created from the categories.
+	 * Thead created from the categories.
 	 */
 	const headerRow = document.createElement("tr");
 	const sortedKeys = SortKeysByEnum(traceData[0]);
@@ -86,7 +87,7 @@ export function TableDataTrc(traceData: object[]): void {
 
 	/**
 	 * Add the results.
-	 * @param DataTableContent The content of the data table.
+	 * The content of the data table.
 	 */
 	const dataTableContent = document.createElement("tbody");
 	for (const obj of traceData) {
@@ -125,8 +126,8 @@ export function TableDataTrc(traceData: object[]): void {
 /**
  * Function to dynamically create and display a HTML table based on solver's time statistics.
  *
- * @param solverTimeStats An object where each key is the name of a solver and each value is another object that holds statistical metrics (average, min, max, std, sum, and percentiles) for the solver's runtime.
- * @param title A string that will be used as the table caption.
+ * @param solverTimeStats - An object where each key is the name of a solver and each value is another object that holds statistical metrics (average, min, max, std, sum, and percentiles) for the solver's runtime.
+ * @param {string} title - A string that will be used as the table caption.
  *
  * @remarks
  * This function generates a new table displaying statistical metrics for different solvers. The table is added to the 'statisticsTable' HTML div.
@@ -224,11 +225,11 @@ export function StatisticsTable(
  * Function to dynamically create and display a HTML table based on the comparison summary of two solvers.
  * The cell values are clickable and display a list of instances where the solver time was better, worse, or equal, depending on the clicked cell.
  *
- * @param comparisonSummary An object that holds the comparison summary of two solvers.
+ * @param comparisonSummary - An object that holds the comparison summary of two solvers.
  * The object has three keys: better, worse, and equal, and each key holds the number of instances where the first solver was better, worse, or equal to the second solver.
- * @param comparisonSummaryInverse Inverse comparison summary of the two solvers.
- * @param solver1Name The name of the first solver.
- * @param solver2Name The name of the second solver.
+ * @param comparisonSummaryInverse - Inverse comparison summary of the two solvers.
+ * @param {string} solver1Name - The name of the first solver.
+ * @param {string} solver2Name - The name of the second solver.
  *
  * @remarks
  * This function generates a new table displaying the comparison summary of two solvers. The table is added to the 'comparisonTableContainer' HTML div.
@@ -253,8 +254,7 @@ export function ComparisonSummaryTable(
 	);
 
 	const tableCaption = document.createElement("caption");
-	tableCaption.textContent =
-		"Direct comparison on how many instances the solver time was better, worse or equal.";
+	tableCaption.textContent = Captions.COMPARISON_TABLE_CAPTION;
 	comparisonTable.appendChild(tableCaption);
 
 	const header = document.createElement("thead");
@@ -347,7 +347,7 @@ function DisplayDetails(comparisonType, details): void {
 	);
 
 	if (solverComparisonModalLabel)
-		solverComparisonModalLabel.innerHTML = `<i class="bi bi-clock-history"></i> Instances were solver times were: ${comparisonType}`;
+		solverComparisonModalLabel.innerHTML = `<i class="bi bi-clock-history"></i> ${Captions.COMPARSION_MODAL_LABEL} ${comparisonType}`;
 	if (solverComparisonModalBody) {
 		solverComparisonModalBody.innerHTML = "";
 		const listGroup = document.createElement("ul");

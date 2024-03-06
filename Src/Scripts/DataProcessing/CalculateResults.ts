@@ -459,8 +459,8 @@ export function ExtractAllSolverTimesGapType(
  * structure. It takes an array of objects (traceData) and returns an object.
  *
  * The returned object has a unique key for each solver and the value is an array of objects, each containing a 'time'
- * @param solver1 - The name of the first solver to compare.
- * @param solver2 - The name of the second solver to compare.
+ * @param {string} solver1 - The name of the first solver to compare.
+ * @param {string} solver2 - The name of the second solver to compare.
  * @param solverTimes - An object with 'time' and 'InputFileName' properties.
  * @returns {object} - An object with solver names as keys. Each key points to an array of objects where each object
  * contains 'time1', 'time2', 'InputFileName', 'comparison' property of the corresponding solver.

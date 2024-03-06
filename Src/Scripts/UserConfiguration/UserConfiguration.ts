@@ -1,3 +1,5 @@
+import { Keys } from "../Constants/Keys";
+import { UserConfigurationMessages } from "../Constants/Messages";
 import {
 	DisplayAlertNotification,
 	DisplayWarningNotification,
@@ -28,10 +30,10 @@ export const userData: UserData = {
 /**
  * This function creates a user configuration and stores it in the browser's local storage.
  *
- * @param dataSet - An array of strings representing raw data to be saved.
- * @param dataFileType - A string representing the type of data file.
- * @param defaultTime - Default time used in the the absolute performance profile chart.
- * @param gapLimit - Gap limit used in the the absolute performance profile chart.
+ * @param {string[]} dataSet - An array of strings representing raw data to be saved.
+ * @param {string} dataFileType - A string representing the type of data file.
+ * @param {number} defaultTime - Default time used in the the absolute performance profile chart.
+ * @param {number} gapLimit - Gap limit used in the the absolute performance profile chart.
  *
  * @example
  * CreateUserConfiguration(["raw data 1", "raw data 2"], "trc");
@@ -48,28 +50,24 @@ export function CreateUserConfiguration(
 	userData.defaultTime = defaultTime;
 	userData.gapLimit = gapLimit;
 	try {
-		localStorage.setItem("UserConfiguration", JSON.stringify(userData));
+		localStorage.setItem(Keys.USER_CONFIGURATION, JSON.stringify(userData));
 	} catch (error) {
 		switch (error.name) {
 			case "QuotaExceededError":
-				DisplayErrorNotification("Local storage is full. Please clear.");
+				DisplayErrorNotification(UserConfigurationMessages.QUOTA_EXCEEDED);
 				break;
 			case "SecurityError":
-				DisplayErrorNotification(
-					"Local storage is disabled. Please enable it in your browser settings."
-				);
+				DisplayErrorNotification(UserConfigurationMessages.SECURITY_ERROR);
 				break;
 			case "InvalidAccessError":
-				DisplayErrorNotification(
-					"Local storage cannot be accessed. Please try again."
-				);
+				DisplayErrorNotification(UserConfigurationMessages.INVALID_ACCESS);
 				break;
 			default:
 				DisplayErrorNotification("Error occured: " + error);
 				break;
 		}
 	}
-	DisplayAlertNotification("Saved configuration.");
+	DisplayAlertNotification(UserConfigurationMessages.STORE_SUCCESS);
 }
 
 /**
@@ -89,18 +87,16 @@ export function GetUserConfiguration(): [string[], string, number, number] {
 	} catch (error) {
 		switch (error.message) {
 			case "SecurityError":
-				DisplayErrorNotification(
-					"Local storage is disabled. Please enable it in your browser settings."
-				);
+				DisplayErrorNotification(UserConfigurationMessages.SECURITY_ERROR);
 				break;
-			case "No saved configuration data found.":
-				if (sessionStorage.getItem("alertedStorage")) {
-					console.info(
-						"User has previously visited this page in this session/tab."
-					);
+			case UserConfigurationMessages.NO_STORED_CONFIG:
+				if (sessionStorage.getItem(Keys.ALERTED_STORAGE)) {
+					console.info(UserConfigurationMessages.PREVIOUSLY_VISITED);
 				} else {
-					DisplayWarningNotification("No saved configuration data found.");
-					sessionStorage.setItem("alertedStorage", "true");
+					DisplayWarningNotification(
+						UserConfigurationMessages.NO_STORED_CONFIG
+					);
+					sessionStorage.setItem(Keys.ALERTED_STORAGE, "true");
 				}
 				break;
 			default:
@@ -124,21 +120,19 @@ export function GetUserConfiguration(): [string[], string, number, number] {
  */
 export function DeleteUserConfiguration(): void {
 	try {
-		localStorage.removeItem("UserConfiguration");
-		localStorage.removeItem("DemoData");
+		localStorage.removeItem(Keys.USER_CONFIGURATION);
+		localStorage.removeItem(Keys.DEMO_DATA);
 	} catch (error) {
 		switch (error.name) {
 			case "SecurityError":
-				DisplayErrorNotification(
-					"Local storage is disabled. Please enable it in your browser settings."
-				);
+				DisplayErrorNotification(UserConfigurationMessages.SECURITY_ERROR);
 				break;
 			default:
 				DisplayErrorNotification("Error occured: " + error);
 				break;
 		}
 	}
-	DisplayWarningNotification("Deleted configuration.");
+	DisplayWarningNotification(UserConfigurationMessages.DELETED_CONFIG);
 }
 
 /**
@@ -155,7 +149,7 @@ export function DeleteUserConfiguration(): void {
  * // If no configuration is found, it will call DisplayErrorNotification function with the provided error message.
  */
 export function DownloadUserConfiguration(): void {
-	const userConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
+	const userConfig = JSON.parse(localStorage.getItem(Keys.USER_CONFIGURATION));
 	if (userConfig) {
 		const downloadAbleFile = JSON.stringify(userConfig);
 		const blob = new Blob([downloadAbleFile], { type: "application/json" });
@@ -163,7 +157,7 @@ export function DownloadUserConfiguration(): void {
 		downloadConfigurationButton.href = window.URL.createObjectURL(blob);
 		downloadConfigurationButton.download = "UserConfiguration.json";
 	} else {
-		DisplayErrorNotification("No saved configuration found!");
+		DisplayErrorNotification(UserConfigurationMessages.NO_STORED_CONFIG);
 	}
 }
 
@@ -174,12 +168,11 @@ export function DownloadUserConfiguration(): void {
  * The function assumes the existence of a global variable or a previously defined `downloadCustomConfigurationButton`
  * which should be a reference to an HTML anchor (`<a>`) element used to trigger the file download.
  *
- * @param traceData - Array of objects, where each object represents a row of data.
- * @param selectedValues - Array or string of selected solvers.
- * @param defaultTime  - Default time that will be used on all results with missing SolverTime or with a failed status.
+ * @param {object[]} traceData - Array of objects, where each object represents a row of data.
+ * @param {number} defaultTime - Default time that will be used on all results with missing SolverTime or with a failed status.
  *
  * @example
- * DownloadCustomizedUserConfiguration(traceData, selectedSolvers, Number(defaultTimeInput.textContent));
+ * DownloadCustomizedUserConfiguration(traceData, Number(defaultTimeInput.textContent), Number(gapLimitInput.textContent);
  * This will initiate the download of a customized user configuration.
  */
 export function DownloadCustomizedUserConfiguration(

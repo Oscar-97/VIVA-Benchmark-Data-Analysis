@@ -1,3 +1,4 @@
+import { PageTitles } from "../Constants/PageTitles";
 import {
 	fileInput,
 	librarySelector,
@@ -68,7 +69,7 @@ export function ElementStatesPlotPage(): void {
 	configurationSettingsButton.disabled = true;
 	downloadChartDataButtonLayer.disabled = true;
 	deleteLocalStorageButton.disabled = true;
-	if (document.title === "Absolute Performance Profile") {
+	if (document.title === PageTitles.ABSOLUTE_PERFORMANCE_PROFILE) {
 		defaultTimeDirectInput.value = "";
 		gapLimitDirectInput.value = "";
 	}

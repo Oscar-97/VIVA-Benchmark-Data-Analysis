@@ -18,11 +18,12 @@ import {
 import { ElementStateDisplayedTable } from "../Elements/ElementStatus";
 import { DEFAULT_VISIBLE_HEADERS } from "../Constants/TraceHeaders";
 import { ShowPWANotification } from "../PWA/PWA-utils";
+import { TableMessages } from "../Constants/Messages";
 
 /**
  * Function to display the trace data in a dynamically generated HTML table using the DataTables library for improved user interaction.
  *
- * @param traceData An array of objects where each object represents a row in the table, and the keys/values within the object represent columns and cell values.
+ * @param {object[]} traceData - An array of objects where each object represents a row in the table, and the keys/values within the object represent columns and cell values.
  *
  * @returns The function doesn't return anything.
  *
@@ -60,8 +61,8 @@ export function DisplayDataTable(traceData: object[]): void {
 
 		ElementStateDisplayedTable();
 
-		ShowPWANotification("Datatable ready!", {
-			body: "Datatable has been successfully generated and is ready for use.",
+		ShowPWANotification(TableMessages.TABLE_SUCCESS_HEADER, {
+			body: TableMessages.TABLE_SUCCESS,
 			icon: "./Src/CSS/tab_icon.png",
 			silent: true
 		});

@@ -11,11 +11,11 @@ import { gapTypeSelector } from "../Elements/Elements";
 /**
  * Prepares and plots data by a specific category.
  *
- * @param traceData - Array of objects containing the data to be analyzed and plotted.
- * @param type - The type of the chart to be created (e.g., 'line', 'bar', 'pie').
- * @param category - The category by which the data should be analyzed.
- * @param label - The label for the data.
- * @param title - The title of the chart.
+ * @param {object[]} traceData - Array of objects containing the data to be analyzed and plotted.
+ * @param {string} type - The type of the chart to be created (e.g., 'line', 'bar', 'pie').
+ * @param {string} category - The category by which the data should be analyzed.
+ * @param {string} label - The label for the data.
+ * @param {string} title - The title of the chart.
  */
 export function PlotDataByCategory(
 	traceData: object[],
@@ -48,9 +48,9 @@ export function PlotDataByCategory(
 /**
  * Prepares and plots all the termination status messages per solver.
  *
- * @param traceData - Array of objects containing the data to be analyzed and plotted.
- * @param type - The type of the chart to be created (e.g., 'line', 'bar', 'pie').
- * @param title - The title of the chart.
+ * @param {object[]} traceData - Array of objects containing the data to be analyzed and plotted.
+ * @param {string} type - The type of the chart to be created (e.g., 'line', 'bar', 'pie').
+ * @param {string} title - The title of the chart.
  */
 export function PlotStatusMessages(
 	traceData: object[],
@@ -90,7 +90,7 @@ export function PlotStatusMessages(
 /**
  * Prepares and plots all the solver times without any failed results.
  *
- * @param traceData - Array of objects containing the data to be analyzed and plotted.
+ * @param {object[]} traceData - Array of objects containing the data to be analyzed and plotted.
  */
 export function PlotAllSolverTimes(
 	traceData: object[]
@@ -136,7 +136,7 @@ export function PlotAllSolverTimes(
 /**
  * Prepares and plots the absolute performance profile of solver time, where the instances have a gap <= 1.0% and not failed.
  *
- * @param traceData - Array of objects containing the data to be analyzed and plotted.
+ * @param {object[]} traceData - Array of objects containing the data to be analyzed and plotted.
  */
 export function PlotAbsolutePerformanceProfileSolverTimes(
 	traceData: object[],

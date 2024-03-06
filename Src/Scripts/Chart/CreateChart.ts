@@ -1,6 +1,7 @@
 import Chart from "chart.js/auto";
 import { chartCanvas } from "../Elements/Elements";
 import { ShowPWANotification } from "../PWA/PWA-utils";
+import { ChartMessages } from "../Constants/Messages";
 let myChart = null;
 
 /**
@@ -29,10 +30,10 @@ export function PickColor(numberOfColors: number): string[] {
 /**
  * Creates a new Chart.js chart. If a chart already exists, it is destroyed before a new one is created.
  *
- * @param type - The type of chart to create (e.g., 'line', 'bar', 'pie').
- * @param data - The data for the chart, which should be an array of objects.
+ * @param {string} type - The type of chart to create (e.g., 'line', 'bar', 'pie').
+ * @param {object[]} data - The data for the chart, which should be an array of objects.
  * @param label - The label/s for the data.
- * @param title - The title of the chart.
+ * @param {string} title - The title of the chart.
  * @param scaleOptions - The scape options for the chart.
  *
  * @example
@@ -103,8 +104,8 @@ export function CreateChart(
 		}
 	});
 
-	ShowPWANotification("VIVA: Chart ready!", {
-		body: "Chart has been successfully generated and is ready for use.",
+	ShowPWANotification(ChartMessages.CHART_SUCCESS_HEADER, {
+		body: ChartMessages.CHART_SUCCESS,
 		icon: "../CSS/tab_icon.png",
 		silent: true
 	});

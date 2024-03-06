@@ -9,8 +9,8 @@ interface CategoriesObj {
 /**
  * Merges two arrays of objects based on matching `InputFileName` or `name` properties.
  *
- * @param traceData - An array of objects to be merged with `data`. Each object must have at least an `InputFileName` or `name` property.
- * @param data - An array of objects to be merged with `traceData`. Each object must have at least an `InputFileName` or `name` property.
+ * @param {CategoriesObj[]} traceData - An array of objects to be merged with `data`. Each object must have at least an `InputFileName` or `name` property.
+ * @param {CategoriesObj[]} data - An array of objects to be merged with `traceData`. Each object must have at least an `InputFileName` or `name` property.
  * @returns Array of merged objects.
  *
  * @remarks

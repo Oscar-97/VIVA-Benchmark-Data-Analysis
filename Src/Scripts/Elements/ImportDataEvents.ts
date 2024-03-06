@@ -12,14 +12,16 @@ import {
 	compareSolversButton
 } from "./Elements";
 import { DisplayAlertNotification } from "./DisplayAlertNotification";
+import { Keys } from "../Constants/Keys";
+import { PageTitles } from "../Constants/PageTitles";
 
 /**
  * Handles events after a data import action. The function removes existing data tables and
  * adjusts the status of various interactive buttons based on the current page title and
  * the type of file extension of the imported data.
  *
- * @param message - Message to be displayed as an alert notification after the data import.
- * @param fileExtensionType - The file extension of the imported data (optional).
+ * @param {string} message - Message to be displayed as an alert notification after the data import.
+ * @param {string} fileExtensionType - The file extension of the imported data (optional).
  *
  * @remarks
  *
@@ -54,7 +56,7 @@ export function ImportDataEvents(
 		console.error("Could not remove elements: ", err);
 	}
 	librarySelector.disabled = true;
-	if (document.title === "Report") {
+	if (document.title === PageTitles.TABLE) {
 		viewTableButton.disabled = false;
 		showSelectedRowsButton.disabled = true;
 		importDataButton.disabled = true;
@@ -62,7 +64,7 @@ export function ImportDataEvents(
 		if (fileExtensionType === "json") {
 			deleteLocalStorageButton.disabled = false;
 		}
-	} else if (document.title === "Compare Solvers") {
+	} else if (document.title === PageTitles.COMPARE_SOLVERS) {
 		compareSolversButton.disabled = false;
 		importDataButton.disabled = true;
 		saveLocalStorageButton.disabled = true;
@@ -78,14 +80,14 @@ export function ImportDataEvents(
 		}
 	}
 
-	if (!sessionStorage.getItem("savedStorageNotification")) {
+	if (!sessionStorage.getItem(Keys.SAVED_STORAGE_NOTIFICATION)) {
 		DisplayAlertNotification(message);
 	}
 }
 
 /**
  * Fills the selector list with solvers from the currently loaded results.
- * @param traceData - Array of objects, where each object represents a row of data.
+ * @param {object[]} traceData - Array of objects, where each object represents a row of data.
  */
 export function FillSolverSelectorList(traceData: object[]): void {
 	solverSelector.innerHTML = "";
