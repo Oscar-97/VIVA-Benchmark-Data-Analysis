@@ -121,8 +121,6 @@ import {
 } from "./UserConfiguration/UserConfiguration";
 
 import { DEMO_DATA } from "./Datasets/DemoData";
-import { MINLPLIB_SOLUTION_DATA } from "./Datasets/MINLPLib";
-import { MIPLIB_2017_SOLUTION_DATA } from "./Datasets/MIPLIB_2017";
 import {
 	DisplayErrorNotification,
 	DisplayWarningNotification
@@ -158,10 +156,9 @@ ReleaseVersionTag();
 BodyFadeLoadingAnimation();
 
 /**
- * Register service worker for PWA offline support and request permission for PWA notifications.
+ * Register service worker for PWA offline support.
  */
 RegisterServiceWorker();
-RequestPWANotificationPermission();
 
 /**
  * @param {string} dataFileType - Type of file extension for the imported data. As of now, either one or more .trc or a single .json. Text based files were removed.
@@ -257,6 +254,8 @@ function InitializeProgram(): void {
 	 * Adds an event listener to the "Import Data" button that calls the
 	 * ImportDataEvents() function with a success message containing the list of files loaded
 	 * and the ManageData() function whenever the button is clicked.
+	 *
+	 * It also requests permission for push notifications.
 	 */
 	importDataButton.addEventListener("click", () => {
 		sessionStorage.removeItem(Keys.SAVED_STORAGE_NOTIFICATION);
@@ -267,6 +266,7 @@ function InitializeProgram(): void {
 			.join(", ");
 		ImportDataEvents(InfoMessages.LOADED_FILES.concat(fileNames));
 		ManageData();
+		RequestPWANotificationPermission();
 	});
 
 	/**
@@ -296,7 +296,7 @@ function InitializeProgram(): void {
 /**
  * Manage the benchmark results data.
  */
-function ManageData(): void {
+async function ManageData(): Promise<void> {
 	/**
 	 * Trace data results and filtered trace data results.
 	 */
@@ -342,9 +342,17 @@ function ManageData(): void {
 		if (unprocessedSolutionData.length !== 0) {
 			soluData = GetBestKnownBounds(unprocessedSolutionData);
 		} else if (librarySelector.value === "MINLPLib") {
-			soluData = MINLPLIB_SOLUTION_DATA;
+			//soluData = MINLPLIB_SOLUTION_DATA;
+			const module = await import(
+				/* webpackChunkName: "minlplib-dataset" */ "./Datasets/MINLPLib"
+			);
+			soluData = module.MINLPLIB_SOLUTION_DATA;
 		} else if (librarySelector.value === "MIPLIB") {
-			soluData = MIPLIB_2017_SOLUTION_DATA;
+			//soluData = MIPLIB_2017_SOLUTION_DATA;
+			const module = await import(
+				/* webpackChunkName: "miplib2017-dataset" */ "./Datasets/MIPLIB_2017"
+			);
+			soluData = module.MIPLIB_2017_SOLUTION_DATA;
 		}
 
 		if (soluData) {

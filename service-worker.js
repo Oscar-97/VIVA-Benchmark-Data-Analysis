@@ -5,17 +5,21 @@ const CACHE_NAME = "VIVA-cache";
  */
 const filesToCache = [
 	"/",
+	"manifest.json",
 	"report.html",
 	"Dist/bundle.js",
+	"Dist/minlplib-dataset.js",
+	"Dist/miplib2017-dataset.js",
 	"Dist/main.css",
 	"Src/CSS/tab_icon.png",
+	"Src/CSS/icon_maskable.png",
 	"Src/Pages/absolute_performance_profile.html",
 	"Src/Pages/average_solver_time.html",
 	"Src/Pages/compare_solvers.html",
 	"Src/Pages/number_of_iterations.html",
 	"Src/Pages/number_of_nodes.html",
 	"Src/Pages/solver_time.html",
-	"Src/Pages/termination_status.html"
+	"Src/Pages/termination_status.html",
 ];
 
 /**
@@ -50,18 +54,10 @@ self.addEventListener("fetch", function (event) {
 				return response;
 			}
 			console.log("Not in cache, fetching:", event.request.url);
-		return fetch(event.request)
-                .then(function(networkResponse) {
-                    // Update the cache with the new response
-                    return caches.open('your-cache-name').then(function(cache) {
-                        cache.put(event.request, networkResponse.clone());
-                        return networkResponse;
-                    });
-                })
-                .catch(function (error) {
-                    console.error("Failed fetch request:", error);
-                    return new Response("Offline", { status: 503, statusText: "Offline" });
-                });
+			return fetch(event.request).catch(function (error) {
+				console.error("Failed fetch request:", error);
+				return new Response("Offline", { status: 503, statusText: "Offline" });
+			});
 		})
 	);
 });
