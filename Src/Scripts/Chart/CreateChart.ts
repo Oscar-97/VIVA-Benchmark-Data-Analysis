@@ -105,7 +105,7 @@ export function CreateChart(
 
 	ShowPWANotification("VIVA: Chart ready!", {
 		body: "Chart has been successfully generated and is ready for use.",
-		icon: "../../CSS/icon_maskable.png",
+		icon: "../CSS/tab_icon.png",
 		silent: true
 	});
 }

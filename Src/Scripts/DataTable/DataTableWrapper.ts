@@ -62,7 +62,7 @@ export function DisplayDataTable(traceData: object[]): void {
 
 		ShowPWANotification("Datatable ready!", {
 			body: "Datatable has been successfully generated and is ready for use.",
-			icon: "../../CSS/icon_maskable.png",
+			icon: "./Src/CSS/tab_icon.png",
 			silent: true
 		});
 	}, 500);

@@ -1,6 +1,7 @@
 {
 	"name": "VIVA: Visualize and Analyze Optimization Solver Benchmarks",
 	"short_name": "VIVA",
+	"id": "xyz.viva-app",
 	"categories": [
 		"utilities",
 		"development",
@@ -32,7 +33,10 @@
 	],
 	"start_url": "/report.html",
 	"display": "standalone",
-	"display_override": "minimal-ui",
+	"display_override": [
+		"window-controls-overlay",
+		"minimal-ui"
+	],
 	"related_applications": [
 		{
 			"platform": "windows",
@@ -46,7 +50,7 @@
 		{
 			"name": "Report",
 			"short_name": "Reports",
-			"description": "View the latest reports",
+			"description": "View data table of benchmark results.",
 			"url": "report.html",
 			"icons": [
 				{
@@ -58,6 +62,7 @@
 		},
 		{
 			"name": "Absolute Performance Profile",
+			"description": "View absolute performance profile of benchmark results.",
 			"url": "Src/Pages/absolute_performance_profile.html",
 			"icons": [
 				{
@@ -69,6 +74,7 @@
 		},
 		{
 			"name": "Average Solver Time",
+			"description": "View average solver time of benchmark results.",
 			"url": "Src/Pages/average_solver_time.html",
 			"icons": [
 				{
@@ -80,6 +86,7 @@
 		},
 		{
 			"name": "Compare Solvers",
+			"description": "Compare solvers based on benchmark results.",
 			"url": "Src/Pages/compare_solvers.html",
 			"icons": [
 				{
@@ -91,6 +98,7 @@
 		},
 		{
 			"name": "Solver Time",
+			"description": "View solver time of benchmark results.",
 			"url": "Src/Pages/solver_time.html",
 			"icons": [
 				{
@@ -102,6 +110,7 @@
 		},
 		{
 			"name": "Number of Iterations",
+			"description": "View number of iterations of benchmark results.",
 			"url": "Src/Pages/number_of_iterations.html",
 			"icons": [
 				{
@@ -113,6 +122,7 @@
 		},
 		{
 			"name": "Number of Nodes",
+			"description": "View number of nodes of benchmark results.",
 			"url": "Src/Pages/number_of_nodes.html",
 			"icons": [
 				{
@@ -124,6 +134,7 @@
 		},
 		{
 			"name": "Termination Status",
+			"description": "View termination status of benchmark results.",
 			"url": "Src/Pages/termination_status.html",
 			"icons": [
 				{
@@ -133,5 +144,12 @@
 				}
 			]
 		}
-	]
+	],
+	"dir": "ltr",
+	"lang": "en",
+	"prefer_related_applications": false,
+	"handle_links": "preferred",
+	"launch_handler": {
+		"client_mode": "navigate-existing"
+	}
 }
