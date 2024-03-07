@@ -38,6 +38,10 @@ body > :not(nav, hr) {
 	margin-right: 1rem;
 }
 
+#alertIcon {
+	margin-right: 4px;
+}
+
 #buttonContainer {
 	margin-left: 1rem;
 	margin-top: 0.5rem;
