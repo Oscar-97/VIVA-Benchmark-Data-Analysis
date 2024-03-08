@@ -3,6 +3,9 @@
   "entryPointStrategy": "expand",
   "out": "Docs",
   "cleanOutputDir": false,
+  "categorizeByGroup": true,
   "name": "System Documentation",
-  "readme": "Docs/README.md"
+  "readme": "Docs/README.md",
+  "plugin": ["typedoc-material-theme"],
+  "themeColor": "#cb9820",
 }
