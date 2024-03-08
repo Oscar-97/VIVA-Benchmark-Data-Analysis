@@ -342,13 +342,11 @@ async function ManageData(): Promise<void> {
 		if (unprocessedSolutionData.length !== 0) {
 			soluData = GetBestKnownBounds(unprocessedSolutionData);
 		} else if (librarySelector.value === "MINLPLib") {
-			//soluData = MINLPLIB_SOLUTION_DATA;
 			const module = await import(
 				/* webpackChunkName: "minlplib-dataset" */ "./Datasets/MINLPLib"
 			);
 			soluData = module.MINLPLIB_SOLUTION_DATA;
 		} else if (librarySelector.value === "MIPLIB") {
-			//soluData = MIPLIB_2017_SOLUTION_DATA;
 			const module = await import(
 				/* webpackChunkName: "miplib2017-dataset" */ "./Datasets/MIPLIB_2017"
 			);
@@ -454,10 +452,12 @@ async function ManageData(): Promise<void> {
 }
 
 /**
+ * @public
+ *
  * This function manages the functionality of the buttons on the Report page of the application.
  *
- * @param {object[]} traceData - This parameter is an array of objects that represents the trace data.
- * @param {object[]} traceDataFiltered - This parameter is an array of objects that represents the filtered trace data.
+ * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {object[]} traceDataFiltered - Array of objects containing the filtered result data.
  */
 function HandleReportPage(
 	traceData: object[],
@@ -531,9 +531,11 @@ function HandleReportPage(
 }
 
 /**
+ * @public
+ *
  * This function manages the functionality of the buttons on the plot pages of the application.
  *
- * @param {object[]} traceData - This parameter is an array of objects that represents the trace data.
+ * @param {object[]} traceData - Array of objects containing the result data.
  */
 function HandlePlotPages(traceData: object[]): void {
 	/**
@@ -644,10 +646,12 @@ function HandlePlotPages(traceData: object[]): void {
 }
 
 /**
+ * @public
+ *
  * This function manages the functionality of the buttons on the compare solvers page of the application.
  * It also handles the comparison of the solvers.
  *
- * @param {object[]} traceData - This parameter is an array of objects that represents the trace data.
+ * @param {object[]} traceData - Array of objects containing the result data.
  */
 function HandleCompareSolversPage(traceData: object[]): void {
 	const solverTimes = ExtractAllSolverTimes(traceData);
@@ -695,6 +699,8 @@ function HandleCompareSolversPage(traceData: object[]): void {
 }
 
 /**
+ * @public
+ *
  * Run the program.
  */
 InitializeProgram();

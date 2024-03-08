@@ -16,29 +16,18 @@ import { Keys } from "../Constants/Keys";
 import { PageTitles } from "../Constants/PageTitles";
 
 /**
- * Handles events after a data import action. The function removes existing data tables and
+ * This function handles events after a data import action. It removes existing data tables or charts and
  * adjusts the status of various interactive buttons based on the current page title and
  * the type of file extension of the imported data.
  *
  * @param {string} message - Message to be displayed as an alert notification after the data import.
  * @param {string} fileExtensionType - The file extension of the imported data (optional).
  *
- * @remarks
- *
- * This function should be invoked after a user imports data to the application, typically via
- * an 'upload data' button. It is designed to:
- *
- * 1. Remove any existing data tables displayed on the page.
- * 2. Enable or disable certain interactive buttons based on the title of the document
- *    (assumed to represent the current page of the application) and the type of file extension
- *    of the imported data.
- * 3. Display an alert notification message.
- *
  * @throws
  * This function may throw an error if it fails to remove the existing data tables.
  *
  * @example
- * ImportDataEvents("Data imported successfully!", ".csv"); // Example usage of ImportDataEvents function
+ * ImportDataEvents("Loaded json file!", "json");
  */
 export function ImportDataEvents(
 	message: string,
@@ -86,8 +75,8 @@ export function ImportDataEvents(
 }
 
 /**
- * Fills the selector list with solvers from the currently loaded results.
- * @param {object[]} traceData - Array of objects, where each object represents a row of data.
+ * This function fills the selector list with solvers from the currently loaded results.
+ * @param {object[]} traceData - Array of objects containing the result data.
  */
 export function FillSolverSelectorList(traceData: object[]): void {
 	solverSelector.innerHTML = "";

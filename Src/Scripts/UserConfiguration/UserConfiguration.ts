@@ -12,14 +12,18 @@ import {
 
 /**
  * UserData consists of dataset and file extension.
+ * @interface UserData
  */
-interface UserData {
+export interface UserData {
 	dataSet: string[] | object[];
 	dataFileType: string;
 	defaultTime?: number | undefined;
 	gapLimit?: number | undefined;
 }
 
+/**
+ * This object is used to store the user configuration.
+ */
 export const userData: UserData = {
 	dataSet: [],
 	dataFileType: "",
@@ -35,9 +39,10 @@ export const userData: UserData = {
  * @param {number} defaultTime - Default time used in the the absolute performance profile chart.
  * @param {number} gapLimit - Gap limit used in the the absolute performance profile chart.
  *
+ * @throws This function may throw an error if it fails to store the user configuration in the local storage.
+ *
  * @example
- * CreateUserConfiguration(["raw data 1", "raw data 2"], "trc");
- * // This will store the given raw data and data file type in the userData object, and then save the userData object in local storage.
+ * CreateUserConfiguration(["raw data 1", "raw data 2"], "trc", 1500, 0.01);
  */
 export function CreateUserConfiguration(
 	dataSet: string[],
@@ -74,11 +79,9 @@ export function CreateUserConfiguration(
  * This function retrieves the user configuration from the browser's local storage.
  * The user is notified if no saved configuration was found and the flag is stored to the session storage.
  *
- * @returns An array that includes the raw data and the data file type.
+ * @throws This function may throw an error if it fails to parse the user configuration from the local storage.
  *
- * @example
- * GetUserConfiguration();
- * // This will return an array that includes the raw data and the data file type from local storage.
+ * @returns An array that includes the raw data, data file type, default time, and gap limit.
  */
 export function GetUserConfiguration(): [string[], string, number, number] {
 	let userConfig: UserData;
@@ -140,13 +143,8 @@ export function DeleteUserConfiguration(): void {
  * If there is no saved user configuration in the local storage, it will display an error notification.
  *
  * @remarks
- * The function assumes the existence of a global variable or a previously defined `downloadConfigurationButton`
+ * The function assumes the existence of a previously defined `downloadConfigurationButton`
  * which should be a reference to an HTML anchor (`<a>`) element used to trigger the file download.
- *
- * @example
- * DownloadUserConfiguration();
- * // This will initiate the download of the user configuration stored in local storage, if present.
- * // If no configuration is found, it will call DisplayErrorNotification function with the provided error message.
  */
 export function DownloadUserConfiguration(): void {
 	const userConfig = JSON.parse(localStorage.getItem(Keys.USER_CONFIGURATION));
@@ -165,15 +163,14 @@ export function DownloadUserConfiguration(): void {
  * This function downloads a customized user configuration as a JSON file.
  *
  * @remarks
- * The function assumes the existence of a global variable or a previously defined `downloadCustomConfigurationButton`
+ * The function assumes the existence of a previously defined `downloadCustomConfigurationButton`
  * which should be a reference to an HTML anchor (`<a>`) element used to trigger the file download.
  *
- * @param {object[]} traceData - Array of objects, where each object represents a row of data.
+ * @param {object[]} traceData - Array of objects containing the result data.
  * @param {number} defaultTime - Default time that will be used on all results with missing SolverTime or with a failed status.
  *
  * @example
- * DownloadCustomizedUserConfiguration(traceData, Number(defaultTimeInput.textContent), Number(gapLimitInput.textContent);
- * This will initiate the download of a customized user configuration.
+ * DownloadCustomizedUserConfiguration(traceData, 1200, 0.02;
  */
 export function DownloadCustomizedUserConfiguration(
 	traceData: string[],

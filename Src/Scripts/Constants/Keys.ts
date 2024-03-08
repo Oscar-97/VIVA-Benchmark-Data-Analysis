@@ -1,5 +1,5 @@
 /**
- * Enum for keys used in local and session storage.
+ * Keys used in local and session storage.
  */
 export enum Keys {
 	DEMO_DATA = "DemoData",

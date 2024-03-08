@@ -9,9 +9,6 @@ import { loaderContainer } from "./Elements";
  * The loading animation is implemented by creating a new `div` element with the class `loader`
  * and adding it as a child to `loaderContainer`.
  * The `loader` class should contain the styles and animations necessary for the loading animation.
- *
- * @example
- * TableLoadingAnimation(); // To start the loading animation
  */
 export function TableLoadingAnimation(): void {
 	const loader = document.createElement("div") as HTMLDivElement;
@@ -23,6 +20,10 @@ export function TableLoadingAnimation(): void {
 
 /**
  * This function applies an fade effect on all children of the body element, except for nav.
+ *
+ * @remarks
+ * The fade effect makes for a smoother transition between the pages of the application.
+ * Not the most optimal solution, but it works for now.
  */
 export function BodyFadeLoadingAnimation(): void {
 	$(function () {

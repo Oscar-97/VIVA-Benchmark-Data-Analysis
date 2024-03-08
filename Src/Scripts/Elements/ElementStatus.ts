@@ -20,17 +20,17 @@ import {
 } from "./Elements";
 
 /**
- * Resets the status of several elements to their initial state when the user first arrives at,
+ * This function resets the status of several elements to their initial state when the user first arrives at,
  * or reloads, the table page.
  *
  * @remarks
  *
- * This function is typically called when the table page is first loaded or refreshed. It's designed to:
+ * This function is called when the table page is first loaded or refreshed. It's designed to:
  * 1. Clear the loader container's inner HTML.
  * 2. Hide the data table.
  * 3. Clear the file input's value.
- * 4. Disable various interactive buttons (library selector, view all results, filter selection,
- *    save local storage, download configuration, delete local storage, clear table).
+ * 4. Set the library selector value to "none".
+ * 4. Disable various interactive buttons.
  */
 export function ElementStatesTablePage(): void {
 	loaderContainer.innerHTML = "";
@@ -49,15 +49,14 @@ export function ElementStatesTablePage(): void {
 }
 
 /**
- * Resets the status of several elements to their initial state when the user first arrives at,
+ * This function resets the status of several elements to their initial state when the user first arrives at,
  * or reloads, the plot page.
  *
  * @remarks
- *
  * This function is typically called when the plot page is first loaded or refreshed. It's designed to:
  * 1. Clear the file input's value.
- * 2. Disable various interactive buttons (library selector, view plots, save local storage,
- * 	  download configuration, delete local storage).
+ * 2. Set the library selector value to "none".
+ * 3. Disable various interactive buttons.
  */
 export function ElementStatesPlotPage(): void {
 	fileInput.value = "";
@@ -76,15 +75,14 @@ export function ElementStatesPlotPage(): void {
 }
 
 /**
- * Resets the status of several elements to their initial state when the user first arrives at,
+ * This function resets the status of several elements to their initial state when the user first arrives at,
  * or reloads, the compare solvers page.
  *
  * @remarks
- *
  * This function is typically called when the compare solvers page is first loaded or refreshed. It's designed to:
  * 1. Clear the file input's value.
- * 2. Disable various interactive buttons (library selector, compare solvers, save local storage,
- * 	  download configuration, delete local storage).
+ * 2. Set the library selector value to "none".
+ * 3. Disable various interactive buttons.
  */
 export function ElementStatesCompareSolversPage(): void {
 	fileInput.value = "";
@@ -98,13 +96,11 @@ export function ElementStatesCompareSolversPage(): void {
 }
 
 /**
- * Updates the status of several buttons when a data table is displayed.
+ * This function updates the status of several buttons when a data table is displayed.
  *
  * @remarks
- *
- * This function is typically called after a data table is generated and displayed on the page.
- * It's designed to enable various interactive buttons (filter selection, save local storage, download configuration,
- *    delete local storage, clear table).
+ * It's designed to enable various interactive buttons (show selected rows, save local storage, download configuration,
+ * delete local storage, clear table).
  */
 export function ElementStateDisplayedTable(): void {
 	showSelectedRowsButton.disabled = false;
@@ -115,13 +111,11 @@ export function ElementStateDisplayedTable(): void {
 }
 
 /**
- * Updates the status of several buttons when a data table is displayed.
+ * This function updates the status of several buttons when a data table is displayed.
  *
  * @remarks
- *
- * This function is typically called after a chart is generated and displayed on the page.
  * It's designed to enable various interactive buttons (save local storage, download configuration,
- * delete local storage).
+ * download chart, delete local storage).
  */
 export function ElementStateDisplayedChart(): void {
 	saveLocalStorageButton.disabled = false;
@@ -131,11 +125,11 @@ export function ElementStateDisplayedChart(): void {
 }
 
 /**
- * Updates the status of several buttons when a comparison table is displayed.
+ * This function updates the status of several buttons when a comparison table is displayed.
  *
  * @remarks
- *
- * This function is typically called after a comparison table is generated and displayed on the page.
+ * It's designed to enable various interactive buttons (save local storage,
+ * download configuration, delete local storage).
  */
 export function ElementStateDisplayedComparisonTable(): void {
 	saveLocalStorageButton.disabled = false;

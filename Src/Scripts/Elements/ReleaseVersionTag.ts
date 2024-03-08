@@ -2,7 +2,7 @@ import { Keys } from "../Constants/Keys";
 import { releaseVersionTag } from "./Elements";
 
 /**
- * Fetches the release version from Github and sets it in the release tag element.
+ * This function fetches the release version number from Github and sets it in the release tag element.
  * Initially, it first checks if it has already been fetched by checkign the session storage.
  * If it has already been fetched, it retrieves the value from local storage.
  */

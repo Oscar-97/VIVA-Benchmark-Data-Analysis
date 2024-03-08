@@ -2,7 +2,7 @@ import { ErrorMessages } from "../Constants/Messages";
 import { DisplayErrorNotification } from "./DisplayAlertNotification";
 
 /**
- * Populates checkboxes for solvers.
+ * This function populates checkboxes for solvers.
  *
  * @param {object} solvers - An object containing solver names as keys.
  */
@@ -35,7 +35,7 @@ export function PopulateCheckboxes(solvers: object): void {
 }
 
 /**
- * Enforces the checkbox limit.
+ * This function enforces the checkbox limit.
  *
  * @param {HTMLElement} container - The container element that holds the checkboxes.
  * @param {number} maxLimit - The maximum number of checkboxes that can be checked.
@@ -53,7 +53,7 @@ function EnforceCheckboxLimit(container: HTMLElement, maxLimit: number): void {
 }
 
 /**
- * Retrieves the values of the selected checkboxes.
+ * This function retrieves the values of the selected checkboxes.
  *
  * @returns An array of strings representing the selected checkbox values.
  */

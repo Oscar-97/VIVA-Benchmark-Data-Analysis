@@ -3,9 +3,8 @@
  * offline caching and background syncing for Progressive Web Apps (PWAs). If supported,
  * it registers a service worker when the page is loaded.
  *
- * @example
- * RegisterServiceWorker();
- * // This will register the service worker when the page is loaded, if the browser supports service workers.
+ * @remarks
+ * PWA will only be installable if the application is served over HTTPS.
  */
 export function RegisterServiceWorker(): void {
 	if ("serviceWorker" in navigator) {
@@ -26,7 +25,7 @@ export function RegisterServiceWorker(): void {
 }
 
 /**
- * Requests permission for desktop notifications in the browser.
+ * This function requests permission for desktop notifications in the browser.
  */
 export function RequestPWANotificationPermission(): void {
 	if (!("Notification" in window)) {
@@ -43,12 +42,15 @@ export function RequestPWANotificationPermission(): void {
 }
 
 /**
- * Shows a PWA notification with the specified title and options.
+ * This function shows a client side PWA notification with the specified title and options.
  *
  * @param {string} title - The title of the notification.
  * @param {NotificationOptions} options - The options for the notification.
  */
-export function ShowPWANotification(title, options): void {
+export function ShowPWANotification(
+	title: string,
+	options: NotificationOptions
+): void {
 	if (!("Notification" in window)) {
 		console.error("This browser does not support notifications.");
 		return;

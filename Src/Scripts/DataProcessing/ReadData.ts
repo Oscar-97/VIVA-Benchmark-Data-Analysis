@@ -9,7 +9,7 @@ import { Keys } from "../Constants/Keys";
 import { ErrorMessages } from "../Constants/Messages";
 
 /**
- * Retrieves the type of the data file inputted by the user.
+ * This function retrieves the type of the data file inputted by the user.
  *
  * @returns The extension of the data file.
  *
@@ -66,7 +66,7 @@ export function GetDataFileType(): string {
 }
 
 /**
- * Validates the extension of the given file and updates the file counts accordingly.
+ * This function validates the extension of the given file and updates the file counts accordingly.
  *
  * @param {File} file - The file for which to check the extension.
  * @param fileCounts - An object that tracks the count of each file extension encountered.
@@ -106,7 +106,7 @@ function CheckFileExtension(
 }
 
 /**
- * Checks if a file extension is valid.
+ * This function checks if a file extension is valid.
  *
  * @param {string} extension - The file extension to check.
  * @returns Boolean value indicating if the file extension is valid.
@@ -116,7 +116,7 @@ function IsValidExtension(extension: string): boolean {
 }
 
 /**
- * Reads data from multiple file inputs, returning the raw data, instance information data and solu data.
+ * This function reads data from multiple file inputs, returning the raw data, instance information data and solu data.
  *
  * @param {string[]} unprocessedData - An array to store the raw data from .trc files.
  * @param {string[]} unprocessedInstanceInformationData - An array to store the raw data from .csv files.
@@ -195,7 +195,7 @@ export function ReadData(
 }
 
 /**
- * Checks the properties of the data in the JSON file.
+ * This function checks the properties of the data in the JSON file.
  */
 function VerifyConfigurationProperties(parsedData): void {
 	if (

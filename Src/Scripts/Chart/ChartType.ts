@@ -9,9 +9,9 @@ import { StatisticsTable } from "../DataTable/DataTableBase";
 import { gapTypeSelector } from "../Elements/Elements";
 
 /**
- * Prepares and plots data by a specific category.
+ * This function prepares and plots data by a specific category.
  *
- * @param {object[]} traceData - Array of objects containing the data to be analyzed and plotted.
+ * @param {object[]} traceData - Array of objects containing the result data.
  * @param {string} type - The type of the chart to be created (e.g., 'line', 'bar', 'pie').
  * @param {string} category - The category by which the data should be analyzed.
  * @param {string} label - The label for the data.
@@ -46,9 +46,9 @@ export function PlotDataByCategory(
 }
 
 /**
- * Prepares and plots all the termination status messages per solver.
+ * This function prepares and plots all the termination status messages per solver.
  *
- * @param {object[]} traceData - Array of objects containing the data to be analyzed and plotted.
+ * @param {object[]} traceData - Array of objects containing the result data.
  * @param {string} type - The type of the chart to be created (e.g., 'line', 'bar', 'pie').
  * @param {string} title - The title of the chart.
  */
@@ -88,9 +88,9 @@ export function PlotStatusMessages(
 }
 
 /**
- * Prepares and plots all the solver times without any failed results.
+ * This function prepares and plots all the solver times without any failed results.
  *
- * @param {object[]} traceData - Array of objects containing the data to be analyzed and plotted.
+ * @param {object[]} traceData - Array of objects containing the result data.
  */
 export function PlotAllSolverTimes(
 	traceData: object[]
@@ -134,9 +134,9 @@ export function PlotAllSolverTimes(
 }
 
 /**
- * Prepares and plots the absolute performance profile of solver time, where the instances have a gap <= 1.0% and not failed.
+ * This function prepares and plots the absolute performance profile of solver time, where the instances have a gap <= 1.0% and not failed.
  *
- * @param {object[]} traceData - Array of objects containing the data to be analyzed and plotted.
+ * @param {object[]} traceData - Array of objects containing the result data.
  */
 export function PlotAbsolutePerformanceProfileSolverTimes(
 	traceData: object[],

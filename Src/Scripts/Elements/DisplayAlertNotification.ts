@@ -8,7 +8,7 @@ import $ from "jquery";
 
 /**
  * This function displays a success notification with the specified message.
- * The notification fades in, remains visible for 4 seconds, and then fades out.
+ * The notification fades in, remains visible for 10 seconds, and then fades out.
  *
  * @param {string} message - The message to be displayed in the notification.
  */
@@ -40,7 +40,7 @@ export function DisplayAlertNotification(message: string): void {
 
 /**
  * This function displays a warning notification with the specified message.
- * The notification fades in, remains visible for 3 seconds, and then fades out.
+ * The notification fades in, remains visible for 5 seconds, and then fades out.
  *
  * @param {string} message - The message to be displayed in the notification.
  */

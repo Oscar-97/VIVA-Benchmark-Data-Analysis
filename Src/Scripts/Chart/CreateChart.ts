@@ -5,7 +5,7 @@ import { ChartMessages } from "../Constants/Messages";
 let myChart = null;
 
 /**
- * Generates an array of random hex color codes.
+ * This function generates an array of random hex color codes.
  *
  * @param numberOfColors - The number of random colors to generate.
  * @returns An array of random color hex codes.
@@ -28,7 +28,7 @@ export function PickColor(numberOfColors: number): string[] {
 }
 
 /**
- * Creates a new Chart.js chart. If a chart already exists, it is destroyed before a new one is created.
+ * This function creates a new Chart.js chart. If a chart already exists, it is destroyed before a new one is created.
  *
  * @param {string} type - The type of chart to create (e.g., 'line', 'bar', 'pie').
  * @param {object[]} data - The data for the chart, which should be an array of objects.
