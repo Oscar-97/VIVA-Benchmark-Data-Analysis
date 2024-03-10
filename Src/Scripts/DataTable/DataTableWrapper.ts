@@ -79,6 +79,8 @@ export function DisplayDataTable(traceData: object[]): void {
  * setting table length and select options, defining responsive breakpoints, setting scroll properties,
  * defining fixed columns, setting button options and more.
  * Note that after configuring, the function makes some changes to CSS classes and moves the search panes container.
+ *
+ * @todo Rewrite all of this.
  */
 
 function DataTablesConfiguration(): void {
@@ -150,7 +152,11 @@ function DataTablesConfiguration(): void {
 					{
 						extend: "colvis",
 						text: "<i class='bi bi-layout-three-columns'></i> Column Visibility",
-						columnText: function (_dt: DataTables.Api, idx: number, title: string): string {
+						columnText: function (
+							_dt: DataTables.Api,
+							idx: number,
+							title: string
+						): string {
 							return idx + 1 + ": " + title;
 						}
 					}
