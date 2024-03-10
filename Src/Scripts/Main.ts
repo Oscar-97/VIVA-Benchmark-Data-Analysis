@@ -452,8 +452,6 @@ async function ManageData(): Promise<void> {
 }
 
 /**
- * @public
- *
  * This function manages the functionality of the buttons on the Report page of the application.
  *
  * @param {object[]} traceData - Array of objects containing the result data.
@@ -525,14 +523,16 @@ function HandleReportPage(
 	 * Destroy the data table and reinitializes the program when clicking on "Clear Data Table".
 	 */
 	clearTableButton.addEventListener("click", () => {
-		DestroyDataTable();
-		InitializeProgram();
+		DisplayWarningNotification(TableMessages.TABLE_CLEARING);
+		clearTableButton.disabled = true;
+		setTimeout(() => {
+			DestroyDataTable();
+			InitializeProgram();
+		}, 5000);
 	});
 }
 
 /**
- * @public
- *
  * This function manages the functionality of the buttons on the plot pages of the application.
  *
  * @param {object[]} traceData - Array of objects containing the result data.
@@ -646,8 +646,6 @@ function HandlePlotPages(traceData: object[]): void {
 }
 
 /**
- * @public
- *
  * This function manages the functionality of the buttons on the compare solvers page of the application.
  * It also handles the comparison of the solvers.
  *
@@ -699,8 +697,6 @@ function HandleCompareSolversPage(traceData: object[]): void {
 }
 
 /**
- * @public
- *
  * Run the program.
  */
 InitializeProgram();

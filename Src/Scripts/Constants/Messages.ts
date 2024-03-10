@@ -26,7 +26,8 @@ export enum ErrorMessages {
 export enum TableMessages {
 	TABLE_SUCCESS_HEADER = "VIVA: Datatable ready!",
 	TABLE_SUCCESS = "Datatable has been successfully generated and is ready for use.",
-	TABLE_NO_ROWS = "No rows selected for filtering."
+	TABLE_NO_ROWS = "No rows selected for filtering.",
+	TABLE_CLEARING = "Clearing table and reinitializing application in 5 seconds."
 }
 
 /**
