@@ -197,12 +197,3 @@
  * Copyright (c) 2021, Robert Eisele (robert@xarg.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
  **/
-
- /**
-
-/*!
- * typedoc-material-theme v0.5.0
- * https://github.com/dmnsgn/typedoc-material-theme
- * (c) 2023 Damien Seguin & Adam Miller
- * Released under the MIT License
- */
