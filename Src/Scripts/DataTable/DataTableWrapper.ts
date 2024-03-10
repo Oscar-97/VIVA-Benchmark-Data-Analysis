@@ -139,7 +139,7 @@ function DataTablesConfiguration(): void {
 				buttons: [
 					{
 						extend: "pageLength",
-						text: function (dt): string {
+						text: function (dt: DataTables.Api): string {
 							return (
 								"<i class='bi bi-list-columns-reverse'></i> Show " +
 								dt.page.len() +
@@ -150,7 +150,7 @@ function DataTablesConfiguration(): void {
 					{
 						extend: "colvis",
 						text: "<i class='bi bi-layout-three-columns'></i> Column Visibility",
-						columnText: function (_dt, idx, title): string {
+						columnText: function (_dt: DataTables.Api, idx: number, title: string): string {
 							return idx + 1 + ": " + title;
 						}
 					}
