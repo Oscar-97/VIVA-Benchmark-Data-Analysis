@@ -5,16 +5,21 @@ const CACHE_NAME = "VIVA-cache";
  */
 const filesToCache = [
 	"/",
+	"manifest.json",
 	"report.html",
 	"Dist/bundle.js",
+	"Dist/minlplib-dataset.js",
+	"Dist/miplib2017-dataset.js",
 	"Dist/main.css",
 	"Src/CSS/tab_icon.png",
+	"Src/CSS/icon_maskable.png",
 	"Src/Pages/absolute_performance_profile.html",
 	"Src/Pages/average_solver_time.html",
+	"Src/Pages/compare_solvers.html",
 	"Src/Pages/number_of_iterations.html",
 	"Src/Pages/number_of_nodes.html",
 	"Src/Pages/solver_time.html",
-	"Src/Pages/termination_status.html"
+	"Src/Pages/termination_status.html",
 ];
 
 /**

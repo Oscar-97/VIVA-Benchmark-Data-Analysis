@@ -24,7 +24,6 @@ export function CalculateDirection(direction: number | string): string {
 }
 
 /**
- * Converts the `primalBound` argument into a corresponding numerical value based on its type and value.
  * This function is used to calculate the primal bound of an optimization problem, which can either be a maximization or minimization problem.
  *
  * @export
@@ -65,7 +64,6 @@ export function CalculatePrimalBound(
 }
 
 /**
- * Converts the `dualBound` argument into a corresponding numerical value based on its type and value.
  * This function is used to calculate the dual bound of an optimization problem, which can either be a maximization or minimization problem.
  *
  * @export
@@ -106,9 +104,25 @@ export function CalculateDualBound(
 }
 
 /**
- * Calculates the gap between two numbers, `a` and `b`, based on the given direction `dir` and tolerance `tol`.
+ * This function calculates the gap between two numbers, `a` and `b`, based on the given direction `dir` and tolerance `tol`.
  *
  * @export
+ * @param {number} a - The first number for the calculation.
+ * @param {number} b - The second number for the calculation.
+ * @param {string} dir - The direction of the calculation. If "max", the values of `a` and `b` are switched.
+ * @param {number} [tol=1e-9] - The tolerance level to check if `a` and `b` are approximately equal.
+ *
+ * @returns {number} - Returns the gap between `a` and `b`.
+ * If `a` and `b` are approximately equal (within `tol`), it returns 0.
+ * If the minimum absolute value of `a` and `b` is less than `tol`, or if either `a` or `b` is Infinity,
+ * or if `a` and `b` have different signs, or if either `a` or `b` is NaN, it returns Infinity.
+ * Otherwise, it returns the relative difference between `a` and `b` divided by the minimum absolute
+ * value of `a` and `b`, rounded to 7 decimal places.
+ * If the result is -0, it converts it to 0.
+ */
+/**
+ * This function calculates the gap between two numbers, `a` and `b`, based on the given direction `dir` and tolerance `tol`.
+ *
  * @param {number} a - The first number for the calculation.
  * @param {number} b - The second number for the calculation.
  * @param {string} dir - The direction of the calculation. If "max", the values of `a` and `b` are switched.
@@ -128,34 +142,52 @@ export function CalculateGap(
 	dir: string,
 	tol = 1e-9
 ): number {
-	// If dir is negative, switch the values to do DualBound - PrimalBound.
+	function AreValuesEffectivelyEqual(
+		a: number,
+		b: number,
+		tol: number
+	): boolean {
+		return Math.abs(a - b) < tol;
+	}
+
+	function IsGapCalculationNotApplicable(
+		a: number,
+		b: number,
+		tol: number
+	): boolean {
+		return (
+			isNaN(a) ||
+			isNaN(b) ||
+			Math.min(Math.abs(a), Math.abs(b)) < tol ||
+			(a === Infinity && b === Infinity) ||
+			a === Infinity ||
+			b === Infinity ||
+			a * b < 0
+		);
+	}
+
+	function ComputeGap(a: number, b: number): number {
+		const gap = Math.abs((a - b) / Math.min(Math.abs(a), Math.abs(b)));
+		return Math.round(gap * 10000) / 100;
+	}
+
+	// Adjusts a and b based on the direction.
 	if (dir === "max") {
 		[a, b] = [b, a];
 	}
 
-	// Check if the values are equal within tolerance
-	if (Math.abs(a - b) < tol) {
+	// Check if the values are effectively equal.
+	if (AreValuesEffectivelyEqual(a, b, tol)) {
 		return 0.0;
 	}
 
-	if (
-		isNaN(a) ||
-		isNaN(b) ||
-		Math.min(Math.abs(a), Math.abs(b)) < tol ||
-		(a === Infinity && b === Infinity) ||
-		a === Infinity ||
-		b === Infinity ||
-		a * b < 0
-	) {
+	// Check if the gap calculation is not applicable.
+	if (IsGapCalculationNotApplicable(a, b, tol)) {
 		return Infinity;
 	}
 
-	// Compute and return the gap between the values
-	const result = Math.abs(
-		Math.round(((a - b) / Math.min(Math.abs(a), Math.abs(b))) * 10000) / 100
-	);
-
-	return result;
+	// Compute and return the gap.
+	return ComputeGap(a, b);
 }
 
 /**
@@ -225,7 +257,7 @@ export function SetSolverStatus(solverStatus: number | string): string {
 }
 
 /**
- * `AnalyzeDataByCategory` function extracts the values of the specified category for each solver from the results data,
+ * This function extracts the values of the specified category for each solver from the results data,
  * calculates the statistical measures, and returns these statistics in a structured format.
  *
  * @param {object[]} resultsData - The array of result objects where each object corresponds to a particular solver's output.
@@ -322,9 +354,9 @@ export function AnalyzeDataByCategory(
 }
 
 /**
- * `ExtractStatusMessages` function extracts the values of the termination message for each instance per solver, from the results data.
+ * This function extracts the values of the termination message for each instance per solver, from the results data.
  *
- * @param {object[]} traceData - An array of objects where each object represents an instance of trace data.
+ * @param {object[]} traceData - Array of objects containing the result data.
  * @returns  {string[]} - An object with solver names as keys. Each solver contains a counter of the instance status messages.
  */
 
@@ -351,13 +383,13 @@ export function ExtractStatusMessages(traceData: object[]): string[] {
 }
 
 /**
- * `ExtractAllSolverTimes` function is used to structure trace data (log of the solver) into a more accessible object
+ * This function is used to structure trace data (log of the solver) into a more accessible object
  * structure. It takes an array of objects (traceData) and returns an object.
  *
  * The returned object has a unique key for each solver and the value is an array of objects, each containing a 'time'
  * and 'InputFileName'.
  *
- * @param {object[]} traceData - An array of objects where each object represents an instance of trace data.
+ * @param {object[]} traceData - Array of objects containing the result data.
  *
  * @returns {object} - An object with solver names as keys. Each key points to an array of objects where each object
  * contains 'time' and 'InputFileName' property of the corresponding solver. If the time value is 'NA' or is not a number,
@@ -387,19 +419,19 @@ export function ExtractAllSolverTimes(traceData: object[]): object {
 }
 
 /**
- * `ExtractAllSolverTimesNoFailedAndGapBelow1Percent` function is used to structure trace data (log of the solver) into a more accessible object
+ * This function is used to structure trace data (log of the solver) into a more accessible object
  * structure. It takes an array of objects (traceData) and returns an object.
  *
  * The returned object has a unique key for each solver and the value is an array of objects, each containing a 'time'
  * and 'InputFileName'. All results with missing SolverTime, or with a failed status, get a default value of 1000.
  * A fail is if the termination or solver status is "Normal" or "Normal Completion".
  *
- * @param {object[]} traceData - An array of objects where each object represents an instance of trace data.
+ * @param {object[]} traceData - Array of objects containing the result data.
  *
  * @returns {object} - An object with solver names as keys. Each key points to an array of objects where each object
  * contains 'time' and 'InputFileName' property of the corresponding solver.
  */
-export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
+export function ExtractAllSolverTimesGapType(
 	traceData: object[],
 	selectedGapType: string,
 	defaultTime?: number | undefined,
@@ -452,4 +484,62 @@ export function ExtractAllSolverTimesNoFailedAndGapBelow1Percent(
 		{}
 	);
 	return result;
+}
+
+/**
+ * This function is used to structure trace data (log of the solver) into a more accessible object
+ * structure. It takes an array of objects (traceData) and returns an object.
+ *
+ * The returned object has a unique key for each solver and the value is an array of objects, each containing a 'time'
+ * @param {string} solver1 - The name of the first solver to compare.
+ * @param {string} solver2 - The name of the second solver to compare.
+ * @param solverTimes - An object with 'time' and 'InputFileName' properties.
+ * @returns {object} - An object with solver names as keys. Each key points to an array of objects where each object
+ * contains 'time1', 'time2', 'InputFileName', 'comparison' property of the corresponding solver.
+ */
+export function CompareSolvers(
+	solver1: string,
+	solver2: string,
+	solverTimes
+): { better: number; worse: number; equal: number; details: object[] } {
+	const results1 = solverTimes[solver1];
+	const results2 = solverTimes[solver2];
+
+	const comparisonSummary = { better: 0, worse: 0, equal: 0, details: [] };
+
+	results1.forEach((result1: { InputFileName: string; time: number }) => {
+		const result2 = results2.find(
+			(r: { InputFileName: string }) =>
+				r.InputFileName === result1.InputFileName
+		);
+		if (result2) {
+			if (result1.time < result2.time) {
+				comparisonSummary.better++;
+				comparisonSummary.details.push({
+					InputFileName: result1.InputFileName,
+					time1: result1.time,
+					time2: result2.time,
+					comparison: "better"
+				});
+			} else if (result1.time > result2.time) {
+				comparisonSummary.worse++;
+				comparisonSummary.details.push({
+					InputFileName: result1.InputFileName,
+					time1: result1.time,
+					time2: result2.time,
+					comparison: "worse"
+				});
+			} else {
+				comparisonSummary.equal++;
+				comparisonSummary.details.push({
+					InputFileName: result1.InputFileName,
+					time1: result1.time,
+					time2: result2.time,
+					comparison: "equal"
+				});
+			}
+		}
+	});
+
+	return comparisonSummary;
 }

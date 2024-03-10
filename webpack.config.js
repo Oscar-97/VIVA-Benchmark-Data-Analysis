@@ -5,6 +5,7 @@ module.exports = {
   entry: "./Src/Scripts/Main.ts",
   output: {
     filename: "bundle.js",
+    chunkFilename: "[name].js",
     path: __dirname + "/Dist",
   },
   devtool: "source-map",

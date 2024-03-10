@@ -104,6 +104,11 @@
 							</ul>
 						</li>
 						<li class="nav-item">
+							<a class="nav-link" aria-current="page" href="../Pages/compare_solvers.html"
+								><i class="bi bi-view-stacked"></i> Compare Solvers</a
+							>
+						</li>
+						<li class="nav-item">
 							<div class="input-group" id="uploadFileGroup">
 								<input
 									type="file"
@@ -133,7 +138,7 @@
 						<li class="nav-item">
 							<div class="input-group" id="librarySelectorGroup">
 								<span class="input-group-text">Library</span>
-								<select class="form-select" id="librarySelector" aria-label="libraryType">
+								<select class="form-select" id="librarySelector" aria-label="Select library">
 								  <option value="none" selected>None</option>
 								  <option value="MINLPLib">MINLPLib</option>
 								  <option value="MIPLIB">MIPLIB</option>
@@ -166,7 +171,7 @@
 						<li class="nav-item">
 							<button
 								class="nav-link"
-								aria-label="help"
+								aria-label="Help"
 								data-bs-toggle="modal"
 								data-bs-target="#fileFormatInformationModal"
 								name="Help"
@@ -187,7 +192,7 @@
 			</div>
 		</nav>
 		<div class="alert alert-dismissible" role="alert" id="alertNotification">
-			<i id="alertIcon" class="bi" style="margin-right: 10px"></i>
+			<i id="alertIcon" class="bi"></i>
 			<span id="alertMessage"></span>
 			<button
 				id="closeAlertButton"
@@ -205,6 +210,10 @@
 					class="btn btn-success btn-sm"
 					type="submit"
 					id="viewPlotsButton"
+					disabled="true"
+					data-toggle="tooltip"
+					data-placement="top"
+					title="View the solver times."
 				>
 					<i class="bi bi-diagram-2"></i> View Solver Time
 				</button>
@@ -216,7 +225,7 @@
 					disabled="true"
 					data-toggle="tooltip"
 					data-placement="top"
-					title="Save current table configuration to local storage."
+					title="Save currently loaded data to local storage."
 				>
 					<i class="bi bi-save"></i> Save Data
 				</button>
@@ -277,7 +286,7 @@
 					id="deleteLocalStorageButton"
 					data-toggle="tooltip"
 					data-placement="top"
-					title="Delete current table configuration from local storage."
+					title="Delete currently saved data in local storage."
 				>
 					<i class="bi bi-trash"></i> Delete Data
 				</button>
@@ -386,7 +395,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="fileFormatInformationModalLabel">
+						<h5 class="modal-title" id="userConfigurationSettingsModalLabel">
 							<i class="bi bi-gear-fill"></i> UserConfiguration Settings
 						</h5>
 						<button
@@ -401,13 +410,13 @@
 
 						<i>Required</i>
 						<div class="mb-3">
-							<label for="solverList" class="form-label"
+							<label for="solverSelector" class="form-label"
 								>Select the solvers to save the instances for.</label
 							>
 							<select
 								class="form-select"
 								multiple
-								aria-label="Multiple select example"
+								aria-label="Select solvers"
 								id="solverSelector"
 							></select>
 						</div>
@@ -425,7 +434,7 @@
 								type="number"
 								class="form-control"
 								placeholder="Enter a defaultTime."
-								aria-label="defaultTime"
+								aria-label="Input default time"
 								aria-describedby="basic-addon1"
 								min="1"
 								id="defaultTimeInput"
@@ -444,7 +453,7 @@
 								type="number"
 								class="form-control"
 								placeholder="Enter a gapLimit."
-								aria-label="gapLimit"
+								aria-label="Input gap limit"
 								aria-describedby="basic-addon1"
 								min="0"
 								step="0.01"

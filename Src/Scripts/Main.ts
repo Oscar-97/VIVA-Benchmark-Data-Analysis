@@ -25,7 +25,10 @@ import "../css/style.css";
 /**
  * PWA Setup.
  */
-import { RegisterServiceWorker } from "./PWA_Setup";
+import {
+	RegisterServiceWorker,
+	RequestPWANotificationPermission
+} from "./PWA/PWA-utils";
 
 /**
  * Chart.
@@ -57,6 +60,7 @@ import {
 /**
  * DataTable.
  */
+import { ComparisonSummaryTable } from "./DataTable/DataTableBase";
 import {
 	DisplayDataTable,
 	DestroyDataTable
@@ -67,9 +71,15 @@ import { UpdateResults } from "./DataTable/UpdateResults";
  * Elements.
  */
 import {
+	PopulateCheckboxes,
+	GetSelectedCheckboxValues
+} from "./Elements/DynamicCheckboxes";
+import {
 	ElementStatesTablePage,
 	ElementStatesPlotPage,
-	ElementStateDisplayedChart
+	ElementStateDisplayedChart,
+	ElementStatesCompareSolversPage,
+	ElementStateDisplayedComparisonTable
 } from "./Elements/ElementStatus";
 import {
 	fileInput,
@@ -91,7 +101,8 @@ import {
 	configurationSettingsButton,
 	defaultTimeDirectInput,
 	gapLimitDirectInput,
-	gapLimitInput
+	gapLimitInput,
+	compareSolversButton
 } from "./Elements/Elements";
 import {
 	BodyFadeLoadingAnimation,
@@ -109,17 +120,29 @@ import {
 	DownloadCustomizedUserConfiguration
 } from "./UserConfiguration/UserConfiguration";
 
-import {
-	DEMO_DATA,
-	MINLPLIB_SOLUTION_DATA,
-	MIPLIB_2017_SOLUTION_DATA
-} from "./DemoData";
+import { DEMO_DATA } from "./Datasets/DemoData";
 import {
 	DisplayErrorNotification,
 	DisplayWarningNotification
 } from "./Elements/DisplayAlertNotification";
 import { ReleaseVersionTag } from "./Elements/ReleaseVersionTag";
-import { ReversedTraceHeaderMap, TraceHeaderMap } from "./TraceHeaders";
+import {
+	ReversedTraceHeaderMap,
+	TraceHeaderMap
+} from "./Constants/TraceHeaders";
+import {
+	ExtractAllSolverTimes,
+	CompareSolvers
+} from "./DataProcessing/CalculateResults";
+import { Keys } from "./Constants/Keys";
+import {
+	ChartMessages,
+	ErrorMessages,
+	InfoMessages,
+	TableMessages,
+	UserConfigurationMessages
+} from "./Constants/Messages";
+import { PageTitles } from "./Constants/PageTitles";
 //#endregion
 
 /**
@@ -138,13 +161,13 @@ BodyFadeLoadingAnimation();
 RegisterServiceWorker();
 
 /**
- * @param dataFileType Type of file extension for the imported data. As of now, either one or more .trc or a single .json. Text based files were removed.
- * @param defaultTime The default time for the absolute performance profile chart.
- * @param gapLimit Gap limit value for the absolute performance profile chart.
- * @param unprocessedData Raw data of the imported benchmark results.
- * @param unprocessedInstanceInformationData Unprocessed instanceinfo.csv containing properties.
- * @param unprocessedSolutionData Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
- * @param chartData Processed data used in the different charts.
+ * @param {string} dataFileType - Type of file extension for the imported data. As of now, either one or more .trc or a single .json. Text based files were removed.
+ * @param {number | string} defaultTime - The default time for the absolute performance profile chart.
+ * @param {number | string} gapLimit - Gap limit value for the absolute performance profile chart.
+ * @param {string[]} unprocessedData - Raw data of the imported benchmark results.
+ * @param {string[]} unprocessedInstanceInformationData - Unprocessed instanceinfo.csv containing properties.
+ * @param {string[]} unprocessedSolutionData - Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
+ * @param chartData - Processed data used in the different charts.
  */
 let dataFileType = "";
 let defaultTime = undefined;
@@ -176,8 +199,10 @@ function InitializeProgram(): void {
 	 * Different functions, ElementStatus() and ElementStatusPlots(), are called
 	 * depending on whether the title is "Report" or not.
 	 */
-	if (document.title === "Report") {
+	if (document.title === PageTitles.TABLE) {
 		ElementStatesTablePage();
+	} else if (document.title === PageTitles.COMPARE_SOLVERS) {
+		ElementStatesCompareSolversPage();
 	} else {
 		ElementStatesPlotPage();
 	}
@@ -192,19 +217,19 @@ function InitializeProgram(): void {
 	try {
 		[unprocessedData, dataFileType, defaultTime, gapLimit] =
 			GetUserConfiguration();
-		if (localStorage.getItem("DemoData") === "true") {
-			ImportDataEvents("Using demo mode!", "json");
+		if (localStorage.getItem(Keys.DEMO_DATA) === "true") {
+			ImportDataEvents(InfoMessages.DEMO_MODE_MSG, "json");
 			NotifyDemoMode();
 		} else {
-			ImportDataEvents("Found cached benchmark file!", "json");
+			ImportDataEvents(InfoMessages.FOUND_STORED_CONFIG, "json");
 		}
 		saveLocalStorageButton.disabled = true;
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
-		sessionStorage.setItem("savedStorageNotification", "true");
+		sessionStorage.setItem(Keys.SAVED_STORAGE_NOTIFICATION, "true");
 		ManageData();
 	} catch {
-		console.info("No saved configuration data found.");
+		console.info(UserConfigurationMessages.NO_STORED_CONFIG);
 	}
 
 	/**
@@ -229,38 +254,39 @@ function InitializeProgram(): void {
 	 * Adds an event listener to the "Import Data" button that calls the
 	 * ImportDataEvents() function with a success message containing the list of files loaded
 	 * and the ManageData() function whenever the button is clicked.
+	 *
+	 * It also requests permission for push notifications.
 	 */
 	importDataButton.addEventListener("click", () => {
-		sessionStorage.removeItem("savedStorageNotification");
+		sessionStorage.removeItem(Keys.SAVED_STORAGE_NOTIFICATION);
 		const fileNames = Array.from(fileInput.files)
 			.map((file) => {
 				return file.name;
 			})
 			.join(", ");
-		ImportDataEvents(
-			"Benchmarks loaded with following files: \n".concat(fileNames)
-		);
+		ImportDataEvents(InfoMessages.LOADED_FILES.concat(fileNames));
 		ManageData();
+		RequestPWANotificationPermission();
 	});
 
 	/**
 	 * Adds an event listener to the "Demo-Mode" button that loads a demo data set and savet it to local storage.
 	 */
-	if (document.title === "Report") {
+	if (document.title === PageTitles.TABLE) {
 		demoDataButton.addEventListener("click", () => {
 			ActivateDemoMode();
 		});
 	}
 
 	function ActivateDemoMode(): void {
-		localStorage.setItem("UserConfiguration", JSON.stringify(DEMO_DATA));
-		localStorage.setItem("DemoData", "true");
+		localStorage.setItem(Keys.USER_CONFIGURATION, JSON.stringify(DEMO_DATA));
+		localStorage.setItem(Keys.DEMO_DATA, "true");
 		location.reload();
 	}
 
 	function NotifyDemoMode(): void {
-		ImportDataEvents("Using demo mode!", "json");
-		if (document.title === "Report") {
+		ImportDataEvents(InfoMessages.DEMO_MODE_MSG, "json");
+		if (document.title === PageTitles.TABLE) {
 			demoDataButton.style.color = "#198754";
 			demoDataButton.disabled = true;
 		}
@@ -270,7 +296,7 @@ function InitializeProgram(): void {
 /**
  * Manage the benchmark results data.
  */
-function ManageData(): void {
+async function ManageData(): Promise<void> {
 	/**
 	 * Trace data results and filtered trace data results.
 	 */
@@ -306,7 +332,6 @@ function ManageData(): void {
 	 */
 	if (dataFileType === "trc") {
 		traceData = ExtractTraceData(unprocessedData);
-
 		if (unprocessedInstanceInformationData.length !== 0) {
 			instanceInfoData = GetInstanceInformation(
 				unprocessedInstanceInformationData
@@ -317,17 +342,20 @@ function ManageData(): void {
 		if (unprocessedSolutionData.length !== 0) {
 			soluData = GetBestKnownBounds(unprocessedSolutionData);
 		} else if (librarySelector.value === "MINLPLib") {
-			soluData = MINLPLIB_SOLUTION_DATA;
-			librarySelector.disabled = true;
+			const module = await import(
+				/* webpackChunkName: "minlplib-dataset" */ "./Datasets/MINLPLib"
+			);
+			soluData = module.MINLPLIB_SOLUTION_DATA;
 		} else if (librarySelector.value === "MIPLIB") {
-			soluData = MIPLIB_2017_SOLUTION_DATA;
-			librarySelector.disabled = true;
+			const module = await import(
+				/* webpackChunkName: "miplib2017-dataset" */ "./Datasets/MIPLIB_2017"
+			);
+			soluData = module.MIPLIB_2017_SOLUTION_DATA;
 		}
 
 		if (soluData) {
 			traceData = MergeData(traceData, soluData);
 		}
-
 		AddResultCategories(traceData);
 	}
 
@@ -393,7 +421,7 @@ function ManageData(): void {
 	 * If the document title is "Report", it handles the report page functionality using
 	 * the traceData and traceDataFiltered variables.
 	 */
-	if (document.title === "Report") {
+	if (document.title === PageTitles.TABLE) {
 		HandleReportPage(traceData, traceDataFiltered);
 		if (dataFileType === "json") {
 			viewTableButton.click();
@@ -401,10 +429,21 @@ function ManageData(): void {
 	}
 
 	/**
+	 * If the document title is "Compare Solvers", it handles the compare solvers page functionality using
+	 * the traceData variable.
+	 */
+	if (document.title === PageTitles.COMPARE_SOLVERS) {
+		HandleCompareSolversPage(traceData);
+	}
+
+	/**
 	 * If the document title is not "Report", it handles the plot page functionality using
 	 * the traceData variable.
 	 */
-	if (document.title !== "Report") {
+	if (
+		document.title !== PageTitles.TABLE &&
+		document.title !== PageTitles.COMPARE_SOLVERS
+	) {
 		HandlePlotPages(traceData);
 		if (dataFileType === "json") {
 			viewPlotsButton.click();
@@ -415,8 +454,8 @@ function ManageData(): void {
 /**
  * This function manages the functionality of the buttons on the Report page of the application.
  *
- * @param {object[]} traceData - This parameter is an array of objects that represents the trace data.
- * @param {object[]} traceDataFiltered - This parameter is an array of objects that represents the filtered trace data.
+ * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {object[]} traceDataFiltered - Array of objects containing the filtered result data.
  */
 function HandleReportPage(
 	traceData: object[],
@@ -439,7 +478,7 @@ function HandleReportPage(
 		traceDataFiltered = UpdateResults();
 
 		if (traceDataFiltered.length === 0) {
-			DisplayWarningNotification("No rows selected for filtering.");
+			DisplayWarningNotification(TableMessages.TABLE_NO_ROWS);
 			showSelectedRowsButton.disabled = false;
 		} else {
 			DisplayDataTable(traceDataFiltered);
@@ -484,15 +523,19 @@ function HandleReportPage(
 	 * Destroy the data table and reinitializes the program when clicking on "Clear Data Table".
 	 */
 	clearTableButton.addEventListener("click", () => {
-		DestroyDataTable();
-		InitializeProgram();
+		DisplayWarningNotification(TableMessages.TABLE_CLEARING);
+		clearTableButton.disabled = true;
+		setTimeout(() => {
+			DestroyDataTable();
+			InitializeProgram();
+		}, 5000);
 	});
 }
 
 /**
  * This function manages the functionality of the buttons on the plot pages of the application.
  *
- * @param {object[]} traceData - This parameter is an array of objects that represents the trace data.
+ * @param {object[]} traceData - Array of objects containing the result data.
  */
 function HandlePlotPages(traceData: object[]): void {
 	/**
@@ -516,7 +559,7 @@ function HandlePlotPages(traceData: object[]): void {
 		/**
 		 * Check if the user is on the Absolute Performance Profile.
 		 */
-		if (document.title === "Absolute Performance Profile") {
+		if (document.title === PageTitles.ABSOLUTE_PERFORMANCE_PROFILE) {
 			defaultTime = defaultTimeDirectInput.value;
 			gapLimit = gapLimitDirectInput.value;
 
@@ -530,7 +573,7 @@ function HandlePlotPages(traceData: object[]): void {
 		/**
 		 * Check if the user is on the Average Solver Time page.
 		 */
-		if (document.title === "Average Solver Time") {
+		if (document.title === PageTitles.AVERAGE_SOLVER_TIME) {
 			chartData = PlotDataByCategory(
 				traceData,
 				"bar",
@@ -543,14 +586,14 @@ function HandlePlotPages(traceData: object[]): void {
 		/**
 		 * Check if the user is on the Solver Time page.
 		 */
-		if (document.title === "Solver Time") {
+		if (document.title === PageTitles.SOLVER_TIME) {
 			chartData = PlotAllSolverTimes(traceData);
 		}
 
 		/**
 		 * Check if the user is on the Number of Nodes page.
 		 */
-		if (document.title === "Number of Nodes") {
+		if (document.title === PageTitles.NUMBER_OF_NODES) {
 			chartData = PlotDataByCategory(
 				traceData,
 				"bar",
@@ -563,7 +606,7 @@ function HandlePlotPages(traceData: object[]): void {
 		/**
 		 * Check if the user is on the Number of Iterations page.
 		 */
-		if (document.title === "Number of Iterations") {
+		if (document.title === PageTitles.NUMBER_OF_ITERATIONS) {
 			chartData = PlotDataByCategory(
 				traceData,
 				"bar",
@@ -576,7 +619,7 @@ function HandlePlotPages(traceData: object[]): void {
 		/**
 		 * Check if the user is on the Termination Status page.
 		 */
-		if (document.title === "Termination Status") {
+		if (document.title === PageTitles.TERMINATION_STATUS) {
 			chartData = PlotStatusMessages(
 				traceData,
 				"bar",
@@ -597,8 +640,59 @@ function HandlePlotPages(traceData: object[]): void {
 			downloadChartDataButton.href = window.URL.createObjectURL(blob);
 			downloadChartDataButton.download = "ChartData.json";
 		} else {
-			DisplayErrorNotification("No chart data found!");
+			DisplayErrorNotification(ChartMessages.NO_CHART_DATA);
 		}
+	});
+}
+
+/**
+ * This function manages the functionality of the buttons on the compare solvers page of the application.
+ * It also handles the comparison of the solvers.
+ *
+ * @param {object[]} traceData - Array of objects containing the result data.
+ */
+function HandleCompareSolversPage(traceData: object[]): void {
+	const solverTimes = ExtractAllSolverTimes(traceData);
+	PopulateCheckboxes(solverTimes);
+
+	/**
+	 * Save to local storage when clicking on the "Save Data" button.
+	 */
+	saveLocalStorageButton.addEventListener("click", () => {
+		if (dataFileType === "trc") {
+			dataFileType = "json";
+		}
+		const newRawData: string[] = CreateNewTraceData(traceData);
+		CreateUserConfiguration(newRawData, dataFileType);
+		deleteLocalStorageButton.disabled = false;
+		downloadConfigurationButtonLayer.disabled = false;
+	});
+
+	/**
+	 * Event listener for the compare solvers button.
+	 */
+	compareSolversButton.addEventListener("click", () => {
+		const selectedSolvers = GetSelectedCheckboxValues();
+		if (selectedSolvers.length !== 2) {
+			DisplayErrorNotification(ErrorMessages.SELECT_SOLVER_AMOUNT);
+		}
+		const comparisonSummary = CompareSolvers(
+			selectedSolvers[0],
+			selectedSolvers[1],
+			solverTimes
+		);
+		const inverseComparisonSummary = CompareSolvers(
+			selectedSolvers[1],
+			selectedSolvers[0],
+			solverTimes
+		);
+		ComparisonSummaryTable(
+			comparisonSummary,
+			inverseComparisonSummary,
+			selectedSolvers[0],
+			selectedSolvers[1]
+		);
+		ElementStateDisplayedComparisonTable();
 	});
 }
 

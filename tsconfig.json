@@ -3,7 +3,8 @@
     "outDir": "./Built",
     "rootDir": "./Src/.",
     "allowJs": true,
-    "target": "es6",
+    "target": "esnext",
+    "module": "es2020",
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node"

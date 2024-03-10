@@ -1,28 +1,39 @@
-import { dataTable } from "../Elements/Elements";
-import { TraceHeaderMap } from "../TraceHeaders";
+import {
+	comparisonTableDiv,
+	dataTable,
+	solverComparisonModal,
+	solverComparisonModalBody,
+	solverComparisonModalLabel,
+	statisticsTableDiv
+} from "../Elements/Elements";
+import { TraceHeaderMap } from "../Constants/TraceHeaders";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Modal from "bootstrap/js/dist/modal";
+import { Captions } from "../Constants/Messages";
 
 /**
- * Sorts the keys by an enumeration and then by alphabetical order for non-enumeration keys.
+ * This function sorts the keys by an enumeration and then by alphabetical order for non-enumeration keys.
  *
  * @param obj - The object whose keys are to be sorted.
+ *
  * @returns An array of strings representing the sorted keys of the object.
- *          First, the keys that are present in the `TraceHeaderMap` enum are sorted based on their order in the enum.
- *          Then, the remaining keys not in the enum are sorted alphabetically.
+ * First, the keys that are present in the `TraceHeaderMap` enum are sorted based on their order in the enum.
+ * Then, the remaining keys not in the enum are sorted alphabetically.
  */
-function SortKeysByEnum(obj): string[] {
-	const enumKeys = Object.keys(TraceHeaderMap);
-	const objKeys = Object.keys(obj);
+function SortKeysByEnum(obj: object): string[] {
+	const enumKeys: string[] = Object.keys(TraceHeaderMap);
+	const objKeys: string[] = Object.keys(obj);
 
-	const sortedEnumKeys = objKeys
-		.filter((key) => {
+	const sortedEnumKeys: string[] = objKeys
+		.filter((key: string) => {
 			return enumKeys.includes(key);
 		})
-		.sort((a, b) => {
+		.sort((a: string, b: string) => {
 			return enumKeys.indexOf(a) - enumKeys.indexOf(b);
 		});
 
-	const nonEnumKeys = objKeys
-		.filter((key) => {
+	const nonEnumKeys: string[] = objKeys
+		.filter((key: string) => {
 			return !enumKeys.includes(key);
 		})
 		.sort();
@@ -31,11 +42,9 @@ function SortKeysByEnum(obj): string[] {
 }
 
 /**
- * Function to dynamically create and display a HTML table based on the provided trace data.
+ * This function dynamically creates and displays a HTML table based on the provided trace data.
  *
- * @param traceData An array of objects where each object represents a row in the table, and the keys/values within the object represent columns and cell values.
- *
- * @returns The function doesn't return anything.
+ @param {object[]} traceData - Array of objects containing the result data.
  *
  * @remarks
  * This function generates a new table to display trace data. The table is added to the 'dataTable' HTML div.
@@ -46,16 +55,16 @@ function SortKeysByEnum(obj): string[] {
  * @example
  * ```typescript
  * const traceData = [
- *   {Solver: "SolverA", Runtime: 10, ObjectiveValue: 100},
- *   {Solver: "SolverB", Runtime: 20, ObjectiveValue: 200}
+ *   {Solver: "SolverA", SolverTime: 10, ObjectiveValue: 100},
+ *   {Solver: "SolverB", SolverTime: 20, ObjectiveValue: 200}
  * ];
  * TableDataTrc(traceData);
  * ```
- * This example will generate a table with two rows and three columns (Solver, Runtime, and ObjectiveValue).
+ * This example will generate a table with two rows and three columns (Solver, SolverTime, and ObjectiveValue).
  */
 export function TableDataTrc(traceData: object[]): void {
 	/**
-	 * @param DataTableDiv Div that contains the data table.
+	 * Div that contains the data table.
 	 */
 	const dataTableDiv = dataTable;
 	dataTableDiv.innerHTML = "";
@@ -64,7 +73,7 @@ export function TableDataTrc(traceData: object[]): void {
 	dataTableHeaders.classList.add("thead-dark");
 
 	/**
-	 * @param DataTableHeaders Thead created from the categories.
+	 * Thead created from the categories.
 	 */
 	const headerRow = document.createElement("tr");
 	const sortedKeys = SortKeysByEnum(traceData[0]);
@@ -78,7 +87,7 @@ export function TableDataTrc(traceData: object[]): void {
 
 	/**
 	 * Add the results.
-	 * @param DataTableContent The content of the data table.
+	 * The content of the data table.
 	 */
 	const dataTableContent = document.createElement("tbody");
 	for (const obj of traceData) {
@@ -115,13 +124,13 @@ export function TableDataTrc(traceData: object[]): void {
 }
 
 /**
- * Function to dynamically create and display a HTML table based on solver's time statistics.
+ * This function dynamically creates and displays a HTML table based on solver's time statistics.
  *
- * @param solverTimeStats An object where each key is the name of a solver and each value is another object that holds statistical metrics (average, min, max, std, sum, and percentiles) for the solver's runtime.
- * @param title A string that will be used as the table caption.
+ * @param solverTimeStats - An object where each key is the name of a solver and each value is another object that holds statistical metrics (average, min, max, std, sum, and percentiles) for the solver's runtime.
+ * @param {string} title - A string that will be used as the table caption.
  *
  * @remarks
- * This function generates a new table displaying statistical metrics for different solvers. The table is added to the 'statisticsTable' HTML div.
+ * The table is added to the 'statisticsTable' HTML div.
  * For each solver, it creates a row with the solver's name in the first column, and the solver's statistics in the subsequent columns.
  * Note: this function directly manipulates the DOM and doesn't return anything.
  */
@@ -142,16 +151,13 @@ export function StatisticsTable(
 	},
 	title: string
 ): void {
-	const statisticsTableDiv = document.getElementById(
-		"statisticsTable"
-	) as HTMLDivElement;
 	statisticsTableDiv.innerHTML = "";
+	statisticsTableDiv.classList.add("table-responsive", "me-3", "ms-1");
 
 	const statisticsTable = document.createElement("table");
 	statisticsTable.classList.add(
 		"table",
 		"table-bordered",
-		"table-responsive",
 		"table-hover",
 		"table-sm"
 	);
@@ -213,4 +219,181 @@ export function StatisticsTable(
 
 	statisticsTable.appendChild(tableBody);
 	statisticsTableDiv.appendChild(statisticsTable);
+}
+
+/**
+ * This function dynamically creates and displays a HTML table based on the comparison summary of two solvers.
+ * The cell values are clickable and display a list of instances where the solver time was better, worse, or equal, depending on the clicked cell.
+ *
+ * @param comparisonSummary - An object that holds the comparison summary of two solvers.
+ * The object has three keys: better, worse, and equal, and each key holds the number of instances where the first solver was better, worse, or equal to the second solver.
+ * @param comparisonSummaryInverse - Inverse comparison summary of the two solvers.
+ * @param {string} solver1Name - The name of the first solver.
+ * @param {string} solver2Name - The name of the second solver.
+ *
+ * @remarks
+ * The table is added to the 'comparisonTableContainer' HTML div.
+ */
+export function ComparisonSummaryTable(
+	comparisonSummary,
+	comparisonSummaryInverse,
+	solver1Name: string,
+	solver2Name: string
+): void {
+	if (!comparisonTableDiv) return;
+
+	comparisonTableDiv.innerHTML = "";
+	comparisonTableDiv.classList.add("table-responsive", "me-3", "ms-1");
+
+	const comparisonTable = document.createElement("table");
+	comparisonTable.classList.add(
+		"table",
+		"table-bordered",
+		"table-hover",
+		"table-sm"
+	);
+
+	const tableCaption = document.createElement("caption");
+	tableCaption.textContent = Captions.COMPARISON_TABLE_CAPTION;
+	comparisonTable.appendChild(tableCaption);
+
+	const header = document.createElement("thead");
+	header.classList.add("table-light");
+
+	const headerRow = document.createElement("tr");
+	headerRow.appendChild(document.createElement("th"));
+	headerRow.appendChild(CreateHeaderCell(solver1Name));
+	headerRow.appendChild(CreateHeaderCell(solver2Name));
+	header.appendChild(headerRow);
+
+	comparisonTable.appendChild(header);
+
+	const tableBody = document.createElement("tbody");
+	const comparisons = ["Better", "Worse", "Equal"];
+	comparisons.forEach((comparison) => {
+		const row = document.createElement("tr");
+		row.appendChild(CreateCell(comparison));
+
+		let value1: number, value2: number;
+		switch (comparison) {
+			case "Better":
+				value1 = comparisonSummary.better;
+				value2 = comparisonSummaryInverse.better;
+				break;
+			case "Worse":
+				value1 = comparisonSummary.worse;
+				value2 = comparisonSummaryInverse.worse;
+				break;
+			case "Equal":
+				value1 = comparisonSummary.equal;
+				value2 = comparisonSummaryInverse.equal;
+				break;
+		}
+
+		row.appendChild(
+			CreateClickableCell(value1, comparison, comparisonSummary.details)
+		);
+		row.appendChild(
+			CreateClickableCell(value2, comparison, comparisonSummaryInverse.details)
+		);
+
+		tableBody.appendChild(row);
+	});
+
+	comparisonTable.appendChild(tableBody);
+	comparisonTableDiv.appendChild(comparisonTable);
+}
+
+/**
+ * This function creates a header cell element with the specified text content.
+ *
+ * @param text - The text content of the header cell.
+ * @returns The created header cell element.
+ */
+function CreateHeaderCell(text: string): HTMLTableCellElement {
+	const th = document.createElement("th");
+	th.textContent = text;
+	return th;
+}
+
+/**
+ * This function creates a cell element with the specified text content.
+ *
+ * @param text - The text content of the cell.
+ * @returns The created cell element.
+ */
+function CreateCell(text: string): HTMLTableCellElement {
+	const td = document.createElement("td");
+	td.classList.add("fw-bold");
+	td.textContent = text;
+	return td;
+}
+
+/**
+ * This function creates a clickable cell element with the specified text content and comparison type.
+ *
+ * @param value - The text content of the cell.
+ * @param comparisonType - The comparison type of the cell.
+ * @param details - The details of the comparison.
+ * @returns The created clickable cell element.
+ */
+function CreateClickableCell(
+	value,
+	comparisonType,
+	details
+): HTMLTableCellElement {
+	const td = document.createElement("td");
+
+	switch (comparisonType) {
+		case "Better":
+			td.classList.add("table-success");
+			break;
+		case "Worse":
+			td.classList.add("table-danger");
+			break;
+		case "Equal":
+			td.classList.add("table-warning");
+			break;
+	}
+	td.textContent = value.toString();
+	td.style.cursor = "pointer";
+	td.onclick = (): void => DisplayDetails(comparisonType, details);
+	return td;
+}
+
+/**
+ * This function displays a modal with the details of the comparison of two solvers.
+ *
+ * @param comparisonType - The comparison type of the details to be displayed.
+ * @param details - An array of objects representing the details of the comparison.
+ *
+ * @remarks
+ * The modal is added to the 'solverComparisonModal' HTML div.
+ */
+function DisplayDetails(comparisonType, details): void {
+	const filteredDetails = details.filter(
+		(detail) => detail.comparison === comparisonType.toLowerCase()
+	);
+
+	if (solverComparisonModalLabel)
+		solverComparisonModalLabel.innerHTML = `<i class="bi bi-clock-history"></i> ${Captions.COMPARSION_MODAL_LABEL} ${comparisonType}`;
+	if (solverComparisonModalBody) {
+		solverComparisonModalBody.innerHTML = "";
+		const listGroup = document.createElement("ul");
+		listGroup.className = "list-group";
+
+		filteredDetails.forEach((detail) => {
+			const listItem = document.createElement("li");
+			listItem.className = "list-group-item";
+			listItem.innerHTML = `${detail.InputFileName}, <b>${detail.time1}</b> compared to <b>${detail.time2}</b>`;
+			listGroup.appendChild(listItem);
+		});
+
+		solverComparisonModalBody.appendChild(listGroup);
+	}
+
+	const modal = new Modal(solverComparisonModal, {
+		keyboard: true
+	});
+	modal.show();
 }

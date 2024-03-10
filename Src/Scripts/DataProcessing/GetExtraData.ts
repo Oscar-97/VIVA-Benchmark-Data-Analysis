@@ -1,13 +1,14 @@
+import { InfoMessages } from "../Constants/Messages";
 import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
 
 /**
- * Converts an array of strings into an array of objects representing instance information data.
+ * This function converts an array of strings into an array of objects representing instance information data.
  *
- * @param unprocessedInstanceInformationData - Array of strings, where each string is a semicolon-separated representation of a row of data.
+ * @param {string[]} unprocessedInstanceInformationData - Array of strings, where each string is a semicolon-separated representation of a row of data.
  * @returns Array of objects, where each object represents a row of instance information.
  *
  * @remarks
- * This function takes an array of strings (representing rows of instance information) as input.
+ * The function takes an array of strings (representing rows of instance information) as input.
  * It reads the first line to extract headers (split by ';'). These headers are used as the keys for the resulting objects.
  *
  * The function then iterates through each line of data, splitting it into separate elements
@@ -51,18 +52,18 @@ export function GetInstanceInformation(
 		}
 		instanceInfo.push(obj);
 	}
-	DisplayAlertNotification("Instance information succesfully loaded!");
+	DisplayAlertNotification(InfoMessages.INSTANCE_INFO_LOADED);
 	return instanceInfo;
 }
 
 /**
- * Extracts the best known primal and dual bounds from raw solu data.
+ * This function the best known primal and dual bounds from raw solu data.
  *
- * @param unprocessedSolutionData - Array of strings, each representing a line from a solu data file.
+ * @param {string[]} unprocessedSolutionData - Array of strings, each representing a line from a solu data file.
  * @returns Array of objects, each representing a processed line of data with associated primal and/or dual bounds.
  *
  * @remarks
- * This function processes an array of strings that represent raw solu data. Each string is parsed using a regular
+ * It processes an array of strings that represent raw solu data. Each string is parsed using a regular
  * expression pattern to extract the best known primal and dual bounds, as well as the file name.
  *
  * The function then generates an object for each line of data, with the file name and the primal and/or dual bounds

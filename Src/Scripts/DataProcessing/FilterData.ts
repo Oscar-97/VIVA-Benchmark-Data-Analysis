@@ -1,13 +1,13 @@
 /**
  * Default headers for the trace file.
  */
-import { DEFAULT_HEADERS } from "../TraceHeaders";
+import { DEFAULT_HEADERS } from "../Constants/TraceHeaders";
 
 /**
- * Extracts headers from the array with raw data results.
+ * This function extracts headers from the array with raw data results.
  * Headers start with an asterisk (*) and are comma-separated.
  *
- * @param unprocessedData - Array of strings, where each string is a comma-separated representation of a row of data.
+ * @param {string[]} unprocessedData - Array of strings, where each string is a comma-separated representation of a row of data.
  * @returns An array of strings representing extracted headers.
  */
 function ExtractHeaders(unprocessedData: string[]): string[] {
@@ -37,13 +37,13 @@ function ExtractHeaders(unprocessedData: string[]): string[] {
 }
 
 /**
- * Processes an array of raw data lines, using header names to create objects. If the line contains an asterisk (*), it is skipped.
+ * This function processes an array of raw data lines, using header names to create objects. If the line contains an asterisk (*), it is skipped.
  *
  * If the header is "ObjectiveValue" or "ObjectiveValueEstimate", it will be set to exponential format.
  *
- * @param headers - Array of strings representing the headers/keys for the resulting objects.
- * @param unprocessedData - Array of strings, where each string is a comma-separated representation of a row of data.
- * @param startIdx - The index to start processing lines from unprocessedData.
+ * @param {string[]} headers - Array of strings representing the headers/keys for the resulting objects.
+ * @param {string[]} unprocessedData - Array of strings, where each string is a comma-separated representation of a row of data.
+ * @param {number} startIdx - The index to start processing lines from unprocessedData.
  * @returns An array of objects created from the unprocessedData lines, where keys are taken from headers.
  */
 function ProcessLines(
@@ -94,9 +94,9 @@ function ProcessLines(
 }
 
 /**
- * Converts an array of strings into an array of objects representing .trc data.
+ * This function converts an array of strings into an array of objects representing .trc data.
  *
- * @param unprocessedData - Array of strings, where each string is a comma-separated representation of a row of data.
+ * @param {string[]} unprocessedData - Array of strings, where each string is a comma-separated representation of a row of data.
  * @returns Array of objects, where each object represents a row of data from the .trc file.
  *
  * @remarks

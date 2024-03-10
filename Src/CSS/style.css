@@ -25,6 +25,38 @@ body > :not(nav, hr) {
     }
 }
 
+@media (max-width: 1399px) {
+	#navbarNav .dropdown-menu {
+		position: absolute;
+		display: block;
+		opacity: 0;
+		max-height: 0;
+		overflow: hidden;
+		transition: all 0.5s;
+	}
+
+	#navbarNav .dropdown-menu.show {
+		display: block;
+		max-height: 500px;
+		opacity: 1;
+	}
+}
+
+@media (min-width: 1399px) {
+	#navbarNav .dropdown-menu{
+		display: block;
+		opacity: 0;
+		transition: all .5s;
+		visibility: hidden;
+	}
+
+	#navbarNav .dropdown:hover .dropdown-menu {
+		display: block;
+		opacity: 1;
+		visibility: visible;
+	}
+}
+
 @keyframes spinner {
 	to {
 		transform: rotate(360deg);
@@ -38,22 +70,45 @@ body > :not(nav, hr) {
 	margin-right: 1rem;
 }
 
+#alertIcon {
+	margin-right: 4px;
+}
+
 #buttonContainer {
 	margin-left: 1rem;
 	margin-top: 0.5rem;
 }
 
 #chartContainer {
-	height: auto;
-	max-height: 85vh;
-	width: auto;
-	margin-left: 1rem;
+    height: auto;
+    width: 95%;
+    max-width: 95vw;
+    min-height: 500px;
+    margin-left: 1rem;
+	margin-right: 1rem;
+	overflow: hidden;
+}
+
+#comparisonTable {
+	visibility: visible;
+	max-width: 400px;
+	padding: 1rem;
+}
+
+#comparisonTable th, #comparisonTable td {
+	text-align: center;
+  	word-wrap: break-word;
 }
 
 #dataTable {
 	visibility: hidden;
 	padding: 1rem;
 	padding-top: 0rem;
+}
+
+.pagination {
+	margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 #librarySelectorGroup {
@@ -65,6 +120,13 @@ body > :not(nav, hr) {
 #loaderContainer {
 	display: none;
 }
+
+#solverOptions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	max-width: 95vw;
+  }
 
 #statisticsTable {
 	visibility: visible;
@@ -101,6 +163,26 @@ body > :not(nav, hr) {
 .navbar-brand {
 	font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode",
 		"Lucida Sans", sans-serif;
+}
+
+.navbar-collapse {
+	transition: all 0.5s;
+}
+
+.dropdown-menu {
+	transition: all .3s;
+}
+
+.navbar-toggler:hover {
+	background-color: #f2f2f2;
+}
+
+.navbar-toggler:active {
+	background-color: #adb5bd;
+}
+
+.navbar-toggler:focus {
+	box-shadow: none;
 }
 
 .vertical-separator {

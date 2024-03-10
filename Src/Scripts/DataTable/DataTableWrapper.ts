@@ -1,4 +1,3 @@
-//const jq = require("jquery");
 import $ from "jquery";
 import "datatables.net-bs5";
 import "datatables.net-fixedcolumns-bs5";
@@ -12,32 +11,38 @@ import "datatables.net-buttons/js/buttons.print.mjs";
 import "datatables.net-datetime";
 
 import { TableDataTrc } from "./DataTableBase";
+import {
+	dataTableGenerated,
+	dataTableGeneratedWrapper
+} from "../Elements/Elements";
 import { ElementStateDisplayedTable } from "../Elements/ElementStatus";
-import { DEFAULT_VISIBLE_HEADERS } from "../TraceHeaders";
+import { DEFAULT_VISIBLE_HEADERS } from "../Constants/TraceHeaders";
+import { ShowPWANotification } from "../PWA/PWA-utils";
+import { TableMessages } from "../Constants/Messages";
 
 /**
- * Function to display the trace data in a dynamically generated HTML table using the DataTables library for improved user interaction.
+ * This function displays the trace data in a dynamically generated HTML table using the DataTables library for improved user interaction.
+ * A notification is shown to the user upon successful generation of the table.
  *
- * @param traceData An array of objects where each object represents a row in the table, and the keys/values within the object represent columns and cell values.
- *
- * @returns The function doesn't return anything.
+ * @param {object[]} traceData - Array of objects containing the result data.
  *
  * @remarks
- * This function generates and displays a table using the 'TableDataTrc' function. It then applies DataTables configuration to it,
+ * This function generates and displays a table using the 'TableDataTrc' function.
+ * It then applies DataTables configuration to it,
  * resulting in a table with additional features like search and pagination.
- * The table will be displayed in the HTML div with the id 'dataTable'.
- * This function will be invoked when a user clicks on the 'View All Results' or 'Selection' button.
+ * The table will be displayed in the HTML div with the id 'dataTable' and
+ * the wrapper gets the id 'dataTableGenerated_wrapper'.
  * Note: this function directly manipulates the DOM and doesn't return anything.
  *
  * @example
  * ```typescript
  * const traceData = [
- *   {Solver: "SolverA", Runtime: 10, ObjectiveValue: 100},
- *   {Solver: "SolverB", Runtime: 20, ObjectiveValue: 200}
+ *   {Solver: "SolverA", SolverTime: 10, ObjectiveValue: 100},
+ *   {Solver: "SolverB", SolverTime: 20, ObjectiveValue: 200}
  * ];
  * DisplayDataTable(traceData);
  * ```
- * This example will generate a table with two rows and three columns (Solver, Runtime, and ObjectiveValue) and apply DataTables configuration to it.
+ * This example will generate a table with two rows and three columns (Solver, SolverTime, and ObjectiveValue) and apply DataTables configuration to it.
  */
 export function DisplayDataTable(traceData: object[]): void {
 	setTimeout(() => {
@@ -55,14 +60,18 @@ export function DisplayDataTable(traceData: object[]): void {
 		});
 
 		ElementStateDisplayedTable();
+
+		ShowPWANotification(TableMessages.TABLE_SUCCESS_HEADER, {
+			body: TableMessages.TABLE_SUCCESS,
+			icon: "./Src/CSS/tab_icon.png",
+			silent: true
+		});
 	}, 500);
 }
 
 /**
  * This function configures the settings for the DataTables JavaScript library.
- * DataTables is a jQuery plugin that provides interactive features to HTML tables such as search, pagination, and sorting.
- *
- * @returns void
+ * It provides interactive features to HTML tables such as search, pagination, and sorting.
  *
  * @remarks
  * This function finds the table with the id 'dataTableGenerated' and applies various configurations to it.
@@ -70,6 +79,8 @@ export function DisplayDataTable(traceData: object[]): void {
  * setting table length and select options, defining responsive breakpoints, setting scroll properties,
  * defining fixed columns, setting button options and more.
  * Note that after configuring, the function makes some changes to CSS classes and moves the search panes container.
+ *
+ * @todo Rewrite all of this.
  */
 
 function DataTablesConfiguration(): void {
@@ -84,6 +95,7 @@ function DataTablesConfiguration(): void {
 			"<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'f>>" +
 			"<'row'<'col-sm-12'tr>>" +
 			"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 mt-2'p>>",
+		pagingType: "numbers",
 		lengthChange: true,
 		lengthMenu: [
 			[10, 25, 50, 100, -1],
@@ -129,7 +141,7 @@ function DataTablesConfiguration(): void {
 				buttons: [
 					{
 						extend: "pageLength",
-						text: function (dt): string {
+						text: function (dt: DataTables.Api): string {
 							return (
 								"<i class='bi bi-list-columns-reverse'></i> Show " +
 								dt.page.len() +
@@ -140,7 +152,11 @@ function DataTablesConfiguration(): void {
 					{
 						extend: "colvis",
 						text: "<i class='bi bi-layout-three-columns'></i> Column Visibility",
-						columnText: function (_dt, idx, title): string {
+						columnText: function (
+							_dt: DataTables.Api,
+							idx: number,
+							title: string
+						): string {
 							return idx + 1 + ": " + title;
 						}
 					}
@@ -212,8 +228,6 @@ function DataTablesConfiguration(): void {
 /**
  * This function destroys the DataTable with id 'dataTableGenerated' and removes it from the DOM.
  *
- * @returns void
- *
  * @remarks
  * This function first grabs the DataTable by its id 'dataTableGenerated', destroys it using DataTables' .destroy() method.
  * Thereafter the state is cleared by running table.state.clear().
@@ -224,15 +238,11 @@ export function DestroyDataTable(): void {
 	table.destroy();
 	table.state.clear();
 
-	const tableElementWrapper = document.getElementById(
-		"dataTableGenerated_wrapper"
-	);
-	if (tableElementWrapper) {
-		tableElementWrapper.remove();
+	if (dataTableGeneratedWrapper) {
+		dataTableGeneratedWrapper.remove();
 	}
 
-	const tableElement = document.getElementById("dataTableGenerated");
-	if (tableElement) {
-		tableElement.remove();
+	if (dataTableGenerated) {
+		dataTableGenerated.remove();
 	}
 }
