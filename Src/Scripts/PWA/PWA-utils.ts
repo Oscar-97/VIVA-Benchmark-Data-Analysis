@@ -1,3 +1,5 @@
+import { Keys } from "../Constants/Keys";
+
 /**
  * This function checks if the browser supports service workers, a technology that enables
  * offline caching and background syncing for Progressive Web Apps (PWAs). If supported,
@@ -28,14 +30,26 @@ export function RegisterServiceWorker(): void {
  * This function requests permission for desktop notifications in the browser.
  */
 export function RequestPWANotificationPermission(): void {
+	if (
+		!window.matchMedia("(display-mode: standalone)").matches &&
+		!window.matchMedia("(display-mode: window-controls-overlay)").matches &&
+		!window.matchMedia("(display-mode: minimal-ui)").matches
+	) {
+		return;
+	}
+
 	if (!("Notification" in window)) {
 		console.error("This browser does not support desktop notification");
-	} else {
+	} else if (Notification.permission === "granted") {
+		console.info("Notification permission already granted.");
+		localStorage.setItem(Keys.NOTIFICATION_PERMISSION, "granted");
+	} else if (Notification.permission !== "denied") {
 		Notification.requestPermission().then((permission) => {
+			localStorage.setItem(Keys.NOTIFICATION_PERMISSION, permission);
 			if (permission === "granted") {
-				console.log("Notification permission granted.");
+				console.info("Notification permission granted.");
 			} else {
-				console.log("Notification permission denied or dismissed.");
+				console.warn("Notification permission denied or dismissed.");
 			}
 		});
 	}
@@ -51,18 +65,22 @@ export function ShowPWANotification(
 	title: string,
 	options: NotificationOptions
 ): void {
+	if (
+		!window.matchMedia("(display-mode: standalone)").matches &&
+		!window.matchMedia("(display-mode: window-controls-overlay)").matches &&
+		!window.matchMedia("(display-mode: minimal-ui)").matches
+	) {
+		return;
+	}
+
 	if (!("Notification" in window)) {
 		console.error("This browser does not support notifications.");
 		return;
 	}
 
-	if (Notification.permission === "granted") {
+	if (localStorage.getItem(Keys.NOTIFICATION_PERMISSION) === "granted") {
 		new Notification(title, options);
-	} else if (Notification.permission !== "denied") {
-		Notification.requestPermission().then((permission) => {
-			if (permission === "granted") {
-				new Notification(title, options);
-			}
-		});
+	} else if (Notification.permission === "denied") {
+		console.warn("Notification permission denied.");
 	}
 }
