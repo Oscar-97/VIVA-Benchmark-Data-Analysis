@@ -2,6 +2,7 @@ body > :not(nav, hr) {
 	opacity: 0;
 	visibility: visible;
 	transition: opacity 0.5s;
+	touch-action: pan-x pinch-zoom;
 }
 
 @media (max-width: 1250px) {

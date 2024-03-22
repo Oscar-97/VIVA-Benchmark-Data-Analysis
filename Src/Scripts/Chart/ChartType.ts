@@ -240,7 +240,7 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 			},
 			type: "linear",
 			min: 0,
-			max: defaultTime ? Number(defaultTime) + 100 : 1100,
+			max: defaultTime ? Number(defaultTime) + 10 : 1010,
 			ticks: {
 				stepSize: 50
 			}
