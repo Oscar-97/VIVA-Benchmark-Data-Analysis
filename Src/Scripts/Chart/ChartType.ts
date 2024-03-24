@@ -14,14 +14,12 @@ import { gapTypeSelector } from "../Elements/Elements";
  * @param {object[]} traceData - Array of objects containing the result data.
  * @param {string} type - The type of the chart to be created (e.g., 'line', 'bar', 'pie').
  * @param {string} category - The category by which the data should be analyzed.
- * @param {string} label - The label for the data.
  * @param {string} title - The title of the chart.
  */
 export function PlotDataByCategory(
 	traceData: object[],
 	type: string,
 	category: string,
-	label: string,
 	title: string
 ): {
 	label: string;
@@ -30,18 +28,56 @@ export function PlotDataByCategory(
 	backgroundColor: string;
 }[] {
 	const data = AnalyzeDataByCategory(traceData, category);
-	const colors = PickColor(20);
-	const chartData = Object.entries(data).map(([key, value], index) => {
-		return {
-			label: key,
-			data: [value.average],
-			borderColor: colors[index % colors.length],
-			backgroundColor: colors[index % colors.length]
-		};
-	});
+	const solverNames = Object.keys(data);
+	const colors = PickColor(4);
 
-	CreateChart(type, chartData, label, title);
+	const averageData = {
+		label: "Average",
+		data: solverNames.map((name) => data[name].average),
+		borderColor: colors[0],
+		backgroundColor: `${colors[0]}AA`
+	};
+
+	const minData = {
+		label: "Min",
+		data: solverNames.map((name) => data[name].min),
+		borderColor: colors[1],
+		backgroundColor: `${colors[1]}AA`
+	};
+
+	const maxData = {
+		label: "Max",
+		data: solverNames.map((name) => data[name].max),
+		borderColor: colors[2],
+		backgroundColor: `${colors[2]}AA`
+	};
+
+	const stdData = {
+		label: "Std",
+		data: solverNames.map((name) => data[name].std),
+		borderColor: colors[3],
+		backgroundColor: `${colors[3]}AA`
+	};
+
+	const chartData = [averageData, minData, maxData, stdData];
+	const scaleOptions = {
+		x: {
+			title: {
+				display: true,
+				text: "Solver name"
+			}
+		},
+		y: {
+			title: {
+				display: true,
+				text: "Count"
+			}
+		}
+	};
+
+	CreateChart(type, chartData, solverNames, title, scaleOptions);
 	StatisticsTable(data, title);
+
 	return chartData;
 }
 
@@ -61,7 +97,6 @@ export function PlotStatusMessages(
 	data: object[];
 	borderColor: string;
 	backgroundColor: string;
-	stack: string;
 }[] {
 	const data = ExtractStatusMessages(traceData);
 	const solverNames = data.map((obj) => {
@@ -71,6 +106,7 @@ export function PlotStatusMessages(
 		return key !== "SolverName";
 	});
 	const colors = PickColor(20);
+
 	const chartData = statusKeys.map((key, index) => {
 		return {
 			label: key,
@@ -78,12 +114,26 @@ export function PlotStatusMessages(
 				return obj[key] || 0;
 			}),
 			borderColor: colors[index % colors.length],
-			backgroundColor: colors[index % colors.length],
-			stack: "Stack 0"
+			backgroundColor: colors[index % colors.length]
 		};
 	});
 
-	CreateChart(type, chartData, solverNames, title);
+	const scaleOptions = {
+		x: {
+			title: {
+				display: true,
+				text: "Solver name"
+			}
+		},
+		y: {
+			title: {
+				display: true,
+				text: "Termination count"
+			}
+		}
+	};
+
+	CreateChart(type, chartData, solverNames, title, scaleOptions);
 	return chartData;
 }
 

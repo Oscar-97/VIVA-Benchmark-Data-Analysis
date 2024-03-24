@@ -10,6 +10,7 @@ const filesToCache = [
 	"Dist/bundle.js",
 	"Dist/minlplib-dataset.js",
 	"Dist/miplib2017-dataset.js",
+	"Dist/miplib2010-dataset.js",
 	"Dist/main.css",
 	"Src/CSS/tab_icon.png",
 	"Src/CSS/icon_maskable.png",

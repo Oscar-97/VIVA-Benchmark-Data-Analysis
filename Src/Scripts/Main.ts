@@ -126,10 +126,7 @@ import {
 	DisplayWarningNotification
 } from "./Elements/DisplayAlertNotification";
 import { ReleaseVersionTag } from "./Elements/ReleaseVersionTag";
-import {
-	ReversedTraceHeaderMap,
-	TraceHeaderMap
-} from "./Constants/TraceHeaders";
+import { ReversedTraceHeaderMap } from "./Constants/TraceHeaders";
 import {
 	ExtractAllSolverTimes,
 	CompareSolvers
@@ -341,16 +338,22 @@ async function ManageData(): Promise<void> {
 
 		if (unprocessedSolutionData.length !== 0) {
 			soluData = GetBestKnownBounds(unprocessedSolutionData);
+			console.log("Solution Data: ", soluData);
 		} else if (librarySelector.value === "MINLPLib") {
 			const module = await import(
 				/* webpackChunkName: "minlplib-dataset" */ "./Datasets/MINLPLib"
 			);
 			soluData = module.MINLPLIB_SOLUTION_DATA;
-		} else if (librarySelector.value === "MIPLIB") {
+		} else if (librarySelector.value === "MIPLIB_2017") {
 			const module = await import(
 				/* webpackChunkName: "miplib2017-dataset" */ "./Datasets/MIPLIB_2017"
 			);
 			soluData = module.MIPLIB_2017_SOLUTION_DATA;
+		} else if (librarySelector.value === "MIPLIB_2010") {
+			const module = await import(
+				/* webpackChunkName: "miplib2010-dataset" */ "./Datasets/MIPLIB_2010"
+			);
+			soluData = module.MIPLIB_2010_SOLUTION_DATA;
 		}
 
 		if (soluData) {
@@ -578,8 +581,7 @@ function HandlePlotPages(traceData: object[]): void {
 				traceData,
 				"bar",
 				"SolverTime",
-				`${TraceHeaderMap.SolverTime}.average`,
-				"Average solver time"
+				"Average, min, max and std for solver time"
 			);
 		}
 
@@ -598,8 +600,7 @@ function HandlePlotPages(traceData: object[]): void {
 				traceData,
 				"bar",
 				"NumberOfNodes",
-				`${TraceHeaderMap.NumberOfNodes}.average`,
-				"Average number of nodes"
+				"Average, min, max and std for number of nodes"
 			);
 		}
 
@@ -611,8 +612,7 @@ function HandlePlotPages(traceData: object[]): void {
 				traceData,
 				"bar",
 				"NumberOfIterations",
-				`${TraceHeaderMap.NumberOfIterations}.average`,
-				"Average number of iterations"
+				"Average, min, max and std for number of iterations"
 			);
 		}
 
