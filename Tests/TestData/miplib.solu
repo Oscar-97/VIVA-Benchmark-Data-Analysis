@@ -1,0 +1,361 @@
+=opt=    30_70_45_095_100     3
+=opt=    30n20b8              302
+=opt=    50v-10               3311.179984123
+=opt=    a1c1s1               11503.444125
+=opt=    acc-tight4           0
+=opt=    acc-tight5           0
+=opt=    acc-tight6           0
+=opt=    aflow40b             1168
+=opt=    air04                56137
+=opt=    app1-2               -41
+=inf=    ash608gpia-3col     
+=opt=    atlanta-ip           90.009878614
+=opt=    atm20-100            2463621.57727541
+=opt=    b2c1s1               25687.9
+=unkn=   bab1                
+=unkn=   bab3                
+=opt=    bab5                 -106411.8401
+=opt=    beasleyC3            754
+=opt=    berlin_5_8_0         62
+=opt=    bg512142             184202.75
+=opt=    biella1              3065005.78
+=opt=    bienst2              54.6
+=opt=    binkar10_1           6742.200024
+=opt=    bley_xl1             190
+=opt=    blp-ar98             6205.2147104
+=opt=    blp-ic97             4.0250235808e+03
+=opt=    bnatt350             0
+=opt=    bnatt400             1
+=opt=    buildingenergy       33283.853236
+=unkn=   cdma                
+=unkn=   circ10-3            
+=opt=    co-100               2639942.06
+=opt=    core2536-691         689
+=unkn=   core4872-1529       
+=opt=    cov1075              20
+=opt=    csched007            351
+=opt=    csched008            173
+=opt=    csched010            408
+=opt=    d10200               12430
+=unkn=   d20200              
+=unkn=   dano3mip            
+=opt=    danoint              65.666666667
+=unkn=   datt256             
+=opt=    dc1c                 1767903.6501
+=unkn=   dc1l                
+=opt=    dfn-gwin-UUM         38752
+=opt=    dg012142             2300867
+=opt=    dolom1               6609253
+=unkn=   ds-big              
+=opt=    eil33-2              934.007916
+=opt=    eilA101-2            880.920108
+=opt=    eilB101              1216.920174
+=opt=    enlight13            71
+=inf=    enlight14           
+=opt=    enlight15            69
+=inf=    enlight16           
+=inf=    enlight9            
+=unkn=   ex1010-pi           
+=opt=    ex10                 100
+=opt=    ex9                  81
+=unkn=   f2000               
+=opt=    g200x740i            30086
+=opt=    ger50_17_trans       7393.2618
+=opt=    germanrr             47095869.649
+=opt=    germany50-DBM        473840
+=opt=    glass4               1200012600
+=opt=    gmu-35-40            -2406733.3688
+=opt=    gmu-35-50            -2607958.33
+=opt=    gmut-75-50           -14180699.047
+=opt=    gmut-77-40           -14172045.4419852
+=opt=    go19                 84
+=opt=    hanoi5               1931
+=opt=    harp2                -73899798
+=unkn=   hawaiiv10-130       
+=opt=    ic97_potential       3942
+=opt=    iis-100-0-cov        29
+=opt=    iis-bupa-cov         36
+=opt=    iis-pima-cov         33
+=opt=    in                   58
+=unkn=   ivu06-big           
+=opt=    ivu52                481.0068
+=opt=    janos-us-DDM         1492707
+=opt=    k16x240              10674
+=opt=    lectsched-1          0
+=unkn=   lectsched-1-obj     
+=opt=    lectsched-2          0
+=opt=    lectsched-3          0
+=opt=    lectsched-4-obj      4
+=opt=    leo1                 404227536.16
+=opt=    leo2                 404077441.12
+=unkn=   liu                 
+=opt=    lotsize              1480195
+=inf=    lrsa120             
+=opt=    m100n500k4r1         -25
+=opt=    macrophage           374
+=opt=    map06                -289
+=opt=    map10                -495
+=opt=    map14                -674
+=opt=    map18                -847
+=opt=    map20                -922
+=opt=    markshare_5_0        1
+=opt=    maxgasflow           -4.456581931886e+07
+=opt=    mc11                 11689
+=opt=    mcsched              211913
+=unkn=   methanosarcina      
+=opt=    mik-250-1-100-1      -66729
+=opt=    mine-166-5           -566395707.87083
+=opt=    mine-90-10           -784302337.633173
+=unkn=   mining              
+=opt=    mkc                  -563.846
+=opt=    momentum1            109143.4935
+=opt=    momentum2            12314.1
+=unkn=   momentum3           
+=opt=    msc98-ip             19839497.005874302
+=opt=    mspp16               363
+=opt=    mzzv11               -21718
+=unkn=   n15-3               
+=opt=    n3-3                 15915
+=unkn=   n3700               
+=unkn=   n3705               
+=unkn=   n370a               
+=opt=    n3div36              130800
+=opt=    n3seq24              52200
+=opt=    n4-3                 8993
+=opt=    n9-3                 14409
+=unkn=   nag                 
+=unkn=   nb10tb              
+=opt=    neos-1109824         378
+=opt=    neos-1112782         5.72103e+11
+=opt=    neos-1112787         5.65032e+11
+=inf=    neos-1140050        
+=opt=    neos-1171692         -273
+=opt=    neos-1171737         -195
+=opt=    neos-1224597         -428
+=opt=    neos-1225589         1231065191.85
+=unkn=   neos-1311124        
+=opt=    neos-1337307         -202319
+=opt=    neos-1396125         3000.045337302
+=opt=    neos13               -95.474806559
+=opt=    neos-1426635         -176
+=opt=    neos-1426662         -44
+=unkn=   neos-1429212        
+=opt=    neos-1436709         -128
+=opt=    neos-1440225         36
+=opt=    neos-1440460         -179.25
+=opt=    neos-1442119         -181
+=opt=    neos-1442657         -154.5
+=opt=    neos15               80598.430096861
+=opt=    neos-1601936         3
+=opt=    neos-1605061         12
+=opt=    neos-1605075         9
+=opt=    neos-1616732         159
+=opt=    neos-1620770         9
+=opt=    neos16               446
+=opt=    neos18               16
+=opt=    neos-476283          406.363206984
+=opt=    neos-506422          0
+=opt=    neos-506428          583780
+=opt=    neos-520729          -1385000
+=opt=    neos-555424          1286800
+=opt=    neos-631710          203
+=opt=    neos-686190          6730
+=opt=    neos-693347          234
+=opt=    neos6                83
+=opt=    neos-738098          -1099
+=opt=    neos-777800          -80
+=inf=    neos-785912         
+=inf=    neos788725          
+=opt=    neos-799711          -11170211.73363777
+=inf=    neos-807456         
+=opt=    neos808444           0
+=inf=    neos-820146         
+=inf=    neos-820157         
+=opt=    neos-824661          33
+=opt=    neos-824695          31
+=opt=    neos-826650          29
+=opt=    neos-826694          58
+=opt=    neos-826812          58.011
+=opt=    neos-826841          29.0082
+=opt=    neos-847302          4
+=opt=    neos-849702          0
+=inf=    neos858960          
+=inf=    neos-859770         
+=opt=    neos-885086          -243
+=opt=    neos-885524          12320.092
+=opt=    neos-911880          54.76
+=opt=    neos-916792          31.870398371
+=opt=    neos-932816          15376
+=opt=    neos-933638          276
+=opt=    neos-933966          318
+=opt=    neos-934278          260
+=opt=    neos-935627          2598
+=opt=    neos-935769          3010
+=opt=    neos-937511          3510
+=opt=    neos-937815          2845
+=opt=    neos-941262          2791
+=opt=    neos-941313          9361
+=opt=    neos-942830          16
+=opt=    neos-948126          2607
+=unkn=   neos-952987         
+=opt=    neos-957389          1.5
+=opt=    neos-984165          2188
+=opt=    net12                214
+=opt=    netdiversion         242
+=opt=    newdano              65.666666667
+=opt=    nobel-eu-DBE         608910
+=opt=    noswot               -41
+=opt=    npmv07               1.0481e+11
+=opt=    ns1111636            162
+=opt=    ns1116954            0
+=inf=    ns1158817           
+=opt=    ns1208400            2
+=unkn=   ns1456591           
+=opt=    ns1606230            21
+=unkn=   ns1631475           
+=opt=    ns1644855            -1524.333333333
+=opt=    ns1663818            86
+=opt=    ns1685374            -13
+=inf=    ns1686196           
+=opt=    ns1688347            27
+=opt=    ns1696083            45
+=inf=    ns1702808           
+=inf=    ns1745726           
+=opt=    ns1758913            -1454.671755
+=inf=    ns1766074           
+=inf=    ns1769397           
+=opt=    ns1778858            -22635740
+=opt=    ns1830653            20622
+=unkn=   ns1853823           
+=unkn=   ns1854840           
+=unkn=   ns1856153           
+=unkn=   ns1904248           
+=unkn=   ns1905797           
+=unkn=   ns1905800           
+=opt=    ns1952667            0
+=opt=    ns2017839            7.70305e+13
+=opt=    ns2081729            9
+=inf=    ns2118727           
+=opt=    ns2122603            77700060
+=unkn=   ns2124243           
+=unkn=   ns2137859           
+=unkn=   ns4-pr3             
+=unkn=   ns4-pr9             
+=unkn=   ns894236            
+=opt=    ns894244             15
+=unkn=   ns894786            
+=opt=    ns894788             7
+=opt=    ns903616             19
+=unkn=   ns930473            
+=unkn=   nsr8k               
+=opt=    nu120-pr3            28130
+=opt=    nu60-pr9             24940
+=opt=    ofi                  6.15538e+09
+=opt=    opm2-z10-s2          -33826
+=opt=    opm2-z11-s8          -43485
+=opt=    opm2-z12-s14         -64291
+=opt=    opm2-z12-s7          -65514
+=opt=    opm2-z7-s2           -10280
+=opt=    p100x588b            47878
+=inf=    p2m2p1m1p0n100      
+=opt=    p6b                  -63
+=opt=    p80x400b             39667
+=unkn=   pb-simp-nonunif     
+=opt=    pg5_34               -14339.353446926
+=opt=    pg                   -8674.342607117
+=opt=    pigeon-10            -9000
+=opt=    pigeon-11            -10000
+=opt=    pigeon-12            -11000
+=opt=    pigeon-13            -12000
+=opt=    pigeon-19            -18000
+=opt=    probportfolio        16.734246764
+=opt=    protfold             -31
+=opt=    pw-myciel4           10
+=opt=    qiu                  -132.873136947
+=opt=    queens-30            -40
+=opt=    r80x800              5332
+=opt=    rail01               -70.5699643
+=opt=    rail02               -200.449907667
+=opt=    rail03               -867.093965444446
+=opt=    rail507              174
+=unkn=   ramos3              
+=opt=    ran14x18-disj-8      3712
+=opt=    ran14x18             3712
+=opt=    ran16x16             3823
+=opt=    reblock166           -6.00052e+08
+=opt=    reblock354           -39280521.2281657
+=opt=    reblock420           -5.17793e+08
+=opt=    reblock67            -34630648.43833169
+=opt=    rmatr100-p10         423
+=opt=    rmatr100-p5          976
+=opt=    rmatr200-p10         2017
+=opt=    rmatr200-p20         837
+=opt=    rmatr200-p5          4521
+=opt=    rmine10              -1913.88062
+=unkn=   rmine14             
+=unkn=   rmine21             
+=unkn=   rmine25             
+=opt=    rmine6               -457.18614
+=opt=    rocII-4-11           -6.652756
+=unkn=   rocII-7-11          
+=unkn=   rocII-9-11          
+=opt=    rococoB10-011000     19449
+=opt=    rococoC10-001000     11460
+=opt=    rococoC11-011100     20889
+=unkn=   rococoC12-111000    
+=opt=    roll3000             12890
+=unkn=   rvb-sub             
+=opt=    satellites1-25       -5
+=opt=    satellites2-60-fs    -19
+=opt=    satellites2-60       -19
+=opt=    satellites3-40-fs    -25
+=opt=    satellites3-40       -25
+=unkn=   sct1                
+=opt=    sct32                -17.887559084650892
+=unkn=   sct5                
+=opt=    set3-10              185179.043049708
+=opt=    set3-15              124886
+=opt=    set3-20              159462.572721458
+=opt=    seymour              423
+=opt=    seymour-disj-10      287
+=unkn=   shipsched           
+=opt=    shs1023              13136.636273
+=unkn=   siena1              
+=unkn=   sing161             
+=unkn=   sing245             
+=unkn=   sing2               
+=unkn=   sing359             
+=opt=    sp97ar               660705645.76
+=opt=    sp98ic               449144758.4
+=opt=    sp98ir               219676790.4
+=unkn=   splan1              
+=unkn=   stockholm           
+=opt=    stp3d                493.71965
+=unkn=   sts405              
+=unkn=   sts729              
+=opt=    swath                467.407491
+=unkn=   t1717               
+=unkn=   t1722               
+=opt=    tanglegram1          5182
+=opt=    tanglegram2          443
+=opt=    timtab1              764772
+=opt=    toll-like            610
+=opt=    transportmoment      -3.063103721717e+09
+=opt=    triptim1             22.8681
+=opt=    triptim2             12.0051
+=opt=    triptim3             13.5311
+=opt=    tw-myciel4           10
+=unkn=   uc-case11           
+=opt=    uc-case3             7204.918769
+=opt=    uct-subprob          314
+=opt=    umts                 30090328
+=opt=    unitcal_7            19635558.2440195
+=opt=    usAbbrv-8-25_70      120
+=unkn=   van                 
+=opt=    vpphard2             81
+=opt=    vpphard              5
+=opt=    wachplan             -8
+=opt=    wnq-n100-mw99-14     259
+=unkn=   zib01               
+=inf=    zib02               
+=opt=    zib54-UUE            10334015.82
