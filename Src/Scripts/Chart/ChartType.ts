@@ -75,7 +75,26 @@ export function PlotDataByCategory(
 		}
 	};
 
-	CreateChart(type, chartData, solverNames, title, scaleOptions);
+	const zoomOptions = {
+		pan: {
+			enabled: false
+		},
+		zoom: {
+			wheel: {
+				enabled: true
+			},
+			pinch: {
+				enabled: true
+			},
+			mode: "y",
+			scaleMode: "y"
+		},
+		limits: {
+			y: { min: 0 }
+		}
+	};
+
+	CreateChart(type, chartData, solverNames, title, scaleOptions, zoomOptions);
 	StatisticsTable(data, title);
 
 	return chartData;
@@ -133,7 +152,25 @@ export function PlotStatusMessages(
 		}
 	};
 
-	CreateChart(type, chartData, solverNames, title, scaleOptions);
+	const zoomOptions = {
+		pan: {
+			enabled: false
+		},
+		zoom: {
+			wheel: {
+				enabled: true
+			},
+			pinch: {
+				enabled: true
+			},
+			mode: "y"
+		},
+		limits: {
+			y: { min: 0 }
+		}
+	};
+
+	CreateChart(type, chartData, solverNames, title, scaleOptions, zoomOptions);
 	return chartData;
 }
 
@@ -179,7 +216,34 @@ export function PlotAllSolverTimes(
 		}
 	};
 
-	CreateChart("line", chartData, "InputFileName", "Solver times", scaleOptions);
+	const zoomOptions = {
+		pan: {
+			enabled: true,
+			mode: "y",
+			modiferKey: "ctrl"
+		},
+		zoom: {
+			wheel: {
+				enabled: true
+			},
+			pinch: {
+				enabled: true
+			},
+			mode: "y"
+		},
+		limits: {
+			y: { min: 0 }
+		}
+	};
+
+	CreateChart(
+		"line",
+		chartData,
+		"InputFileName",
+		"Solver times",
+		scaleOptions,
+		zoomOptions
+	);
 	return chartData;
 }
 
@@ -303,6 +367,26 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 		}
 	};
 
+	const zoomOptions = {
+		pan: {
+			enabled: true,
+			mode: "xy",
+			modiferKey: "ctrl"
+		},
+		zoom: {
+			wheel: {
+				enabled: true
+			},
+			pinch: {
+				enabled: true
+			},
+			mode: "xy"
+		},
+		limits: {
+			y: { min: 0 }
+		}
+	};
+
 	CreateChart(
 		"line",
 		chartData,
@@ -310,7 +394,8 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 		`Absolute performance profile (${selectedGapType} <= ${
 			gapLimit || 0.01
 		}% and not failed)`,
-		scaleOptions
+		scaleOptions,
+		zoomOptions
 	);
 	return chartData;
 }
