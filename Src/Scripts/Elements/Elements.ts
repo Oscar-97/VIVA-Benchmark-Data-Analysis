@@ -225,6 +225,14 @@ export const demoDataButton: HTMLButtonElement = document.getElementById(
 ) as HTMLButtonElement;
 
 /**
+ * `demoDataSelector` is a reference to the HTMLSelectElement with the ID "demoDataSelector".
+ * @type {HTMLSelectElement}
+ */
+export const demoDataSelector: HTMLSelectElement = document.getElementById(
+	"demoDataSelector"
+) as HTMLSelectElement;
+
+/**
  * `releaseVersionTag` is a reference to the HTMLSpanElement with the ID "releaseVersionTagSpan".
  * @type {HTMLSpanElement}
  */

@@ -116,9 +116,10 @@ body > :not(nav, hr) {
 	padding-top: 0rem;
 }
 
-.pagination {
-	margin-left: 1rem;
-    margin-right: 1rem;
+#demoDataSelectorGroup {
+	flex-wrap: nowrap;
+	min-width: 170px;
+	max-width: 300px;
 }
 
 #librarySelectorGroup {
@@ -193,6 +194,11 @@ body > :not(nav, hr) {
 
 .navbar-toggler:focus {
 	box-shadow: none;
+}
+
+.pagination {
+	margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 .vertical-separator {

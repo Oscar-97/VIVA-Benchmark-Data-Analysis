@@ -1,15 +1,17 @@
 /* eslint-disable max-lines */
 
+import { UserData } from "../UserConfiguration/UserConfiguration";
+
 /**
  * Provides demo data for testing and development.
  * @type {object}
- * @property {string[]} dataset - The data set.
+ * @property {string[]} dataSet - The data set.
  * @property {string} dataFileType - The type of file extension.
  *
  * TODO: Remake the structure of the data set.
  * Need to get proper specifications of the default categories to include.
  */
-export const DEMO_DATA: object = {
+export const DEMO_DATA: UserData = {
 	dataSet: [
 		"* InputFileName,ModelType,SolverName,OptionFile,Direction,NumberOfEquations,NumberOfVariables,NumberOfDiscreteVariables,NumberOfNonZeros,NumberOfNonlinearNonZeros,ModelStatus,SolverStatus,ObjectiveValue,ObjectiveValueEstimate,SolverTime,ETSolver,NumberOfIterations,NumberOfNodes,PrimalBoundSolver,DualBoundSolver,TermStatus,PrimalBoundProblem,DualBoundProblem,Gap_Solver,Gap_Problem,PrimalGap,DualGap",
 		"30n20b8,MIP,Balin,NA,min,577,18381,11098,109709,0,Integer Solution,Resource Interrupt,4.020000e+2,1.510000e+2,3602.92,3603.50100046489,14591843,127918,4.020000e+2,1.510000e+2,Unknown Error,4.020000e+2,1.510000e+2,166.23,166.23,0,0",
@@ -449,11 +451,11 @@ export const DEMO_DATA: object = {
 		"zib54-UUE,MIP,Thorin,NA,min,1810,5151,81,15370,0,Integer Solution,Resource Interrupt,1.033402e+7,9.532889e+6,3600,3623.46999985166,33662909,641382,1.033402e+7,9.532889e+6,Unknown Error,1.033402e+7,9.532889e+6,8.4,8.4,0,0"
 	],
 	dataFileType: "json",
-	defaultTime: "1000"
+	defaultTime: 1000
 };
 
-export const DEMO_DATA_2 = {
-	dataset: [
+export const DEMO_DATA_2: UserData = {
+	dataSet: [
 		"* InputFileName,ModelType,SolverName,NLP,MIP,JulianDate,Direction,NumberOfEquations,NumberOfVariables,NumberOfDiscreteVariables,NumberOfNonZeros,NumberOfNonlinearNonZeros,OptionFile,ModelStatus,SolverStatus,ObjectiveValue,ObjectiveValueEstimate,SolverTime,NumberOfIterations,NumberOfDomainViolations,NumberOfNodes,UserComment,PrimalBoundSolver,DualBoundSolver,PrimalBoundProblem,DualBoundProblem,Gap_Solver,Gap_Problem,PrimalGap,DualGap",
 		"ball_mk2_10,MINLP,shot,conopt,CPLEX,43381.77806,min,2,11,10,31,10,1,Integer Solution,Normal Completion,0.000000e+0,0.000000e+0,0.56,0,0,1511,#,0.000000e+0,0.000000e+0,0.000000e+0,0.000000e+0,0,0,0,0",
 		"ball_mk2_30,MINLP,shot,conopt,CPLEX,43381.78847,min,2,31,30,91,30,1,Integer Solution,Resource Interrupt,0.000000e+0,-2.600000e+1,900.08,0,0,148387,#,0.000000e+0,-2.600000e+1,0.000000e+0,-2.600000e+1,Infinity,Infinity,0,0",
@@ -8759,5 +8761,5 @@ export const DEMO_DATA_2 = {
 		"watercontamination0303,MINLP,bbb,CONOPT,CPLEX,43363.5,min,108218,107223,14,213766,4521,3,Integer Solution,Normal Completion,2.079850e+2,2.079850e+2,361.05,1361,0,56,#,2.079850e+2,2.079850e+2,2.079850e+2,2.079850e+2,0,0,0,0"
 	],
 	dataFileType: "json",
-	defaultTime: "1000"
+	defaultTime: 1000
 };

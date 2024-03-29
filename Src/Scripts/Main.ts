@@ -102,7 +102,8 @@ import {
 	defaultTimeDirectInput,
 	gapLimitDirectInput,
 	gapLimitInput,
-	compareSolversButton
+	compareSolversButton,
+	demoDataSelector
 } from "./Elements/Elements";
 import {
 	BodyFadeLoadingAnimation,
@@ -119,8 +120,6 @@ import {
 	DownloadUserConfiguration,
 	DownloadCustomizedUserConfiguration
 } from "./UserConfiguration/UserConfiguration";
-
-import { DEMO_DATA } from "./Datasets/DemoData";
 import {
 	DisplayErrorNotification,
 	DisplayWarningNotification
@@ -275,8 +274,21 @@ function InitializeProgram(): void {
 		});
 	}
 
-	function ActivateDemoMode(): void {
-		localStorage.setItem(Keys.USER_CONFIGURATION, JSON.stringify(DEMO_DATA));
+	async function ActivateDemoMode(): Promise<void> {
+		const module = await import(
+			/* webpackChunkName: "demoData" */ "./Datasets/DemoData"
+		);
+		if (demoDataSelector.value === "Demo_1") {
+			localStorage.setItem(
+				Keys.USER_CONFIGURATION,
+				JSON.stringify(module.DEMO_DATA)
+			);
+		} else if (demoDataSelector.value === "Demo_2") {
+			localStorage.setItem(
+				Keys.USER_CONFIGURATION,
+				JSON.stringify(module.DEMO_DATA_2)
+			);
+		}
 		localStorage.setItem(Keys.DEMO_DATA, "true");
 		location.reload();
 	}
@@ -286,6 +298,7 @@ function InitializeProgram(): void {
 		if (document.title === PageTitles.TABLE) {
 			demoDataButton.style.color = "#198754";
 			demoDataButton.disabled = true;
+			demoDataSelector.disabled = true;
 		}
 	}
 }
@@ -338,7 +351,6 @@ async function ManageData(): Promise<void> {
 
 		if (unprocessedSolutionData.length !== 0) {
 			soluData = GetBestKnownBounds(unprocessedSolutionData);
-			console.log("Solution Data: ", soluData);
 		} else if (librarySelector.value === "MINLPLib") {
 			const module = await import(
 				/* webpackChunkName: "minlplib-dataset" */ "./Datasets/MINLPLib"

@@ -192,6 +192,38 @@ describe("UI tests", () => {
 			);
 		}
 
+		test("Demo mode 1", async () => {
+			await page.selectOption("#demoDataSelector", "Demo_1");
+			await page.click("#demoModeButton");
+			await RunTableOperationsJSON(page, "Using demo mode!");
+			const deleteLocalStorageButton = await page.$(
+				"#deleteLocalStorageButton"
+			);
+			await deleteLocalStorageButton?.click();
+			await page.waitForTimeout(500);
+			await CheckNotification(
+				page,
+				"#alertNotification",
+				"Deleted configuration."
+			);
+		}, 60000);
+
+		test("Demo mode 2", async () => {
+			await page.selectOption("#demoDataSelector", "Demo_2");
+			await page.click("#demoModeButton");
+			await RunTableOperationsJSON(page, "Using demo mode!");
+			const deleteLocalStorageButton = await page.$(
+				"#deleteLocalStorageButton"
+			);
+			await deleteLocalStorageButton?.click();
+			await page.waitForTimeout(500);
+			await CheckNotification(
+				page,
+				"#alertNotification",
+				"Deleted configuration."
+			);
+		}, 60000);
+
 		test("Handle multiple trace files", async () => {
 			await UploadFile(page, [
 				"./Tests/TestData/shotALL.trc",
