@@ -4,7 +4,7 @@ import {
 	ExtractAllSolverTimes,
 	ExtractAllSolverTimesGapType
 } from "../DataProcessing/CalculateResults";
-import { PickColor, CreateChart } from "./CreateChart";
+import { CreateChart } from "./CreateChart";
 import { StatisticsTable } from "../DataTable/DataTableBase";
 import { gapTypeSelector } from "../Elements/Elements";
 
@@ -29,34 +29,33 @@ export function PlotDataByCategory(
 }[] {
 	const data = AnalyzeDataByCategory(traceData, category);
 	const solverNames = Object.keys(data);
-	const colors = PickColor(4);
 
 	const averageData = {
 		label: "Average",
 		data: solverNames.map((name) => data[name].average),
-		borderColor: colors[0],
-		backgroundColor: `${colors[0]}AA`
+		borderColor: "#007bff",
+		backgroundColor: "#007bffAA"
 	};
 
 	const minData = {
 		label: "Min",
 		data: solverNames.map((name) => data[name].min),
-		borderColor: colors[1],
-		backgroundColor: `${colors[1]}AA`
+		borderColor: "#28a745",
+		backgroundColor: "#28a745AA"
 	};
 
 	const maxData = {
 		label: "Max",
 		data: solverNames.map((name) => data[name].max),
-		borderColor: colors[2],
-		backgroundColor: `${colors[2]}AA`
+		borderColor: "#dc3545",
+		backgroundColor: "#dc3545AA"
 	};
 
 	const stdData = {
 		label: "Std",
 		data: solverNames.map((name) => data[name].std),
-		borderColor: colors[3],
-		backgroundColor: `${colors[3]}AA`
+		borderColor: "#6f42c1",
+		backgroundColor: "#6f42c1AA"
 	};
 
 	const chartData = [averageData, minData, maxData, stdData];
@@ -124,16 +123,38 @@ export function PlotStatusMessages(
 	const statusKeys = Object.keys(data[0]).filter((key) => {
 		return key !== "SolverName";
 	});
-	const colors = PickColor(20);
 
-	const chartData = statusKeys.map((key, index) => {
+	const colorMapping: { [key: string]: string } = {
+		Optimal: "#d5fa87",
+		"Locally Optimal": "#778c4a",
+		Unbounded: "#3131cc",
+		Infeasible: "#05055c",
+		"Locally Infeasible": "#15153b",
+		"Intermediate Infeasible": "#23232e",
+		"Feasible Solution": "#767694",
+		"Integer Solution": "#ee02fa",
+		"Intermediate Non-integer": "#883c8c",
+		"Integer Infeasible": "#a671a8",
+		"Lic Problem - No Solution": "#616060",
+		"Error Unknown": "#0a0a0a",
+		"Error No Solution": "#f5a2a3",
+		"No Solution Returned": "#381414",
+		"Solved Unique": "#30f522",
+		Solved: "#92ff8a",
+		"Solved Singular": "#085202",
+		"Unbounded - No Solution": "#ff1c03",
+		"Infeasible - No Solution": "#fa9287"
+	};
+
+	const chartData = statusKeys.map((key) => {
+		console.log(key);
 		return {
 			label: key,
 			data: data.map((obj) => {
 				return obj[key] || 0;
 			}),
-			borderColor: colors[index % colors.length],
-			backgroundColor: colors[index % colors.length]
+			borderColor: colorMapping[key],
+			backgroundColor: colorMapping[key]
 		};
 	});
 
