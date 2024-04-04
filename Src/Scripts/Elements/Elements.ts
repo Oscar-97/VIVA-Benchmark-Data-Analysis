@@ -285,6 +285,13 @@ export const gapTypeSelector: HTMLSelectElement = document.getElementById(
 ) as HTMLSelectElement;
 
 /**
+ * `terminationTypeSelector` is a reference to the HTMLSelectElement with the ID "terminationTypeSelector".
+ * @type {HTMLSelectElement}
+ */
+export const terminationTypeSelector: HTMLSelectElement =
+	document.getElementById("terminationTypeSelector") as HTMLSelectElement;
+
+/**
  * 'solverComparisonModal' is a reference to the HTMLDivElement with the ID "solverComparisonModal".
  * @type {HTMLDivElement}
  */

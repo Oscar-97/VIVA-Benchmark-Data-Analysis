@@ -424,7 +424,7 @@ export function ExtractAllSolverTimes(traceData: object[]): object {
  *
  * The returned object has a unique key for each solver and the value is an array of objects, each containing a 'time'
  * and 'InputFileName'. All results with missing SolverTime, or with a failed status, get a default value of 1000.
- * A fail is if the termination or solver status is "Normal" or "Normal Completion".
+ * A fail is if the termination or solver status is not "Normal Completion".
  *
  * @param {object[]} traceData - Array of objects containing the result data.
  *
@@ -435,10 +435,14 @@ export function ExtractAllSolverTimesGapType(
 	traceData: object[],
 	selectedGapType: string,
 	defaultTime?: number | undefined,
-	gapLimit?: number | undefined
+	gapLimit?: number | undefined,
+	terminationStatusSelector?: string
 ): object {
 	let defaultMaximumTime: number;
 	let primalGapToCompare: number;
+	let terminationStatus: string;
+	console.log(terminationStatusSelector);
+	console.log(terminationStatus);
 
 	if (!gapLimit || gapLimit < 0) {
 		primalGapToCompare = 0.01;
@@ -454,6 +458,28 @@ export function ExtractAllSolverTimesGapType(
 		defaultMaximumTime = defaultTime;
 	}
 
+	if (!terminationStatusSelector) {
+		terminationStatus = "Normal Completion";
+	} else {
+		const statusMap: { [key: number]: string } = {
+			1: "Normal Completion",
+			2: "Iteration Interrupt",
+			3: "Resource Interrupt",
+			4: "Terminated By Solver",
+			5: "Evaluation Interrupt",
+			6: "Capability Problems",
+			7: "Licensing Problems",
+			8: "User Interrupt",
+			9: "Error Setup Failure",
+			10: "Error Solver Failure",
+			11: "Error Internal Solver Failure",
+			12: "Solve Processing Skipped",
+			13: "Error System Failure"
+		};
+		terminationStatus = statusMap[terminationStatusSelector];
+	}
+	console.log(terminationStatus);
+
 	const result = traceData.reduce(
 		(
 			acc: { [key: string]: { time: number; InputFileName: string }[] },
@@ -466,7 +492,7 @@ export function ExtractAllSolverTimesGapType(
 				if (
 					obj[selectedGapType] <= primalGapToCompare &&
 					Number(obj["SolverTime"]) <= defaultMaximumTime &&
-					obj["SolverStatus"] === "Normal Completion"
+					obj["SolverStatus"] === terminationStatus
 				) {
 					acc[obj["SolverName"]].push({
 						time: Number(obj["SolverTime"]),
