@@ -1,6 +1,8 @@
 import {
 	comparisonTableDiv,
 	dataTable,
+	instanceAttributesTableDiv,
+	solveAttributesTableDiv,
 	solverComparisonModal,
 	solverComparisonModalBody,
 	solverComparisonModalLabel,
@@ -10,6 +12,11 @@ import { TraceHeaderMap } from "../Constants/TraceHeaders";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "bootstrap/js/dist/modal";
 import { Captions } from "../Constants/Messages";
+import {
+	CalculateInstanceAttributes,
+	CalculateSolveAttributes,
+	ExtractUniqueProblems
+} from "../DataProcessing/CalculateResults";
 
 /**
  * This function sorts the keys by an enumeration and then by alphabetical order for non-enumeration keys.
@@ -152,9 +159,8 @@ export function StatisticsTable(
 	title: string
 ): void {
 	statisticsTableDiv.innerHTML = "";
-	statisticsTableDiv.classList.add("table-responsive", "me-3", "ms-1");
-
 	const statisticsTable = document.createElement("table");
+	statisticsTable.id = "statisticsTable_inner";
 	statisticsTable.classList.add(
 		"table",
 		"table-bordered",
@@ -164,60 +170,48 @@ export function StatisticsTable(
 
 	const tableCaption = document.createElement("caption");
 	tableCaption.textContent = title + " statistics.";
-
-	const header = document.createElement("thead");
-	header.classList.add("table-light");
-
-	const headerRow = document.createElement("tr");
-	const dataLabel = document.createElement("th");
-	dataLabel.textContent = "Solver";
-	dataLabel.scope = "col";
-
-	header.appendChild(headerRow);
-	headerRow.appendChild(dataLabel);
-
 	statisticsTable.appendChild(tableCaption);
-	statisticsTable.appendChild(header);
 
-	const tableBody = document.createElement("tbody");
-
-	/**
-	 * Iterate over each key in the SolverTimeStats and create a new table header element.
-	 */
-	const usedCategories: string[] = [];
-	for (const objKey of Object.keys(solverTimeStats)) {
-		const keys = Object.keys(solverTimeStats[objKey]);
-		keys.forEach((key) => {
-			if (!usedCategories.includes(key)) {
-				const th = document.createElement("th");
-				th.textContent = key;
-				th.scope = "col";
-				headerRow.appendChild(th);
-				usedCategories.push(key);
-			}
-		});
-	}
+	const header = statisticsTable.createTHead();
+	header.classList.add("table-light");
+	const headerRow = header.insertRow();
+	const headers = [
+		"Solver",
+		"Average",
+		"Min",
+		"Max",
+		"Std. Dev",
+		"Sum",
+		"10th %",
+		"25th %",
+		"50th %",
+		"75th %",
+		"90th %"
+	];
+	headers.forEach((headerText) => {
+		const headerCell = document.createElement("th");
+		headerCell.textContent = headerText;
+		headerRow.appendChild(headerCell);
+	});
 
 	/**
 	 * Create value table rows.
 	 */
+	const tableBody = statisticsTable.createTBody();
 	const dataKeys = Object.keys(solverTimeStats);
 	dataKeys.forEach((dataKey) => {
-		const valuesRow = document.createElement("tr");
-		const dataType = document.createElement("th");
-		dataType.scope = "row";
-		dataType.textContent = dataKey;
-		valuesRow.appendChild(dataType);
+		const row = tableBody.insertRow();
+		const nameCell = row.insertCell();
+		nameCell.textContent = dataKey;
+		nameCell.style.fontWeight = "bold";
+
 		const dataValues = Object.values(solverTimeStats[dataKey]);
 		dataValues.forEach((dataValue) => {
-			const td = document.createElement("td");
-			td.textContent = dataValue.toString();
-			valuesRow.appendChild(td);
+			const cell = row.insertCell();
+			cell.textContent = dataValue.toString();
 		});
-		tableBody.appendChild(valuesRow);
 	});
 
-	statisticsTable.appendChild(tableBody);
 	statisticsTableDiv.appendChild(statisticsTable);
 }
 
@@ -234,18 +228,31 @@ export function StatisticsTable(
  * @remarks
  * The table is added to the 'comparisonTableContainer' HTML div.
  */
+interface ComparisonSummary {
+	better: number;
+	worse: number;
+	equal: number;
+	details: ComparisonDetail;
+}
+
+interface ComparisonDetail {
+	InputFileName: string;
+	time1: number;
+	time2: number;
+	comparison: string;
+}
+
 export function ComparisonSummaryTable(
-	comparisonSummary,
-	comparisonSummaryInverse,
+	comparisonSummary: ComparisonSummary,
+	comparisonSummaryInverse: ComparisonSummary,
 	solver1Name: string,
 	solver2Name: string
 ): void {
 	if (!comparisonTableDiv) return;
 
 	comparisonTableDiv.innerHTML = "";
-	comparisonTableDiv.classList.add("table-responsive", "me-3", "ms-1");
 
-	const comparisonTable = document.createElement("table");
+	const comparisonTable: HTMLTableElement = document.createElement("table");
 	comparisonTable.classList.add(
 		"table",
 		"table-bordered",
@@ -253,25 +260,26 @@ export function ComparisonSummaryTable(
 		"table-sm"
 	);
 
-	const tableCaption = document.createElement("caption");
+	const tableCaption: HTMLTableCaptionElement =
+		document.createElement("caption");
 	tableCaption.textContent = Captions.COMPARISON_TABLE_CAPTION;
 	comparisonTable.appendChild(tableCaption);
 
-	const header = document.createElement("thead");
+	const header: HTMLTableSectionElement = comparisonTable.createTHead();
 	header.classList.add("table-light");
 
-	const headerRow = document.createElement("tr");
-	headerRow.appendChild(document.createElement("th"));
-	headerRow.appendChild(CreateHeaderCell(solver1Name));
-	headerRow.appendChild(CreateHeaderCell(solver2Name));
-	header.appendChild(headerRow);
+	const headerRow: HTMLTableRowElement = header.insertRow();
+	const headers: string[] = ["Comparison", solver1Name, solver2Name];
+	headers.forEach((headerText) => {
+		const headerCell: HTMLTableCellElement = document.createElement("th");
+		headerCell.textContent = headerText;
+		headerRow.appendChild(headerCell);
+	});
 
-	comparisonTable.appendChild(header);
-
-	const tableBody = document.createElement("tbody");
-	const comparisons = ["Better", "Worse", "Equal"];
+	const tableBody: HTMLTableSectionElement = comparisonTable.createTBody();
+	const comparisons: string[] = ["Better", "Worse", "Equal"];
 	comparisons.forEach((comparison) => {
-		const row = document.createElement("tr");
+		const row: HTMLTableRowElement = document.createElement("tr");
 		row.appendChild(CreateCell(comparison));
 
 		let value1: number, value2: number;
@@ -300,20 +308,7 @@ export function ComparisonSummaryTable(
 		tableBody.appendChild(row);
 	});
 
-	comparisonTable.appendChild(tableBody);
 	comparisonTableDiv.appendChild(comparisonTable);
-}
-
-/**
- * This function creates a header cell element with the specified text content.
- *
- * @param text - The text content of the header cell.
- * @returns The created header cell element.
- */
-function CreateHeaderCell(text: string): HTMLTableCellElement {
-	const th = document.createElement("th");
-	th.textContent = text;
-	return th;
 }
 
 /**
@@ -338,11 +333,11 @@ function CreateCell(text: string): HTMLTableCellElement {
  * @returns The created clickable cell element.
  */
 function CreateClickableCell(
-	value,
-	comparisonType,
-	details
+	value: number,
+	comparisonType: string,
+	details: ComparisonDetail | undefined
 ): HTMLTableCellElement {
-	const td = document.createElement("td");
+	const td: HTMLTableCellElement = document.createElement("td");
 
 	switch (comparisonType) {
 		case "Better":
@@ -370,7 +365,7 @@ function CreateClickableCell(
  * @remarks
  * The modal is added to the 'solverComparisonModal' HTML div.
  */
-function DisplayDetails(comparisonType, details): void {
+function DisplayDetails(comparisonType: string, details): void {
 	const filteredDetails = details.filter(
 		(detail) => detail.comparison === comparisonType.toLowerCase()
 	);
@@ -382,7 +377,7 @@ function DisplayDetails(comparisonType, details): void {
 		const listGroup = document.createElement("ul");
 		listGroup.className = "list-group";
 
-		filteredDetails.forEach((detail) => {
+		filteredDetails.forEach((detail: ComparisonDetail) => {
 			const listItem = document.createElement("li");
 			listItem.className = "list-group-item";
 			listItem.innerHTML = `${detail.InputFileName}, <b>${detail.time1}</b> compared to <b>${detail.time2}</b>`;
@@ -396,4 +391,137 @@ function DisplayDetails(comparisonType, details): void {
 		keyboard: true
 	});
 	modal.show();
+}
+
+/**
+ * This function dynamically creates and displays a HTML table based on the problem statistics.
+ * The table contains the statistics of the number of equations, variables, discrete variables, non-zeros, nonlinear non-zeros, primal bound problem, and dual bound problem.
+ * @param {object[]} traceData - Array of objects containing the result data.
+ */
+export function InstanceAttributesTable(traceData: object[]): void {
+	instanceAttributesTableDiv.innerHTML = "";
+	const instanceAttributesTable = document.createElement("table");
+	instanceAttributesTable.id = "instanceAttributesTable_inner";
+	instanceAttributesTable.classList.add(
+		"table",
+		"table-bordered",
+		"table-hover",
+		"table-sm"
+	);
+
+	const tableCaption = document.createElement("caption");
+	tableCaption.textContent = Captions.INSTANCE_ATTRIBUTES_TABLE_CAPTION;
+	instanceAttributesTable.appendChild(tableCaption);
+
+	const uniqueData = ExtractUniqueProblems(traceData);
+	const calculationResults = CalculateInstanceAttributes(uniqueData);
+	const header = instanceAttributesTable.createTHead();
+	header.classList.add("table-light");
+	const headerRow = header.insertRow();
+	const headers = [
+		"Instance attribute",
+		"Count",
+		"Average",
+		"Min",
+		"Max",
+		"Std. Dev",
+		"10th %",
+		"25th %",
+		"50th %",
+		"75th %",
+		"90th %"
+	];
+	headers.forEach((headerText) => {
+		const headerCell = document.createElement("th");
+		headerCell.textContent = headerText;
+		headerRow.appendChild(headerCell);
+	});
+
+	const tableBody = instanceAttributesTable.createTBody();
+	Object.entries(calculationResults).forEach(([key, values]) => {
+		const row = tableBody.insertRow();
+		const nameCell = row.insertCell();
+		nameCell.textContent = key;
+		nameCell.style.fontWeight = "bold";
+
+		Object.entries(values).forEach(([_, value]) => {
+			const cell = row.insertCell();
+			cell.textContent = String(value);
+		});
+	});
+
+	instanceAttributesTableDiv.appendChild(instanceAttributesTable);
+}
+
+/**
+ * This function dynamically creates and displays a HTML table based on the solve attributes.
+ * @param {object[]} traceData - Array of objects containing the result data.
+ */
+export function SolveAttributesTable(traceData: object[]): void {
+	solveAttributesTableDiv.innerHTML = "";
+	const solveAttributesTable = document.createElement("table");
+	solveAttributesTable.id = "solveAttributesTable_inner";
+	solveAttributesTable.classList.add(
+		"table",
+		"table-bordered",
+		"table-hover",
+		"table-sm"
+	);
+
+	const tableCaption = document.createElement("caption");
+	tableCaption.textContent = Captions.SOLVE_ATTRIBUTES_TABLE_CAPTION;
+	solveAttributesTable.appendChild(tableCaption);
+
+	const specificKeys = [
+		"JulianDate",
+		"SolverStatus",
+		"PrimalBoundSolver",
+		"DualBoundSolver",
+		"PrimalGap",
+		"DualGap",
+		"Gap_Solver",
+		"SolverTime",
+		"NumberOfIterations",
+		"NumberOfDomainViolations",
+		"NumberOfNodes"
+	];
+	const statistics = CalculateSolveAttributes(traceData, specificKeys);
+
+	const header = solveAttributesTable.createTHead();
+	header.classList.add("table-light");
+	const headerRow = header.insertRow();
+	const headers = [
+		"Solve attribute",
+		"Count",
+		"Average",
+		"Min",
+		"Max",
+		"Std. Dev",
+		"10th %",
+		"25th %",
+		"50th %",
+		"75th %",
+		"90th %"
+	];
+
+	headers.forEach((headerText) => {
+		const headerCell = document.createElement("th");
+		headerCell.textContent = headerText;
+		headerRow.appendChild(headerCell);
+	});
+
+	const tableBody = solveAttributesTable.createTBody();
+	Object.entries(statistics).forEach(([key, values]) => {
+		const row = tableBody.insertRow();
+		const nameCell = row.insertCell();
+		nameCell.textContent = key;
+		nameCell.style.fontWeight = "bold";
+
+		Object.entries(values).forEach(([_, value]) => {
+			const cell = row.insertCell();
+			cell.textContent = value.toString();
+		});
+	});
+
+	solveAttributesTableDiv.appendChild(solveAttributesTable);
 }

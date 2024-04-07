@@ -145,7 +145,8 @@
 								<select class="form-select" id="librarySelector" aria-label="Select library">
 								  <option value="none" selected>None</option>
 								  <option value="MINLPLib">MINLPLib</option>
-								  <option value="MIPLIB">MIPLIB</option>
+								  <option value="MIPLIB_2017">MIPLIB 2017</option>
+								  <option value="MIPLIB_2010">MIPLIB 2010</option>
 								</select>
 							</div>
 						</li>						
@@ -184,13 +185,13 @@
 							</button>
 						</li>
 						<li class="nav-item">
-							<button
-								class="nav-link"
-								aria-label="Demo-Data"
-								id="demoModeButton"
-							>
-								<i class="bi bi-activity"></i> Demo-Data
-							</button>
+							<div class="input-group" id="demoDataSelectorGroup">
+								<button class="input-group-text" id="demoModeButton"><i class="bi bi-activity"></i>Demo-Data</button>
+								<select class="form-select" id="demoDataSelector" aria-label="Select demo data">
+								  <option value="Demo_1">MIP (435 entries)</option>
+								  <option value="Demo_2">MINLP (8000 entries)</option>
+								</select>
+							</div>
 						</li>
 						<li class="nav-item">
 							<a
@@ -317,6 +318,12 @@
 		></div>
 		<div id="dataTable">
 			<!-- Table element will be created here. -->
+		</div>
+		<div id="instanceAttributesTable">
+			<!-- Instance attributes statistics table element will be created here. -->
+		</div>
+		<div id="solveAttributesTable">
+			<!-- Solve attributes statistics table element will be created here. -->
 		</div>
 		<!-- Modal with file information. -->
 		<div

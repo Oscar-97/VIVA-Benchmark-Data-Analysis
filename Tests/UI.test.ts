@@ -192,6 +192,40 @@ describe("UI tests", () => {
 			);
 		}
 
+		test("Demo mode 1", async () => {
+			await page.selectOption("#demoDataSelector", "Demo_1");
+			await page.click("#demoModeButton");
+			await RunTableOperationsJSON(page, "Using demo mode!");
+			const deleteLocalStorageButton = await page.$(
+				"#deleteLocalStorageButton"
+			);
+			expect(await page.locator("#demoDataSelector").isEnabled()).toBeFalsy();
+			await deleteLocalStorageButton?.click();
+			await page.waitForTimeout(500);
+			await CheckNotification(
+				page,
+				"#alertNotification",
+				"Deleted configuration."
+			);
+		}, 60000);
+
+		test.skip("Demo mode 2", async () => {
+			await page.selectOption("#demoDataSelector", "Demo_2");
+			await page.click("#demoModeButton");
+			await RunTableOperationsJSON(page, "Using demo mode!");
+			const deleteLocalStorageButton = await page.$(
+				"#deleteLocalStorageButton"
+			);
+			expect(await page.locator("#demoDataSelector").isEnabled()).toBeFalsy();
+			await deleteLocalStorageButton?.click();
+			await page.waitForTimeout(500);
+			await CheckNotification(
+				page,
+				"#alertNotification",
+				"Deleted configuration."
+			);
+		}, 60000);
+
 		test("Handle multiple trace files", async () => {
 			await UploadFile(page, [
 				"./Tests/TestData/shotALL.trc",
@@ -468,10 +502,10 @@ describe("UI tests", () => {
 			await ShowProblemCells();
 
 			const primalBoundProblemCellValue = await page.$(
-				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[5]"
+				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[3]/td[5]"
 			);
 			const dualBoundProblemCellValue = await page.$(
-				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[4]"
+				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[3]/td[4]"
 			);
 
 			// Check if 'alkylation' problem contains the values from MINLPLib.
@@ -481,7 +515,7 @@ describe("UI tests", () => {
 			expect(await dualBoundProblemCellValue?.innerText()).toBe("1.768807e+3");
 		}, 60000);
 
-		test("Use MIPLIB option", async () => {
+		test("Use MIPLIB 2017 option", async () => {
 			await page.waitForSelector("#fileInput");
 			await page.click("#fileInput");
 			await page.waitForSelector('input[type="file"]');
@@ -490,7 +524,38 @@ describe("UI tests", () => {
 				"./Tests/TestData/library_test.trc"
 			);
 			await page.waitForTimeout(2000);
-			await page.selectOption("#librarySelector", "MIPLIB");
+			await page.selectOption("#librarySelector", "MIPLIB_2017");
+			await WaitForElementAndClick(page, "#importDataButton");
+			await RunTableOperations(
+				page,
+				"Benchmarks loaded with following files: library_test.trc"
+			);
+
+			await ShowProblemCells();
+			const primalBoundProblemCellValue = await page.$(
+				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[5]"
+			);
+			const dualBoundProblemCellValue = await page.$(
+				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[4]"
+			);
+
+			// Check if '50v-10' problem contains the values from MIPLIB.
+			expect(await primalBoundProblemCellValue?.innerText()).toBe(
+				"3.311180e+3"
+			);
+			expect(await dualBoundProblemCellValue?.innerText()).toBe("3.311180e+3");
+		}, 60000);
+
+		test("Use MIPLIB 2010 option", async () => {
+			await page.waitForSelector("#fileInput");
+			await page.click("#fileInput");
+			await page.waitForSelector('input[type="file"]');
+			await page.setInputFiles(
+				'input[type="file"]',
+				"./Tests/TestData/library_test.trc"
+			);
+			await page.waitForTimeout(2000);
+			await page.selectOption("#librarySelector", "MIPLIB_2010");
 			await WaitForElementAndClick(page, "#importDataButton");
 			await RunTableOperations(
 				page,
@@ -505,11 +570,11 @@ describe("UI tests", () => {
 				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[1]/td[4]"
 			);
 
-			// Check if '50v-10' problem contains the values from MIPLIB.
+			// Check if '30_70_45_095_100' problem contains the values from MIPLIB.
 			expect(await primalBoundProblemCellValue?.innerText()).toBe(
-				"3.311180e+3"
+				"3.000000e+0"
 			);
-			expect(await dualBoundProblemCellValue?.innerText()).toBe("3.311180e+3");
+			expect(await dualBoundProblemCellValue?.innerText()).toBe("3.000000e+0");
 		}, 60000);
 	});
 

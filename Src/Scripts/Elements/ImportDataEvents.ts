@@ -9,7 +9,8 @@ import {
 	solverSelector,
 	dataTableGeneratedWrapper,
 	dataTableGenerated,
-	compareSolversButton
+	compareSolversButton,
+	demoDataSelector
 } from "./Elements";
 import { DisplayAlertNotification } from "./DisplayAlertNotification";
 import { Keys } from "../Constants/Keys";
@@ -31,7 +32,8 @@ import { PageTitles } from "../Constants/PageTitles";
  */
 export function ImportDataEvents(
 	message: string,
-	fileExtensionType?: string
+	fileExtensionType?: string,
+	demoModeName?: string
 ): void {
 	try {
 		if (dataTableGeneratedWrapper) {
@@ -44,8 +46,17 @@ export function ImportDataEvents(
 	} catch (err) {
 		console.error("Could not remove elements: ", err);
 	}
+
 	librarySelector.disabled = true;
+
 	if (document.title === PageTitles.TABLE) {
+		if (demoModeName === "demo1") {
+			demoDataSelector.value = "Demo_1";
+		}
+
+		if (demoModeName === "demo2") {
+			demoDataSelector.value = "Demo_2";
+		}
 		viewTableButton.disabled = false;
 		showSelectedRowsButton.disabled = true;
 		importDataButton.disabled = true;

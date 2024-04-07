@@ -171,6 +171,21 @@ export const statisticsTableDiv: HTMLDivElement = document.getElementById(
 ) as HTMLDivElement;
 
 /**
+ * `instanceAttributesTableDiv` is a reference to the HTMLDivElement with the ID "instanceAttributesTable".
+ * @type {HTMLDivElement}
+ */
+export const instanceAttributesTableDiv: HTMLDivElement =
+	document.getElementById("instanceAttributesTable") as HTMLDivElement;
+
+/**
+ * `solveAttributesTableDiv` is a reference to the HTMLDivElement with the ID "solveAttributesTable".
+ * @type {HTMLDivElement}
+ */
+export const solveAttributesTableDiv: HTMLDivElement = document.getElementById(
+	"solveAttributesTable"
+) as HTMLDivElement;
+
+/**
  * `comparisonTableDiv` is a reference to the HTMLDivElement with the ID "comparisonTable".
  * @type {HTMLDivElement}
  */
@@ -225,6 +240,14 @@ export const demoDataButton: HTMLButtonElement = document.getElementById(
 ) as HTMLButtonElement;
 
 /**
+ * `demoDataSelector` is a reference to the HTMLSelectElement with the ID "demoDataSelector".
+ * @type {HTMLSelectElement}
+ */
+export const demoDataSelector: HTMLSelectElement = document.getElementById(
+	"demoDataSelector"
+) as HTMLSelectElement;
+
+/**
  * `releaseVersionTag` is a reference to the HTMLSpanElement with the ID "releaseVersionTagSpan".
  * @type {HTMLSpanElement}
  */
@@ -275,6 +298,13 @@ export const gapLimitDirectInput: HTMLInputElement = document.getElementById(
 export const gapTypeSelector: HTMLSelectElement = document.getElementById(
 	"gapTypeSelector"
 ) as HTMLSelectElement;
+
+/**
+ * `terminationTypeSelector` is a reference to the HTMLSelectElement with the ID "terminationTypeSelector".
+ * @type {HTMLSelectElement}
+ */
+export const terminationTypeSelector: HTMLSelectElement =
+	document.getElementById("terminationTypeSelector") as HTMLSelectElement;
 
 /**
  * 'solverComparisonModal' is a reference to the HTMLDivElement with the ID "solverComparisonModal".

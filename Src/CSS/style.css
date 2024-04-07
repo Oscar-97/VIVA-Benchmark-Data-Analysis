@@ -1,3 +1,8 @@
+html {
+	scroll-behavior: smooth;
+	scrollbar-width: none;
+}
+
 body > :not(nav, hr) {
 	opacity: 0;
 	visibility: visible;
@@ -59,9 +64,13 @@ body > :not(nav, hr) {
 }
 
 @keyframes spinner {
-	to {
-		transform: rotate(360deg);
-	}
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
 }
 
 #alertNotification {
@@ -92,8 +101,10 @@ body > :not(nav, hr) {
 
 #comparisonTable {
 	visibility: visible;
-	max-width: 400px;
+	max-width: 700px;
 	padding: 1rem;
+	margin-left: 0.25rem;
+	margin-right: 0.25rem;
 }
 
 #comparisonTable th, #comparisonTable td {
@@ -105,11 +116,14 @@ body > :not(nav, hr) {
 	visibility: hidden;
 	padding: 1rem;
 	padding-top: 0rem;
+	margin-left: 0.25rem;
+	margin-right: 0.25rem;
 }
 
-.pagination {
-	margin-left: 1rem;
-    margin-right: 1rem;
+#demoDataSelectorGroup {
+	flex-wrap: nowrap;
+	min-width: 170px;
+	max-width: 300px;
 }
 
 #librarySelectorGroup {
@@ -129,10 +143,12 @@ body > :not(nav, hr) {
 	max-width: 95vw;
   }
 
-#statisticsTable {
+#statisticsTable, #instanceAttributesTable, #solveAttributesTable {
 	visibility: visible;
 	padding: 1rem;
-	padding-top: 1rem;
+	padding-top: 0.75rem;
+	margin-left: 0.25rem;
+	margin-right: 0.25rem;
 }
 
 #uploadFileGroup {
@@ -154,7 +170,7 @@ body > :not(nav, hr) {
 	border-top: 16px solid #3498db;
 	width: 80px;
 	height: 80px;
-	animation: spinner 2s linear infinite;
+	animation: spinner 2s linear infinite, fadeInOut 3s ease-in-out infinite;
 }
 
 .nav-link {
@@ -184,6 +200,11 @@ body > :not(nav, hr) {
 
 .navbar-toggler:focus {
 	box-shadow: none;
+}
+
+.pagination {
+	margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 .vertical-separator {
@@ -216,6 +237,10 @@ tbody tr.even td.dtfc-fixed-left {
 
 tbody tr.odd td.dtfc-fixed-left {
 	background-color: #d9d9d9 !important;
+}
+
+th, tr {
+	white-space: nowrap;
 }
 
 tr.even td,

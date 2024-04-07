@@ -102,7 +102,10 @@ import {
 	defaultTimeDirectInput,
 	gapLimitDirectInput,
 	gapLimitInput,
-	compareSolversButton
+	compareSolversButton,
+	demoDataSelector,
+	gapTypeSelector,
+	terminationTypeSelector
 } from "./Elements/Elements";
 import {
 	BodyFadeLoadingAnimation,
@@ -119,20 +122,15 @@ import {
 	DownloadUserConfiguration,
 	DownloadCustomizedUserConfiguration
 } from "./UserConfiguration/UserConfiguration";
-
-import { DEMO_DATA } from "./Datasets/DemoData";
 import {
 	DisplayErrorNotification,
 	DisplayWarningNotification
 } from "./Elements/DisplayAlertNotification";
 import { ReleaseVersionTag } from "./Elements/ReleaseVersionTag";
+import { ReversedTraceHeaderMap } from "./Constants/TraceHeaders";
 import {
-	ReversedTraceHeaderMap,
-	TraceHeaderMap
-} from "./Constants/TraceHeaders";
-import {
-	ExtractAllSolverTimes,
-	CompareSolvers
+	CompareSolvers,
+	ExtractAllSolverTimesGapType
 } from "./DataProcessing/CalculateResults";
 import { Keys } from "./Constants/Keys";
 import {
@@ -217,8 +215,16 @@ function InitializeProgram(): void {
 	try {
 		[unprocessedData, dataFileType, defaultTime, gapLimit] =
 			GetUserConfiguration();
-		if (localStorage.getItem(Keys.DEMO_DATA) === "true") {
-			ImportDataEvents(InfoMessages.DEMO_MODE_MSG, "json");
+		if (
+			localStorage.getItem(Keys.DEMO_DATA) === "demo1" ||
+			localStorage.getItem(Keys.DEMO_DATA) === "demo2"
+		) {
+			console.log(localStorage.getItem(Keys.DEMO_DATA));
+			ImportDataEvents(
+				InfoMessages.DEMO_MODE_MSG,
+				"json",
+				localStorage.getItem(Keys.DEMO_DATA)
+			);
 			NotifyDemoMode();
 		} else {
 			ImportDataEvents(InfoMessages.FOUND_STORED_CONFIG, "json");
@@ -228,8 +234,9 @@ function InitializeProgram(): void {
 		downloadConfigurationButtonLayer.disabled = false;
 		sessionStorage.setItem(Keys.SAVED_STORAGE_NOTIFICATION, "true");
 		ManageData();
-	} catch {
+	} catch (error) {
 		console.info(UserConfigurationMessages.NO_STORED_CONFIG);
+		console.log(error);
 	}
 
 	/**
@@ -278,17 +285,31 @@ function InitializeProgram(): void {
 		});
 	}
 
-	function ActivateDemoMode(): void {
-		localStorage.setItem(Keys.USER_CONFIGURATION, JSON.stringify(DEMO_DATA));
-		localStorage.setItem(Keys.DEMO_DATA, "true");
+	async function ActivateDemoMode(): Promise<void> {
+		const module = await import(
+			/* webpackChunkName: "demoData" */ "./Datasets/DemoData"
+		);
+		if (demoDataSelector.value === "Demo_1") {
+			localStorage.setItem(
+				Keys.USER_CONFIGURATION,
+				JSON.stringify(module.DEMO_DATA)
+			);
+			localStorage.setItem(Keys.DEMO_DATA, "demo1");
+		} else if (demoDataSelector.value === "Demo_2") {
+			localStorage.setItem(
+				Keys.USER_CONFIGURATION,
+				JSON.stringify(module.DEMO_DATA_2)
+			);
+			localStorage.setItem(Keys.DEMO_DATA, "demo2");
+		}
 		location.reload();
 	}
 
 	function NotifyDemoMode(): void {
-		ImportDataEvents(InfoMessages.DEMO_MODE_MSG, "json");
 		if (document.title === PageTitles.TABLE) {
 			demoDataButton.style.color = "#198754";
 			demoDataButton.disabled = true;
+			demoDataSelector.disabled = true;
 		}
 	}
 }
@@ -346,11 +367,16 @@ async function ManageData(): Promise<void> {
 				/* webpackChunkName: "minlplib-dataset" */ "./Datasets/MINLPLib"
 			);
 			soluData = module.MINLPLIB_SOLUTION_DATA;
-		} else if (librarySelector.value === "MIPLIB") {
+		} else if (librarySelector.value === "MIPLIB_2017") {
 			const module = await import(
 				/* webpackChunkName: "miplib2017-dataset" */ "./Datasets/MIPLIB_2017"
 			);
 			soluData = module.MIPLIB_2017_SOLUTION_DATA;
+		} else if (librarySelector.value === "MIPLIB_2010") {
+			const module = await import(
+				/* webpackChunkName: "miplib2010-dataset" */ "./Datasets/MIPLIB_2010"
+			);
+			soluData = module.MIPLIB_2010_SOLUTION_DATA;
 		}
 
 		if (soluData) {
@@ -578,8 +604,7 @@ function HandlePlotPages(traceData: object[]): void {
 				traceData,
 				"bar",
 				"SolverTime",
-				`${TraceHeaderMap.SolverTime}.average`,
-				"Average solver time"
+				"Average, min, max and std for solver time"
 			);
 		}
 
@@ -598,8 +623,7 @@ function HandlePlotPages(traceData: object[]): void {
 				traceData,
 				"bar",
 				"NumberOfNodes",
-				`${TraceHeaderMap.NumberOfNodes}.average`,
-				"Average number of nodes"
+				"Average, min, max and std for number of nodes"
 			);
 		}
 
@@ -611,8 +635,7 @@ function HandlePlotPages(traceData: object[]): void {
 				traceData,
 				"bar",
 				"NumberOfIterations",
-				`${TraceHeaderMap.NumberOfIterations}.average`,
-				"Average number of iterations"
+				"Average, min, max and std for number of iterations"
 			);
 		}
 
@@ -652,8 +675,7 @@ function HandlePlotPages(traceData: object[]): void {
  * @param {object[]} traceData - Array of objects containing the result data.
  */
 function HandleCompareSolversPage(traceData: object[]): void {
-	const solverTimes = ExtractAllSolverTimes(traceData);
-	PopulateCheckboxes(solverTimes);
+	PopulateCheckboxes(traceData);
 
 	/**
 	 * Save to local storage when clicking on the "Save Data" button.
@@ -672,7 +694,18 @@ function HandleCompareSolversPage(traceData: object[]): void {
 	 * Event listener for the compare solvers button.
 	 */
 	compareSolversButton.addEventListener("click", () => {
+		defaultTime = defaultTimeDirectInput.value;
+		gapLimit = gapLimitDirectInput.value;
+
+		const solverTimes = ExtractAllSolverTimesGapType(
+			traceData,
+			gapTypeSelector.value,
+			defaultTime,
+			gapLimit,
+			terminationTypeSelector.value
+		);
 		const selectedSolvers = GetSelectedCheckboxValues();
+
 		if (selectedSolvers.length !== 2) {
 			DisplayErrorNotification(ErrorMessages.SELECT_SOLVER_AMOUNT);
 		}

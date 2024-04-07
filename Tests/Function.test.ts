@@ -15,8 +15,10 @@ import {
 	CalculatePrimalBound,
 	CalculateDualBound,
 	CalculateGap,
+	CompareSolvers,
 	AnalyzeDataByCategory,
 	ExtractAllSolverTimes,
+	ExtractAllSolverTimesGapType,
 	SetModelStatus,
 	SetSolverStatus
 } from "../Src/Scripts/DataProcessing/CalculateResults";
@@ -820,6 +822,13 @@ describe("Coverage in computation functions with mockup data.", () => {
 		});
 	});
 
+	describe("ExtractAllSolverTimesGapType", () => {
+		it("should return an empty object if traceData is empty", () => {
+			const result = ExtractAllSolverTimesGapType([], "PrimalGap");
+			expect(result).toEqual({});
+		});
+	});
+
 	describe("AnalyzeDataByCategory", () => {
 		const category = "SolverTime";
 
@@ -1026,5 +1035,52 @@ describe("Status mapping", () => {
 			expect(SetSolverStatus(0)).toBe("Unknown Error");
 			expect(SetSolverStatus("invalid")).toBe("Unknown Error");
 		});
+	});
+});
+
+describe("CompareSolvers", () => {
+	const solverTimes = {
+		Solver1: [
+			{ InputFileName: "File1", time: 10 },
+			{ InputFileName: "File2", time: 25 },
+			{ InputFileName: "File3", time: 30 }
+		],
+		Solver2: [
+			{ InputFileName: "File1", time: 15 },
+			{ InputFileName: "File2", time: 20 },
+			{ InputFileName: "File3", time: 29 }
+		]
+	};
+
+	it("should return the correct comparison summary", () => {
+		const expectedSummary = {
+			better: 1,
+			worse: 2,
+			equal: 0,
+			details: [
+				{
+					InputFileName: "File1",
+					time1: 10,
+					time2: 15,
+					comparison: "better"
+				},
+				{
+					InputFileName: "File2",
+					time1: 25,
+					time2: 20,
+					comparison: "worse"
+				},
+				{
+					InputFileName: "File3",
+					time1: 30,
+					time2: 29,
+					comparison: "worse"
+				}
+			]
+		};
+
+		const comparisonSummary = CompareSolvers("Solver1", "Solver2", solverTimes);
+
+		expect(comparisonSummary).toEqual(expectedSummary);
 	});
 });
