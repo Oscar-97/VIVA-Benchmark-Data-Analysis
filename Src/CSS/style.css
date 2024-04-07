@@ -103,6 +103,8 @@ body > :not(nav, hr) {
 	visibility: visible;
 	max-width: 700px;
 	padding: 1rem;
+	margin-left: 0.25rem;
+	margin-right: 0.25rem;
 }
 
 #comparisonTable th, #comparisonTable td {
@@ -114,6 +116,8 @@ body > :not(nav, hr) {
 	visibility: hidden;
 	padding: 1rem;
 	padding-top: 0rem;
+	margin-left: 0.25rem;
+	margin-right: 0.25rem;
 }
 
 #demoDataSelectorGroup {
@@ -139,10 +143,12 @@ body > :not(nav, hr) {
 	max-width: 95vw;
   }
 
-#statisticsTable {
+#statisticsTable, #instanceAttributesTable, #solveAttributesTable {
 	visibility: visible;
 	padding: 1rem;
-	padding-top: 1rem;
+	padding-top: 0.75rem;
+	margin-left: 0.25rem;
+	margin-right: 0.25rem;
 }
 
 #uploadFileGroup {
@@ -231,6 +237,10 @@ tbody tr.even td.dtfc-fixed-left {
 
 tbody tr.odd td.dtfc-fixed-left {
 	background-color: #d9d9d9 !important;
+}
+
+th, tr {
+	white-space: nowrap;
 }
 
 tr.even td,

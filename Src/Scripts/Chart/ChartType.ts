@@ -7,6 +7,7 @@ import {
 import { CreateChart } from "./CreateChart";
 import { StatisticsTable } from "../DataTable/DataTableBase";
 import { gapTypeSelector } from "../Elements/Elements";
+import { DataTablesConfigurationStats } from "../DataTable/DataTableWrapper";
 
 /**
  * This function prepares and plots data by a specific category.
@@ -95,6 +96,7 @@ export function PlotDataByCategory(
 
 	CreateChart(type, chartData, solverNames, title, scaleOptions, zoomOptions);
 	StatisticsTable(data, title);
+	DataTablesConfigurationStats("#statisticsTable_inner");
 
 	return chartData;
 }

@@ -171,6 +171,21 @@ export const statisticsTableDiv: HTMLDivElement = document.getElementById(
 ) as HTMLDivElement;
 
 /**
+ * `instanceAttributesTableDiv` is a reference to the HTMLDivElement with the ID "instanceAttributesTable".
+ * @type {HTMLDivElement}
+ */
+export const instanceAttributesTableDiv: HTMLDivElement =
+	document.getElementById("instanceAttributesTable") as HTMLDivElement;
+
+/**
+ * `solveAttributesTableDiv` is a reference to the HTMLDivElement with the ID "solveAttributesTable".
+ * @type {HTMLDivElement}
+ */
+export const solveAttributesTableDiv: HTMLDivElement = document.getElementById(
+	"solveAttributesTable"
+) as HTMLDivElement;
+
+/**
  * `comparisonTableDiv` is a reference to the HTMLDivElement with the ID "comparisonTable".
  * @type {HTMLDivElement}
  */
