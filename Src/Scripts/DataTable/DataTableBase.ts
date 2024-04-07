@@ -399,7 +399,6 @@ function DisplayDetails(comparisonType: string, details): void {
  * @param {object[]} traceData - Array of objects containing the result data.
  */
 export function InstanceAttributesTable(traceData: object[]): void {
-	console.log(traceData);
 	instanceAttributesTableDiv.innerHTML = "";
 	const instanceAttributesTable = document.createElement("table");
 	instanceAttributesTable.id = "instanceAttributesTable_inner";
@@ -416,7 +415,6 @@ export function InstanceAttributesTable(traceData: object[]): void {
 
 	const uniqueData = ExtractUniqueProblems(traceData);
 	const calculationResults = CalculateInstanceAttributes(uniqueData);
-
 	const header = instanceAttributesTable.createTHead();
 	header.classList.add("table-light");
 	const headerRow = header.insertRow();
@@ -446,7 +444,7 @@ export function InstanceAttributesTable(traceData: object[]): void {
 		nameCell.textContent = key;
 		nameCell.style.fontWeight = "bold";
 
-		Object.entries(values).forEach(([value]) => {
+		Object.entries(values).forEach(([_, value]) => {
 			const cell = row.insertCell();
 			cell.textContent = String(value);
 		});
@@ -519,9 +517,9 @@ export function SolveAttributesTable(traceData: object[]): void {
 		nameCell.textContent = key;
 		nameCell.style.fontWeight = "bold";
 
-		Object.entries(values).forEach(([value]) => {
+		Object.entries(values).forEach(([_, value]) => {
 			const cell = row.insertCell();
-			cell.textContent = String(value);
+			cell.textContent = value.toString();
 		});
 	});
 
