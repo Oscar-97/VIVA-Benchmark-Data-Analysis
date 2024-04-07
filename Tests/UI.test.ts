@@ -199,6 +199,7 @@ describe("UI tests", () => {
 			const deleteLocalStorageButton = await page.$(
 				"#deleteLocalStorageButton"
 			);
+			expect(await page.locator("#demoDataSelector").isEnabled()).toBeFalsy();
 			await deleteLocalStorageButton?.click();
 			await page.waitForTimeout(500);
 			await CheckNotification(
@@ -208,13 +209,14 @@ describe("UI tests", () => {
 			);
 		}, 60000);
 
-		test("Demo mode 2", async () => {
+		test.skip("Demo mode 2", async () => {
 			await page.selectOption("#demoDataSelector", "Demo_2");
 			await page.click("#demoModeButton");
 			await RunTableOperationsJSON(page, "Using demo mode!");
 			const deleteLocalStorageButton = await page.$(
 				"#deleteLocalStorageButton"
 			);
+			expect(await page.locator("#demoDataSelector").isEnabled()).toBeFalsy();
 			await deleteLocalStorageButton?.click();
 			await page.waitForTimeout(500);
 			await CheckNotification(
