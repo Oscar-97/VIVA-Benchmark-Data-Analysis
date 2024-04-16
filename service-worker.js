@@ -8,6 +8,7 @@ const filesToCache = [
 	"manifest.json",
 	"report.html",
 	"Dist/bundle.js",
+	"Dist/demodata.js",
 	"Dist/minlplib-dataset.js",
 	"Dist/miplib2017-dataset.js",
 	"Dist/miplib2010-dataset.js",
