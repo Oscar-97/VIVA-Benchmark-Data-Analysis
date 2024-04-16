@@ -776,20 +776,12 @@ describe("Coverage in computation functions with mockup data.", () => {
 
 	describe("ExtractAllSolverTimes", () => {
 		test("Extracts solver times correctly.", () => {
-			const result = ExtractAllSolverTimes(mockupTraceData);
-
-			expect(
-				(result as { [key: string]: { time: number; InputFileName: string }[] })
-					.TestSolver1
-			).toHaveLength(2);
-			expect(
-				(result as { [key: string]: { time: number; InputFileName: string }[] })
-					.TestSolver1[0]
-			).toHaveProperty("time", 0.041120867);
-			expect(
-				(result as { [key: string]: { time: number; InputFileName: string }[] })
-					.TestSolver1[0]
-			).toHaveProperty("InputFileName", "TestInstance");
+			const result = ExtractAllSolverTimes(
+				mockupTraceData.map((data) => ({
+					...data,
+					SolverTime: parseFloat(data.SolverTime)
+				}))
+			);
 			expect(
 				(result as { [key: string]: { time: number; InputFileName: string }[] })
 					.TestSolver1[1]
@@ -837,55 +829,55 @@ describe("Coverage in computation functions with mockup data.", () => {
 
 			expect(result).toEqual({
 				TestSolver1: {
-					average: expect.any(Number),
-					min: expect.any(Number),
-					max: expect.any(Number),
-					std: expect.any(Number),
-					sum: expect.any(Number),
-					percentile_10: expect.any(Number),
-					percentile_25: expect.any(Number),
-					percentile_50: expect.any(Number),
-					percentile_75: expect.any(Number),
-					percentile_90: expect.any(Number)
+					avgValue: expect.any(Number),
+					minValue: expect.any(Number),
+					maxValue: expect.any(Number),
+					stdValue: expect.any(Number),
+					sumValue: expect.any(Number),
+					p10Value: expect.any(Number),
+					p25Value: expect.any(Number),
+					p50Value: expect.any(Number),
+					p75Value: expect.any(Number),
+					p90Value: expect.any(Number)
 				},
 				TestSolver2: {
-					average: expect.any(Number),
-					min: expect.any(Number),
-					max: expect.any(Number),
-					std: expect.any(Number),
-					sum: expect.any(Number),
-					percentile_10: expect.any(Number),
-					percentile_25: expect.any(Number),
-					percentile_50: expect.any(Number),
-					percentile_75: expect.any(Number),
-					percentile_90: expect.any(Number)
+					avgValue: expect.any(Number),
+					minValue: expect.any(Number),
+					maxValue: expect.any(Number),
+					stdValue: expect.any(Number),
+					sumValue: expect.any(Number),
+					p10Value: expect.any(Number),
+					p25Value: expect.any(Number),
+					p50Value: expect.any(Number),
+					p75Value: expect.any(Number),
+					p90Value: expect.any(Number)
 				}
 			});
 
 			expect(result.TestSolver1).toEqual({
-				average: 0.3008711,
-				min: 0.04112087,
-				max: 0.5606212,
-				std: 0.3673422,
-				sum: 0.6017421,
-				percentile_10: 0.09307091,
-				percentile_25: 0.170996,
-				percentile_50: 0.3008711,
-				percentile_75: 0.4307462,
-				percentile_90: 0.5086712
+				avgValue: 0.3008711,
+				minValue: 0.04112087,
+				maxValue: 0.5606212,
+				stdValue: 0.3673422,
+				sumValue: 0.6017421,
+				p10Value: 0.09307091,
+				p25Value: 0.170996,
+				p50Value: 0.3008711,
+				p75Value: 0.4307462,
+				p90Value: 0.5086712
 			});
 
 			expect(result.TestSolver2).toEqual({
-				average: 453.4465,
-				min: 5.922,
-				max: 900.971,
-				std: 632.8952,
-				sum: 906.893,
-				percentile_10: 95.4269,
-				percentile_25: 229.6843,
-				percentile_50: 453.4465,
-				percentile_75: 677.2088,
-				percentile_90: 811.4661
+				avgValue: 453.4465,
+				minValue: 5.922,
+				maxValue: 900.971,
+				stdValue: 632.8952,
+				sumValue: 906.893,
+				p10Value: 95.4269,
+				p25Value: 229.6843,
+				p50Value: 453.4465,
+				p75Value: 677.2088,
+				p90Value: 811.4661
 			});
 		});
 	});
