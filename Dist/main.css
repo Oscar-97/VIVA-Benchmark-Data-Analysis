@@ -2337,8 +2337,8 @@ body > :not(nav, hr) {
 
 #demoDataSelectorGroup {
 	flex-wrap: nowrap;
-	min-width: 170px;
-	max-width: 300px;
+	min-width: 160px;
+	max-width: 500px;
 }
 
 #librarySelectorGroup {
