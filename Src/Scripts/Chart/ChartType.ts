@@ -8,6 +8,12 @@ import { CreateChart } from "./CreateChart";
 import { StatisticsTable } from "../DataTable/DataTableBase";
 import { gapTypeSelector } from "../Elements/Elements";
 import { DataTablesConfigurationStats } from "../DataTable/DataTableWrapper";
+import { TraceData } from "../Interfaces/Interfaces";
+import {
+	ComputeVirtualTimes,
+	ComputeVirtualTimesTraceData
+} from "../DataProcessing/ComputeVirtualSolvers";
+import { Values } from "../Constants/Values";
 
 /**
  * This function prepares and plots data by a specific category.
@@ -18,10 +24,11 @@ import { DataTablesConfigurationStats } from "../DataTable/DataTableWrapper";
  * @param {string} title - The title of the chart.
  */
 export function PlotDataByCategory(
-	traceData: object[],
+	traceData: TraceData[],
 	type: string,
 	category: string,
-	title: string
+	title: string,
+	defaultTime?: number | undefined
 ): {
 	label: string;
 	data: number[];
@@ -33,28 +40,28 @@ export function PlotDataByCategory(
 
 	const averageData = {
 		label: "Average",
-		data: solverNames.map((name) => data[name].average),
+		data: solverNames.map((name) => data[name].avgValue),
 		borderColor: "#007bff",
 		backgroundColor: "#007bffAA"
 	};
 
 	const minData = {
 		label: "Min",
-		data: solverNames.map((name) => data[name].min),
+		data: solverNames.map((name) => data[name].minValue),
 		borderColor: "#28a745",
 		backgroundColor: "#28a745AA"
 	};
 
 	const maxData = {
 		label: "Max",
-		data: solverNames.map((name) => data[name].max),
+		data: solverNames.map((name) => data[name].maxValue),
 		borderColor: "#dc3545",
 		backgroundColor: "#dc3545AA"
 	};
 
 	const stdData = {
 		label: "Std",
-		data: solverNames.map((name) => data[name].std),
+		data: solverNames.map((name) => data[name].stdValue),
 		borderColor: "#6f42c1",
 		backgroundColor: "#6f42c1AA"
 	};
@@ -94,7 +101,60 @@ export function PlotDataByCategory(
 		}
 	};
 
-	CreateChart(type, chartData, solverNames, title, scaleOptions, zoomOptions);
+	let annotationOptions = null;
+
+	/**
+	 * Draw annotations for the virtual best and worst solvers if SolverTime is used.
+	 */
+	if (category === "SolverTime") {
+		if (!defaultTime) {
+			defaultTime = Values.DEFAULT_TIME;
+		}
+		const extraData = ComputeVirtualTimesTraceData(traceData, defaultTime);
+		const virtualData = AnalyzeDataByCategory(extraData, category);
+		annotationOptions = {
+			annotations: {
+				line1: {
+					type: "line",
+					yMin: virtualData["VirtualBestSolver"].avgValue,
+					yMax: virtualData["VirtualBestSolver"].avgValue,
+					borderColor: "rgb(124,252,0)",
+					borderShadowColor: "rgba(0,0,0, 0)",
+					shadowOffsetY: 2,
+					borderWidth: 2,
+					label: {
+						content: "Virtual Best Average",
+						display: true,
+						position: "end"
+					}
+				},
+				line2: {
+					type: "line",
+					yMin: virtualData["VirtualWorstSolver"].avgValue,
+					yMax: virtualData["VirtualWorstSolver"].avgValue,
+					borderColor: "rgb(255, 99, 132)",
+					borderShadowColor: "rgba(0,0,0, 0)",
+					shadowOffsetY: 2,
+					borderWidth: 2,
+					label: {
+						content: "Virtual Worst Average",
+						display: true,
+						position: "end"
+					}
+				}
+			}
+		};
+	}
+
+	CreateChart(
+		type,
+		chartData,
+		solverNames,
+		title,
+		scaleOptions,
+		zoomOptions,
+		annotationOptions
+	);
 	StatisticsTable(data, title);
 	DataTablesConfigurationStats("#statisticsTable_inner");
 
@@ -109,7 +169,7 @@ export function PlotDataByCategory(
  * @param {string} title - The title of the chart.
  */
 export function PlotStatusMessages(
-	traceData: object[],
+	traceData: TraceData[],
 	type: string,
 	title: string
 ): {
@@ -149,7 +209,6 @@ export function PlotStatusMessages(
 	};
 
 	const chartData = statusKeys.map((key) => {
-		console.log(key);
 		return {
 			label: key,
 			data: data.map((obj) => {
@@ -203,7 +262,7 @@ export function PlotStatusMessages(
  * @param {object[]} traceData - Array of objects containing the result data.
  */
 export function PlotAllSolverTimes(
-	traceData: object[]
+	traceData: TraceData[]
 ): { label: string; data: { x: string; y: number }[]; showLine: boolean }[] {
 	const solverTimes = ExtractAllSolverTimes(traceData);
 	const chartData = (
@@ -276,7 +335,7 @@ export function PlotAllSolverTimes(
  * @param {object[]} traceData - Array of objects containing the result data.
  */
 export function PlotAbsolutePerformanceProfileSolverTimes(
-	traceData: object[],
+	traceData: TraceData[],
 	defaultTime?: number | undefined,
 	gapLimit?: number | undefined
 ): {
@@ -285,16 +344,23 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 	showLine: boolean;
 }[] {
 	const selectedGapType = gapTypeSelector.value;
-	const absolutePerformanceProfileSolverTimes = ExtractAllSolverTimesGapType(
+	const solverTimes = ExtractAllSolverTimesGapType(
 		traceData,
 		selectedGapType,
 		defaultTime,
 		gapLimit
 	);
+
+	const virtualSolvers = ComputeVirtualTimes(solverTimes);
+	const combinedSolverTimes = {
+		...solverTimes,
+		...virtualSolvers
+	};
+
 	const allLabels = [];
 	const allXValues: number[] = [];
 	const data = (
-		Object.entries(absolutePerformanceProfileSolverTimes) as [
+		Object.entries(combinedSolverTimes) as [
 			string,
 			{ time: number; InputFileName: string }[]
 		][]

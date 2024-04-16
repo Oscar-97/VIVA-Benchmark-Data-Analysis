@@ -1,10 +1,4 @@
-/**
- * Interface representing a categories object with optional `InputFileName` and `name` properties.
- */
-export interface CategoriesObj {
-	InputFileName?: string;
-	name?: string;
-}
+import { TraceData, CategoriesObj } from "../Interfaces/Interfaces";
 
 /**
  * This function merges two arrays of objects based on matching `InputFileName` or `name` properties.
@@ -18,7 +12,7 @@ export interface CategoriesObj {
  * into a single object with properties from both.
  */
 export function MergeData(
-	traceData: CategoriesObj[],
+	traceData: TraceData[],
 	data: CategoriesObj[]
 ): object[] {
 	const mergedData = [];

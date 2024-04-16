@@ -17,6 +17,12 @@ import {
 	CalculateSolveAttributes,
 	ExtractUniqueProblems
 } from "../DataProcessing/CalculateResults";
+import {
+	ComparisonDetails,
+	ComparisonSummary,
+	StatisticsColumns,
+	TraceData
+} from "../Interfaces/Interfaces";
 
 /**
  * This function sorts the keys by an enumeration and then by alphabetical order for non-enumeration keys.
@@ -69,7 +75,7 @@ function SortKeysByEnum(obj: object): string[] {
  * ```
  * This example will generate a table with two rows and three columns (Solver, SolverTime, and ObjectiveValue).
  */
-export function TableDataTrc(traceData: object[]): void {
+export function TableDataTrc(traceData: TraceData[]): void {
 	/**
 	 * Div that contains the data table.
 	 */
@@ -143,18 +149,7 @@ export function TableDataTrc(traceData: object[]): void {
  */
 export function StatisticsTable(
 	solverTimeStats: {
-		[SolverName: string]: {
-			average: number;
-			min: number;
-			max: number;
-			std: number;
-			sum: number;
-			percentile_10: number;
-			percentile_25: number;
-			percentile_50: number;
-			percentile_75: number;
-			percentile_90: number;
-		};
+		[SolverName: string]: StatisticsColumns;
 	},
 	title: string
 ): void {
@@ -228,19 +223,6 @@ export function StatisticsTable(
  * @remarks
  * The table is added to the 'comparisonTableContainer' HTML div.
  */
-interface ComparisonSummary {
-	better: number;
-	worse: number;
-	equal: number;
-	details: ComparisonDetail;
-}
-
-interface ComparisonDetail {
-	InputFileName: string;
-	time1: number;
-	time2: number;
-	comparison: string;
-}
 
 export function ComparisonSummaryTable(
 	comparisonSummary: ComparisonSummary,
@@ -335,7 +317,7 @@ function CreateCell(text: string): HTMLTableCellElement {
 function CreateClickableCell(
 	value: number,
 	comparisonType: string,
-	details: ComparisonDetail | undefined
+	details: ComparisonDetails[]
 ): HTMLTableCellElement {
 	const td: HTMLTableCellElement = document.createElement("td");
 
@@ -377,7 +359,7 @@ function DisplayDetails(comparisonType: string, details): void {
 		const listGroup = document.createElement("ul");
 		listGroup.className = "list-group";
 
-		filteredDetails.forEach((detail: ComparisonDetail) => {
+		filteredDetails.forEach((detail: ComparisonDetails) => {
 			const listItem = document.createElement("li");
 			listItem.className = "list-group-item";
 			listItem.innerHTML = `${detail.InputFileName}, <b>${detail.time1}</b> compared to <b>${detail.time2}</b>`;
@@ -398,7 +380,7 @@ function DisplayDetails(comparisonType: string, details): void {
  * The table contains the statistics of the number of equations, variables, discrete variables, non-zeros, nonlinear non-zeros, primal bound problem, and dual bound problem.
  * @param {object[]} traceData - Array of objects containing the result data.
  */
-export function InstanceAttributesTable(traceData: object[]): void {
+export function InstanceAttributesTable(traceData: TraceData[]): void {
 	instanceAttributesTableDiv.innerHTML = "";
 	const instanceAttributesTable = document.createElement("table");
 	instanceAttributesTable.id = "instanceAttributesTable_inner";
@@ -444,6 +426,7 @@ export function InstanceAttributesTable(traceData: object[]): void {
 		nameCell.textContent = key;
 		nameCell.style.fontWeight = "bold";
 
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		Object.entries(values).forEach(([_, value]) => {
 			const cell = row.insertCell();
 			cell.textContent = String(value);
@@ -457,7 +440,7 @@ export function InstanceAttributesTable(traceData: object[]): void {
  * This function dynamically creates and displays a HTML table based on the solve attributes.
  * @param {object[]} traceData - Array of objects containing the result data.
  */
-export function SolveAttributesTable(traceData: object[]): void {
+export function SolveAttributesTable(traceData: TraceData[]): void {
 	solveAttributesTableDiv.innerHTML = "";
 	const solveAttributesTable = document.createElement("table");
 	solveAttributesTable.id = "solveAttributesTable_inner";
@@ -517,6 +500,7 @@ export function SolveAttributesTable(traceData: object[]): void {
 		nameCell.textContent = key;
 		nameCell.style.fontWeight = "bold";
 
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		Object.entries(values).forEach(([_, value]) => {
 			const cell = row.insertCell();
 			cell.textContent = value.toString();

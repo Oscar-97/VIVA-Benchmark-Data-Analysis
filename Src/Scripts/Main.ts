@@ -141,6 +141,8 @@ import {
 	UserConfigurationMessages
 } from "./Constants/Messages";
 import { PageTitles } from "./Constants/PageTitles";
+import { TraceData } from "./Interfaces/Interfaces";
+import { Values } from "./Constants/Values";
 //#endregion
 
 /**
@@ -219,7 +221,6 @@ function InitializeProgram(): void {
 			localStorage.getItem(Keys.DEMO_DATA) === "demo1" ||
 			localStorage.getItem(Keys.DEMO_DATA) === "demo2"
 		) {
-			console.log(localStorage.getItem(Keys.DEMO_DATA));
 			ImportDataEvents(
 				InfoMessages.DEMO_MODE_MSG,
 				"json",
@@ -236,7 +237,7 @@ function InitializeProgram(): void {
 		ManageData();
 	} catch (error) {
 		console.info(UserConfigurationMessages.NO_STORED_CONFIG);
-		console.log(error);
+		console.error(error);
 	}
 
 	/**
@@ -321,7 +322,7 @@ async function ManageData(): Promise<void> {
 	/**
 	 * Trace data results and filtered trace data results.
 	 */
-	let traceData: object[] = [];
+	let traceData: TraceData[] = [];
 	const traceDataFiltered: object[] = [];
 
 	/**
@@ -432,7 +433,7 @@ async function ManageData(): Promise<void> {
 
 		defaultTime = Number(defaultTimeInput.value);
 		if (!defaultTime) {
-			defaultTime = 1000;
+			defaultTime = Values.DEFAULT_TIME;
 		}
 
 		gapLimit = Number(gapLimitInput.value);
@@ -484,7 +485,7 @@ async function ManageData(): Promise<void> {
  * @param {object[]} traceDataFiltered - Array of objects containing the filtered result data.
  */
 function HandleReportPage(
-	traceData: object[],
+	traceData: TraceData[],
 	traceDataFiltered: object[]
 ): void {
 	/**
@@ -517,7 +518,7 @@ function HandleReportPage(
 	 * based on `ReversedTraceHeaderMap` before saving the data.
 	 */
 	saveLocalStorageButton.addEventListener("click", () => {
-		function RemapObjectProperties(traceData: object[]): object[] {
+		function RemapObjectProperties(traceData: TraceData[]): object[] {
 			return traceData.map((obj) => {
 				const remappedObj = {};
 				for (const key in obj) {
@@ -563,7 +564,7 @@ function HandleReportPage(
  *
  * @param {object[]} traceData - Array of objects containing the result data.
  */
-function HandlePlotPages(traceData: object[]): void {
+function HandlePlotPages(traceData: TraceData[]): void {
 	/**
 	 * Save to local storage when clicking on the "Save Data" button.
 	 */
@@ -604,7 +605,8 @@ function HandlePlotPages(traceData: object[]): void {
 				traceData,
 				"bar",
 				"SolverTime",
-				"Average, min, max and std for solver time"
+				"Average, min, max and std for solver time",
+				defaultTime
 			);
 		}
 
@@ -674,7 +676,7 @@ function HandlePlotPages(traceData: object[]): void {
  *
  * @param {object[]} traceData - Array of objects containing the result data.
  */
-function HandleCompareSolversPage(traceData: object[]): void {
+function HandleCompareSolversPage(traceData: TraceData[]): void {
 	PopulateCheckboxes(traceData);
 
 	/**

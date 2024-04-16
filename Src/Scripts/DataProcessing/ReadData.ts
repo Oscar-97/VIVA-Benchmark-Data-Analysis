@@ -212,6 +212,6 @@ function VerifyConfigurationProperties(parsedData): void {
 		localStorage.setItem(Keys.USER_CONFIGURATION, JSON.stringify(userData));
 	} else {
 		DisplayErrorNotification(ErrorMessages.INVALID_DATA_STRUCTURE);
-		console.log(ErrorMessages.INVALID_DATA_STRUCTURE);
+		console.error(ErrorMessages.INVALID_DATA_STRUCTURE);
 	}
 }

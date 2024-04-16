@@ -9,17 +9,7 @@ import {
 	downloadConfigurationButton,
 	downloadCustomConfigurationButton
 } from "../Elements/Elements";
-
-/**
- * UserData consists of dataset and file extension.
- * @interface UserData
- */
-export interface UserData {
-	dataSet: string[] | object[];
-	dataFileType: string;
-	defaultTime?: number | undefined;
-	gapLimit?: number | undefined;
-}
+import { UserData } from "../Interfaces/Interfaces";
 
 /**
  * This object is used to store the user configuration.

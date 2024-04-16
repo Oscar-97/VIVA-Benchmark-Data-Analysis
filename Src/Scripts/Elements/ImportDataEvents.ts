@@ -15,6 +15,7 @@ import {
 import { DisplayAlertNotification } from "./DisplayAlertNotification";
 import { Keys } from "../Constants/Keys";
 import { PageTitles } from "../Constants/PageTitles";
+import { TraceData } from "../Interfaces/Interfaces";
 
 /**
  * This function handles events after a data import action. It removes existing data tables or charts and
@@ -89,7 +90,7 @@ export function ImportDataEvents(
  * This function fills the selector list with solvers from the currently loaded results.
  * @param {object[]} traceData - Array of objects containing the result data.
  */
-export function FillSolverSelectorList(traceData: object[]): void {
+export function FillSolverSelectorList(traceData: TraceData[]): void {
 	solverSelector.innerHTML = "";
 	let isSelectedSet = false;
 

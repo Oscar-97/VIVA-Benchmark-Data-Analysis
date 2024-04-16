@@ -1,4 +1,5 @@
 import { ErrorMessages } from "../Constants/Messages";
+import { TraceData } from "../Interfaces/Interfaces";
 import { DisplayErrorNotification } from "./DisplayAlertNotification";
 
 /**
@@ -6,7 +7,7 @@ import { DisplayErrorNotification } from "./DisplayAlertNotification";
  *
  * @param {object[]} traceData - Array of objects containing the result data.
  */
-export function PopulateCheckboxes(traceData: object[]): void {
+export function PopulateCheckboxes(traceData: TraceData[]): void {
 	const container = document.getElementById("solverOptions");
 
 	const uniqueSolvers = Array.from(

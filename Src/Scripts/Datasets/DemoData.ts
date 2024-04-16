@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
-
-import { UserData } from "../UserConfiguration/UserConfiguration";
+import { Values } from "../Constants/Values";
+import { UserData } from "../Interfaces/Interfaces";
 
 /**
  * Provides demo data for testing and development.
@@ -451,7 +451,7 @@ export const DEMO_DATA: UserData = {
 		"zib54-UUE,MIP,Thorin,NA,min,1810,5151,81,15370,0,Integer Solution,Resource Interrupt,1.033402e+7,9.532889e+6,3600,3623.46999985166,33662909,641382,1.033402e+7,9.532889e+6,Unknown Error,1.033402e+7,9.532889e+6,8.4,8.4,0,0"
 	],
 	dataFileType: "json",
-	defaultTime: 1000
+	defaultTime: Values.DEFAULT_TIME
 };
 
 export const DEMO_DATA_2: UserData = {
@@ -8761,5 +8761,5 @@ export const DEMO_DATA_2: UserData = {
 		"watercontamination0303,MINLP,bbb,CONOPT,CPLEX,43363.5,min,108218,107223,14,213766,4521,3,Integer Solution,Normal Completion,2.079850e+2,2.079850e+2,361.05,1361,0,56,#,2.079850e+2,2.079850e+2,2.079850e+2,2.079850e+2,0,0,0,0"
 	],
 	dataFileType: "json",
-	defaultTime: 1000
+	defaultTime: Values.DEFAULT_TIME
 };

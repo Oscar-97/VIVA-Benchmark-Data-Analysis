@@ -1,11 +1,13 @@
 import Chart from "chart.js/auto";
 import zoomPlugin from "chartjs-plugin-zoom";
+import annotationPlugin from "chartjs-plugin-annotation";
 import { chartCanvas } from "../Elements/Elements";
 import { ShowPWANotification } from "../PWA/PWA-utils";
 import { ChartMessages } from "../Constants/Messages";
 let myChart = null;
 
 Chart.register(zoomPlugin);
+Chart.register(annotationPlugin);
 /**
  * This function generates an array of random hex color codes.
  *
@@ -61,7 +63,8 @@ export function CreateChart(
 	label,
 	title,
 	scaleOptions = null,
-	zoomOptions = null
+	zoomOptions = null,
+	annotationOptions = null
 ): void {
 	/**
 	 * Destroy the chart if it already exist.
@@ -97,7 +100,8 @@ export function CreateChart(
 						family: `system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"`
 					}
 				},
-				zoom: zoomOptions
+				zoom: zoomOptions,
+				annotation: annotationOptions
 			},
 			tooltips: {
 				callbacks: {

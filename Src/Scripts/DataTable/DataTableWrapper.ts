@@ -23,6 +23,7 @@ import { ElementStateDisplayedTable } from "../Elements/ElementStatus";
 import { DEFAULT_VISIBLE_HEADERS } from "../Constants/TraceHeaders";
 import { ShowPWANotification } from "../PWA/PWA-utils";
 import { TableMessages } from "../Constants/Messages";
+import { TraceData } from "../Interfaces/Interfaces";
 
 /**
  * This function displays the trace data in a dynamically generated HTML table using the DataTables library for improved user interaction.
@@ -48,7 +49,7 @@ import { TableMessages } from "../Constants/Messages";
  * ```
  * This example will generate a table with two rows and three columns (Solver, SolverTime, and ObjectiveValue) and apply DataTables configuration to it.
  */
-export function DisplayDataTable(traceData: object[]): void {
+export function DisplayDataTable(traceData: TraceData[]): void {
 	setTimeout(() => {
 		/**
 		 * Create the table with the trc data.

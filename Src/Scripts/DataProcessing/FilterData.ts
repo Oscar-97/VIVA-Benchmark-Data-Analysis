@@ -2,6 +2,7 @@
  * Default headers for the trace file.
  */
 import { DEFAULT_HEADERS } from "../Constants/TraceHeaders";
+import { TraceData } from "../Interfaces/Interfaces";
 
 /**
  * This function extracts headers from the array with raw data results.
@@ -120,7 +121,7 @@ function ProcessLines(
  */
 export function ExtractTraceData(unprocessedData: string[]): object[] {
 	const firstLine = unprocessedData[0].split(",");
-	let traceData: object[] = [];
+	let traceData: TraceData[] = [];
 
 	if (firstLine[0].startsWith("*")) {
 		const headers = ExtractHeaders(unprocessedData);

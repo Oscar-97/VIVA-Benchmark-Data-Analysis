@@ -3,6 +3,12 @@ import {
 	defaultTimeDirectInput,
 	gapLimitDirectInput
 } from "../Elements/Elements";
+import {
+	ComparisonSummary,
+	StatisticsColumns,
+	TraceData
+} from "../Interfaces/Interfaces";
+import { Values } from "../Constants/Values";
 
 /**
  * This function calculates a direction, based on an input parameter 'direction'.
@@ -106,23 +112,6 @@ export function CalculateDualBound(
 /**
  * This function calculates the gap between two numbers, `a` and `b`, based on the given direction `dir` and tolerance `tol`.
  *
- * @export
- * @param {number} a - The first number for the calculation.
- * @param {number} b - The second number for the calculation.
- * @param {string} dir - The direction of the calculation. If "max", the values of `a` and `b` are switched.
- * @param {number} [tol=1e-9] - The tolerance level to check if `a` and `b` are approximately equal.
- *
- * @returns {number} - Returns the gap between `a` and `b`.
- * If `a` and `b` are approximately equal (within `tol`), it returns 0.
- * If the minimum absolute value of `a` and `b` is less than `tol`, or if either `a` or `b` is Infinity,
- * or if `a` and `b` have different signs, or if either `a` or `b` is NaN, it returns Infinity.
- * Otherwise, it returns the relative difference between `a` and `b` divided by the minimum absolute
- * value of `a` and `b`, rounded to 7 decimal places.
- * If the result is -0, it converts it to 0.
- */
-/**
- * This function calculates the gap between two numbers, `a` and `b`, based on the given direction `dir` and tolerance `tol`.
- *
  * @param {number} a - The first number for the calculation.
  * @param {number} b - The second number for the calculation.
  * @param {string} dir - The direction of the calculation. If "max", the values of `a` and `b` are switched.
@@ -137,8 +126,8 @@ export function CalculateDualBound(
  * If the result is -0, it converts it to 0.
  */
 export function CalculateGap(
-	a: number,
-	b: number,
+	a: number | string,
+	b: number | string,
 	dir: string,
 	tol = 1e-9
 ): number {
@@ -177,17 +166,17 @@ export function CalculateGap(
 	}
 
 	// Check if the values are effectively equal.
-	if (AreValuesEffectivelyEqual(a, b, tol)) {
+	if (AreValuesEffectivelyEqual(Number(a), Number(b), tol)) {
 		return 0.0;
 	}
 
 	// Check if the gap calculation is not applicable.
-	if (IsGapCalculationNotApplicable(a, b, tol)) {
+	if (IsGapCalculationNotApplicable(Number(a), Number(b), tol)) {
 		return Infinity;
 	}
 
 	// Compute and return the gap.
-	return ComputeGap(a, b);
+	return ComputeGap(Number(a), Number(b));
 }
 
 /**
@@ -272,18 +261,7 @@ export function AnalyzeDataByCategory(
 	resultsData: object[],
 	category: string
 ): {
-	[SolverName: string]: {
-		average: number;
-		min: number;
-		max: number;
-		std: number;
-		sum: number;
-		percentile_10: number;
-		percentile_25: number;
-		percentile_50: number;
-		percentile_75: number;
-		percentile_90: number;
-	};
+	[SolverName: string]: StatisticsColumns;
 } {
 	const categoryValues = resultsData.reduce((acc, curr) => {
 		const parsedValue = Number(curr[category]);
@@ -298,18 +276,7 @@ export function AnalyzeDataByCategory(
 	}, {});
 
 	const solverCategoryStats: {
-		[SolverName: string]: {
-			average: number;
-			min: number;
-			max: number;
-			std: number;
-			sum: number;
-			percentile_10: number;
-			percentile_25: number;
-			percentile_50: number;
-			percentile_75: number;
-			percentile_90: number;
-		};
+		[SolverName: string]: StatisticsColumns;
 	} = {};
 
 	for (const solverName in categoryValues) {
@@ -337,16 +304,16 @@ export function AnalyzeDataByCategory(
 			);
 
 			solverCategoryStats[solverName] = {
-				average: avgValue,
-				min: minValue,
-				max: maxValue,
-				std: stdValue,
-				sum: sumValue,
-				percentile_10: p10Value,
-				percentile_25: p25Value,
-				percentile_50: p50Value,
-				percentile_75: p75Value,
-				percentile_90: p90Value
+				avgValue: avgValue,
+				minValue: minValue,
+				maxValue: maxValue,
+				stdValue: stdValue,
+				sumValue: sumValue,
+				p10Value: p10Value,
+				p25Value: p25Value,
+				p50Value: p50Value,
+				p75Value: p75Value,
+				p90Value: p90Value
 			};
 		}
 	}
@@ -360,7 +327,7 @@ export function AnalyzeDataByCategory(
  * @returns  {string[]} - An object with solver names as keys. Each solver contains a counter of the instance status messages.
  */
 
-export function ExtractStatusMessages(traceData: object[]): string[] {
+export function ExtractStatusMessages(traceData: TraceData[]): string[] {
 	const result = [];
 	const nameErrorMap = new Map();
 
@@ -395,7 +362,7 @@ export function ExtractStatusMessages(traceData: object[]): string[] {
  * contains 'time' and 'InputFileName' property of the corresponding solver. If the time value is 'NA' or is not a number,
  * the instance is not added to the final result.
  */
-export function ExtractAllSolverTimes(traceData: object[]): object {
+export function ExtractAllSolverTimes(traceData: TraceData[]): object {
 	const result = traceData.reduce(
 		(
 			acc: { [key: string]: { time: number; InputFileName: string }[] },
@@ -432,7 +399,7 @@ export function ExtractAllSolverTimes(traceData: object[]): object {
  * contains 'time' and 'InputFileName' property of the corresponding solver.
  */
 export function ExtractAllSolverTimesGapType(
-	traceData: object[],
+	traceData: TraceData[],
 	selectedGapType: string,
 	defaultTime?: number | undefined,
 	gapLimit?: number | undefined,
@@ -441,8 +408,6 @@ export function ExtractAllSolverTimesGapType(
 	let defaultMaximumTime: number;
 	let primalGapToCompare: number;
 	let terminationStatus: string;
-	console.log(terminationStatusSelector);
-	console.log(terminationStatus);
 
 	if (!gapLimit || gapLimit < 0) {
 		primalGapToCompare = 0.01;
@@ -452,8 +417,8 @@ export function ExtractAllSolverTimesGapType(
 	}
 
 	if (!defaultTime || defaultTime < 0) {
-		defaultMaximumTime = 1000.0;
-		defaultTimeDirectInput.value = "1000";
+		defaultMaximumTime = Values.DEFAULT_TIME;
+		defaultTimeDirectInput.value = Values.DEFAULT_TIME.toString();
 	} else {
 		defaultMaximumTime = defaultTime;
 	}
@@ -478,7 +443,6 @@ export function ExtractAllSolverTimesGapType(
 		};
 		terminationStatus = statusMap[terminationStatusSelector];
 	}
-	console.log(terminationStatus);
 
 	const result = traceData.reduce(
 		(
@@ -526,13 +490,8 @@ export function ExtractAllSolverTimesGapType(
 export function CompareSolvers(
 	solver1: string,
 	solver2: string,
-	solverTimes
-): {
-	better: number;
-	worse: number;
-	equal: number;
-	details;
-} {
+	solverTimes: object
+): ComparisonSummary {
 	const results1 = solverTimes[solver1];
 	const results2 = solverTimes[solver2];
 
@@ -580,7 +539,7 @@ export function CompareSolvers(
  * @param traceData - The array of objects to extract unique objects from.
  * @returns An array of unique objects based on the "InputFileName" property.
  */
-export function ExtractUniqueProblems(traceData: object[]): object[] {
+export function ExtractUniqueProblems(traceData: TraceData[]): object[] {
 	const unique: object = {};
 	traceData.forEach((item) => {
 		if (!unique[item["InputFileName"]]) {
@@ -606,32 +565,10 @@ export function ExtractUniqueProblems(traceData: object[]): object[] {
  * @returns An object containing the calculated statistics.
  */
 export function CalculateInstanceAttributes(data: object[]): {
-	[key: string]: {
-		countValue: number;
-		avgValue: number;
-		minValue: number;
-		maxValue: number;
-		stdValue: number;
-		p10Value: number;
-		p25Value: number;
-		p50Value: number;
-		p75Value: number;
-		p90Value: number;
-	};
+	[key: string]: StatisticsColumns;
 } {
 	const results: {
-		[key: string]: {
-			countValue: number;
-			avgValue: number;
-			minValue: number;
-			maxValue: number;
-			stdValue: number;
-			p10Value: number;
-			p25Value: number;
-			p50Value: number;
-			p75Value: number;
-			p90Value: number;
-		};
+		[key: string]: StatisticsColumns;
 	} = {};
 	const keys = Object.keys(data[0]).filter((key) => key !== "InputFileName");
 
@@ -691,32 +628,10 @@ export function CalculateSolveAttributes(
 	data: object[],
 	specificKeys: string[]
 ): {
-	[key: string]: {
-		countValue: number;
-		avgValue: number;
-		minValue: number;
-		maxValue: number;
-		stdValue: number;
-		p10Value: number;
-		p25Value: number;
-		p50Value: number;
-		p75Value: number;
-		p90Value: number;
-	};
+	[key: string]: StatisticsColumns;
 } {
 	const results: {
-		[key: string]: {
-			countValue: number;
-			avgValue: number;
-			minValue: number;
-			maxValue: number;
-			stdValue: number;
-			p10Value: number;
-			p25Value: number;
-			p50Value: number;
-			p75Value: number;
-			p90Value: number;
-		};
+		[key: string]: StatisticsColumns;
 	} = {};
 
 	specificKeys.forEach((key) => {
