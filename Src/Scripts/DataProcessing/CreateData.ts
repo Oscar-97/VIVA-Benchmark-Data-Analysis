@@ -3,7 +3,7 @@ import { TraceData } from "../Interfaces/Interfaces";
 /**
  * This function converts an array of objects into an array of strings for .trc file format, to be able to save it to local storage.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  * @returns Array of strings, where each string is a comma-separated representation of a row of data.
  *
  * @remarks

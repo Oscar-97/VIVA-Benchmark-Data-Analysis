@@ -175,7 +175,7 @@ let gapLimit = undefined;
 let unprocessedData: string[] = [];
 let unprocessedInstanceInformationData: string[] = [];
 let unprocessedSolutionData: string[] = [];
-let chartData;
+let chartData = [];
 
 /**
  * Initializing the methods that are needed to run the system.
@@ -323,7 +323,7 @@ async function ManageData(): Promise<void> {
 	 * Trace data results and filtered trace data results.
 	 */
 	let traceData: TraceData[] = [];
-	const traceDataFiltered: object[] = [];
+	const traceDataFiltered: TraceData[] = [];
 
 	/**
 	 * instanceInfoData holds the instance properties.
@@ -438,7 +438,7 @@ async function ManageData(): Promise<void> {
 
 		gapLimit = Number(gapLimitInput.value);
 		if (!gapLimit) {
-			gapLimit = 0.01;
+			gapLimit = Values.DEFAULT_GAP_LIMIT;
 		}
 
 		DownloadCustomizedUserConfiguration(newRawData, defaultTime, gapLimit);
@@ -481,12 +481,12 @@ async function ManageData(): Promise<void> {
 /**
  * This function manages the functionality of the buttons on the Report page of the application.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
- * @param {object[]} traceDataFiltered - Array of objects containing the filtered result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceDataFiltered - Array of objects containing the filtered result data.
  */
 function HandleReportPage(
 	traceData: TraceData[],
-	traceDataFiltered: object[]
+	traceDataFiltered: TraceData[]
 ): void {
 	/**
 	 * Show the table when clicking on the "View Table" button.
@@ -518,7 +518,7 @@ function HandleReportPage(
 	 * based on `ReversedTraceHeaderMap` before saving the data.
 	 */
 	saveLocalStorageButton.addEventListener("click", () => {
-		function RemapObjectProperties(traceData: TraceData[]): object[] {
+		function RemapObjectProperties(traceData: TraceData[]): TraceData[] {
 			return traceData.map((obj) => {
 				const remappedObj = {};
 				for (const key in obj) {
@@ -562,7 +562,7 @@ function HandleReportPage(
 /**
  * This function manages the functionality of the buttons on the plot pages of the application.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 function HandlePlotPages(traceData: TraceData[]): void {
 	/**
@@ -674,7 +674,7 @@ function HandlePlotPages(traceData: TraceData[]): void {
  * This function manages the functionality of the buttons on the compare solvers page of the application.
  * It also handles the comparison of the solvers.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 function HandleCompareSolversPage(traceData: TraceData[]): void {
 	PopulateCheckboxes(traceData);

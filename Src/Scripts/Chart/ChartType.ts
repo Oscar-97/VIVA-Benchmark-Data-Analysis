@@ -18,7 +18,7 @@ import { Values } from "../Constants/Values";
 /**
  * This function prepares and plots data by a specific category.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  * @param {string} type - The type of the chart to be created (e.g., 'line', 'bar', 'pie').
  * @param {string} category - The category by which the data should be analyzed.
  * @param {string} title - The title of the chart.
@@ -164,7 +164,7 @@ export function PlotDataByCategory(
 /**
  * This function prepares and plots all the termination status messages per solver.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  * @param {string} type - The type of the chart to be created (e.g., 'line', 'bar', 'pie').
  * @param {string} title - The title of the chart.
  */
@@ -174,7 +174,7 @@ export function PlotStatusMessages(
 	title: string
 ): {
 	label: string;
-	data: object[];
+	data: TraceData[];
 	borderColor: string;
 	backgroundColor: string;
 }[] {
@@ -259,7 +259,7 @@ export function PlotStatusMessages(
 /**
  * This function prepares and plots all the solver times without any failed results.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 export function PlotAllSolverTimes(
 	traceData: TraceData[]
@@ -332,7 +332,7 @@ export function PlotAllSolverTimes(
 /**
  * This function prepares and plots the absolute performance profile of solver time, where the instances have a gap <= 1.0% and not failed.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 export function PlotAbsolutePerformanceProfileSolverTimes(
 	traceData: TraceData[],
@@ -443,7 +443,7 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 			},
 			type: "linear",
 			min: 0,
-			max: defaultTime ? Number(defaultTime) + 10 : 1010,
+			max: defaultTime ? Number(defaultTime) + 10 : Values.DEFAULT_TIME + 10,
 			ticks: {
 				stepSize: 50
 			}
@@ -481,7 +481,7 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 		chartData,
 		null,
 		`Absolute performance profile (${selectedGapType} <= ${
-			gapLimit || 0.01
+			gapLimit || Values.DEFAULT_GAP_LIMIT
 		}% and not failed)`,
 		scaleOptions,
 		zoomOptions

@@ -57,7 +57,7 @@ function SortKeysByEnum(obj: object): string[] {
 /**
  * This function dynamically creates and displays a HTML table based on the provided trace data.
  *
- @param {object[]} traceData - Array of objects containing the result data.
+ @param {TraceData[]} traceData - Array of objects containing the result data.
  *
  * @remarks
  * This function generates a new table to display trace data. The table is added to the 'dataTable' HTML div.
@@ -438,7 +438,7 @@ export function InstanceAttributesTable(traceData: TraceData[]): void {
 
 /**
  * This function dynamically creates and displays a HTML table based on the solve attributes.
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 export function SolveAttributesTable(traceData: TraceData[]): void {
 	solveAttributesTableDiv.innerHTML = "";

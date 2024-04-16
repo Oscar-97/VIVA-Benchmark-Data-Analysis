@@ -249,7 +249,7 @@ export function SetSolverStatus(solverStatus: number | string): string {
  * This function extracts the values of the specified category for each solver from the results data,
  * calculates the statistical measures, and returns these statistics in a structured format.
  *
- * @param {object[]} resultsData - The array of result objects where each object corresponds to a particular solver's output.
+ * @param {TraceData[]} resultsData - The array of result objects where each object corresponds to a particular solver's output.
  * @param {string} category - The category whose values are to be analyzed. The category could be time, memory, etc.
  *
  * @returns {object} An object with solver names as keys. Each key points to an object that represents the statistical
@@ -258,7 +258,7 @@ export function SetSolverStatus(solverStatus: number | string): string {
  * the category is not a finite number, the instance is not added to the final result.
  */
 export function AnalyzeDataByCategory(
-	resultsData: object[],
+	resultsData: TraceData[],
 	category: string
 ): {
 	[SolverName: string]: StatisticsColumns;
@@ -323,7 +323,7 @@ export function AnalyzeDataByCategory(
 /**
  * This function extracts the values of the termination message for each instance per solver, from the results data.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  * @returns  {string[]} - An object with solver names as keys. Each solver contains a counter of the instance status messages.
  */
 
@@ -356,7 +356,7 @@ export function ExtractStatusMessages(traceData: TraceData[]): string[] {
  * The returned object has a unique key for each solver and the value is an array of objects, each containing a 'time'
  * and 'InputFileName'.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  *
  * @returns {object} - An object with solver names as keys. Each key points to an array of objects where each object
  * contains 'time' and 'InputFileName' property of the corresponding solver. If the time value is 'NA' or is not a number,
@@ -393,7 +393,7 @@ export function ExtractAllSolverTimes(traceData: TraceData[]): object {
  * and 'InputFileName'. All results with missing SolverTime, or with a failed status, get a default value of 1000.
  * A fail is if the termination or solver status is not "Normal Completion".
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  *
  * @returns {object} - An object with solver names as keys. Each key points to an array of objects where each object
  * contains 'time' and 'InputFileName' property of the corresponding solver.

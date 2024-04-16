@@ -2,7 +2,7 @@ import { TraceData } from "../Interfaces/Interfaces";
 
 /**
  *	This function computes the best and worst solver times data with the TraceData interface.
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  * @param {number} defaultTime - The default time for non-numeric solver times.
  * @returns {TraceData[]} - Array of objects containing the best and worst solver times.
  */

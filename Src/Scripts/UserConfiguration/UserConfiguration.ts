@@ -156,18 +156,18 @@ export function DownloadUserConfiguration(): void {
  * The function assumes the existence of a previously defined `downloadCustomConfigurationButton`
  * which should be a reference to an HTML anchor (`<a>`) element used to trigger the file download.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {string[]} newRawData -  Array of strings, where each string is a comma-separated representation of a row of data.
  * @param {number} defaultTime - Default time that will be used on all results with missing SolverTime or with a failed status.
  *
  * @example
  * DownloadCustomizedUserConfiguration(traceData, 1200, 0.02;
  */
 export function DownloadCustomizedUserConfiguration(
-	traceData: string[],
+	newRawData: string[],
 	defaultTime: number,
 	gapLimit: number
 ): void {
-	userData.dataSet = traceData;
+	userData.dataSet = newRawData;
 	userData.dataFileType = "json";
 	userData.defaultTime = defaultTime;
 	userData.gapLimit = gapLimit;

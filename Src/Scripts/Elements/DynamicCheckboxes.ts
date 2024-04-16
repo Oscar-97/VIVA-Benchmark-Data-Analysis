@@ -5,7 +5,7 @@ import { DisplayErrorNotification } from "./DisplayAlertNotification";
 /**
  * This function populates checkboxes for solvers.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 export function PopulateCheckboxes(traceData: TraceData[]): void {
 	const container = document.getElementById("solverOptions");

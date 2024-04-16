@@ -11,7 +11,7 @@ import {
 /**
  * This function adds result categories to each object in the traceData array.
  *
- * @param {object[]} traceData - Array of objects containing the data to be processed.
+ * @param {TraceData[]} traceData - Array of objects containing the data to be processed.
  *
  * @remarks
  * It modifies the passed `traceData` array by adding calculated properties to each object.

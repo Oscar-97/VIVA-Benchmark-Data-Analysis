@@ -88,7 +88,7 @@ export function ImportDataEvents(
 
 /**
  * This function fills the selector list with solvers from the currently loaded results.
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 export function FillSolverSelectorList(traceData: TraceData[]): void {
 	solverSelector.innerHTML = "";

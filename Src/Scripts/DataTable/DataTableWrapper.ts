@@ -29,7 +29,7 @@ import { TraceData } from "../Interfaces/Interfaces";
  * This function displays the trace data in a dynamically generated HTML table using the DataTables library for improved user interaction.
  * A notification is shown to the user upon successful generation of the table.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  *
  * @remarks
  * This function generates and displays a table using the 'TableDataTrc' function.
