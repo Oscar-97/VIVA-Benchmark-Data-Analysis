@@ -11,11 +11,11 @@ import {
 	dataTableGenerated,
 	compareSolversButton,
 	demoDataSelector
-} from "./Elements";
+} from "../Elements";
 import { DisplayAlertNotification } from "./DisplayAlertNotification";
-import { Keys } from "../Constants/Keys";
-import { PageTitles } from "../Constants/PageTitles";
-import { TraceData } from "../Interfaces/Interfaces";
+import { Keys } from "../../Constants/Keys";
+import { PageTitles } from "../../Constants/PageTitles";
+import { TraceData } from "../../Interfaces/Interfaces";
 
 /**
  * This function handles events after a data import action. It removes existing data tables or charts and

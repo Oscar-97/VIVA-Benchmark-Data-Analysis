@@ -1,5 +1,5 @@
-import { ErrorMessages } from "../Constants/Messages";
-import { TraceData } from "../Interfaces/Interfaces";
+import { ErrorMessages } from "../../Constants/Messages";
+import { TraceData } from "../../Interfaces/Interfaces";
 import { DisplayErrorNotification } from "./DisplayAlertNotification";
 
 /**

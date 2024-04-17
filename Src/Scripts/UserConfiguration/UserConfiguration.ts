@@ -4,7 +4,7 @@ import {
 	DisplayAlertNotification,
 	DisplayWarningNotification,
 	DisplayErrorNotification
-} from "../Elements/DisplayAlertNotification";
+} from "../Elements/Events/DisplayAlertNotification";
 import {
 	downloadConfigurationButton,
 	downloadCustomConfigurationButton

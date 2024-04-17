@@ -19,7 +19,7 @@ import {
 	dataTableGenerated,
 	dataTableGeneratedWrapper
 } from "../Elements/Elements";
-import { ElementStateDisplayedTable } from "../Elements/ElementStatus";
+import { ElementStateDisplayedTable } from "../Elements/Events/ElementStatus";
 import { DEFAULT_VISIBLE_HEADERS } from "../Constants/TraceHeaders";
 import { ShowPWANotification } from "../PWA/PWA-utils";
 import { TableMessages } from "../Constants/Messages";

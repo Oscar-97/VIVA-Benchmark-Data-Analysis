@@ -3,7 +3,7 @@ import {
 	alertIcon,
 	alertMessage,
 	closeAlertButton
-} from "./Elements";
+} from "../Elements";
 import $ from "jquery";
 
 /**

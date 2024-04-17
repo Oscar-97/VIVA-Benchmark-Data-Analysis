@@ -48,7 +48,7 @@ import { ConvertToTraceFile } from "./DataProcessing/CreateData";
 import {
 	FillSolverSelectorList,
 	ImportDataEvents
-} from "./Elements/ImportDataEvents";
+} from "./Elements/Events/ImportDataEvents";
 import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
 import { MergeData } from "./DataProcessing/MergeData";
 import { ExtractTraceData } from "./DataProcessing/FilterData";
@@ -73,14 +73,14 @@ import { GetFilteredRows, GetSelectedRows } from "./DataTable/GetDataFromTable";
 import {
 	PopulateCheckboxes,
 	GetSelectedCheckboxValues
-} from "./Elements/DynamicCheckboxes";
+} from "./Elements/Events/DynamicCheckboxes";
 import {
 	ElementStatesTablePage,
 	ElementStatesPlotPage,
 	ElementStateDisplayedChart,
 	ElementStatesCompareSolversPage,
 	ElementStateDisplayedComparisonTable
-} from "./Elements/ElementStatus";
+} from "./Elements/Events/ElementStatus";
 import {
 	fileInput,
 	librarySelector,
@@ -103,7 +103,6 @@ import {
 	gapLimitDirectInput,
 	gapLimitInput,
 	compareSolversButton,
-	demoDataSelector,
 	gapTypeSelector,
 	terminationTypeSelector
 } from "./Elements/Elements";
@@ -125,7 +124,7 @@ import {
 import {
 	DisplayErrorNotification,
 	DisplayWarningNotification
-} from "./Elements/DisplayAlertNotification";
+} from "./Elements/Events/DisplayAlertNotification";
 import { ReleaseVersionTag } from "./Elements/ReleaseVersionTag";
 import {
 	CompareSolvers,
@@ -142,6 +141,7 @@ import {
 import { PageTitles } from "./Constants/PageTitles";
 import { TraceData } from "./Interfaces/Interfaces";
 import { Values } from "./Constants/Values";
+import { ActivateDemoMode, NotifyDemoMode } from "./Actions/DemoMode";
 //#endregion
 
 /**
@@ -283,34 +283,6 @@ function InitializeProgram(): void {
 		demoDataButton.addEventListener("click", () => {
 			ActivateDemoMode();
 		});
-	}
-
-	async function ActivateDemoMode(): Promise<void> {
-		const module = await import(
-			/* webpackChunkName: "demodata" */ "./Datasets/DemoData"
-		);
-		if (demoDataSelector.value === "Demo_1") {
-			localStorage.setItem(
-				Keys.USER_CONFIGURATION,
-				JSON.stringify(module.DEMO_DATA)
-			);
-			localStorage.setItem(Keys.DEMO_DATA, "demo1");
-		} else if (demoDataSelector.value === "Demo_2") {
-			localStorage.setItem(
-				Keys.USER_CONFIGURATION,
-				JSON.stringify(module.DEMO_DATA_2)
-			);
-			localStorage.setItem(Keys.DEMO_DATA, "demo2");
-		}
-		location.reload();
-	}
-
-	function NotifyDemoMode(): void {
-		if (document.title === PageTitles.TABLE) {
-			demoDataButton.style.color = "#198754";
-			demoDataButton.disabled = true;
-			demoDataSelector.disabled = true;
-		}
 	}
 }
 
@@ -512,6 +484,9 @@ function HandleReportPage(traceData: TraceData[]): void {
 	 * it remaps the object properties based on `ReversedTraceHeaderMap` before saving the data.
 	 */
 	saveLocalStorageButton.addEventListener("click", () => {
+		if (dataFileType === "trc") {
+			dataFileType = "json";
+		}
 		const newTraceData = GetFilteredRows();
 		const newRawData = ConvertToTraceFile(newTraceData);
 

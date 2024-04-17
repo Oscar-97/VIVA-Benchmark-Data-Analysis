@@ -1,4 +1,4 @@
-import { PageTitles } from "../Constants/PageTitles";
+import { PageTitles } from "../../Constants/PageTitles";
 import {
 	fileInput,
 	librarySelector,
@@ -17,7 +17,7 @@ import {
 	defaultTimeDirectInput,
 	gapLimitDirectInput,
 	compareSolversButton
-} from "./Elements";
+} from "../Elements";
 
 /**
  * This function resets the status of several elements to their initial state when the user first arrives at,
