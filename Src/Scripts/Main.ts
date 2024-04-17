@@ -288,7 +288,7 @@ function InitializeProgram(): void {
 
 	async function ActivateDemoMode(): Promise<void> {
 		const module = await import(
-			/* webpackChunkName: "demoData" */ "./Datasets/DemoData"
+			/* webpackChunkName: "demodata" */ "./Datasets/DemoData"
 		);
 		if (demoDataSelector.value === "Demo_1") {
 			localStorage.setItem(
