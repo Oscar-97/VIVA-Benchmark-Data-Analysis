@@ -44,7 +44,7 @@ import {
  * Dataprocessing.
  */
 import { AddResultCategories } from "./DataProcessing/AddResultCategories";
-import { CreateNewTraceData } from "./DataProcessing/CreateData";
+import { ConvertToTraceFile } from "./DataProcessing/CreateData";
 import {
 	FillSolverSelectorList,
 	ImportDataEvents
@@ -65,7 +65,7 @@ import {
 	DisplayDataTable,
 	DestroyDataTable
 } from "./DataTable/DataTableWrapper";
-import { UpdateResults } from "./DataTable/UpdateResults";
+import { GetFilteredRows, GetSelectedRows } from "./DataTable/GetDataFromTable";
 
 /**
  * Elements.
@@ -127,7 +127,6 @@ import {
 	DisplayWarningNotification
 } from "./Elements/DisplayAlertNotification";
 import { ReleaseVersionTag } from "./Elements/ReleaseVersionTag";
-import { ReversedTraceHeaderMap } from "./Constants/TraceHeaders";
 import {
 	CompareSolvers,
 	ExtractAllSolverTimesGapType
@@ -320,10 +319,9 @@ function InitializeProgram(): void {
  */
 async function ManageData(): Promise<void> {
 	/**
-	 * Trace data results and filtered trace data results.
+	 * Trace data results.
 	 */
 	let traceData: TraceData[] = [];
-	const traceDataFiltered: TraceData[] = [];
 
 	/**
 	 * instanceInfoData holds the instance properties.
@@ -429,7 +427,7 @@ async function ManageData(): Promise<void> {
 		const customizedTraceData = traceData.filter((solver) => {
 			return selectedSolvers.includes(solver["SolverName"]);
 		});
-		const newRawData: string[] = CreateNewTraceData(customizedTraceData);
+		const newRawData: string[] = ConvertToTraceFile(customizedTraceData);
 
 		defaultTime = Number(defaultTimeInput.value);
 		if (!defaultTime) {
@@ -446,10 +444,10 @@ async function ManageData(): Promise<void> {
 
 	/**
 	 * If the document title is "Report", it handles the report page functionality using
-	 * the traceData and traceDataFiltered variables.
+	 * the traceData variable.
 	 */
 	if (document.title === PageTitles.TABLE) {
-		HandleReportPage(traceData, traceDataFiltered);
+		HandleReportPage(traceData);
 		if (dataFileType === "json") {
 			viewTableButton.click();
 		}
@@ -482,12 +480,8 @@ async function ManageData(): Promise<void> {
  * This function manages the functionality of the buttons on the Report page of the application.
  *
  * @param {TraceData[]} traceData - Array of objects containing the result data.
- * @param {TraceData[]} traceDataFiltered - Array of objects containing the filtered result data.
  */
-function HandleReportPage(
-	traceData: TraceData[],
-	traceDataFiltered: TraceData[]
-): void {
+function HandleReportPage(traceData: TraceData[]): void {
 	/**
 	 * Show the table when clicking on the "View Table" button.
 	 */
@@ -502,7 +496,7 @@ function HandleReportPage(
 	 */
 	showSelectedRowsButton.addEventListener("click", () => {
 		showSelectedRowsButton.disabled = true;
-		traceDataFiltered = UpdateResults();
+		const traceDataFiltered = GetSelectedRows();
 
 		if (traceDataFiltered.length === 0) {
 			DisplayWarningNotification(TableMessages.TABLE_NO_ROWS);
@@ -514,33 +508,13 @@ function HandleReportPage(
 
 	/**
 	 * Save to local storage when clicking on the "Save Data" button.
-	 * If the results have been filtered it remaps the object properties
-	 * based on `ReversedTraceHeaderMap` before saving the data.
+	 * If the results have been filtered or if they have been selected,
+	 * it remaps the object properties based on `ReversedTraceHeaderMap` before saving the data.
 	 */
 	saveLocalStorageButton.addEventListener("click", () => {
-		function RemapObjectProperties(traceData: TraceData[]): TraceData[] {
-			return traceData.map((obj) => {
-				const remappedObj = {};
-				for (const key in obj) {
-					const newKey = ReversedTraceHeaderMap[key] || key;
-					remappedObj[newKey] = obj[key];
-				}
-				return remappedObj;
-			});
-		}
+		const newTraceData = GetFilteredRows();
+		const newRawData = ConvertToTraceFile(newTraceData);
 
-		let newRawData = [];
-
-		if (dataFileType === "trc") {
-			dataFileType = "json";
-		}
-
-		if (traceDataFiltered.length === 0) {
-			newRawData = CreateNewTraceData(traceData);
-		} else {
-			const remappedData = RemapObjectProperties(traceDataFiltered);
-			newRawData = CreateNewTraceData(remappedData);
-		}
 		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
@@ -572,7 +546,7 @@ function HandlePlotPages(traceData: TraceData[]): void {
 		if (dataFileType === "trc") {
 			dataFileType = "json";
 		}
-		const newRawData: string[] = CreateNewTraceData(traceData);
+		const newRawData: string[] = ConvertToTraceFile(traceData);
 		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
@@ -686,7 +660,7 @@ function HandleCompareSolversPage(traceData: TraceData[]): void {
 		if (dataFileType === "trc") {
 			dataFileType = "json";
 		}
-		const newRawData: string[] = CreateNewTraceData(traceData);
+		const newRawData: string[] = ConvertToTraceFile(traceData);
 		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;

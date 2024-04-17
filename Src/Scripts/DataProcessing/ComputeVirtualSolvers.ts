@@ -75,13 +75,12 @@ export function ComputeVirtualTimes(data: object): object {
 			}
 		}
 	}
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	for (const [_, record] of Object.entries(bestEntries)) {
+
+	for (const [, record] of Object.entries(bestEntries)) {
 		bestWorst["Virtual Best Solver"].push(record);
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	for (const [_, record] of Object.entries(worstEntries)) {
+	for (const [, record] of Object.entries(worstEntries)) {
 		bestWorst["Virtual Worst Solver"].push(record);
 	}
 	return bestWorst;
