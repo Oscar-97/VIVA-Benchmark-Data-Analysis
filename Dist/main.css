@@ -2308,7 +2308,7 @@ body > :not(nav, hr) {
     height: auto;
     width: 95%;
     max-width: 95vw;
-    min-height: 500px;
+    min-height: 70vh;
     margin-left: 1rem;
 	margin-right: 1rem;
 	overflow: hidden;
