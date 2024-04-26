@@ -65,7 +65,7 @@ export function PlotDataByCategory(
 	};
 
 	const chartData = [averageData, minData, maxData, stdData];
-	
+
 	const scaleOptions = {
 		x: {
 			title: {
@@ -525,7 +525,7 @@ export function PlotSolutionTimes(traceData: TraceData[]): object[] {
 				display: true,
 				text: "Number Of Equations"
 			}
-		},
+		}
 	};
 
 	const zoomOptions = {

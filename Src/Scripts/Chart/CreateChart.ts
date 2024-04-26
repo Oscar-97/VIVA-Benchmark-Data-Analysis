@@ -77,7 +77,7 @@ export function CreateChart(
 		type: type,
 		data: {
 			labels: typeof label === "string" ? [label] : label,
-			datasets: data,
+			datasets: data
 		},
 		options: {
 			responsive: true,
