@@ -73,8 +73,8 @@
 			]
 		},
 		{
-			"name": "Average Solver Time",
-			"description": "View average solver time of benchmark results.",
+			"name": "Solver Time per Solver",
+			"description": "View solver time per solver of benchmark results.",
 			"url": "Src/Pages/average_solver_time.html",
 			"icons": [
 				{
@@ -85,20 +85,8 @@
 			]
 		},
 		{
-			"name": "Compare Solvers",
-			"description": "Compare solvers based on benchmark results.",
-			"url": "Src/Pages/compare_solvers.html",
-			"icons": [
-				{
-					"src": "Src/CSS/icon_maskable.png",
-					"sizes": "192x192",
-					"type": "image/png"
-				}
-			]
-		},
-		{
-			"name": "Solver Time",
-			"description": "View solver time of benchmark results.",
+			"name": "Solver Time per Instance",
+			"description": "View solver time per instance of benchmark results.",
 			"url": "Src/Pages/solver_time.html",
 			"icons": [
 				{
@@ -136,6 +124,42 @@
 			"name": "Termination Status",
 			"description": "View termination status of benchmark results.",
 			"url": "Src/Pages/termination_status.html",
+			"icons": [
+				{
+					"src": "Src/CSS/icon_maskable.png",
+					"sizes": "192x192",
+					"type": "image/png"
+				}
+			]
+		},
+		{
+			"name": "Compare Solvers",
+			"description": "Compare solvers based on benchmark results.",
+			"url": "Src/Pages/compare_solvers.html",
+			"icons": [
+				{
+					"src": "Src/CSS/icon_maskable.png",
+					"sizes": "192x192",
+					"type": "image/png"
+				}
+			]
+		},
+		{
+			"name": "Solution Quality",
+			"description": "View solution quality of benchmark results.",
+			"url": "Src/Pages/solution_quality.html",
+			"icons": [
+				{
+					"src": "Src/CSS/icon_maskable.png",
+					"sizes": "192x192",
+					"type": "image/png"
+				}
+			]
+		},
+		{
+			"name": "Solution Time",
+			"description": "View solution time of benchmark results.",
+			"url": "Src/Pages/solution_time.html",
 			"icons": [
 				{
 					"src": "Src/CSS/icon_maskable.png",

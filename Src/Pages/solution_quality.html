@@ -10,7 +10,7 @@
       content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers."
     />
     <!-- Title and icon -->
-    <title id="ReportTitle">Solver Time per Instance</title>
+    <title id="ReportTitle">Solution Quality</title>
     <link rel="icon" href="../CSS/tab_icon.png" />
     <!-- Styling -->
     <link href="../../Dist/main.css" rel="stylesheet" />
@@ -76,9 +76,8 @@
                   >
                 </li>
                 <li>
-                  <span class="dropdown-item active"
-                    ><i class="bi bi-graph-up"></i> Solver Time per
-                    Instance</span
+                  <a class="dropdown-item" href="../Pages/solver_time.html">
+                    <i class="bi bi-graph-up"></i> Solver Time per Instance</a
                   >
                 </li>
                 <hr />
@@ -104,13 +103,15 @@
                 </li>
                 <hr />
                 <li>
-                  <a class="dropdown-item" href="../Pages/solution_quality.html"
-                    ><i class="bi bi-bar-chart-line-fill"></i> Solution
-                    Quality</a
+                  <span class="dropdown-item active"
+                    ><i class="bi bi-bar-chart"></i> Solution Quality</span
                   >
                 </li>
                 <li>
-                  <a class="dropdown-item" href="../Pages/solution_time.html"
+                  <a
+                    class="dropdown-item"
+                    class="dropdown-item active"
+                    href="../Pages/solution_time.html"
                     ><i class="bi bi-circle-square"></i> Solution Time</a
                   >
                 </li>
@@ -234,9 +235,9 @@
           disabled="true"
           data-toggle="tooltip"
           data-placement="top"
-          title="View the solver times."
+          title="View number of iterations."
         >
-          <i class="bi bi-diagram-2"></i> View Solver Time
+          <i class="bi bi-diagram-2"></i> View Solution Quality
         </button>
       </div>
       <div class="col-auto">
@@ -313,6 +314,32 @@
         </button>
       </div>
     </div>
+
+    <div
+      class="d-flex flex-wrap justify-content-start gap-2"
+      style="margin-left: 1rem; margin-top: 1rem"
+    >
+      <div class="col-auto">
+        <div class="input-group mb-1">
+          <div class="form-floating">
+            <select
+              class="form-control form-control-sm"
+              id="categorySelector"
+              aria-label="categoryType"
+            >
+              <option value="PrimalGap">Primal Gap</option>
+              <option value="DualGap">Dual Gap</option>
+              <option value="Gap_Solver">Solver Gap</option>
+              <option value="Gap_Problem">Problem Gap</option>
+              <option value="PrimalBoundSolver">Primal Bound Solver</option>
+              <option value="DualBoundSolver">Dual Bound Solver</option>
+            </select>
+            <label for="categorySelector">Category Type</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <hr />
 
     <div id="chartContainer">
@@ -367,6 +394,7 @@
         </div>
       </div>
     </div>
+
     <!-- Modal with file information. -->
     <div
       class="modal fade"

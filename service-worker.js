@@ -22,6 +22,8 @@ const filesToCache = [
 	"Src/Pages/number_of_nodes.html",
 	"Src/Pages/solver_time.html",
 	"Src/Pages/termination_status.html",
+	"Src/Pages/solution_quality.html",
+	"Src/Pages/solution_time.html"
 ];
 
 /**

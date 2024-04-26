@@ -497,7 +497,7 @@ export function SolveAttributesTable(traceData: TraceData[]): void {
 	Object.entries(statistics).forEach(([key, values]) => {
 		const row = tableBody.insertRow();
 		const nameCell = row.insertCell();
-		nameCell.textContent = key;
+		nameCell.textContent = TraceHeaderMap[key as keyof typeof TraceHeaderMap];
 		nameCell.style.fontWeight = "bold";
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars

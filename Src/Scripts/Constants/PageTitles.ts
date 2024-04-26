@@ -4,10 +4,12 @@
 export enum PageTitles {
 	TABLE = "Report",
 	ABSOLUTE_PERFORMANCE_PROFILE = "Absolute Performance Profile",
-	AVERAGE_SOLVER_TIME = "Average Solver Time",
+	AVERAGE_SOLVER_TIME = "Solver Time per Solver",
 	COMPARE_SOLVERS = "Compare Solvers",
 	NUMBER_OF_NODES = "Number of Nodes",
 	NUMBER_OF_ITERATIONS = "Number of Iterations",
-	SOLVER_TIME = "Solver Time",
-	TERMINATION_STATUS = "Termination Status"
+	SOLVER_TIME = "Solver Time per Instance",
+	TERMINATION_STATUS = "Termination Status",
+	SOLUTION_QUALITY = "Solution Quality",
+	SOLUTION_TIME = "Solution Time"
 }

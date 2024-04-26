@@ -86,7 +86,7 @@ describe("UI tests", () => {
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[2]/a");
 			await page.waitForTimeout(2000);
 			const averageSolverTimeTitle = await page.title();
-			expect(averageSolverTimeTitle).toBe("Average Solver Time");
+			expect(averageSolverTimeTitle).toBe("Solver Time per Solver");
 			await page.screenshot({
 				path: "TestScreenshots/averagesolvertimepage.png"
 			});
@@ -95,7 +95,7 @@ describe("UI tests", () => {
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[3]/a");
 			await page.waitForTimeout(2000);
 			const solverTimeTitle = await page.title();
-			expect(solverTimeTitle).toBe("Solver Time");
+			expect(solverTimeTitle).toBe("Solver Time per Instance");
 			await page.screenshot({ path: "TestScreenshots/solvertimepage.png" });
 
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
@@ -123,6 +123,24 @@ describe("UI tests", () => {
 			expect(terminationStatusTitle).toBe("Termination Status");
 			await page.screenshot({
 				path: "TestScreenshots/terminationstatus.png"
+			});
+
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[7]/a");
+			await page.waitForTimeout(2000);
+			const solutionQualityTitle = await page.title();
+			expect(solutionQualityTitle).toBe("Solution Quality");
+			await page.screenshot({
+				path: "TestScreenshots/solutionquality.png"
+			});
+
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[8]/a");
+			await page.waitForTimeout(2000);
+			const solutionTimeTitle = await page.title();
+			expect(solutionTimeTitle).toBe("Solution Time");
+			await page.screenshot({
+				path: "TestScreenshots/solutiontime.png"
 			});
 
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[3]/a");
@@ -201,6 +219,7 @@ describe("UI tests", () => {
 			);
 			expect(await page.locator("#demoDataSelector").isEnabled()).toBeFalsy();
 			await deleteLocalStorageButton?.click();
+			await page.click("#deleteButtonInModal");
 			await page.waitForTimeout(500);
 			await CheckNotification(
 				page,
@@ -218,6 +237,7 @@ describe("UI tests", () => {
 			);
 			expect(await page.locator("#demoDataSelector").isEnabled()).toBeFalsy();
 			await deleteLocalStorageButton?.click();
+			await page.click("deleteButtonInModal");
 			await page.waitForTimeout(500);
 			await CheckNotification(
 				page,
@@ -298,6 +318,7 @@ describe("UI tests", () => {
 			await page.waitForTimeout(3000);
 			const deleteLocalStorageButton = await page.$(buttonIDs[1]);
 			await deleteLocalStorageButton?.click();
+			await page.click("#deleteButtonInModal");
 			await page.waitForTimeout(500);
 			await CheckNotification(
 				page,
@@ -602,7 +623,7 @@ describe("UI tests", () => {
 			await RunPlotOperations("../Src/Pages/absolute_performance_profile.html");
 		}, 10000);
 
-		test("Average Solver Time Page", async () => {
+		test("Solver Time per Solver Page", async () => {
 			await RunPlotOperations("../Src/Pages/average_solver_time.html");
 			await page.waitForSelector("#statisticsTable", {
 				state: "visible",
@@ -610,7 +631,7 @@ describe("UI tests", () => {
 			});
 		}, 10000);
 
-		test("Solver Time Page", async () => {
+		test("Solver Time per Instance Page", async () => {
 			RunPlotOperations("../Src/Pages/solver_time.html");
 		}, 10000);
 
@@ -632,6 +653,18 @@ describe("UI tests", () => {
 
 		test("Termination Status Page", async () => {
 			await RunPlotOperations("../Src/Pages/termination_status.html");
+		}, 10000);
+
+		test("Solution Quality Page", async () => {
+			await RunPlotOperations("../Src/Pages/solution_quality.html");
+			await page.waitForSelector("#statisticsTable", {
+				state: "visible",
+				timeout: 3000
+			});
+		}, 10000);
+
+		test("Solution Time Page", async () => {
+			await RunPlotOperations("../Src/Pages/solution_time.html");
 		}, 10000);
 	});
 

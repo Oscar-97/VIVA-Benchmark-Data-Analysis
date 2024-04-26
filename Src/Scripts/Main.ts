@@ -5,6 +5,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import Modal from "bootstrap/js/dist/modal";
 
 /**
  * DataTables and extensions.
@@ -37,7 +38,8 @@ import {
 	PlotDataByCategory,
 	PlotStatusMessages,
 	PlotAllSolverTimes,
-	PlotAbsolutePerformanceProfileSolverTimes
+	PlotAbsolutePerformanceProfileSolverTimes,
+	PlotSolutionTimes
 } from "./Chart/ChartType";
 
 /**
@@ -104,7 +106,10 @@ import {
 	gapLimitInput,
 	compareSolversButton,
 	gapTypeSelector,
-	terminationTypeSelector
+	terminationTypeSelector,
+	categorySelector,
+	deleteButtonInModal,
+	deleteDataModal
 } from "./Elements/Elements";
 import {
 	BodyFadeLoadingAnimation,
@@ -382,9 +387,14 @@ async function ManageData(): Promise<void> {
 	 * Delete stored data in local storage when clicking in the "Delete Data" button.
 	 */
 	deleteLocalStorageButton.addEventListener("click", () => {
-		DeleteUserConfiguration();
-		deleteLocalStorageButton.disabled = true;
-		downloadConfigurationButtonLayer.disabled = true;
+		const confirmDeletionModal = new Modal(deleteDataModal, { keyboard: true });
+		confirmDeletionModal.show();
+		deleteButtonInModal.addEventListener("click", () => {
+			DeleteUserConfiguration();
+			deleteLocalStorageButton.disabled = true;
+			downloadConfigurationButtonLayer.disabled = true;
+			confirmDeletionModal.hide();
+		});
 	});
 
 	/**
@@ -532,74 +542,146 @@ function HandlePlotPages(traceData: TraceData[]): void {
 	 */
 	viewPlotsButton.disabled = false;
 	viewPlotsButton.addEventListener("click", () => {
-		/**
-		 * Check if the user is on the Absolute Performance Profile.
-		 */
-		if (document.title === PageTitles.ABSOLUTE_PERFORMANCE_PROFILE) {
-			defaultTime = defaultTimeDirectInput.value;
-			gapLimit = gapLimitDirectInput.value;
+		switch (document.title) {
+			case PageTitles.ABSOLUTE_PERFORMANCE_PROFILE: {
+				defaultTime = defaultTimeDirectInput.value;
+				gapLimit = gapLimitDirectInput.value;
 
-			chartData = PlotAbsolutePerformanceProfileSolverTimes(
-				traceData,
-				defaultTime,
-				gapLimit
-			);
+				chartData = PlotAbsolutePerformanceProfileSolverTimes(
+					traceData,
+					defaultTime,
+					gapLimit
+				);
+				break;
+			}
+			case PageTitles.AVERAGE_SOLVER_TIME: {
+				chartData = PlotDataByCategory(
+					traceData,
+					"SolverTime",
+					"Average, min, max and std for solver time",
+					defaultTime
+				);
+				break;
+			}
+			case PageTitles.SOLVER_TIME: {
+				chartData = PlotAllSolverTimes(traceData);
+				break;
+			}
+			case PageTitles.NUMBER_OF_NODES: {
+				chartData = PlotDataByCategory(
+					traceData,
+					"NumberOfNodes",
+					"Average, min, max and std for number of nodes"
+				);
+				break;
+			}
+			case PageTitles.NUMBER_OF_ITERATIONS: {
+				chartData = PlotDataByCategory(
+					traceData,
+					"NumberOfIterations",
+					"Average, min, max and std for number of iterations"
+				);
+				break;
+			}
+			case PageTitles.TERMINATION_STATUS: {
+				chartData = PlotStatusMessages(traceData, "Termination status by type");
+				break;
+			}
+			case PageTitles.SOLUTION_QUALITY: {
+				const category = categorySelector.value;
+				chartData = PlotDataByCategory(
+					traceData,
+					category,
+					`Average, min, max and std for ${category}`
+				);
+				break;
+			}
+			case PageTitles.SOLUTION_TIME: {
+				chartData = PlotSolutionTimes(traceData);
+				break;
+			}
 		}
 
-		/**
-		 * Check if the user is on the Average Solver Time page.
-		 */
-		if (document.title === PageTitles.AVERAGE_SOLVER_TIME) {
-			chartData = PlotDataByCategory(
-				traceData,
-				"bar",
-				"SolverTime",
-				"Average, min, max and std for solver time",
-				defaultTime
-			);
-		}
+		// /**
+		//  * Check if the user is on the Absolute Performance Profile.
+		//  */
+		// if (document.title === PageTitles.ABSOLUTE_PERFORMANCE_PROFILE) {
+		// 	defaultTime = defaultTimeDirectInput.value;
+		// 	gapLimit = gapLimitDirectInput.value;
 
-		/**
-		 * Check if the user is on the Solver Time page.
-		 */
-		if (document.title === PageTitles.SOLVER_TIME) {
-			chartData = PlotAllSolverTimes(traceData);
-		}
+		// 	chartData = PlotAbsolutePerformanceProfileSolverTimes(
+		// 		traceData,
+		// 		defaultTime,
+		// 		gapLimit
+		// 	);
+		// }
 
-		/**
-		 * Check if the user is on the Number of Nodes page.
-		 */
-		if (document.title === PageTitles.NUMBER_OF_NODES) {
-			chartData = PlotDataByCategory(
-				traceData,
-				"bar",
-				"NumberOfNodes",
-				"Average, min, max and std for number of nodes"
-			);
-		}
+		// /**
+		//  * Check if the user is on the Solver Time per Solver page.
+		//  */
+		// if (document.title === PageTitles.AVERAGE_SOLVER_TIME) {
+		// 	chartData = PlotDataByCategory(
+		// 		traceData,
+		// 		"SolverTime",
+		// 		"Average, min, max and std for solver time",
+		// 		defaultTime
+		// 	);
+		// }
 
-		/**
-		 * Check if the user is on the Number of Iterations page.
-		 */
-		if (document.title === PageTitles.NUMBER_OF_ITERATIONS) {
-			chartData = PlotDataByCategory(
-				traceData,
-				"bar",
-				"NumberOfIterations",
-				"Average, min, max and std for number of iterations"
-			);
-		}
+		// /**
+		//  * Check if the user is on the Solver Time per Instance page.
+		//  */
+		// if (document.title === PageTitles.SOLVER_TIME) {
+		// 	chartData = PlotAllSolverTimes(traceData);
+		// }
 
-		/**
-		 * Check if the user is on the Termination Status page.
-		 */
-		if (document.title === PageTitles.TERMINATION_STATUS) {
-			chartData = PlotStatusMessages(
-				traceData,
-				"bar",
-				"Termination status by type"
-			);
-		}
+		// /**
+		//  * Check if the user is on the Number of Nodes page.
+		//  */
+		// if (document.title === PageTitles.NUMBER_OF_NODES) {
+		// 	chartData = PlotDataByCategory(
+		// 		traceData,
+		// 		"NumberOfNodes",
+		// 		"Average, min, max and std for number of nodes"
+		// 	);
+		// }
+
+		// /**
+		//  * Check if the user is on the Number of Iterations page.
+		//  */
+		// if (document.title === PageTitles.NUMBER_OF_ITERATIONS) {
+		// 	chartData = PlotDataByCategory(
+		// 		traceData,
+		// 		"NumberOfIterations",
+		// 		"Average, min, max and std for number of iterations"
+		// 	);
+		// }
+
+		// /**
+		//  * Check if the user is on the Termination Status page.
+		//  */
+		// if (document.title === PageTitles.TERMINATION_STATUS) {
+		// 	chartData = PlotStatusMessages(traceData, "Termination status by type");
+		// }
+
+		// /**
+		//  * Check if the user is on the Solution Quality page.
+		//  */
+		// if (document.title === PageTitles.SOLUTION_QUALITY) {
+		// 	const category = categorySelector.value;
+		// 	chartData = PlotDataByCategory(
+		// 		traceData,
+		// 		category,
+		// 		`Average, min, max and std for ${category}`
+		// 	);
+		// }
+
+		// /**
+		//  * Check if the user is on the Solution Time page.
+		//  */
+		// if (document.title === PageTitles.SOLUTION_TIME) {
+		// 	chartData = PlotSolutionTimes(traceData);
+		// }
 		ElementStateDisplayedChart();
 	});
 

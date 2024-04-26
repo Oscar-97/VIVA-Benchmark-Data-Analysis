@@ -10,7 +10,7 @@
       content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers."
     />
     <!-- Title and icon -->
-    <title id="ReportTitle">Solver Time per Instance</title>
+    <title id="ReportTitle">Solution Time</title>
     <link rel="icon" href="../CSS/tab_icon.png" />
     <!-- Styling -->
     <link href="../../Dist/main.css" rel="stylesheet" />
@@ -76,9 +76,8 @@
                   >
                 </li>
                 <li>
-                  <span class="dropdown-item active"
-                    ><i class="bi bi-graph-up"></i> Solver Time per
-                    Instance</span
+                  <a class="dropdown-item" href="../Pages/solver_time.html">
+                    <i class="bi bi-graph-up"></i> Solver Time per Instance</a
                   >
                 </li>
                 <hr />
@@ -110,8 +109,8 @@
                   >
                 </li>
                 <li>
-                  <a class="dropdown-item" href="../Pages/solution_time.html"
-                    ><i class="bi bi-circle-square"></i> Solution Time</a
+                  <span class="dropdown-item active"
+                    ><i class="bi bi-circle-square"></i> Solution Time</span
                   >
                 </li>
               </ul>
@@ -234,9 +233,9 @@
           disabled="true"
           data-toggle="tooltip"
           data-placement="top"
-          title="View the solver times."
+          title="View number of iterations."
         >
-          <i class="bi bi-diagram-2"></i> View Solver Time
+          <i class="bi bi-diagram-2"></i> View Solution Time
         </button>
       </div>
       <div class="col-auto">
@@ -313,16 +312,13 @@
         </button>
       </div>
     </div>
+
     <hr />
 
     <div id="chartContainer">
       <canvas id="myChart" class="chart">
         <!-- Content created with Chart.js will be displayed here. -->
       </canvas>
-    </div>
-
-    <div id="statisticsTable">
-      <!-- statistics table element will be created here. -->
     </div>
 
     <!-- Modal for deleting data. -->
@@ -367,6 +363,7 @@
         </div>
       </div>
     </div>
+
     <!-- Modal with file information. -->
     <div
       class="modal fade"

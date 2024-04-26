@@ -77,7 +77,7 @@ export function CreateChart(
 		type: type,
 		data: {
 			labels: typeof label === "string" ? [label] : label,
-			datasets: data
+			datasets: data,
 		},
 		options: {
 			responsive: true,
@@ -96,27 +96,12 @@ export function CreateChart(
 					display: true,
 					text: title,
 					font: {
-						size: 16,
+						size: 20,
 						family: `system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"`
 					}
 				},
 				zoom: zoomOptions,
 				annotation: annotationOptions
-			},
-			tooltips: {
-				callbacks: {
-					label: function (tooltipItem, data): string {
-						const datasetIndex = tooltipItem.datasetIndex;
-						const dataIndex = tooltipItem.index;
-						const dataset = data.datasets[datasetIndex];
-						const dataPoint = dataset.data[dataIndex];
-						const xLabel = data.labels[dataIndex];
-						const yLabel = dataPoint;
-						const inputFileName =
-							data[datasetIndex].data[dataIndex].InputFileName;
-						return `x: ${xLabel}, y: ${yLabel}\nInputFileName: ${inputFileName}`;
-					}
-				}
 			}
 		}
 	});

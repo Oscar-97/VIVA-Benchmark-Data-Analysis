@@ -125,6 +125,20 @@ export const deleteLocalStorageButton: HTMLButtonElement =
 	document.getElementById("deleteLocalStorageButton") as HTMLButtonElement;
 
 /**
+ * `deleteDataModal` is a reference to the HTMLDivElement with the ID "deleteDataModal".
+ */
+export const deleteDataModal: HTMLDivElement = document.getElementById(
+	"deleteDataModal"
+) as HTMLDivElement;
+
+/**
+ * `deleteButtonInModal` is a reference to the HTMLButtonElement with the ID "deleteButtonInModal".
+ */
+export const deleteButtonInModal: HTMLButtonElement = document.getElementById(
+	"deleteButtonInModal"
+) as HTMLButtonElement;
+
+/**
  * `clearTableButton` is a reference to the HTMLButtonElement with the ID "clearTableButton".
  * @type {HTMLButtonElement}
  */
@@ -305,6 +319,13 @@ export const gapTypeSelector: HTMLSelectElement = document.getElementById(
  */
 export const terminationTypeSelector: HTMLSelectElement =
 	document.getElementById("terminationTypeSelector") as HTMLSelectElement;
+
+/**
+ * `categorySelector` is a reference to the HTMLSelectElement with the ID "categorySelector".
+ */
+export const categorySelector: HTMLSelectElement = document.getElementById(
+	"categorySelector"
+) as HTMLSelectElement;
 
 /**
  * 'solverComparisonModal' is a reference to the HTMLDivElement with the ID "solverComparisonModal".

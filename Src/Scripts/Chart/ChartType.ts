@@ -19,13 +19,11 @@ import { Values } from "../Constants/Values";
  * This function prepares and plots data by a specific category.
  *
  * @param {TraceData[]} traceData - Array of objects containing the result data.
- * @param {string} type - The type of the chart to be created (e.g., 'line', 'bar', 'pie').
  * @param {string} category - The category by which the data should be analyzed.
  * @param {string} title - The title of the chart.
  */
 export function PlotDataByCategory(
 	traceData: TraceData[],
-	type: string,
 	category: string,
 	title: string,
 	defaultTime?: number | undefined
@@ -67,6 +65,7 @@ export function PlotDataByCategory(
 	};
 
 	const chartData = [averageData, minData, maxData, stdData];
+	
 	const scaleOptions = {
 		x: {
 			title: {
@@ -147,7 +146,7 @@ export function PlotDataByCategory(
 	}
 
 	CreateChart(
-		type,
+		"bar",
 		chartData,
 		solverNames,
 		title,
@@ -165,12 +164,10 @@ export function PlotDataByCategory(
  * This function prepares and plots all the termination status messages per solver.
  *
  * @param {TraceData[]} traceData - Array of objects containing the result data.
- * @param {string} type - The type of the chart to be created (e.g., 'line', 'bar', 'pie').
  * @param {string} title - The title of the chart.
  */
 export function PlotStatusMessages(
 	traceData: TraceData[],
-	type: string,
 	title: string
 ): {
 	label: string;
@@ -252,7 +249,7 @@ export function PlotStatusMessages(
 		}
 	};
 
-	CreateChart(type, chartData, solverNames, title, scaleOptions, zoomOptions);
+	CreateChart("bar", chartData, solverNames, title, scaleOptions, zoomOptions);
 	return chartData;
 }
 
@@ -322,7 +319,7 @@ export function PlotAllSolverTimes(
 		"line",
 		chartData,
 		"InputFileName",
-		"Solver times",
+		"Solver times per Instance",
 		scaleOptions,
 		zoomOptions
 	);
@@ -483,6 +480,76 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 		`Absolute performance profile (${selectedGapType} <= ${
 			gapLimit || Values.DEFAULT_GAP_LIMIT
 		}% and not failed)`,
+		scaleOptions,
+		zoomOptions
+	);
+	return chartData;
+}
+
+/**
+ * This function prepares and plots the solution times of the solvers based on the number of variables and equations.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
+ */
+export function PlotSolutionTimes(traceData: TraceData[]): object[] {
+	const data = traceData.reduce((acc, obj) => {
+		const bubbleSize = obj.SolverTime / 100;
+		if (!acc[obj.SolverName]) {
+			acc[obj.SolverName] = {
+				label: obj.SolverName,
+				data: [],
+				clip: 1
+			};
+		}
+
+		acc[obj.SolverName].data.push({
+			x: obj.NumberOfVariables,
+			y: obj.NumberOfEquations,
+			r: bubbleSize,
+			solverTime: obj.SolverTime
+		});
+
+		return acc;
+	}, {});
+
+	const chartData = Object.values(data);
+
+	const scaleOptions = {
+		x: {
+			title: {
+				display: true,
+				text: "Number Of Variables"
+			}
+		},
+		y: {
+			title: {
+				display: true,
+				text: "Number Of Equations"
+			}
+		},
+	};
+
+	const zoomOptions = {
+		pan: {
+			enabled: true,
+			mode: "xy",
+			modiferKey: "ctrl"
+		},
+		zoom: {
+			wheel: {
+				enabled: true
+			},
+			pinch: {
+				enabled: true
+			},
+			mode: "xy"
+		}
+	};
+
+	CreateChart(
+		"bubble",
+		chartData,
+		null,
+		"Solution times (Radius = SolverTime / 100)",
 		scaleOptions,
 		zoomOptions
 	);

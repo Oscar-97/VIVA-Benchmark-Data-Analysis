@@ -44,6 +44,8 @@ task("release-web", function () {
 		"/number_of_nodes /Src/Pages/number_of_nodes 301",
 		"/number_of_iterations /Src/Pages/number_of_iterations 301",
 		"/termination_status /Src/Pages/termination_status 301",
+		"/solution_quality /Src/Pages/solution_quality 301",
+		"/solution_time /Src/Pages/solution_time 301",
 		"/Src/Pages/absolute_performance_profile.html /Src/Pages/absolute_performance_profile 301",
 		"/Src/Pages/average_solver_time.html /Src/Pages/average_solver_time 301",
 		"/Src/Pages/compare_solvers.html /Src/Pages/compare_solvers 301",
@@ -51,6 +53,8 @@ task("release-web", function () {
 		"/Src/Pages/number_of_nodes.html /Src/Pages/number_of_nodes 301",
 		"/Src/Pages/number_of_iterations.html /Src/Pages/number_of_iterations 301",
 		"/Src/Pages/termination_status.html /Src/Pages/termination_status 301",
+		"/Src/Pages/solution_quality.html /Src/Pages/solution_quality 301",
+		"/Src/Pages/solution_time.html /Src/Pages/solution_quality 301",
 	];
 	const redirectContent = redirects.join("\n");
 	const redirectFile = file("_redirect", redirectContent, { src: true });

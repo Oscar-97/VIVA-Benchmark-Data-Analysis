@@ -115,7 +115,7 @@ export function CalculateDualBound(
  * @param {number} a - The first number for the calculation.
  * @param {number} b - The second number for the calculation.
  * @param {string} dir - The direction of the calculation. If "max", the values of `a` and `b` are switched.
- * @param {number} [tol=1e-9] - The tolerance level to check if `a` and `b` are approximately equal.
+ * @param {number} tol - The tolerance level to check if `a` and `b` are approximately equal.
  *
  * @returns {number} - Returns the gap between `a` and `b`.
  * If `a` and `b` are approximately equal (within `tol`), it returns 0.
@@ -129,7 +129,7 @@ export function CalculateGap(
 	a: number | string,
 	b: number | string,
 	dir: string,
-	tol = 1e-9
+	tol = Values.TOLERANCE_LEVEL
 ): number {
 	function AreValuesEffectivelyEqual(
 		a: number,
@@ -265,8 +265,8 @@ export function AnalyzeDataByCategory(
 } {
 	const categoryValues = resultsData.reduce((acc, curr) => {
 		const parsedValue = Number(curr[category]);
-
-		if (isFinite(parsedValue)) {
+		console.log(parsedValue);
+		if (!isNaN(parsedValue)) {
 			if (!acc[curr["SolverName"]]) {
 				acc[curr["SolverName"]] = [];
 			}
