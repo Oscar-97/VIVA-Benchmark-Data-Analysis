@@ -9,7 +9,7 @@ import {
 	downloadConfigurationButtonLayer,
 	configurationSettingsButton,
 	deleteLocalStorageButton,
-	clearTableButton,
+	clearDataTableButton,
 	viewPlotsButton,
 	downloadChartDataButtonLayer,
 	loaderContainer,
@@ -45,7 +45,7 @@ export function ElementStatesTablePage(): void {
 	downloadConfigurationButtonLayer.disabled = true;
 	configurationSettingsButton.disabled = true;
 	deleteLocalStorageButton.disabled = true;
-	clearTableButton.disabled = true;
+	clearDataTableButton.disabled = true;
 }
 
 /**
@@ -107,7 +107,7 @@ export function ElementStateDisplayedTable(): void {
 	saveLocalStorageButton.disabled = false;
 	downloadConfigurationButtonLayer.disabled = false;
 	deleteLocalStorageButton.disabled = false;
-	clearTableButton.disabled = false;
+	clearDataTableButton.disabled = false;
 }
 
 /**

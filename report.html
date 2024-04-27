@@ -332,7 +332,7 @@
           id="clearTableButton"
           data-toggle="tooltip"
           data-placement="top"
-          title="Clear current table."
+          title="Clear current table and refresh table page."
         >
           <i class="bi bi-x-circle-fill"></i> Clear Data Table
         </button>
@@ -390,6 +390,48 @@
               title="Delete currently saved data in local storage."
             >
               <i class="bi bi-trash"></i> Delete Data
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal for deleting data. -->
+    <div
+      class="modal fade"
+      id="clearDataTableModal"
+      tabindex="-1"
+      aria-labelledby="clearDataTableModalLabel"
+      aria-hidden="false"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              Are you sure you want to clear the data table?
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              class="btn btn-danger"
+              id="clearTableButtonInModal"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Clear current table and refresh table page."
+            >
+              <i class="bi bi-trash"></i> Clear Data Table
             </button>
           </div>
         </div>

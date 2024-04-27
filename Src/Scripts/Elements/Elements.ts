@@ -139,10 +139,23 @@ export const deleteButtonInModal: HTMLButtonElement = document.getElementById(
 ) as HTMLButtonElement;
 
 /**
- * `clearTableButton` is a reference to the HTMLButtonElement with the ID "clearTableButton".
+ * `clearDataTableModal` is a reference to the HTMLDivElement with the ID "clearDataTableModal".
+ */
+export const clearDataTableModal: HTMLDivElement = document.getElementById(
+	"clearDataTableModal"
+) as HTMLDivElement;
+
+/**
+ * `clearTableButtonInModal` is a reference to the HTMLButtonElement with the ID "clearTableButtonInModal".
+ */
+export const clearTableButtonInModal: HTMLButtonElement =
+	document.getElementById("clearTableButtonInModal") as HTMLButtonElement;
+
+/**
+ * `clearDataTableButton` is a reference to the HTMLButtonElement with the ID "clearDataTableButton".
  * @type {HTMLButtonElement}
  */
-export const clearTableButton: HTMLButtonElement = document.getElementById(
+export const clearDataTableButton: HTMLButtonElement = document.getElementById(
 	"clearTableButton"
 ) as HTMLButtonElement;
 

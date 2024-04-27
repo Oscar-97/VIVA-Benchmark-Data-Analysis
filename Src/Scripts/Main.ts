@@ -92,7 +92,7 @@ import {
 	saveLocalStorageButton,
 	downloadConfigurationButton,
 	deleteLocalStorageButton,
-	clearTableButton,
+	clearDataTableButton,
 	downloadConfigurationButtonLayer,
 	demoDataButton,
 	viewPlotsButton,
@@ -109,7 +109,9 @@ import {
 	terminationTypeSelector,
 	categorySelector,
 	deleteButtonInModal,
-	deleteDataModal
+	deleteDataModal,
+	clearDataTableModal,
+	clearTableButtonInModal
 } from "./Elements/Elements";
 import {
 	BodyFadeLoadingAnimation,
@@ -241,7 +243,7 @@ function InitializeProgram(): void {
 		ManageData();
 	} catch (error) {
 		console.info(UserConfigurationMessages.NO_STORED_CONFIG);
-		console.error(error);
+		console.error("ERROR: ", error);
 	}
 
 	/**
@@ -508,13 +510,20 @@ function HandleReportPage(traceData: TraceData[]): void {
 	/**
 	 * Destroy the data table and reinitializes the program when clicking on "Clear Data Table".
 	 */
-	clearTableButton.addEventListener("click", () => {
-		DisplayWarningNotification(TableMessages.TABLE_CLEARING);
-		clearTableButton.disabled = true;
-		setTimeout(() => {
-			DestroyDataTable();
-			InitializeProgram();
-		}, 5000);
+	clearDataTableButton.addEventListener("click", () => {
+		const confirmClearDataTableModal = new Modal(clearDataTableModal, {
+			keyboard: true
+		});
+		confirmClearDataTableModal.show();
+		clearTableButtonInModal.addEventListener("click", () => {
+			confirmClearDataTableModal.hide();
+			DisplayWarningNotification(TableMessages.TABLE_CLEARING);
+			clearDataTableButton.disabled = true;
+			setTimeout(() => {
+				DestroyDataTable();
+				InitializeProgram();
+			}, 5000);
+		});
 	});
 }
 

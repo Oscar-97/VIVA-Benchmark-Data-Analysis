@@ -23,7 +23,9 @@ export enum TraceHeaderMap {
 	Gap_Solver = "SolverGap",
 	SolverTime = "SolverTime",
 	NumberOfIterations = "#SolverIterations",
-	NumberOfNodes = "#SolverNodes"
+	NumberOfNodes = "#SolverNodes",
+	NumberOfDomainViolations = "#SolverDomainViolations",
+	JulianDate = "JulianDate"
 }
 
 /**
@@ -52,7 +54,9 @@ export enum ReversedTraceHeaderMap {
 	SolverGap = "Gap_Solver",
 	SolverTime = "SolverTime",
 	"#SolverIterations" = "NumberOfIterations",
-	"#SolverNodes" = "NumberOfNodes"
+	"#SolverNodes" = "NumberOfNodes",
+	"#SolverDomainViolations" = "NumberOfDomainViolations",
+	JulianDate = "JulianDate"
 }
 
 /**

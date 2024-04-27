@@ -265,7 +265,6 @@ export function AnalyzeDataByCategory(
 } {
 	const categoryValues = resultsData.reduce((acc, curr) => {
 		const parsedValue = Number(curr[category]);
-		console.log(parsedValue);
 		if (!isNaN(parsedValue)) {
 			if (!acc[curr["SolverName"]]) {
 				acc[curr["SolverName"]] = [];
