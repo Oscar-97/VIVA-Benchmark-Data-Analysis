@@ -1,4 +1,4 @@
-import { TraceData } from "../Interfaces/Interfaces";
+import { TraceData } from "../../Interfaces/Interfaces";
 
 /**
  *	This function computes the best and worst solver times data with the TraceData interface.
@@ -50,15 +50,17 @@ export function ComputeVirtualTimesTraceData(
  * @param {object} data - The data structure containing the filtered and extracted solver times.
  * @returns An object containing the best and worst solver times for the absolute performance profile chart.
  */
-export function ComputeVirtualTimes(data: object): object {
+export function ComputeVirtualTimes(data){
 	const bestWorst = { "Virtual Best Solver": [], "Virtual Worst Solver": [] };
 	const bestEntries: object = {};
 	const worstEntries: object = {};
 
 	for (const group of Object.values(data)) {
-		for (const entry of group) {
+		console.log("Group", group)
+		for (const entry of group as any[]) {
 			// eslint-disable-next-line @typescript-eslint/naming-convention
 			const { time, InputFileName } = entry;
+			console.log("Time: ", time, "InputFileName: ", InputFileName)
 
 			if (
 				!bestEntries[InputFileName] ||
@@ -77,10 +79,12 @@ export function ComputeVirtualTimes(data: object): object {
 	}
 
 	for (const [, record] of Object.entries(bestEntries)) {
+		console.log("Best: ", record);
 		bestWorst["Virtual Best Solver"].push(record);
 	}
 
 	for (const [, record] of Object.entries(worstEntries)) {
+		console.log("Worst: ", record);
 		bestWorst["Virtual Worst Solver"].push(record);
 	}
 	return bestWorst;

@@ -57,7 +57,7 @@ import { ExtractTraceData } from "./DataProcessing/FilterData";
 import {
 	GetInstanceInformation,
 	GetBestKnownBounds
-} from "./DataProcessing/GetExtraData";
+} from "./DataProcessing/ReadMetaData";
 
 /**
  * DataTable.
@@ -111,7 +111,8 @@ import {
 	deleteButtonInModal,
 	deleteDataModal,
 	clearDataTableModal,
-	clearTableButtonInModal
+	clearTableButtonInModal,
+	filterTypeSelector
 } from "./Elements/Elements";
 import {
 	BodyFadeLoadingAnimation,
@@ -136,7 +137,7 @@ import { ReleaseVersionTag } from "./Elements/ReleaseVersionTag";
 import {
 	CompareSolvers,
 	ExtractAllSolverTimesGapType
-} from "./DataProcessing/CalculateResults";
+} from "./DataProcessing/ResultComputations/ComputeResults";
 import { Keys } from "./Constants/Keys";
 import {
 	ChartMessages,
@@ -564,11 +565,13 @@ function HandlePlotPages(traceData: TraceData[]): void {
 				break;
 			}
 			case PageTitles.AVERAGE_SOLVER_TIME: {
+				const filterType = filterTypeSelector.value;
 				chartData = PlotDataByCategory(
 					traceData,
 					"SolverTime",
 					"Average, min, max and std for solver time",
-					defaultTime
+					defaultTime,
+					filterType
 				);
 				break;
 			}

@@ -3,16 +3,15 @@ import {
 	ExtractStatusMessages,
 	ExtractAllSolverTimes,
 	ExtractAllSolverTimesGapType
-} from "../DataProcessing/CalculateResults";
+} from "../DataProcessing/ResultComputations/ComputeResults";
 import { CreateChart } from "./CreateChart";
 import { StatisticsTable } from "../DataTable/DataTableBase";
 import { gapTypeSelector } from "../Elements/Elements";
 import { DataTablesConfigurationStats } from "../DataTable/DataTableWrapper";
 import { TraceData } from "../Interfaces/Interfaces";
 import {
-	ComputeVirtualTimes,
 	ComputeVirtualTimesTraceData
-} from "../DataProcessing/ComputeVirtualSolvers";
+} from "../DataProcessing/ResultComputations/ComputeVirtualSolvers";
 import { Values } from "../Constants/Values";
 
 /**
@@ -26,14 +25,15 @@ export function PlotDataByCategory(
 	traceData: TraceData[],
 	category: string,
 	title: string,
-	defaultTime?: number | undefined
+	defaultTime?: number | undefined,
+	filterType?: string
 ): {
 	label: string;
 	data: number[];
 	borderColor: string;
 	backgroundColor: string;
 }[] {
-	const data = AnalyzeDataByCategory(traceData, category);
+	const data = AnalyzeDataByCategory(traceData, category, filterType);
 	const solverNames = Object.keys(data);
 
 	const averageData = {
@@ -348,16 +348,10 @@ export function PlotAbsolutePerformanceProfileSolverTimes(
 		gapLimit
 	);
 
-	const virtualSolvers = ComputeVirtualTimes(solverTimes);
-	const combinedSolverTimes = {
-		...solverTimes,
-		...virtualSolvers
-	};
-
 	const allLabels = [];
 	const allXValues: number[] = [];
 	const data = (
-		Object.entries(combinedSolverTimes) as [
+		Object.entries(solverTimes) as [
 			string,
 			{ time: number; InputFileName: string }[]
 		][]
@@ -553,5 +547,5 @@ export function PlotSolutionTimes(traceData: TraceData[]): object[] {
 		scaleOptions,
 		zoomOptions
 	);
-	return chartData;
+	return chartData as object[];
 }

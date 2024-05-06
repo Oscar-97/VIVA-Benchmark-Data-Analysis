@@ -6,7 +6,7 @@ import {
 	SetModelStatus,
 	SetSolverStatus,
 	CalculateGap
-} from "./CalculateResults";
+} from "./ResultComputations/ComputeResults";
 
 /**
  * This function adds result categories to each object in the traceData array.

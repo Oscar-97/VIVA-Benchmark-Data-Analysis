@@ -341,6 +341,13 @@ export const categorySelector: HTMLSelectElement = document.getElementById(
 ) as HTMLSelectElement;
 
 /**
+ * `filterTypeSelector` is a reference to the HTMLSelectElement with the ID "filterTypeSelector".
+ */
+export const filterTypeSelector: HTMLSelectElement = document.getElementById(
+	"filterTypeSelector"
+) as HTMLSelectElement;
+
+/**
  * 'solverComparisonModal' is a reference to the HTMLDivElement with the ID "solverComparisonModal".
  * @type {HTMLDivElement}
  */

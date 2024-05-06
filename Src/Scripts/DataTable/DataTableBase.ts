@@ -16,7 +16,7 @@ import {
 	CalculateInstanceAttributes,
 	CalculateSolveAttributes,
 	ExtractUniqueProblems
-} from "../DataProcessing/CalculateResults";
+} from "../DataProcessing/ResultComputations/ComputeResults";
 import {
 	ComparisonDetails,
 	ComparisonSummary,

@@ -2,13 +2,14 @@ import * as math from "mathjs";
 import {
 	defaultTimeDirectInput,
 	gapLimitDirectInput
-} from "../Elements/Elements";
+} from "../../Elements/Elements";
 import {
 	ComparisonSummary,
 	StatisticsColumns,
 	TraceData
-} from "../Interfaces/Interfaces";
-import { Values } from "../Constants/Values";
+} from "../../Interfaces/Interfaces";
+import { Values } from "../../Constants/Values";
+import { ComputeVirtualTimes } from "./ComputeVirtualSolvers";
 
 /**
  * This function calculates a direction, based on an input parameter 'direction'.
@@ -259,10 +260,16 @@ export function SetSolverStatus(solverStatus: number | string): string {
  */
 export function AnalyzeDataByCategory(
 	resultsData: TraceData[],
-	category: string
+	category: string,
+	filterType?: string
 ): {
 	[SolverName: string]: StatisticsColumns;
 } {
+	if (filterType && filterType !== "None") {
+		resultsData = FilterByType(filterType, resultsData);
+		console.log("Filtered values: ", resultsData, "Filter type: ", filterType);
+	}
+
 	const categoryValues = resultsData.reduce((acc, curr) => {
 		const parsedValue = Number(curr[category]);
 		if (!isNaN(parsedValue)) {
@@ -317,6 +324,112 @@ export function AnalyzeDataByCategory(
 		}
 	}
 	return solverCategoryStats;
+}
+
+/**
+ * This function filters the data based on the filter type provided.
+ * TODO: Still in progress, verify the filter types and update the function accordingly.
+ * @param filterType
+ */
+function FilterByType(
+	filterType: string,
+	categoryValues: TraceData[]
+): TraceData[] {
+	console.log(categoryValues);
+	switch (filterType) {
+		case "no_fail_by_all_solver":
+			return (categoryValues = categoryValues.filter(
+				(obj) => obj["SolverStatus"] === "Normal Completion"
+			));
+		case "time_greater_than_10_by_at_least_one_solver_and_no_fail":
+			return (categoryValues = categoryValues.filter(
+				(obj) =>
+					obj["SolverTime"] > 10 && obj["SolverStatus"] === "Normal Completion"
+			));
+		case "gap_less_than_or_equal_to_0.1002_percent_and_no_fail":
+			return (categoryValues = categoryValues.filter(
+				(obj) =>
+					obj["PrimalDualGap"] <= 0.1002 &&
+					obj["SolverStatus"] === "Normal Completion"
+			));
+		case "gap_less_than_or_equal_to_1_percent_and_no_fail":
+			return (categoryValues = categoryValues.filter(
+				(obj) =>
+					obj["PrimalDualGap"] <= 1 &&
+					obj["SolverStatus"] === "Normal Completion"
+			));
+		case "gap_less_than_or_equal_to_10_percent_and_no_fail":
+			return (categoryValues = categoryValues.filter(
+				(obj) =>
+					obj["PrimalDualGap"] <= 10 &&
+					obj["SolverStatus"] === "Normal Completion"
+			));
+		case "within_0.1002_percent_of_known_optimal_value_and_no_fail":
+			return (categoryValues = categoryValues.filter(
+				(obj) =>
+					obj["PrimalDualGap"] <= 0.1002 &&
+					obj["SolverStatus"] === "Normal Completion"
+			));
+		case "within_1_percent_of_known_optimal_value_and_no_fail":
+			return (categoryValues = categoryValues.filter(
+				(obj) =>
+					obj["PrimalDualGap"] <= 1 &&
+					obj["SolverStatus"] === "Normal Completion"
+			));
+		case "within_10_percent_of_known_optimal_value_and_no_fail":
+			return (categoryValues = categoryValues.filter(
+				(obj) =>
+					obj["PrimalDualGap"] <= 10 &&
+					obj["SolverStatus"] === "Normal Completion"
+			));
+		case "no_fail":
+			return (categoryValues = categoryValues.filter(
+				(obj) => obj["SolverStatus"] === "Normal Completion"
+			));
+		case "time_greater_than_10_by_at_least_one_solver_and_no_fail":
+			return (categoryValues = categoryValues.filter(
+				(obj) =>
+					obj["SolverTime"] > 10 && obj["SolverStatus"] === "Normal Completion"
+			));
+		case "gap_less_than_or_equal_to_0.1002_percent_and_not_failed":
+			return (categoryValues = categoryValues.filter(
+				(obj) =>
+					obj["PrimalDualGap"] <= 0.1002 &&
+					obj["SolverStatus"] === "Normal Completion"
+			));
+		case "gap_less_than_or_equal_to_1_percent_and_not_failed":
+			return (categoryValues = categoryValues.filter(
+				(obj) =>
+					obj["PrimalDualGap"] <= 1 &&
+					obj["SolverStatus"] === "Normal Completion"
+			));
+		case "gap_less_than_or_equal_to_10_percent_and_not_failed":
+			return (categoryValues = categoryValues.filter(
+				(obj) =>
+					obj["PrimalDualGap"] <= 10 &&
+					obj["SolverStatus"] === "Normal Completion"
+			));
+		case "within_0.1002_percent_of_known_optimal_value_and_not_failed":
+			return (categoryValues = categoryValues.filter(
+				(obj) =>
+					obj["PrimalDualGap"] <= 0.1002 &&
+					obj["SolverStatus"] === "Normal Completion"
+			));
+		case "within_1_percent_of_known_optimal_value_and_not_failed":
+			return (categoryValues = categoryValues.filter(
+				(obj) =>
+					obj["PrimalDualGap"] <= 1 &&
+					obj["SolverStatus"] === "Normal Completion"
+			));
+		case "within_10_percent_of_known_optimal_value_and_not_failed":
+			return (categoryValues = categoryValues.filter(
+				(obj) =>
+					obj["PrimalDualGap"] <= 10 &&
+					obj["SolverStatus"] === "Normal Completion"
+			));
+		default:
+			return categoryValues;
+	}
 }
 
 /**
@@ -443,7 +556,7 @@ export function ExtractAllSolverTimesGapType(
 		terminationStatus = statusMap[terminationStatusSelector];
 	}
 
-	const result = traceData.reduce(
+	let filteredSolvers = traceData.reduce(
 		(
 			acc: { [key: string]: { time: number; InputFileName: string }[] },
 			obj: object
@@ -472,6 +585,8 @@ export function ExtractAllSolverTimesGapType(
 		},
 		{}
 	);
+	const virtualSolvers = ComputeVirtualTimes(filteredSolvers);
+	const result = { ...filteredSolvers, ...virtualSolvers };
 	return result;
 }
 
