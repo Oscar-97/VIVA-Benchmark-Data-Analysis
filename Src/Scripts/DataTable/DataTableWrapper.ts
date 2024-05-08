@@ -13,7 +13,7 @@ import "datatables.net-datetime";
 import {
 	InstanceAttributesTable,
 	SolveAttributesTable,
-	TableDataTrc
+	TraceTableData
 } from "./DataTableBase";
 import {
 	dataTableGenerated,
@@ -54,7 +54,7 @@ export function DisplayDataTable(traceData: TraceData[]): void {
 		/**
 		 * Create the table with the trc data.
 		 */
-		TableDataTrc(traceData);
+		TraceTableData(traceData);
 		InstanceAttributesTable(traceData);
 		SolveAttributesTable(traceData);
 

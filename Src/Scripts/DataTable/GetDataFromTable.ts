@@ -54,7 +54,7 @@ export function GetFilteredRows(): TraceData[] {
 	const headers = table
 		.columns()
 		.header()
-		// @ts-ignore-line
+		// @ts-expect-error 'toArray' does not exist on type 'HTMLElement'
 		.toArray()
 		.map((header) => $(header).text());
 	const objects = data.map((row) => {

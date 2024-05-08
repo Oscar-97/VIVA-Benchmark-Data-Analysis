@@ -75,7 +75,7 @@ function SortKeysByEnum(obj: object): string[] {
  * ```
  * This example will generate a table with two rows and three columns (Solver, SolverTime, and ObjectiveValue).
  */
-export function TableDataTrc(traceData: TraceData[]): void {
+export function TraceTableData(traceData: TraceData[]): void {
 	/**
 	 * Div that contains the data table.
 	 */

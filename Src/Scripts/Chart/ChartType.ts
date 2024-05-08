@@ -1,18 +1,15 @@
-import {
-	AnalyzeDataByCategory,
-	ExtractStatusMessages,
-	ExtractAllSolverTimes,
-	ExtractAllSolverTimesGapType
-} from "../DataProcessing/ResultComputations/ComputeResults";
 import { CreateChart } from "./CreateChart";
 import { StatisticsTable } from "../DataTable/DataTableBase";
 import { gapTypeSelector } from "../Elements/Elements";
 import { DataTablesConfigurationStats } from "../DataTable/DataTableWrapper";
 import { TraceData } from "../Interfaces/Interfaces";
-import {
-	ComputeVirtualTimesTraceData
-} from "../DataProcessing/ResultComputations/ComputeVirtualSolvers";
 import { Values } from "../Constants/Values";
+import {
+	ComputeStatisticalMeasures,
+	ExtractAllSolverTimes,
+	ExtractAllSolverTimesGapType,
+	ExtractStatusMessages
+} from "../DataProcessing/ChartsComputations/ComputeChartData";
 
 /**
  * This function prepares and plots data by a specific category.
@@ -33,7 +30,12 @@ export function PlotDataByCategory(
 	borderColor: string;
 	backgroundColor: string;
 }[] {
-	const data = AnalyzeDataByCategory(traceData, category, filterType);
+	const data = ComputeStatisticalMeasures(
+		traceData,
+		category,
+		defaultTime,
+		filterType
+	);
 	const solverNames = Object.keys(data);
 
 	const averageData = {
@@ -106,17 +108,12 @@ export function PlotDataByCategory(
 	 * Draw annotations for the virtual best and worst solvers if SolverTime is used.
 	 */
 	if (category === "SolverTime") {
-		if (!defaultTime) {
-			defaultTime = Values.DEFAULT_TIME;
-		}
-		const extraData = ComputeVirtualTimesTraceData(traceData, defaultTime);
-		const virtualData = AnalyzeDataByCategory(extraData, category);
 		annotationOptions = {
 			annotations: {
 				line1: {
 					type: "line",
-					yMin: virtualData["VirtualBestSolver"].avgValue,
-					yMax: virtualData["VirtualBestSolver"].avgValue,
+					yMin: data["VirtualBestSolver"].avgValue,
+					yMax: data["VirtualBestSolver"].avgValue,
 					borderColor: "rgb(124,252,0)",
 					borderShadowColor: "rgba(0,0,0, 0)",
 					shadowOffsetY: 2,
@@ -129,8 +126,8 @@ export function PlotDataByCategory(
 				},
 				line2: {
 					type: "line",
-					yMin: virtualData["VirtualWorstSolver"].avgValue,
-					yMax: virtualData["VirtualWorstSolver"].avgValue,
+					yMin: data["VirtualWorstSolver"].avgValue,
+					yMax: data["VirtualWorstSolver"].avgValue,
 					borderColor: "rgb(255, 99, 132)",
 					borderShadowColor: "rgba(0,0,0, 0)",
 					shadowOffsetY: 2,
@@ -258,7 +255,7 @@ export function PlotStatusMessages(
  *
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
-export function PlotAllSolverTimes(
+export function PlotSolverTimes(
 	traceData: TraceData[]
 ): { label: string; data: { x: string; y: number }[]; showLine: boolean }[] {
 	const solverTimes = ExtractAllSolverTimes(traceData);
@@ -331,7 +328,7 @@ export function PlotAllSolverTimes(
  *
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
-export function PlotAbsolutePerformanceProfileSolverTimes(
+export function PlotAbsolutePerformanceProfile(
 	traceData: TraceData[],
 	defaultTime?: number | undefined,
 	gapLimit?: number | undefined

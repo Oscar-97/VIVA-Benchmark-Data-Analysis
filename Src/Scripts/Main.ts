@@ -37,8 +37,8 @@ import {
 import {
 	PlotDataByCategory,
 	PlotStatusMessages,
-	PlotAllSolverTimes,
-	PlotAbsolutePerformanceProfileSolverTimes,
+	PlotSolverTimes,
+	PlotAbsolutePerformanceProfile,
 	PlotSolutionTimes
 } from "./Chart/ChartType";
 
@@ -134,10 +134,7 @@ import {
 	DisplayWarningNotification
 } from "./Elements/Events/DisplayAlertNotification";
 import { ReleaseVersionTag } from "./Elements/ReleaseVersionTag";
-import {
-	CompareSolvers,
-	ExtractAllSolverTimesGapType
-} from "./DataProcessing/ResultComputations/ComputeResults";
+import { CompareSolvers } from "./DataProcessing/ResultComputations/ComputeResults";
 import { Keys } from "./Constants/Keys";
 import {
 	ChartMessages,
@@ -150,6 +147,7 @@ import { PageTitles } from "./Constants/PageTitles";
 import { TraceData } from "./Interfaces/Interfaces";
 import { Values } from "./Constants/Values";
 import { ActivateDemoMode, NotifyDemoMode } from "./Actions/DemoMode";
+import { ExtractAllSolverTimesGapType } from "./DataProcessing/ChartsComputations/ComputeChartData";
 //#endregion
 
 /**
@@ -557,7 +555,7 @@ function HandlePlotPages(traceData: TraceData[]): void {
 				defaultTime = defaultTimeDirectInput.value;
 				gapLimit = gapLimitDirectInput.value;
 
-				chartData = PlotAbsolutePerformanceProfileSolverTimes(
+				chartData = PlotAbsolutePerformanceProfile(
 					traceData,
 					defaultTime,
 					gapLimit
@@ -569,14 +567,14 @@ function HandlePlotPages(traceData: TraceData[]): void {
 				chartData = PlotDataByCategory(
 					traceData,
 					"SolverTime",
-					"Average, min, max and std for solver time",
+					`Average, min, max and std for solver time. ${defaultTime} as default time for NaN values.`,
 					defaultTime,
 					filterType
 				);
 				break;
 			}
 			case PageTitles.SOLVER_TIME: {
-				chartData = PlotAllSolverTimes(traceData);
+				chartData = PlotSolverTimes(traceData);
 				break;
 			}
 			case PageTitles.NUMBER_OF_NODES: {

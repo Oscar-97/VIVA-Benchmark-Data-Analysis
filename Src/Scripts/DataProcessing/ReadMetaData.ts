@@ -81,6 +81,8 @@ export function GetInstanceInformation(
  * // ];
  * ```
  */
+
+// eslint-disable-next-line complexity
 export function GetBestKnownBounds(
 	unprocessedSolutionData: string[]
 ): object[] {
