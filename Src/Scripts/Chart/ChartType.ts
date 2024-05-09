@@ -23,7 +23,8 @@ export function PlotDataByCategory(
 	category: string,
 	title: string,
 	defaultTime?: number | undefined,
-	filterType?: string
+	filterType?: string,
+	subtitle?: string
 ): {
 	label: string;
 	data: number[];
@@ -149,7 +150,8 @@ export function PlotDataByCategory(
 		title,
 		scaleOptions,
 		zoomOptions,
-		annotationOptions
+		annotationOptions,
+		subtitle
 	);
 	StatisticsTable(data, title);
 	DataTablesConfigurationStats("#statisticsTable_inner");
@@ -468,11 +470,13 @@ export function PlotAbsolutePerformanceProfile(
 		"line",
 		chartData,
 		null,
-		`Absolute performance profile (${selectedGapType} <= ${
-			gapLimit || Values.DEFAULT_GAP_LIMIT
-		}% and not failed)`,
+		"Absolute performance profile",
 		scaleOptions,
-		zoomOptions
+		zoomOptions,
+		null,
+		`${selectedGapType} <= ${
+			gapLimit || Values.DEFAULT_GAP_LIMIT
+		}% and not failed.`
 	);
 	return chartData;
 }
@@ -483,7 +487,7 @@ export function PlotAbsolutePerformanceProfile(
  */
 export function PlotSolutionTimes(traceData: TraceData[]): object[] {
 	const data = traceData.reduce((acc, obj) => {
-		const bubbleSize = obj.SolverTime / 100;
+		const bubbleSize = Math.round((obj.SolverTime / 100) * 100) / 100;
 		if (!acc[obj.SolverName]) {
 			acc[obj.SolverName] = {
 				label: obj.SolverName,
@@ -540,9 +544,11 @@ export function PlotSolutionTimes(traceData: TraceData[]): object[] {
 		"bubble",
 		chartData,
 		null,
-		"Solution times (Radius = SolverTime / 100)",
+		"Solution time",
 		scaleOptions,
-		zoomOptions
+		zoomOptions,
+		null,
+		"The radius of the bubble is obtained by dividing the SolverTime by 100 for easier scaling."
 	);
 	return chartData as object[];
 }

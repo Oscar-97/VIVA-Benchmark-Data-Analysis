@@ -64,7 +64,8 @@ export function CreateChart(
 	title,
 	scaleOptions = null,
 	zoomOptions = null,
-	annotationOptions = null
+	annotationOptions = null,
+	subtitle = null
 ): void {
 	/**
 	 * Destroy the chart if it already exist.
@@ -99,6 +100,10 @@ export function CreateChart(
 						size: 20,
 						family: `system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"`
 					}
+				},
+				subtitle: {
+					display: subtitle ? true : false,
+					text: subtitle
 				},
 				zoom: zoomOptions,
 				annotation: annotationOptions

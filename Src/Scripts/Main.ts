@@ -532,6 +532,10 @@ function HandleReportPage(traceData: TraceData[]): void {
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 function HandlePlotPages(traceData: TraceData[]): void {
+	defaultTime = Number(defaultTimeInput.value);
+	if (!defaultTime) {
+		defaultTime = Values.DEFAULT_TIME;
+	}
 	/**
 	 * Save to local storage when clicking on the "Save Data" button.
 	 */
@@ -567,9 +571,10 @@ function HandlePlotPages(traceData: TraceData[]): void {
 				chartData = PlotDataByCategory(
 					traceData,
 					"SolverTime",
-					`Average, min, max and std for solver time. ${defaultTime} as default time for NaN values.`,
+					"Average, min, max and std for solver time",
 					defaultTime,
-					filterType
+					filterType,
+					`${defaultTime} as default time for NaN values.`
 				);
 				break;
 			}

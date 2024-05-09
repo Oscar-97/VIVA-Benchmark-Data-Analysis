@@ -291,7 +291,7 @@ export function ExtractAllSolverTimesGapType(
 	gapLimit?: number | undefined,
 	terminationStatusSelector?: string
 ): object {
-	let defaultMaximumTime: number;
+	let defaultTimeFallback: number;
 	let primalGapToCompare: number;
 	let terminationStatus: string;
 
@@ -303,14 +303,14 @@ export function ExtractAllSolverTimesGapType(
 	}
 
 	if (!defaultTime || defaultTime < 0) {
-		defaultMaximumTime = Values.DEFAULT_TIME;
+		defaultTimeFallback = Values.DEFAULT_TIME;
 		defaultTimeDirectInput.value = Values.DEFAULT_TIME.toString();
 	} else {
-		defaultMaximumTime = defaultTime;
+		defaultTimeFallback = defaultTime;
 	}
 
 	if (!terminationStatusSelector) {
-		terminationStatus = "Normal Completion";
+		terminationStatus = undefined;
 	} else {
 		const statusMap: { [key: number]: string } = {
 			1: "Normal Completion",
@@ -339,10 +339,12 @@ export function ExtractAllSolverTimesGapType(
 				acc[obj["SolverName"]] = [];
 			}
 			if (!isNaN(Number(obj["SolverTime"]))) {
+				const isTerminationStatusValid =
+					typeof terminationStatus === "undefined" ||
+					obj["SolverStatus"] === terminationStatus;
 				if (
 					obj[selectedGapType] <= primalGapToCompare &&
-					Number(obj["SolverTime"]) <= defaultMaximumTime &&
-					obj["SolverStatus"] === terminationStatus
+					isTerminationStatusValid
 				) {
 					acc[obj["SolverName"]].push({
 						time: Number(obj["SolverTime"]),
@@ -351,7 +353,7 @@ export function ExtractAllSolverTimesGapType(
 				}
 			} else {
 				acc[obj["SolverName"]].push({
-					time: defaultMaximumTime,
+					time: defaultTimeFallback,
 					InputFileName: obj["InputFileName"]
 				});
 			}
@@ -359,7 +361,7 @@ export function ExtractAllSolverTimesGapType(
 		},
 		{}
 	);
-	console.log("Filtered Solvers", filteredSolvers);
+
 	const virtualSolvers = ComputeVirtualTimes(filteredSolvers);
 	const result = { ...filteredSolvers, ...virtualSolvers };
 	return result;
