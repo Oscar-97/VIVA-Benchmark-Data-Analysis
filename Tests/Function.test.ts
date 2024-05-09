@@ -4,7 +4,7 @@ jest.mock("../Src/Scripts/Elements/Elements", () => ({
 	gapLimitDirectInput: jest.fn()
 }));
 
-jest.doMock("../Src/Scripts/DataProcessing/GetExtraData", () => {
+jest.doMock("../Src/Scripts/DataProcessing/ReadMetaData", () => {
 	return {
 		DOMElement: jest.fn()
 	};
@@ -16,12 +16,15 @@ import {
 	CalculateDualBound,
 	CalculateGap,
 	CompareSolvers,
-	AnalyzeDataByCategory,
-	ExtractAllSolverTimes,
-	ExtractAllSolverTimesGapType,
 	SetModelStatus,
 	SetSolverStatus
-} from "../Src/Scripts/DataProcessing/CalculateResults";
+} from "../Src/Scripts/DataProcessing/ResultComputations/ComputeResults";
+
+import {
+	ComputeStatisticalMeasures,
+	ExtractAllSolverTimes,
+	ExtractAllSolverTimesGapType,
+} from "../Src/Scripts/DataProcessing/ChartsComputations/ComputeChartData"
 
 /**
  * Mockup data.
@@ -817,15 +820,15 @@ describe("Coverage in computation functions with mockup data.", () => {
 	describe("ExtractAllSolverTimesGapType", () => {
 		it("should return an empty object if traceData is empty", () => {
 			const result = ExtractAllSolverTimesGapType([], "PrimalGap");
-			expect(result).toEqual({});
+			expect(result).toEqual({"Virtual Best Solver": [], "Virtual Worst Solver": [],});
 		});
 	});
 
-	describe("AnalyzeDataByCategory", () => {
+	describe("ComputeStatisticalMeasures", () => {
 		const category = "SolverTime";
 
 		test("Calculate the statistics table correctly.", () => {
-			const result = AnalyzeDataByCategory(mockupTraceData, category);
+			const result = ComputeStatisticalMeasures(mockupTraceData, category);
 
 			expect(result).toEqual({
 				TestSolver1: {
@@ -841,6 +844,30 @@ describe("Coverage in computation functions with mockup data.", () => {
 					p90Value: expect.any(Number)
 				},
 				TestSolver2: {
+					avgValue: expect.any(Number),
+					minValue: expect.any(Number),
+					maxValue: expect.any(Number),
+					stdValue: expect.any(Number),
+					sumValue: expect.any(Number),
+					p10Value: expect.any(Number),
+					p25Value: expect.any(Number),
+					p50Value: expect.any(Number),
+					p75Value: expect.any(Number),
+					p90Value: expect.any(Number)
+				},
+				VirtualBestSolver: {
+					avgValue: expect.any(Number),
+					minValue: expect.any(Number),
+					maxValue: expect.any(Number),
+					stdValue: expect.any(Number),
+					sumValue: expect.any(Number),
+					p10Value: expect.any(Number),
+					p25Value: expect.any(Number),
+					p50Value: expect.any(Number),
+					p75Value: expect.any(Number),
+					p90Value: expect.any(Number)
+				},
+				VirtualWorstSolver: {
 					avgValue: expect.any(Number),
 					minValue: expect.any(Number),
 					maxValue: expect.any(Number),
@@ -878,6 +905,32 @@ describe("Coverage in computation functions with mockup data.", () => {
 				p50Value: 453.4465,
 				p75Value: 677.2088,
 				p90Value: 811.4661
+			});
+
+			expect(result.VirtualBestSolver).toEqual({
+				avgValue: 226.8737,
+				maxValue: 900.971,
+				minValue: 0.04112087,
+				p10Value: 0.196971,
+				p25Value: 0.4307462,
+				p50Value: 3.241311,
+				p75Value: 229.6843,
+				p90Value: 632.4563,
+				stdValue: 449.4061,
+				sumValue: 907.4947,
+			});
+
+			expect(result.VirtualWorstSolver).toEqual({
+				avgValue: 226.8737,
+				maxValue: 900.971,
+				minValue: 0.04112087,
+				p10Value: 0.196971,
+				p25Value: 0.4307462,
+				p50Value: 3.241311,
+				p75Value: 229.6843,
+				p90Value: 632.4563,
+				stdValue: 449.4061,
+				sumValue: 907.4947
 			});
 		});
 	});
