@@ -37,32 +37,50 @@ export function PlotDataByCategory(
 		defaultTime,
 		filterType
 	);
-	const solverNames = Object.keys(data);
+	const solverNames = Object.keys(data).filter(
+		(name) => name !== "VirtualBestSolver" && name !== "VirtualWorstSolver"
+	);
 
 	const averageData = {
 		label: "Average",
-		data: solverNames.map((name) => data[name].avgValue),
+		data: solverNames
+			.filter(
+				(name) => name !== "VirtualBestSolver" && name !== "VirtualWorstSolver"
+			)
+			.map((name) => data[name].avgValue),
 		borderColor: "#007bff",
 		backgroundColor: "#007bffAA"
 	};
 
 	const minData = {
 		label: "Min",
-		data: solverNames.map((name) => data[name].minValue),
+		data: solverNames
+			.filter(
+				(name) => name !== "VirtualBestSolver" && name !== "VirtualWorstSolver"
+			)
+			.map((name) => data[name].minValue),
 		borderColor: "#28a745",
 		backgroundColor: "#28a745AA"
 	};
 
 	const maxData = {
 		label: "Max",
-		data: solverNames.map((name) => data[name].maxValue),
+		data: solverNames
+			.filter(
+				(name) => name !== "VirtualBestSolver" && name !== "VirtualWorstSolver"
+			)
+			.map((name) => data[name].maxValue),
 		borderColor: "#dc3545",
 		backgroundColor: "#dc3545AA"
 	};
 
 	const stdData = {
 		label: "Std",
-		data: solverNames.map((name) => data[name].stdValue),
+		data: solverNames
+			.filter(
+				(name) => name !== "VirtualBestSolver" && name !== "VirtualWorstSolver"
+			)
+			.map((name) => data[name].stdValue),
 		borderColor: "#6f42c1",
 		backgroundColor: "#6f42c1AA"
 	};

@@ -23,8 +23,8 @@ import {
 import {
 	ComputeStatisticalMeasures,
 	ExtractAllSolverTimes,
-	ExtractAllSolverTimesGapType,
-} from "../Src/Scripts/DataProcessing/ChartsComputations/ComputeChartData"
+	ExtractAllSolverTimesGapType
+} from "../Src/Scripts/DataProcessing/ChartsComputations/ComputeChartData";
 
 /**
  * Mockup data.
@@ -820,7 +820,10 @@ describe("Coverage in computation functions with mockup data.", () => {
 	describe("ExtractAllSolverTimesGapType", () => {
 		it("should return an empty object if traceData is empty", () => {
 			const result = ExtractAllSolverTimesGapType([], "PrimalGap");
-			expect(result).toEqual({"Virtual Best Solver": [], "Virtual Worst Solver": [],});
+			expect(result).toEqual({
+				"Virtual Best Solver": [],
+				"Virtual Worst Solver": []
+			});
 		});
 	});
 
@@ -917,7 +920,7 @@ describe("Coverage in computation functions with mockup data.", () => {
 				p75Value: 229.6843,
 				p90Value: 632.4563,
 				stdValue: 449.4061,
-				sumValue: 907.4947,
+				sumValue: 907.4947
 			});
 
 			expect(result.VirtualWorstSolver).toEqual({

@@ -36,6 +36,27 @@ export function ImportDataEvents(
 	fileExtensionType?: string,
 	demoModeName?: string
 ): void {
+	librarySelector.disabled = true;
+	if (document.title === PageTitles.TABLE) {
+		TablePageElements(fileExtensionType, demoModeName);
+	} else if (document.title === PageTitles.COMPARE_SOLVERS) {
+		CompareSolversPageElements(fileExtensionType);
+	} else {
+		PlotPagesElements(fileExtensionType);
+	}
+
+	if (!sessionStorage.getItem(Keys.SAVED_STORAGE_NOTIFICATION)) {
+		DisplayAlertNotification(message);
+	}
+}
+
+/**
+ * Manage the elements on the table page after data import.
+ */
+function TablePageElements(
+	fileExtensionType?: string,
+	demoModeName?: string
+): void {
 	try {
 		if (dataTableGeneratedWrapper) {
 			dataTableGeneratedWrapper.remove();
@@ -48,41 +69,44 @@ export function ImportDataEvents(
 		console.error("Could not remove elements: ", err);
 	}
 
-	librarySelector.disabled = true;
-
-	if (document.title === PageTitles.TABLE) {
-		if (demoModeName === "demo1") {
-			demoDataSelector.value = "Demo_1";
-		}
-
-		if (demoModeName === "demo2") {
-			demoDataSelector.value = "Demo_2";
-		}
-		viewTableButton.disabled = false;
-		showSelectedRowsButton.disabled = true;
-		importDataButton.disabled = true;
-		showSelectedRowsButton.disabled = true;
-		if (fileExtensionType === "json") {
-			deleteLocalStorageButton.disabled = false;
-		}
-	} else if (document.title === PageTitles.COMPARE_SOLVERS) {
-		compareSolversButton.disabled = false;
-		importDataButton.disabled = true;
-		saveLocalStorageButton.disabled = true;
-		if (fileExtensionType === "json") {
-			deleteLocalStorageButton.disabled = false;
-		}
-	} else {
-		viewPlotsButton.disabled = false;
-		importDataButton.disabled = true;
-		saveLocalStorageButton.disabled = true;
-		if (fileExtensionType === "json") {
-			deleteLocalStorageButton.disabled = false;
-		}
+	if (demoModeName === "demo1") {
+		demoDataSelector.value = "Demo_1";
 	}
 
-	if (!sessionStorage.getItem(Keys.SAVED_STORAGE_NOTIFICATION)) {
-		DisplayAlertNotification(message);
+	if (demoModeName === "demo2") {
+		demoDataSelector.value = "Demo_2";
+	}
+	viewTableButton.disabled = false;
+	showSelectedRowsButton.disabled = true;
+	importDataButton.disabled = true;
+	showSelectedRowsButton.disabled = true;
+	if (fileExtensionType === "json") {
+		deleteLocalStorageButton.disabled = false;
+	}
+}
+
+/**
+ * Manage the elements on the compare solvers page after data import.
+ * @param fileExtensionType
+ */
+function CompareSolversPageElements(fileExtensionType?): void {
+	compareSolversButton.disabled = false;
+	importDataButton.disabled = true;
+	saveLocalStorageButton.disabled = true;
+	if (fileExtensionType === "json") {
+		deleteLocalStorageButton.disabled = false;
+	}
+}
+
+/**
+ *  Manage the elements on the plot pages after data import.
+ */
+function PlotPagesElements(fileExtensionType): void {
+	viewPlotsButton.disabled = false;
+	importDataButton.disabled = true;
+	saveLocalStorageButton.disabled = true;
+	if (fileExtensionType === "json") {
+		deleteLocalStorageButton.disabled = false;
 	}
 }
 

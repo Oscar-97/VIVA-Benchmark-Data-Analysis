@@ -148,6 +148,7 @@ import { TraceData } from "./Interfaces/Interfaces";
 import { Values } from "./Constants/Values";
 import { ActivateDemoMode, NotifyDemoMode } from "./Actions/DemoMode";
 import { ExtractAllSolverTimesGapType } from "./DataProcessing/ChartsComputations/ComputeChartData";
+import { TraceHeaderMap } from "./Constants/TraceHeaders";
 //#endregion
 
 /**
@@ -574,7 +575,7 @@ function HandlePlotPages(traceData: TraceData[]): void {
 					"Average, min, max and std for solver time",
 					defaultTime,
 					filterType,
-					`${defaultTime} as default time for NaN values.`
+					`${defaultTime} is set as default time for NaN values.`
 				);
 				break;
 			}
@@ -604,10 +605,14 @@ function HandlePlotPages(traceData: TraceData[]): void {
 			}
 			case PageTitles.SOLUTION_QUALITY: {
 				const category = categorySelector.value;
+				const categoryTitle = TraceHeaderMap[category];
 				chartData = PlotDataByCategory(
 					traceData,
 					category,
-					`Average, min, max and std for ${category}`
+					`Average, min, max and std for ${categoryTitle}`,
+					null,
+					null,
+					"Infinite and NaN values are excluded from the calculations."
 				);
 				break;
 			}

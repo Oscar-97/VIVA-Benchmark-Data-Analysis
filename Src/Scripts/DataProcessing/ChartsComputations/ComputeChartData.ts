@@ -44,6 +44,13 @@ export function ComputeStatisticalMeasures(
 	} else {
 		data = resultsData;
 	}
+	if (
+		category !== "NumberOfNodes" &&
+		category !== "NumberOfIterations" &&
+		category !== "SolverTime"
+	) {
+		data = data.filter((obj) => isFinite(Number(obj[category])));
+	}
 	const categoryValues = data.reduce((acc, curr) => {
 		const parsedValue = Number(curr[category]);
 		if (!isNaN(parsedValue)) {

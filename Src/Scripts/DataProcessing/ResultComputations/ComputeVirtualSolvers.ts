@@ -27,19 +27,29 @@ export function ComputeVirtualTimesTraceData(
 		const bestTime = Math.min(...times);
 		const worstTime = Math.max(...times);
 
+		const primalGaps = groupedByFileName[fileName].map(
+			(item) => item.PrimalGap
+		);
+		const bestPrimalGap = Math.min(...primalGaps);
+		const worstPrimalGap = Math.max(...primalGaps);
+
+		const dualGaps = groupedByFileName[fileName].map((item) => item.DualGap);
+		const bestDualGap = Math.min(...dualGaps);
+		const worstDualGap = Math.max(...dualGaps);
+
 		result.push({
 			InputFileName: fileName,
 			SolverName: "VirtualBestSolver",
 			SolverTime: bestTime,
-			PrimalGap: 0, // add these
-			DualGap: 0 // add these
+			PrimalGap: bestPrimalGap,
+			DualGap: bestDualGap
 		});
 		result.push({
 			InputFileName: fileName,
 			SolverName: "VirtualWorstSolver",
 			SolverTime: worstTime,
-			PrimalGap: 0, // add these
-			DualGap: 0 // add these
+			PrimalGap: worstPrimalGap,
+			DualGap: worstDualGap
 		});
 	});
 	return result;
@@ -59,12 +69,10 @@ export function ComputeVirtualTimes(data): {
 	const worstEntries: object = {};
 
 	for (const group of Object.values(data)) {
-		console.log("Group", group);
 		/* eslint-disable  @typescript-eslint/no-explicit-any */
 		for (const entry of group as any[]) {
 			// eslint-disable-next-line @typescript-eslint/naming-convention
 			const { time, InputFileName } = entry;
-			console.log("Time: ", time, "InputFileName: ", InputFileName);
 
 			if (
 				!bestEntries[InputFileName] ||
@@ -84,13 +92,11 @@ export function ComputeVirtualTimes(data): {
 
 	// All best counts all best times
 	for (const [, record] of Object.entries(bestEntries)) {
-		console.log("Best: ", record);
 		bestWorst["Virtual Best Solver"].push(record);
 	}
 
 	// But all the worst times are counted instead of just the worst time...
 	for (const [, record] of Object.entries(worstEntries)) {
-		console.log("Worst: ", record);
 		bestWorst["Virtual Worst Solver"].push(record);
 	}
 	return bestWorst;
