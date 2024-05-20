@@ -324,77 +324,32 @@
             >
               <option value="None">None</option>
               <option value="no_fail_by_all_solver">
-                No fail by all solvers
+                No fail for all solvers (Normal Completion only)
               </option>
               <option
-                value="time_greater_than_10_by_at_least_one_solver_and_no_fail"
+                value="time_less_than_10_by_at_least_one_solver_and_no_fail"
               >
-                Time &gt;= 10.0 by at least one solver and no fail for all
-                solvers
+                Time &lt;= 10.0 and no fail for all solvers
               </option>
               <option
-                value="gap_less_than_or_equal_to_0.1002_percent_and_no_fail"
+                value="solver_primal_gap_less_than_or_equal_to_1_percent_and_no_fail"
               >
-                Gap &lt;= 0.1002% and no fail for all solvers
-              </option>
-              <option value="gap_less_than_or_equal_to_1_percent_and_no_fail">
-                Gap &lt;= 1.0% and no fail for all solvers
-              </option>
-              <option value="gap_less_than_or_equal_to_10_percent_and_no_fail">
-                Gap &lt;= 10.0% and no fail for all solvers
+                SolverPrimalGap[%] &lt;= 1.0% and no fail for all solvers
               </option>
               <option
-                value="within_0.1002_percent_of_known_optimal_value_and_no_fail"
+                value="solver_primal_gap_less_than_or_equal_to_10_percent_and_no_fail"
               >
-                Within 0.1002% of known optimal value and no fail for all
-                solvers
+                SolverPrimalGap[%] &lt;= 10.0% and no fail for all solvers
               </option>
               <option
-                value="within_1_percent_of_known_optimal_value_and_no_fail"
+                value="solver_dual_gap_less_than_or_equal_to_1_percent_and_not_failed"
               >
-                Within 1.0% of known optimal value and no fail for all solvers
+                SolverDualGap[%] &lt;= 1.0% and no fail for all solvers
               </option>
               <option
-                value="within_10_percent_of_known_optimal_value_and_no_fail"
+                value="solver_dual_gap_less_than_or_equal_to_10_percent_and_not_failed"
               >
-                Within 10.0% of known optimal value and no fail for all solvers
-              </option>
-              <option value="no_fail">No fail</option>
-              <option
-                value="time_greater_than_10_by_at_least_one_solver_and_no_fail"
-              >
-                Time &gt;= 10.0 by at least one solver and no fail for all
-                solvers
-              </option>
-              <option
-                value="gap_less_than_or_equal_to_0.1002_percent_and_not_failed"
-              >
-                Gap &lt;= 0.1002% and not failed
-              </option>
-              <option
-                value="gap_less_than_or_equal_to_1_percent_and_not_failed"
-              >
-                Gap &lt;= 1.0% and not failed
-              </option>
-              <option
-                value="gap_less_than_or_equal_to_10_percent_and_not_failed"
-              >
-                Gap &lt;= 10.0% and not failed
-              </option>
-              <option
-                value="within_0.1002_percent_of_known_optimal_value_and_not_failed"
-              >
-                Within 0.1002% of known optimal value and not failed
-              </option>
-              <option
-                value="within_1_percent_of_known_optimal_value_and_not_failed"
-              >
-                Within 1.0% of known optimal value and not failed
-              </option>
-              <option
-                value="within_10_percent_of_known_optimal_value_and_not_failed"
-              >
-                Within 10.0% of known optimal value and not failed
+                SolverDualGap[%] &lt;= 10.0% and no fail for all solvers
               </option>
             </select>
             <label for="filterTypeSelector">Filter type</label>

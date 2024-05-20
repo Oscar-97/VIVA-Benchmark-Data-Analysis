@@ -109,7 +109,6 @@ export function ComputeStatisticalMeasures(
 
 /**
  * This function filters the data based on the filter type provided.
- * TODO: Still in progress, verify the filter types and update the function accordingly.
  * @param filterType
  */
 // eslint-disable-next-line complexity
@@ -125,88 +124,36 @@ function FilterByType(
 		case "time_greater_than_10_by_at_least_one_solver_and_no_fail":
 			return (categoryValues = categoryValues.filter(
 				(obj) =>
-					obj["SolverTime"] > 10 && obj["SolverStatus"] === "Normal Completion"
+					obj["SolverTime"] <= 10 && obj["SolverStatus"] === "Normal Completion"
 			));
-		case "gap_less_than_or_equal_to_0.1002_percent_and_no_fail":
 			return (categoryValues = categoryValues.filter(
 				(obj) =>
-					obj["PrimalDualGap"] <= 0.1002 &&
+					obj["PrimalGap"] <= 0.1002 &&
 					obj["SolverStatus"] === "Normal Completion"
 			));
-		case "gap_less_than_or_equal_to_1_percent_and_no_fail":
+		case "solver_primal_gap_less_than_or_equal_to_1_percent_and_no_fail":
 			return (categoryValues = categoryValues.filter(
 				(obj) =>
-					obj["PrimalDualGap"] <= 1 &&
-					obj["SolverStatus"] === "Normal Completion"
+					obj["PrimalGap"] <= 1 && obj["SolverStatus"] === "Normal Completion"
 			));
-		case "gap_less_than_or_equal_to_10_percent_and_no_fail":
+		case "solver_primal_gap_less_than_or_equal_to_10_percent_and_no_fail":
 			return (categoryValues = categoryValues.filter(
 				(obj) =>
-					obj["PrimalDualGap"] <= 10 &&
-					obj["SolverStatus"] === "Normal Completion"
+					obj["PrimalGap"] <= 10 && obj["SolverStatus"] === "Normal Completion"
 			));
-		case "within_0.1002_percent_of_known_optimal_value_and_no_fail":
+		case "solver_dual_gap_less_than_or_equal_to_1_percent_and_not_failed":
 			return (categoryValues = categoryValues.filter(
 				(obj) =>
-					obj["PrimalDualGap"] <= 0.1002 &&
-					obj["SolverStatus"] === "Normal Completion"
+					obj["DualGap"] <= 1 && obj["SolverStatus"] === "Normal Completion"
 			));
-		case "within_1_percent_of_known_optimal_value_and_no_fail":
+		case "solver_dual_gap_less_than_or_equal_to_10_percent_and_not_failed":
 			return (categoryValues = categoryValues.filter(
 				(obj) =>
-					obj["PrimalDualGap"] <= 1 &&
-					obj["SolverStatus"] === "Normal Completion"
+					obj["DualGap"] <= 10 && obj["SolverStatus"] === "Normal Completion"
 			));
-		case "within_10_percent_of_known_optimal_value_and_no_fail":
 			return (categoryValues = categoryValues.filter(
 				(obj) =>
-					obj["PrimalDualGap"] <= 10 &&
-					obj["SolverStatus"] === "Normal Completion"
-			));
-		case "no_fail":
-			return (categoryValues = categoryValues.filter(
-				(obj) => obj["SolverStatus"] === "Normal Completion"
-			));
-		case "time_greater_than_10_by_at_least_one_solver_and_no_fail":
-			return (categoryValues = categoryValues.filter(
-				(obj) =>
-					obj["SolverTime"] > 10 && obj["SolverStatus"] === "Normal Completion"
-			));
-		case "gap_less_than_or_equal_to_0.1002_percent_and_not_failed":
-			return (categoryValues = categoryValues.filter(
-				(obj) =>
-					obj["PrimalDualGap"] <= 0.1002 &&
-					obj["SolverStatus"] === "Normal Completion"
-			));
-		case "gap_less_than_or_equal_to_1_percent_and_not_failed":
-			return (categoryValues = categoryValues.filter(
-				(obj) =>
-					obj["PrimalDualGap"] <= 1 &&
-					obj["SolverStatus"] === "Normal Completion"
-			));
-		case "gap_less_than_or_equal_to_10_percent_and_not_failed":
-			return (categoryValues = categoryValues.filter(
-				(obj) =>
-					obj["PrimalDualGap"] <= 10 &&
-					obj["SolverStatus"] === "Normal Completion"
-			));
-		case "within_0.1002_percent_of_known_optimal_value_and_not_failed":
-			return (categoryValues = categoryValues.filter(
-				(obj) =>
-					obj["PrimalDualGap"] <= 0.1002 &&
-					obj["SolverStatus"] === "Normal Completion"
-			));
-		case "within_1_percent_of_known_optimal_value_and_not_failed":
-			return (categoryValues = categoryValues.filter(
-				(obj) =>
-					obj["PrimalDualGap"] <= 1 &&
-					obj["SolverStatus"] === "Normal Completion"
-			));
-		case "within_10_percent_of_known_optimal_value_and_not_failed":
-			return (categoryValues = categoryValues.filter(
-				(obj) =>
-					obj["PrimalDualGap"] <= 10 &&
-					obj["SolverStatus"] === "Normal Completion"
+					obj["PrimalGap"] <= 10 && obj["SolverStatus"] === "Normal Completion"
 			));
 		default:
 			return categoryValues;
