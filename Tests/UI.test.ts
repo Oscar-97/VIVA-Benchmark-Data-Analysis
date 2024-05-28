@@ -74,10 +74,8 @@ describe("UI tests", () => {
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[1]/a");
 			await page.waitForTimeout(2000);
-			const absolutePerformanceProfileTitle = await page.title();
-			expect(absolutePerformanceProfileTitle).toBe(
-				"Absolute Performance Profile"
-			);
+			const performanceProfileTitle = await page.title();
+			expect(performanceProfileTitle).toBe("Performance Profile");
 			await page.screenshot({
 				path: "TestScreenshots/absoluteperformanceprofilepage.png"
 			});
@@ -619,8 +617,8 @@ describe("UI tests", () => {
 			});
 		}
 
-		test("Absolute Performance Profile Page", async () => {
-			await RunPlotOperations("../Src/Pages/absolute_performance_profile.html");
+		test("Performance Profile Page", async () => {
+			await RunPlotOperations("../Src/Pages/performance_profile.html");
 		}, 10000);
 
 		test("Solver Time per Solver Page", async () => {

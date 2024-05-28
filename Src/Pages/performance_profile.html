@@ -10,7 +10,7 @@
       content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers."
     />
     <!-- Title and icon -->
-    <title id="ReportTitle">Absolute Performance Profile</title>
+    <title id="ReportTitle">Performance Profile</title>
     <link rel="icon" href="../CSS/tab_icon.png" />
     <!-- Styling-->
     <link href="../../Dist/main.css" rel="stylesheet" />
@@ -61,7 +61,7 @@
               >
                 <li>
                   <span class="dropdown-item active"
-                    ><i class="bi bi-graph-up-arrow"></i> Absolute Performance
+                    ><i class="bi bi-graph-up-arrow"></i> Performance
                     Profile</span
                   >
                 </li>
@@ -231,9 +231,9 @@
           disabled="true"
           data-toggle="tooltip"
           data-placement="top"
-          title="View absolute performance profile."
+          title="View performance profile."
         >
-          <i class="bi bi-diagram-2"></i> View Absolute Performance Profile
+          <i class="bi bi-diagram-2"></i> View Performance Profile
         </button>
       </div>
       <div class="col-auto">
@@ -315,6 +315,21 @@
       class="d-flex flex-wrap justify-content-start gap-2"
       style="margin-left: 1rem; margin-top: 1rem"
     >
+      <div class="col-auto">
+        <div class="input-group mb-1">
+          <div class="form-floating">
+            <select
+              class="form-control form-control-sm"
+              id="performanceProfileSelector"
+              aria-label="performanceProfile"
+            >
+              <option value="Absolute">Absolute Performance</option>
+              <option value="Relative">Relative Performance</option>
+            </select>
+            <label for="performanceProfileSelector">Profile</label>
+          </div>
+        </div>
+      </div>
       <div class="col-auto">
         <div class="input-group mb-1">
           <div class="form-floating">
@@ -545,8 +560,8 @@
               Set the defaultTime for the to be used for all results with
               missing SolverTime or with a failed status. The default fallback
               value is 1000.
-              <br /><b>NOTE!</b> Only takes effect on the absolute performance
-              profile chart.
+              <br /><b>NOTE!</b> Only takes effect on the performance profile
+              chart.
             </p>
             <div class="form-floating mb-3">
               <input
@@ -564,8 +579,8 @@
             <i>Optional</i>
             <p>
               Specify the gapLimit percentage to use for filtering results.
-              <br /><b>NOTE!</b> Only takes effect on the absolute performance
-              profile chart.
+              <br /><b>NOTE!</b> Only takes effect on the performance profile
+              chart.
             </p>
             <div class="form-floating mb-3">
               <input

@@ -291,6 +291,12 @@ export const solverSelector: HTMLSelectElement = document.getElementById(
 ) as HTMLSelectElement;
 
 /**
+ * `performanceProfileSelector` is a reference to the HTMLSelectElement with the ID "performanceProfileSelector".
+ */
+export const performanceProfileSelector: HTMLSelectElement =
+	document.getElementById("performanceProfileSelector") as HTMLSelectElement;
+
+/**
  * `defaultTimeInput` is a reference the HTMLInputElement with the ID "defaultTimeInput".
  */
 export const defaultTimeInput: HTMLInputElement = document.getElementById(

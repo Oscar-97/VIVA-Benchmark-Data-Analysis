@@ -36,11 +36,12 @@ import {
  */
 import {
 	PlotDataByCategory,
-	PlotStatusMessages,
-	PlotSolverTimes,
-	PlotAbsolutePerformanceProfile,
-	PlotSolutionTimes
-} from "./Chart/ChartType";
+	PlotStatusMessages
+} from "./Chart/ChartType/BarCharts";
+
+import { PlotPerformanceProfile } from "./Chart/ChartType/LineCharts";
+import { PlotSolverTimes } from "./Chart/ChartType/LineCharts";
+import { PlotSolutionTimes } from "./Chart/ChartType/BubbleCharts";
 
 /**
  * Dataprocessing.
@@ -112,7 +113,8 @@ import {
 	deleteDataModal,
 	clearDataTableModal,
 	clearTableButtonInModal,
-	filterTypeSelector
+	filterTypeSelector,
+	performanceProfileSelector
 } from "./Elements/Elements";
 import {
 	BodyFadeLoadingAnimation,
@@ -168,8 +170,8 @@ RegisterServiceWorker();
 
 /**
  * @param {string} dataFileType - Type of file extension for the imported data. As of now, either one or more .trc or a single .json. Text based files were removed.
- * @param {number | string} defaultTime - The default time for the absolute performance profile chart.
- * @param {number | string} gapLimit - Gap limit value for the absolute performance profile chart.
+ * @param {number | string} defaultTime - The default time for the performance profile chart.
+ * @param {number | string} gapLimit - Gap limit value for the performance profile chart.
  * @param {string[]} unprocessedData - Raw data of the imported benchmark results.
  * @param {string[]} unprocessedInstanceInformationData - Unprocessed instanceinfo.csv containing properties.
  * @param {string[]} unprocessedSolutionData - Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
@@ -556,12 +558,13 @@ function HandlePlotPages(traceData: TraceData[]): void {
 	viewPlotsButton.disabled = false;
 	viewPlotsButton.addEventListener("click", () => {
 		switch (document.title) {
-			case PageTitles.ABSOLUTE_PERFORMANCE_PROFILE: {
+			case PageTitles.PERFORMANCE_PROFILE: {
 				defaultTime = defaultTimeDirectInput.value;
 				gapLimit = gapLimitDirectInput.value;
 
-				chartData = PlotAbsolutePerformanceProfile(
+				chartData = PlotPerformanceProfile(
 					traceData,
+					performanceProfileSelector.value,
 					defaultTime,
 					gapLimit
 				);

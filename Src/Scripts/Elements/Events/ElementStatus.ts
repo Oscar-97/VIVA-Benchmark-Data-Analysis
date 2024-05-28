@@ -68,7 +68,7 @@ export function ElementStatesPlotPage(): void {
 	configurationSettingsButton.disabled = true;
 	downloadChartDataButtonLayer.disabled = true;
 	deleteLocalStorageButton.disabled = true;
-	if (document.title === PageTitles.ABSOLUTE_PERFORMANCE_PROFILE) {
+	if (document.title === PageTitles.PERFORMANCE_PROFILE) {
 		defaultTimeDirectInput.value = "";
 		gapLimitDirectInput.value = "";
 	}

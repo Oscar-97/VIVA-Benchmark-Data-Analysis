@@ -26,8 +26,8 @@ export const userData: UserData = {
  *
  * @param {string[]} dataSet - An array of strings representing raw data to be saved.
  * @param {string} dataFileType - A string representing the type of data file.
- * @param {number} defaultTime - Default time used in the the absolute performance profile chart.
- * @param {number} gapLimit - Gap limit used in the the absolute performance profile chart.
+ * @param {number} defaultTime - Default time used in the the performance profile chart.
+ * @param {number} gapLimit - Gap limit used in the the performance profile chart.
  *
  * @throws This function may throw an error if it fails to store the user configuration in the local storage.
  *

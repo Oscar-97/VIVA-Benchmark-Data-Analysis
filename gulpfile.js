@@ -37,7 +37,7 @@ task("release-web", function () {
 
 	const redirects = [
 		"/ /report.html 301",
-		"/absolute_performance_profile /Src/Pages/absolute_performance_profile",
+		"/performance_profile /Src/Pages/performance_profile",
 		"/average_solver_time /Src/Pages/average_solver_time 301",
 		"/compare_solvers /Src/Pages/compare_solvers.html 301",
 		"/solver_time /Src/Pages/solver_time 301",
@@ -46,7 +46,7 @@ task("release-web", function () {
 		"/termination_status /Src/Pages/termination_status 301",
 		"/solution_quality /Src/Pages/solution_quality 301",
 		"/solution_time /Src/Pages/solution_time 301",
-		"/Src/Pages/absolute_performance_profile.html /Src/Pages/absolute_performance_profile 301",
+		"/Src/Pages/performance_profile.html /Src/Pages/performance_profile 301",
 		"/Src/Pages/average_solver_time.html /Src/Pages/average_solver_time 301",
 		"/Src/Pages/compare_solvers.html /Src/Pages/compare_solvers 301",
 		"/Src/Pages/solver_time.html /Src/Pages/solver_time 301",

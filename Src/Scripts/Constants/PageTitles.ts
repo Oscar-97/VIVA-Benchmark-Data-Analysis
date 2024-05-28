@@ -3,7 +3,7 @@
  */
 export enum PageTitles {
 	TABLE = "Report",
-	ABSOLUTE_PERFORMANCE_PROFILE = "Absolute Performance Profile",
+	PERFORMANCE_PROFILE = "Performance Profile",
 	AVERAGE_SOLVER_TIME = "Solver Time per Solver",
 	COMPARE_SOLVERS = "Compare Solvers",
 	NUMBER_OF_NODES = "Number of Nodes",

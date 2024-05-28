@@ -56,9 +56,9 @@ export function ComputeVirtualTimesTraceData(
 }
 
 /**
- * This function computes the best and worst solver times for the data strucutre used in the absolute performance profile chart.
+ * This function computes the best and worst solver times for the data strucutre used in the performance profile chart.
  * @param {object} data - The data structure containing the filtered and extracted solver times.
- * @returns An object containing the best and worst solver times for the absolute performance profile chart.
+ * @returns An object containing the best and worst solver times for the performance profile chart.
  */
 export function ComputeVirtualTimes(data): {
 	"Virtual Best Solver": object[];

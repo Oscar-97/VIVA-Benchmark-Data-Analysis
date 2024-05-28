@@ -61,9 +61,9 @@
 			]
 		},
 		{
-			"name": "Absolute Performance Profile",
-			"description": "View absolute performance profile of benchmark results.",
-			"url": "Src/Pages/absolute_performance_profile.html",
+			"name": "Performance Profile",
+			"description": "View performance profile of benchmark results.",
+			"url": "Src/Pages/performance_profile.html",
 			"icons": [
 				{
 					"src": "Src/CSS/icon_maskable.png",
