@@ -5,7 +5,9 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import Modal from "bootstrap/js/dist/modal";
+
+import { CreateFileFormatInformationModal } from "./Elements/Modals/InfoModal";
+import { CreateConfigurationSettingsModal } from "./Elements/Modals/CustomizeDownloadModal";
 
 /**
  * DataTables and extensions.
@@ -151,8 +153,20 @@ import { Values } from "./Constants/Values";
 import { ActivateDemoMode, NotifyDemoMode } from "./Actions/DemoMode";
 import { ExtractAllSolverTimesGapType } from "./DataProcessing/ChartsComputations/ComputeChartData";
 import { TraceHeaderMap } from "./Constants/TraceHeaders";
+import { ClearDataTableModal } from "./Elements/Modals/ClearDataTableModal";
+import { CreateDeleteDataModal } from "./Elements/Modals/DeleteDataModal";
+
 //#endregion
 
+/**
+ * Create modals.
+ */
+CreateFileFormatInformationModal();
+CreateConfigurationSettingsModal();
+CreateDeleteDataModal();
+if (document.title === PageTitles.TABLE) {
+	ClearDataTableModal();
+}
 /**
  * Fetches and displays the latest release of the application.
  */
@@ -245,7 +259,7 @@ function InitializeProgram(): void {
 		ManageData();
 	} catch (error) {
 		console.info(UserConfigurationMessages.NO_STORED_CONFIG);
-		console.error("ERROR: ", error);
+		console.warn("Warn: ", error);
 	}
 
 	/**
@@ -369,7 +383,10 @@ async function ManageData(): Promise<void> {
 	 * Fill the solver selector with solvers and update the values in selectedSolvers when the user selects them.
 	 */
 	FillSolverSelectorList(traceData);
-	solverSelector.addEventListener("change", () => {
+	document.getElementById("solverSelector").addEventListener("change", () => {
+		const solverSelector = document.getElementById(
+			"solverSelector"
+		) as HTMLSelectElement;
 		selectedSolvers = Array.from(solverSelector.options)
 			.filter((option) => {
 				return option.selected;
@@ -391,14 +408,15 @@ async function ManageData(): Promise<void> {
 	 * Delete stored data in local storage when clicking in the "Delete Data" button.
 	 */
 	deleteLocalStorageButton.addEventListener("click", () => {
-		const confirmDeletionModal = new Modal(deleteDataModal, { keyboard: true });
-		confirmDeletionModal.show();
-		deleteButtonInModal.addEventListener("click", () => {
-			DeleteUserConfiguration();
-			deleteLocalStorageButton.disabled = true;
-			downloadConfigurationButtonLayer.disabled = true;
-			confirmDeletionModal.hide();
-		});
+		//const confirmDeletionModal = new Modal(deleteDataModal, { keyboard: true });
+		//confirmDeletionModal.show();
+		document
+			.getElementById("deleteButtonInModal")
+			.addEventListener("click", () => {
+				DeleteUserConfiguration();
+				deleteLocalStorageButton.disabled = true;
+				downloadConfigurationButtonLayer.disabled = true;
+			});
 	});
 
 	/**
@@ -406,27 +424,29 @@ async function ManageData(): Promise<void> {
 	 * Filters by the solvers selected in the form selector and gets
 	 * the default time and gap percentage from the number input.
 	 */
-	downloadCustomConfigurationButton.addEventListener("click", () => {
-		if (selectedSolvers.length === 0) {
-			selectedSolvers[0] = solverSelector.value;
-		}
-		const customizedTraceData = traceData.filter((solver) => {
-			return selectedSolvers.includes(solver["SolverName"]);
+	document
+		.getElementById("downloadCustomConfigurationButton")
+		.addEventListener("click", () => {
+			if (selectedSolvers.length === 0) {
+				selectedSolvers[0] = solverSelector.value;
+			}
+			const customizedTraceData = traceData.filter((solver) => {
+				return selectedSolvers.includes(solver["SolverName"]);
+			});
+			const newRawData: string[] = ConvertToTraceFile(customizedTraceData);
+
+			defaultTime = Number(defaultTimeInput.value);
+			if (!defaultTime) {
+				defaultTime = Values.DEFAULT_TIME;
+			}
+
+			gapLimit = Number(gapLimitInput.value);
+			if (!gapLimit) {
+				gapLimit = Values.DEFAULT_GAP_LIMIT;
+			}
+
+			DownloadCustomizedUserConfiguration(newRawData, defaultTime, gapLimit);
 		});
-		const newRawData: string[] = ConvertToTraceFile(customizedTraceData);
-
-		defaultTime = Number(defaultTimeInput.value);
-		if (!defaultTime) {
-			defaultTime = Values.DEFAULT_TIME;
-		}
-
-		gapLimit = Number(gapLimitInput.value);
-		if (!gapLimit) {
-			gapLimit = Values.DEFAULT_GAP_LIMIT;
-		}
-
-		DownloadCustomizedUserConfiguration(newRawData, defaultTime, gapLimit);
-	});
 
 	/**
 	 * If the document title is "Report", it handles the report page functionality using
@@ -513,19 +533,16 @@ function HandleReportPage(traceData: TraceData[]): void {
 	 * Destroy the data table and reinitializes the program when clicking on "Clear Data Table".
 	 */
 	clearDataTableButton.addEventListener("click", () => {
-		const confirmClearDataTableModal = new Modal(clearDataTableModal, {
-			keyboard: true
-		});
-		confirmClearDataTableModal.show();
-		clearTableButtonInModal.addEventListener("click", () => {
-			confirmClearDataTableModal.hide();
-			DisplayWarningNotification(TableMessages.TABLE_CLEARING);
-			clearDataTableButton.disabled = true;
-			setTimeout(() => {
-				DestroyDataTable();
-				InitializeProgram();
-			}, 5000);
-		});
+		document
+			.getElementById("clearTableButtonInModal")
+			.addEventListener("click", () => {
+				DisplayWarningNotification(TableMessages.TABLE_CLEARING);
+				clearDataTableButton.disabled = true;
+				setTimeout(() => {
+					DestroyDataTable();
+					InitializeProgram();
+				}, 5000);
+			});
 	});
 }
 
@@ -535,7 +552,10 @@ function HandleReportPage(traceData: TraceData[]): void {
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 function HandlePlotPages(traceData: TraceData[]): void {
-	defaultTime = Number(defaultTimeInput.value);
+	const defaultTimeInput = document.getElementById(
+		"defaultTimeInput"
+	) as HTMLInputElement;
+	defaultTime = defaultTimeInput.value;
 	if (!defaultTime) {
 		defaultTime = Values.DEFAULT_TIME;
 	}

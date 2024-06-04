@@ -6,7 +6,6 @@ import {
 	viewPlotsButton,
 	deleteLocalStorageButton,
 	saveLocalStorageButton,
-	solverSelector,
 	dataTableGeneratedWrapper,
 	dataTableGenerated,
 	compareSolversButton,
@@ -115,7 +114,7 @@ function PlotPagesElements(fileExtensionType): void {
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 export function FillSolverSelectorList(traceData: TraceData[]): void {
-	solverSelector.innerHTML = "";
+	document.getElementById("solverSelector").innerHTML = "";
 	let isSelectedSet = false;
 
 	const uniqueSolvers = traceData
@@ -136,6 +135,6 @@ export function FillSolverSelectorList(traceData: TraceData[]): void {
 			isSelectedSet = true;
 		}
 
-		solverSelector.appendChild(option);
+		document.getElementById("solverSelector").appendChild(option);
 	});
 }
