@@ -8,12 +8,16 @@
 		"test:functions": "jest Function.test.ts",
 		"test:ui": "jest UI.test.ts",
 		"lint": "eslint . --ext .ts,.tsx,.html,.css",
-		"lint:fix": "eslint . --ext .ts,.tsx,.html,.css --fix",
+		"lint:fix": "eslint . --ext .ts,.tsx,.html --fix",
 		"build": "webpack --config webpack.config.js",
 		"build:docs": "typedoc --options typedoc.json",
 		"release": "gulp release",
 		"release:web": "gulp release-web"
 	},
+	"pre-commit": [
+		"test:functions",
+		"lint:fix"
+	],
 	"jest": {
 		"preset": "ts-jest",
 		"testEnvironment": "node"
@@ -46,6 +50,7 @@
 		"jest": "^29.5.0",
 		"merge-stream": "^2.0.0",
 		"mini-css-extract-plugin": "^2.7.6",
+		"pre-commit": "^1.2.2",
 		"prettier": "^2.8.4",
 		"style-loader": "^3.3.3",
 		"ts-jest": "^29.1.0",

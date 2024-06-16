@@ -48,19 +48,13 @@ import { PlotSolutionTimes } from "./Chart/ChartType/BubbleCharts";
 /**
  * Dataprocessing.
  */
-import { AddResultCategories } from "./DataProcessing/AddResultCategories";
 import { ConvertToTraceFile } from "./DataProcessing/CreateData";
 import {
 	FillSolverSelectorList,
 	ImportDataEvents
 } from "./Elements/Events/ImportDataEvents";
 import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
-import { MergeData } from "./DataProcessing/MergeData";
 import { ExtractTraceData } from "./DataProcessing/FilterData";
-import {
-	GetInstanceInformation,
-	GetBestKnownBounds
-} from "./DataProcessing/ReadMetaData";
 
 /**
  * DataTable.
@@ -155,6 +149,7 @@ import { ExtractAllSolverTimesGapType } from "./DataProcessing/ChartsComputation
 import { TraceHeaderMap } from "./Constants/TraceHeaders";
 import { ClearDataTableModal } from "./Elements/Modals/ClearDataTableModal";
 import { CreateDeleteDataModal } from "./Elements/Modals/DeleteDataModal";
+import { ProcessData } from "./DataProcessing/ProcessTraceData";
 
 //#endregion
 
@@ -322,13 +317,13 @@ async function ManageData(): Promise<void> {
 	 * instanceInfoData holds the instance properties.
 	 * soluData holds the best known primal and dual bounds for each instance.
 	 */
-	let instanceInfoData: object[] = [];
-	let soluData: object[] = [];
+	// const instanceInfoData: object[] = [];
+	// const soluData: object[] = [];
 
 	/**
 	 * selectedValues holds the selected solvers.
 	 */
-	let selectedSolvers: string[] = [];
+	const selectedSolvers: string[] = [];
 
 	/**
 	 * If the uploaded data file is of type JSON, it retrieves the user configuration
@@ -346,39 +341,61 @@ async function ManageData(): Promise<void> {
 	 * merges the data, and adds result categories to the trace data.
 	 */
 	if (dataFileType === "trc") {
-		traceData = ExtractTraceData(unprocessedData);
-		if (unprocessedInstanceInformationData.length !== 0) {
-			instanceInfoData = GetInstanceInformation(
-				unprocessedInstanceInformationData
-			);
-			traceData = MergeData(traceData, instanceInfoData);
-		}
-
-		if (unprocessedSolutionData.length !== 0) {
-			soluData = GetBestKnownBounds(unprocessedSolutionData);
-		} else if (librarySelector.value === "MINLPLib") {
-			const module = await import(
-				/* webpackChunkName: "minlplib-dataset" */ "./Datasets/MINLPLib"
-			);
-			soluData = module.MINLPLIB_SOLUTION_DATA;
-		} else if (librarySelector.value === "MIPLIB_2017") {
-			const module = await import(
-				/* webpackChunkName: "miplib2017-dataset" */ "./Datasets/MIPLIB_2017"
-			);
-			soluData = module.MIPLIB_2017_SOLUTION_DATA;
-		} else if (librarySelector.value === "MIPLIB_2010") {
-			const module = await import(
-				/* webpackChunkName: "miplib2010-dataset" */ "./Datasets/MIPLIB_2010"
-			);
-			soluData = module.MIPLIB_2010_SOLUTION_DATA;
-		}
-
-		if (soluData) {
-			traceData = MergeData(traceData, soluData);
-		}
-		AddResultCategories(traceData);
+		traceData = await ProcessData(
+			unprocessedData,
+			unprocessedInstanceInformationData,
+			unprocessedSolutionData
+		);
 	}
 
+	/**
+	 * Handle and set up the common buttons for all pages.
+	 */
+	HandleCommonButtons(traceData, selectedSolvers);
+
+	/**
+	 * If the document title is "Report", it handles the report page functionality using
+	 * the traceData variable.
+	 */
+	if (document.title === PageTitles.TABLE) {
+		HandleReportPage(traceData);
+		if (dataFileType === "json") {
+			viewTableButton.click();
+		}
+	}
+
+	/**
+	 * If the document title is "Compare Solvers", it handles the compare solvers page functionality using
+	 * the traceData variable.
+	 */
+	if (document.title === PageTitles.COMPARE_SOLVERS) {
+		HandleCompareSolversPage(traceData);
+	}
+
+	/**
+	 * If the document title is not "Report", it handles the plot page functionality using
+	 * the traceData variable.
+	 */
+	if (
+		document.title !== PageTitles.TABLE &&
+		document.title !== PageTitles.COMPARE_SOLVERS
+	) {
+		HandlePlotPages(traceData);
+		if (dataFileType === "json") {
+			viewPlotsButton.click();
+		}
+	}
+}
+
+/**
+ * This function manages the functionality of the common buttons on all pages of the application.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
+ * @param selectedSolvers  - selectedValues holds the selected solvers.
+ */
+function HandleCommonButtons(
+	traceData: TraceData[],
+	selectedSolvers: string[]
+): void {
 	/**
 	 * Fill the solver selector with solvers and update the values in selectedSolvers when the user selects them.
 	 */
@@ -447,39 +464,6 @@ async function ManageData(): Promise<void> {
 
 			DownloadCustomizedUserConfiguration(newRawData, defaultTime, gapLimit);
 		});
-
-	/**
-	 * If the document title is "Report", it handles the report page functionality using
-	 * the traceData variable.
-	 */
-	if (document.title === PageTitles.TABLE) {
-		HandleReportPage(traceData);
-		if (dataFileType === "json") {
-			viewTableButton.click();
-		}
-	}
-
-	/**
-	 * If the document title is "Compare Solvers", it handles the compare solvers page functionality using
-	 * the traceData variable.
-	 */
-	if (document.title === PageTitles.COMPARE_SOLVERS) {
-		HandleCompareSolversPage(traceData);
-	}
-
-	/**
-	 * If the document title is not "Report", it handles the plot page functionality using
-	 * the traceData variable.
-	 */
-	if (
-		document.title !== PageTitles.TABLE &&
-		document.title !== PageTitles.COMPARE_SOLVERS
-	) {
-		HandlePlotPages(traceData);
-		if (dataFileType === "json") {
-			viewPlotsButton.click();
-		}
-	}
 }
 
 /**
@@ -590,7 +574,7 @@ function HandlePlotPages(traceData: TraceData[]): void {
 				);
 				break;
 			}
-			case PageTitles.AVERAGE_SOLVER_TIME: {
+			case PageTitles.SOLVER_TIME_PER_SOLVER: {
 				const filterType = filterTypeSelector.value;
 				chartData = PlotDataByCategory(
 					traceData,

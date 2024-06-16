@@ -47,7 +47,7 @@ task("release-web", function () {
 		"/solution_quality /Src/Pages/solution_quality 301",
 		"/solution_time /Src/Pages/solution_time 301",
 		"/Src/Pages/performance_profile.html /Src/Pages/performance_profile 301",
-		"/Src/Pages/average_solver_time.html /Src/Pages/average_solver_time 301",
+		"/Src/Pages/solver_time_all.html /Src/Pages/average_solver_time 301",
 		"/Src/Pages/compare_solvers.html /Src/Pages/compare_solvers 301",
 		"/Src/Pages/solver_time.html /Src/Pages/solver_time 301",
 		"/Src/Pages/number_of_nodes.html /Src/Pages/number_of_nodes 301",
