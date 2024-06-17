@@ -73,7 +73,7 @@ export function PlotSolverTimes(
 		"line",
 		chartData,
 		"InputFileName",
-		"Solver times per Instance",
+		"Solver time per Instance",
 		scaleOptions,
 		zoomOptions
 	);

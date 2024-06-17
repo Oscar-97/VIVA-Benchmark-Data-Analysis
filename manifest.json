@@ -75,7 +75,7 @@
 		{
 			"name": "Solver Time per Solver",
 			"description": "View solver time per solver of benchmark results.",
-			"url": "Src/Pages/average_solver_time.html",
+			"url": "Src/Pages/solver_time_all.html",
 			"icons": [
 				{
 					"src": "Src/CSS/icon_maskable.png",

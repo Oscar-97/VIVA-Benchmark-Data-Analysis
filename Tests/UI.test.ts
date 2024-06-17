@@ -622,7 +622,7 @@ describe("UI tests", () => {
 		}, 10000);
 
 		test("Solver Time per Solver Page", async () => {
-			await RunPlotOperations("../Src/Pages/average_solver_time.html");
+			await RunPlotOperations("../Src/Pages/solver_time_all.html");
 			await page.waitForSelector("#statisticsTable", {
 				state: "visible",
 				timeout: 3000
@@ -710,24 +710,24 @@ describe("UI tests", () => {
 
 			// TODO: Column order is not set. Update to some better paths later on.
 			const cell1 = await page.$(
-				"//tbody/tr[td[contains(text(), 'Better')]]/td[contains(@class, 'table-success') and contains(text(), '119')]"
+				"//tbody/tr[td[contains(text(), 'Better')]]/td[contains(@class, 'table-success') and contains(text(), '102')]"
 			);
-			expect(await cell1?.innerText()).toBe("119");
+			expect(await cell1?.innerText()).toBe("102");
 
 			const cell2 = await page.$(
-				"//tbody/tr[td[contains(text(), 'Better')]]/td[contains(@class, 'table-success') and contains(text(), '212')]"
+				"//tbody/tr[td[contains(text(), 'Better')]]/td[contains(@class, 'table-success') and contains(text(), '183')]"
 			);
-			expect(await cell2?.innerText()).toBe("212");
+			expect(await cell2?.innerText()).toBe("183");
 
 			const cell3 = await page.$(
-				"//tbody/tr[td[contains(text(), 'Worse')]]/td[contains(@class, 'table-danger') and contains(text(), '212')]"
+				"//tbody/tr[td[contains(text(), 'Worse')]]/td[contains(@class, 'table-danger') and contains(text(), '183')]"
 			);
-			expect(await cell3?.innerText()).toBe("212");
+			expect(await cell3?.innerText()).toBe("183");
 
 			const cell4 = await page.$(
-				"//tbody/tr[td[contains(text(), 'Worse')]]/td[contains(@class, 'table-danger') and contains(text(), '119')]"
+				"//tbody/tr[td[contains(text(), 'Worse')]]/td[contains(@class, 'table-danger') and contains(text(), '102')]"
 			);
-			expect(await cell4?.innerText()).toBe("119");
+			expect(await cell4?.innerText()).toBe("102");
 
 			const cell5 = await page.$(
 				"//tbody/tr[td[contains(text(), 'Equal')]]/td[contains(@class, 'table-warning') and contains(text(), '4')]"

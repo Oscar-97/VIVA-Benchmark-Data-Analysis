@@ -103,10 +103,12 @@ export const configurationSettingsButton: HTMLButtonElement =
  * `downloadCustomConfigurationButton` is a reference to the HTMLButtonElement with the ID "downloadCustomConfigurationButton".
  * @type {HTMLAnchorElement}
  */
-export const downloadCustomConfigurationButton: HTMLAnchorElement =
-	document.getElementById(
+export let downloadCustomConfigurationButton: HTMLAnchorElement | null = null;
+document.addEventListener("DOMContentLoaded", () => {
+	downloadCustomConfigurationButton = document.getElementById(
 		"downloadCustomConfigurationButton"
-	) as HTMLAnchorElement;
+	) as HTMLAnchorElement | null;
+});
 
 /**
  * `downloadCustomConfigurationButtonLayer` is a reference to the HTMLButtonElement with the ID "downloadCustomConfigurationButtonLayer".
@@ -286,9 +288,12 @@ export const releaseVersionTag: HTMLSpanElement = document.getElementById(
  * `solverSelector` is a reference to the HTMLSelectElement with the ID "solverSelector".
  * @type {HTMLSelectElement}
  */
-export const solverSelector: HTMLSelectElement = document.getElementById(
-	"solverSelector"
-) as HTMLSelectElement;
+export let solverSelector: HTMLSelectElement | null = null;
+document.addEventListener("DOMContentLoaded", () => {
+	solverSelector = document.getElementById(
+		"solverSelector"
+	) as HTMLSelectElement | null;
+});
 
 /**
  * `performanceProfileSelector` is a reference to the HTMLSelectElement with the ID "performanceProfileSelector".
@@ -299,16 +304,22 @@ export const performanceProfileSelector: HTMLSelectElement =
 /**
  * `defaultTimeInput` is a reference the HTMLInputElement with the ID "defaultTimeInput".
  */
-export const defaultTimeInput: HTMLInputElement = document.getElementById(
-	"defaultTimeInput"
-) as HTMLInputElement;
+export let defaultTimeInput: HTMLInputElement | null = null;
+document.addEventListener("DOMContentLoaded", () => {
+	defaultTimeInput = document.getElementById(
+		"defaultTimeInput"
+	) as HTMLInputElement | null;
+});
 
 /**
  * `gapLimitInput` is a reference the HTMLInputElement with the ID "gapLimitInput".
  */
-export const gapLimitInput: HTMLInputElement = document.getElementById(
-	"gapLimitInput"
-) as HTMLInputElement;
+export let gapLimitInput: HTMLInputElement | null = null;
+document.addEventListener("DOMContentLoaded", () => {
+	gapLimitInput = document.getElementById(
+		"gapLimitInput"
+	) as HTMLInputElement | null;
+});
 
 /**
  * `defaultTimeDirectInput` is a reference the HTMLInputElement with the ID "defaultTimeDirectInput".

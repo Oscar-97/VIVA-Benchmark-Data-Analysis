@@ -26,12 +26,14 @@ This project is developed using TypeScript, DataTables.js, Chart.js and Webpack.
 - Once you have selected a file or files, click on upload.
 - Click on the View All Results/View Plot button to get a table or plot with the benchmark results, depending on the currently active page.
 - The following plots are available:
-    - Absolute Performance Profile
-    - Average Solver Time
-    - Solver Time"
+    - Performance Profile (Absolute and relative)
+    - Solver Time per Solver
+    - Solver Time per Instance
     - Number of Nodes
     - Number of Iterations
     - Termination Status
+    - Solution Quality
+    - Solution Time
 - Compare a pair of solvers via the "Compare Solvers" page. Direct comparison on how many instances the solver time was better, worse or equal.
 
 ### 1.1 General Button Functionality
@@ -136,6 +138,10 @@ Navigate to the project directory in your terminal and run:
     npm run build
 
 This runs the command "webpack --config webpack.config.js", which will build the application using webpack'. The created `bundle.js` and `main.css` are located in `Dist/`.
+
+Dev server can be run with:
+
+    npnm run start
 
 ### 3.3 Other Scripts
 
