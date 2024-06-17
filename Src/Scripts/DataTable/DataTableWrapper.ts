@@ -10,21 +10,26 @@ import "datatables.net-buttons/js/buttons.html5.mjs";
 import "datatables.net-buttons/js/buttons.print.mjs";
 import "datatables.net-datetime";
 
-import { TableDataTrc } from "./DataTableBase";
+import {
+	InstanceAttributesTable,
+	SolveAttributesTable,
+	TraceTableData
+} from "./DataTableBase";
 import {
 	dataTableGenerated,
 	dataTableGeneratedWrapper
 } from "../Elements/Elements";
-import { ElementStateDisplayedTable } from "../Elements/ElementStatus";
+import { ElementStateDisplayedTable } from "../Elements/Events/ElementStatus";
 import { DEFAULT_VISIBLE_HEADERS } from "../Constants/TraceHeaders";
 import { ShowPWANotification } from "../PWA/PWA-utils";
 import { TableMessages } from "../Constants/Messages";
+import { TraceData } from "../Interfaces/Interfaces";
 
 /**
  * This function displays the trace data in a dynamically generated HTML table using the DataTables library for improved user interaction.
  * A notification is shown to the user upon successful generation of the table.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  *
  * @remarks
  * This function generates and displays a table using the 'TableDataTrc' function.
@@ -44,21 +49,21 @@ import { TableMessages } from "../Constants/Messages";
  * ```
  * This example will generate a table with two rows and three columns (Solver, SolverTime, and ObjectiveValue) and apply DataTables configuration to it.
  */
-export function DisplayDataTable(traceData: object[]): void {
+export function DisplayDataTable(traceData: TraceData[]): void {
 	setTimeout(() => {
 		/**
 		 * Create the table with the trc data.
 		 */
-		TableDataTrc(traceData);
+		TraceTableData(traceData);
+		InstanceAttributesTable(traceData);
+		SolveAttributesTable(traceData);
 
 		/**
-		 * Apply the DataTables plugin. Applied as a layer over the generated table.
+		 * Apply the DataTables plugin. Applied as layers over the generated tables.
 		 */
-		$(function () {
-			DataTablesConfiguration();
-			("#dataTableGenerated_wrapper");
-		});
-
+		DataTablesConfiguration();
+		DataTablesConfigurationStats("#instanceAttributesTable_inner");
+		DataTablesConfigurationStats("#solveAttributesTable_inner");
 		ElementStateDisplayedTable();
 
 		ShowPWANotification(TableMessages.TABLE_SUCCESS_HEADER, {
@@ -245,4 +250,32 @@ export function DestroyDataTable(): void {
 	if (dataTableGenerated) {
 		dataTableGenerated.remove();
 	}
+}
+
+/**
+ * This function configures the settings for the statistics, instance and solve attributes tables.
+ * @param tableSelector ID of the table to apply the wrapper on.
+ */
+export function DataTablesConfigurationStats(tableSelector: string): void {
+	$(tableSelector).DataTable({
+		destroy: true,
+		searching: false,
+		paging: false,
+		info: false,
+		responsive: {
+			details: {
+				type: "column",
+				target: "tr"
+			},
+			breakpoints: [
+				{ name: "desktop", width: Infinity },
+				{ name: "tablet", width: 1200 },
+				{ name: "fablet", width: 768 },
+				{ name: "phone", width: 480 }
+			]
+		},
+		scrollY: "",
+		scrollX: true,
+		scrollCollapse: true
+	});
 }

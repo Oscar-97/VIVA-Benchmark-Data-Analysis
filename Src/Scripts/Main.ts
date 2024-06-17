@@ -6,6 +6,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
+import { CreateFileFormatInformationModal } from "./Elements/Modals/InfoModal";
+import { CreateConfigurationSettingsModal } from "./Elements/Modals/CustomizeDownloadModal";
+
 /**
  * DataTables and extensions.
  */
@@ -35,27 +38,23 @@ import {
  */
 import {
 	PlotDataByCategory,
-	PlotStatusMessages,
-	PlotAllSolverTimes,
-	PlotAbsolutePerformanceProfileSolverTimes
-} from "./Chart/ChartType";
+	PlotStatusMessages
+} from "./Chart/ChartType/BarCharts";
+
+import { PlotPerformanceProfile } from "./Chart/ChartType/LineCharts";
+import { PlotSolverTimes } from "./Chart/ChartType/LineCharts";
+import { PlotSolutionTimes } from "./Chart/ChartType/BubbleCharts";
 
 /**
  * Dataprocessing.
  */
-import { AddResultCategories } from "./DataProcessing/AddResultCategories";
-import { CreateNewTraceData } from "./DataProcessing/CreateData";
+import { ConvertToTraceFile } from "./DataProcessing/CreateData";
 import {
 	FillSolverSelectorList,
 	ImportDataEvents
-} from "./Elements/ImportDataEvents";
+} from "./Elements/Events/ImportDataEvents";
 import { ReadData, GetDataFileType } from "./DataProcessing/ReadData";
-import { MergeData } from "./DataProcessing/MergeData";
 import { ExtractTraceData } from "./DataProcessing/FilterData";
-import {
-	GetInstanceInformation,
-	GetBestKnownBounds
-} from "./DataProcessing/GetExtraData";
 
 /**
  * DataTable.
@@ -65,7 +64,7 @@ import {
 	DisplayDataTable,
 	DestroyDataTable
 } from "./DataTable/DataTableWrapper";
-import { UpdateResults } from "./DataTable/UpdateResults";
+import { GetFilteredRows, GetSelectedRows } from "./DataTable/GetDataFromTable";
 
 /**
  * Elements.
@@ -73,36 +72,39 @@ import { UpdateResults } from "./DataTable/UpdateResults";
 import {
 	PopulateCheckboxes,
 	GetSelectedCheckboxValues
-} from "./Elements/DynamicCheckboxes";
+} from "./Elements/Events/DynamicCheckboxes";
 import {
 	ElementStatesTablePage,
 	ElementStatesPlotPage,
 	ElementStateDisplayedChart,
 	ElementStatesCompareSolversPage,
 	ElementStateDisplayedComparisonTable
-} from "./Elements/ElementStatus";
+} from "./Elements/Events/ElementStatus";
 import {
 	fileInput,
-	librarySelector,
 	importDataButton,
 	viewTableButton,
 	showSelectedRowsButton,
 	saveLocalStorageButton,
 	downloadConfigurationButton,
 	deleteLocalStorageButton,
-	clearTableButton,
+	clearDataTableButton,
 	downloadConfigurationButtonLayer,
 	demoDataButton,
 	viewPlotsButton,
 	downloadChartDataButton,
-	downloadCustomConfigurationButton,
 	solverSelector,
 	defaultTimeInput,
 	configurationSettingsButton,
 	defaultTimeDirectInput,
 	gapLimitDirectInput,
 	gapLimitInput,
-	compareSolversButton
+	compareSolversButton,
+	gapTypeSelector,
+	terminationTypeSelector,
+	categorySelector,
+	filterTypeSelector,
+	performanceProfileSelector
 } from "./Elements/Elements";
 import {
 	BodyFadeLoadingAnimation,
@@ -119,21 +121,12 @@ import {
 	DownloadUserConfiguration,
 	DownloadCustomizedUserConfiguration
 } from "./UserConfiguration/UserConfiguration";
-
-import { DEMO_DATA } from "./Datasets/DemoData";
 import {
 	DisplayErrorNotification,
 	DisplayWarningNotification
-} from "./Elements/DisplayAlertNotification";
+} from "./Elements/Events/DisplayAlertNotification";
 import { ReleaseVersionTag } from "./Elements/ReleaseVersionTag";
-import {
-	ReversedTraceHeaderMap,
-	TraceHeaderMap
-} from "./Constants/TraceHeaders";
-import {
-	ExtractAllSolverTimes,
-	CompareSolvers
-} from "./DataProcessing/CalculateResults";
+import { CompareSolvers } from "./DataProcessing/ResultComputations/ComputeResults";
 import { Keys } from "./Constants/Keys";
 import {
 	ChartMessages,
@@ -143,8 +136,26 @@ import {
 	UserConfigurationMessages
 } from "./Constants/Messages";
 import { PageTitles } from "./Constants/PageTitles";
+import { TraceData } from "./Interfaces/Interfaces";
+import { Values } from "./Constants/Values";
+import { ActivateDemoMode, NotifyDemoMode } from "./Actions/DemoMode";
+import { ExtractAllSolverTimesGapType } from "./DataProcessing/ChartsComputations/ComputeChartData";
+import { TraceHeaderMap } from "./Constants/TraceHeaders";
+import { ClearDataTableModal } from "./Elements/Modals/ClearDataTableModal";
+import { CreateDeleteDataModal } from "./Elements/Modals/DeleteDataModal";
+import { ProcessData } from "./DataProcessing/ProcessTraceData";
+
 //#endregion
 
+/**
+ * Create modals.
+ */
+CreateFileFormatInformationModal();
+CreateConfigurationSettingsModal();
+CreateDeleteDataModal();
+if (document.title === PageTitles.TABLE) {
+	ClearDataTableModal();
+}
 /**
  * Fetches and displays the latest release of the application.
  */
@@ -162,8 +173,8 @@ RegisterServiceWorker();
 
 /**
  * @param {string} dataFileType - Type of file extension for the imported data. As of now, either one or more .trc or a single .json. Text based files were removed.
- * @param {number | string} defaultTime - The default time for the absolute performance profile chart.
- * @param {number | string} gapLimit - Gap limit value for the absolute performance profile chart.
+ * @param {number | string} defaultTime - The default time for the performance profile chart.
+ * @param {number | string} gapLimit - Gap limit value for the performance profile chart.
  * @param {string[]} unprocessedData - Raw data of the imported benchmark results.
  * @param {string[]} unprocessedInstanceInformationData - Unprocessed instanceinfo.csv containing properties.
  * @param {string[]} unprocessedSolutionData - Unprocessed minlplib.solu. Best known primal and dual bounds for each instance.
@@ -175,7 +186,7 @@ let gapLimit = undefined;
 let unprocessedData: string[] = [];
 let unprocessedInstanceInformationData: string[] = [];
 let unprocessedSolutionData: string[] = [];
-let chartData;
+let chartData = [];
 
 /**
  * Initializing the methods that are needed to run the system.
@@ -217,8 +228,15 @@ function InitializeProgram(): void {
 	try {
 		[unprocessedData, dataFileType, defaultTime, gapLimit] =
 			GetUserConfiguration();
-		if (localStorage.getItem(Keys.DEMO_DATA) === "true") {
-			ImportDataEvents(InfoMessages.DEMO_MODE_MSG, "json");
+		if (
+			localStorage.getItem(Keys.DEMO_DATA) === "demo1" ||
+			localStorage.getItem(Keys.DEMO_DATA) === "demo2"
+		) {
+			ImportDataEvents(
+				InfoMessages.DEMO_MODE_MSG,
+				"json",
+				localStorage.getItem(Keys.DEMO_DATA)
+			);
 			NotifyDemoMode();
 		} else {
 			ImportDataEvents(InfoMessages.FOUND_STORED_CONFIG, "json");
@@ -228,8 +246,9 @@ function InitializeProgram(): void {
 		downloadConfigurationButtonLayer.disabled = false;
 		sessionStorage.setItem(Keys.SAVED_STORAGE_NOTIFICATION, "true");
 		ManageData();
-	} catch {
+	} catch (error) {
 		console.info(UserConfigurationMessages.NO_STORED_CONFIG);
+		console.warn("Warn: ", error);
 	}
 
 	/**
@@ -277,20 +296,6 @@ function InitializeProgram(): void {
 			ActivateDemoMode();
 		});
 	}
-
-	function ActivateDemoMode(): void {
-		localStorage.setItem(Keys.USER_CONFIGURATION, JSON.stringify(DEMO_DATA));
-		localStorage.setItem(Keys.DEMO_DATA, "true");
-		location.reload();
-	}
-
-	function NotifyDemoMode(): void {
-		ImportDataEvents(InfoMessages.DEMO_MODE_MSG, "json");
-		if (document.title === PageTitles.TABLE) {
-			demoDataButton.style.color = "#198754";
-			demoDataButton.disabled = true;
-		}
-	}
 }
 
 /**
@@ -298,22 +303,21 @@ function InitializeProgram(): void {
  */
 async function ManageData(): Promise<void> {
 	/**
-	 * Trace data results and filtered trace data results.
+	 * Trace data results.
 	 */
-	let traceData: object[] = [];
-	const traceDataFiltered: object[] = [];
+	let traceData: TraceData[] = [];
 
 	/**
 	 * instanceInfoData holds the instance properties.
 	 * soluData holds the best known primal and dual bounds for each instance.
 	 */
-	let instanceInfoData: object[] = [];
-	let soluData: object[] = [];
+	// const instanceInfoData: object[] = [];
+	// const soluData: object[] = [];
 
 	/**
 	 * selectedValues holds the selected solvers.
 	 */
-	let selectedSolvers: string[] = [];
+	const selectedSolvers: string[] = [];
 
 	/**
 	 * If the uploaded data file is of type JSON, it retrieves the user configuration
@@ -331,98 +335,24 @@ async function ManageData(): Promise<void> {
 	 * merges the data, and adds result categories to the trace data.
 	 */
 	if (dataFileType === "trc") {
-		traceData = ExtractTraceData(unprocessedData);
-		if (unprocessedInstanceInformationData.length !== 0) {
-			instanceInfoData = GetInstanceInformation(
-				unprocessedInstanceInformationData
-			);
-			traceData = MergeData(traceData, instanceInfoData);
-		}
-
-		if (unprocessedSolutionData.length !== 0) {
-			soluData = GetBestKnownBounds(unprocessedSolutionData);
-		} else if (librarySelector.value === "MINLPLib") {
-			const module = await import(
-				/* webpackChunkName: "minlplib-dataset" */ "./Datasets/MINLPLib"
-			);
-			soluData = module.MINLPLIB_SOLUTION_DATA;
-		} else if (librarySelector.value === "MIPLIB") {
-			const module = await import(
-				/* webpackChunkName: "miplib2017-dataset" */ "./Datasets/MIPLIB_2017"
-			);
-			soluData = module.MIPLIB_2017_SOLUTION_DATA;
-		}
-
-		if (soluData) {
-			traceData = MergeData(traceData, soluData);
-		}
-		AddResultCategories(traceData);
+		traceData = await ProcessData(
+			unprocessedData,
+			unprocessedInstanceInformationData,
+			unprocessedSolutionData
+		);
 	}
 
 	/**
-	 * Fill the solver selector with solvers and update the values in selectedSolvers when the user selects them.
+	 * Handle and set up the common buttons for all pages.
 	 */
-	FillSolverSelectorList(traceData);
-	solverSelector.addEventListener("change", () => {
-		selectedSolvers = Array.from(solverSelector.options)
-			.filter((option) => {
-				return option.selected;
-			})
-			.map((option) => {
-				return option.value;
-			});
-	});
-	configurationSettingsButton.disabled = false;
-
-	/**
-	 * Download the current configuration when clicking on the "Download Configuration" button.
-	 */
-	downloadConfigurationButton.addEventListener("click", () => {
-		DownloadUserConfiguration();
-	});
-
-	/**
-	 * Delete stored data in local storage when clicking in the "Delete Data" button.
-	 */
-	deleteLocalStorageButton.addEventListener("click", () => {
-		DeleteUserConfiguration();
-		deleteLocalStorageButton.disabled = true;
-		downloadConfigurationButtonLayer.disabled = true;
-	});
-
-	/**
-	 * Download a customized version of the user configuration.
-	 * Filters by the solvers selected in the form selector and gets
-	 * the default time and gap percentage from the number input.
-	 */
-	downloadCustomConfigurationButton.addEventListener("click", () => {
-		if (selectedSolvers.length === 0) {
-			selectedSolvers[0] = solverSelector.value;
-		}
-		const customizedTraceData = traceData.filter((solver) => {
-			return selectedSolvers.includes(solver["SolverName"]);
-		});
-		const newRawData: string[] = CreateNewTraceData(customizedTraceData);
-
-		defaultTime = Number(defaultTimeInput.value);
-		if (!defaultTime) {
-			defaultTime = 1000;
-		}
-
-		gapLimit = Number(gapLimitInput.value);
-		if (!gapLimit) {
-			gapLimit = 0.01;
-		}
-
-		DownloadCustomizedUserConfiguration(newRawData, defaultTime, gapLimit);
-	});
+	HandleCommonButtons(traceData, selectedSolvers);
 
 	/**
 	 * If the document title is "Report", it handles the report page functionality using
-	 * the traceData and traceDataFiltered variables.
+	 * the traceData variable.
 	 */
 	if (document.title === PageTitles.TABLE) {
-		HandleReportPage(traceData, traceDataFiltered);
+		HandleReportPage(traceData);
 		if (dataFileType === "json") {
 			viewTableButton.click();
 		}
@@ -452,15 +382,90 @@ async function ManageData(): Promise<void> {
 }
 
 /**
+ * This function manages the functionality of the common buttons on all pages of the application.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
+ * @param selectedSolvers  - selectedValues holds the selected solvers.
+ */
+function HandleCommonButtons(
+	traceData: TraceData[],
+	selectedSolvers: string[]
+): void {
+	/**
+	 * Fill the solver selector with solvers and update the values in selectedSolvers when the user selects them.
+	 */
+	FillSolverSelectorList(traceData);
+	document.getElementById("solverSelector").addEventListener("change", () => {
+		const solverSelector = document.getElementById(
+			"solverSelector"
+		) as HTMLSelectElement;
+		selectedSolvers = Array.from(solverSelector.options)
+			.filter((option) => {
+				return option.selected;
+			})
+			.map((option) => {
+				return option.value;
+			});
+	});
+	configurationSettingsButton.disabled = false;
+
+	/**
+	 * Download the current configuration when clicking on the "Download Configuration" button.
+	 */
+	downloadConfigurationButton.addEventListener("click", () => {
+		DownloadUserConfiguration();
+	});
+
+	/**
+	 * Delete stored data in local storage when clicking in the "Delete Data" button.
+	 */
+	deleteLocalStorageButton.addEventListener("click", () => {
+		//const confirmDeletionModal = new Modal(deleteDataModal, { keyboard: true });
+		//confirmDeletionModal.show();
+		document
+			.getElementById("deleteButtonInModal")
+			.addEventListener("click", () => {
+				DeleteUserConfiguration();
+				deleteLocalStorageButton.disabled = true;
+				downloadConfigurationButtonLayer.disabled = true;
+			});
+	});
+
+	/**
+	 * Download a customized version of the user configuration.
+	 * Filters by the solvers selected in the form selector and gets
+	 * the default time and gap percentage from the number input.
+	 */
+	document
+		.getElementById("downloadCustomConfigurationButton")
+		.addEventListener("click", () => {
+			if (selectedSolvers.length === 0) {
+				selectedSolvers[0] = solverSelector.value;
+			}
+			const customizedTraceData = traceData.filter((solver) => {
+				return selectedSolvers.includes(solver["SolverName"]);
+			});
+			const newRawData: string[] = ConvertToTraceFile(customizedTraceData);
+
+			defaultTime = Number(defaultTimeInput.value);
+			if (!defaultTime) {
+				defaultTime = Values.DEFAULT_TIME;
+			}
+
+			gapLimit = Number(gapLimitInput.value);
+			if (!gapLimit) {
+				gapLimit = Values.DEFAULT_GAP_LIMIT;
+			}
+
+			DownloadCustomizedUserConfiguration(newRawData, defaultTime, gapLimit);
+		});
+}
+
+/**
  * This function manages the functionality of the buttons on the Report page of the application.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
- * @param {object[]} traceDataFiltered - Array of objects containing the filtered result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
-function HandleReportPage(
-	traceData: object[],
-	traceDataFiltered: object[]
-): void {
+function HandleReportPage(traceData: TraceData[]): void {
 	/**
 	 * Show the table when clicking on the "View Table" button.
 	 */
@@ -475,7 +480,7 @@ function HandleReportPage(
 	 */
 	showSelectedRowsButton.addEventListener("click", () => {
 		showSelectedRowsButton.disabled = true;
-		traceDataFiltered = UpdateResults();
+		const traceDataFiltered = GetSelectedRows();
 
 		if (traceDataFiltered.length === 0) {
 			DisplayWarningNotification(TableMessages.TABLE_NO_ROWS);
@@ -487,33 +492,16 @@ function HandleReportPage(
 
 	/**
 	 * Save to local storage when clicking on the "Save Data" button.
-	 * If the results have been filtered it remaps the object properties
-	 * based on `ReversedTraceHeaderMap` before saving the data.
+	 * If the results have been filtered or if they have been selected,
+	 * it remaps the object properties based on `ReversedTraceHeaderMap` before saving the data.
 	 */
 	saveLocalStorageButton.addEventListener("click", () => {
-		function RemapObjectProperties(traceData: object[]): object[] {
-			return traceData.map((obj) => {
-				const remappedObj = {};
-				for (const key in obj) {
-					const newKey = ReversedTraceHeaderMap[key] || key;
-					remappedObj[newKey] = obj[key];
-				}
-				return remappedObj;
-			});
-		}
-
-		let newRawData = [];
-
 		if (dataFileType === "trc") {
 			dataFileType = "json";
 		}
+		const newTraceData = GetFilteredRows();
+		const newRawData = ConvertToTraceFile(newTraceData);
 
-		if (traceDataFiltered.length === 0) {
-			newRawData = CreateNewTraceData(traceData);
-		} else {
-			const remappedData = RemapObjectProperties(traceDataFiltered);
-			newRawData = CreateNewTraceData(remappedData);
-		}
 		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
@@ -522,22 +510,33 @@ function HandleReportPage(
 	/**
 	 * Destroy the data table and reinitializes the program when clicking on "Clear Data Table".
 	 */
-	clearTableButton.addEventListener("click", () => {
-		DisplayWarningNotification(TableMessages.TABLE_CLEARING);
-		clearTableButton.disabled = true;
-		setTimeout(() => {
-			DestroyDataTable();
-			InitializeProgram();
-		}, 5000);
+	clearDataTableButton.addEventListener("click", () => {
+		document
+			.getElementById("clearTableButtonInModal")
+			.addEventListener("click", () => {
+				DisplayWarningNotification(TableMessages.TABLE_CLEARING);
+				clearDataTableButton.disabled = true;
+				setTimeout(() => {
+					DestroyDataTable();
+					InitializeProgram();
+				}, 5000);
+			});
 	});
 }
 
 /**
  * This function manages the functionality of the buttons on the plot pages of the application.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
-function HandlePlotPages(traceData: object[]): void {
+function HandlePlotPages(traceData: TraceData[]): void {
+	const defaultTimeInput = document.getElementById(
+		"defaultTimeInput"
+	) as HTMLInputElement;
+	defaultTime = defaultTimeInput.value;
+	if (!defaultTime) {
+		defaultTime = Values.DEFAULT_TIME;
+	}
 	/**
 	 * Save to local storage when clicking on the "Save Data" button.
 	 */
@@ -545,7 +544,7 @@ function HandlePlotPages(traceData: object[]): void {
 		if (dataFileType === "trc") {
 			dataFileType = "json";
 		}
-		const newRawData: string[] = CreateNewTraceData(traceData);
+		const newRawData: string[] = ConvertToTraceFile(traceData);
 		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
@@ -556,75 +555,72 @@ function HandlePlotPages(traceData: object[]): void {
 	 */
 	viewPlotsButton.disabled = false;
 	viewPlotsButton.addEventListener("click", () => {
-		/**
-		 * Check if the user is on the Absolute Performance Profile.
-		 */
-		if (document.title === PageTitles.ABSOLUTE_PERFORMANCE_PROFILE) {
-			defaultTime = defaultTimeDirectInput.value;
-			gapLimit = gapLimitDirectInput.value;
+		switch (document.title) {
+			case PageTitles.PERFORMANCE_PROFILE: {
+				defaultTime = defaultTimeDirectInput.value;
+				gapLimit = gapLimitDirectInput.value;
 
-			chartData = PlotAbsolutePerformanceProfileSolverTimes(
-				traceData,
-				defaultTime,
-				gapLimit
-			);
-		}
-
-		/**
-		 * Check if the user is on the Average Solver Time page.
-		 */
-		if (document.title === PageTitles.AVERAGE_SOLVER_TIME) {
-			chartData = PlotDataByCategory(
-				traceData,
-				"bar",
-				"SolverTime",
-				`${TraceHeaderMap.SolverTime}.average`,
-				"Average solver time"
-			);
-		}
-
-		/**
-		 * Check if the user is on the Solver Time page.
-		 */
-		if (document.title === PageTitles.SOLVER_TIME) {
-			chartData = PlotAllSolverTimes(traceData);
-		}
-
-		/**
-		 * Check if the user is on the Number of Nodes page.
-		 */
-		if (document.title === PageTitles.NUMBER_OF_NODES) {
-			chartData = PlotDataByCategory(
-				traceData,
-				"bar",
-				"NumberOfNodes",
-				`${TraceHeaderMap.NumberOfNodes}.average`,
-				"Average number of nodes"
-			);
-		}
-
-		/**
-		 * Check if the user is on the Number of Iterations page.
-		 */
-		if (document.title === PageTitles.NUMBER_OF_ITERATIONS) {
-			chartData = PlotDataByCategory(
-				traceData,
-				"bar",
-				"NumberOfIterations",
-				`${TraceHeaderMap.NumberOfIterations}.average`,
-				"Average number of iterations"
-			);
-		}
-
-		/**
-		 * Check if the user is on the Termination Status page.
-		 */
-		if (document.title === PageTitles.TERMINATION_STATUS) {
-			chartData = PlotStatusMessages(
-				traceData,
-				"bar",
-				"Termination status by type"
-			);
+				chartData = PlotPerformanceProfile(
+					traceData,
+					performanceProfileSelector.value,
+					defaultTime,
+					gapLimit
+				);
+				break;
+			}
+			case PageTitles.SOLVER_TIME_PER_SOLVER: {
+				const filterType = filterTypeSelector.value;
+				chartData = PlotDataByCategory(
+					traceData,
+					"SolverTime",
+					"Average, min, max and std for solver time",
+					defaultTime,
+					filterType,
+					`${defaultTime} is set as default time for NaN values.`
+				);
+				break;
+			}
+			case PageTitles.SOLVER_TIME: {
+				chartData = PlotSolverTimes(traceData);
+				break;
+			}
+			case PageTitles.NUMBER_OF_NODES: {
+				chartData = PlotDataByCategory(
+					traceData,
+					"NumberOfNodes",
+					"Average, min, max and std for number of nodes"
+				);
+				break;
+			}
+			case PageTitles.NUMBER_OF_ITERATIONS: {
+				chartData = PlotDataByCategory(
+					traceData,
+					"NumberOfIterations",
+					"Average, min, max and std for number of iterations"
+				);
+				break;
+			}
+			case PageTitles.TERMINATION_STATUS: {
+				chartData = PlotStatusMessages(traceData, "Termination status by type");
+				break;
+			}
+			case PageTitles.SOLUTION_QUALITY: {
+				const category = categorySelector.value;
+				const categoryTitle = TraceHeaderMap[category];
+				chartData = PlotDataByCategory(
+					traceData,
+					category,
+					`Average, min, max and std for ${categoryTitle}`,
+					null,
+					null,
+					"Infinite and NaN values are excluded from the calculations."
+				);
+				break;
+			}
+			case PageTitles.SOLUTION_TIME: {
+				chartData = PlotSolutionTimes(traceData);
+				break;
+			}
 		}
 		ElementStateDisplayedChart();
 	});
@@ -649,11 +645,10 @@ function HandlePlotPages(traceData: object[]): void {
  * This function manages the functionality of the buttons on the compare solvers page of the application.
  * It also handles the comparison of the solvers.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
-function HandleCompareSolversPage(traceData: object[]): void {
-	const solverTimes = ExtractAllSolverTimes(traceData);
-	PopulateCheckboxes(solverTimes);
+function HandleCompareSolversPage(traceData: TraceData[]): void {
+	PopulateCheckboxes(traceData);
 
 	/**
 	 * Save to local storage when clicking on the "Save Data" button.
@@ -662,7 +657,7 @@ function HandleCompareSolversPage(traceData: object[]): void {
 		if (dataFileType === "trc") {
 			dataFileType = "json";
 		}
-		const newRawData: string[] = CreateNewTraceData(traceData);
+		const newRawData: string[] = ConvertToTraceFile(traceData);
 		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
@@ -672,7 +667,18 @@ function HandleCompareSolversPage(traceData: object[]): void {
 	 * Event listener for the compare solvers button.
 	 */
 	compareSolversButton.addEventListener("click", () => {
+		defaultTime = defaultTimeDirectInput.value;
+		gapLimit = gapLimitDirectInput.value;
+
+		const solverTimes = ExtractAllSolverTimesGapType(
+			traceData,
+			gapTypeSelector.value,
+			defaultTime,
+			gapLimit,
+			terminationTypeSelector.value
+		);
 		const selectedSolvers = GetSelectedCheckboxValues();
+
 		if (selectedSolvers.length !== 2) {
 			DisplayErrorNotification(ErrorMessages.SELECT_SOLVER_AMOUNT);
 		}

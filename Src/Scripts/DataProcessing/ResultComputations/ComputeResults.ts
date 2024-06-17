@@ -1,8 +1,10 @@
 import * as math from "mathjs";
 import {
-	defaultTimeDirectInput,
-	gapLimitDirectInput
-} from "../Elements/Elements";
+	ComparisonSummary,
+	StatisticsColumns,
+	TraceData
+} from "../../Interfaces/Interfaces";
+import { Values } from "../../Constants/Values";
 
 /**
  * This function calculates a direction, based on an input parameter 'direction'.
@@ -106,27 +108,10 @@ export function CalculateDualBound(
 /**
  * This function calculates the gap between two numbers, `a` and `b`, based on the given direction `dir` and tolerance `tol`.
  *
- * @export
  * @param {number} a - The first number for the calculation.
  * @param {number} b - The second number for the calculation.
  * @param {string} dir - The direction of the calculation. If "max", the values of `a` and `b` are switched.
- * @param {number} [tol=1e-9] - The tolerance level to check if `a` and `b` are approximately equal.
- *
- * @returns {number} - Returns the gap between `a` and `b`.
- * If `a` and `b` are approximately equal (within `tol`), it returns 0.
- * If the minimum absolute value of `a` and `b` is less than `tol`, or if either `a` or `b` is Infinity,
- * or if `a` and `b` have different signs, or if either `a` or `b` is NaN, it returns Infinity.
- * Otherwise, it returns the relative difference between `a` and `b` divided by the minimum absolute
- * value of `a` and `b`, rounded to 7 decimal places.
- * If the result is -0, it converts it to 0.
- */
-/**
- * This function calculates the gap between two numbers, `a` and `b`, based on the given direction `dir` and tolerance `tol`.
- *
- * @param {number} a - The first number for the calculation.
- * @param {number} b - The second number for the calculation.
- * @param {string} dir - The direction of the calculation. If "max", the values of `a` and `b` are switched.
- * @param {number} [tol=1e-9] - The tolerance level to check if `a` and `b` are approximately equal.
+ * @param {number} tol - The tolerance level to check if `a` and `b` are approximately equal.
  *
  * @returns {number} - Returns the gap between `a` and `b`.
  * If `a` and `b` are approximately equal (within `tol`), it returns 0.
@@ -137,10 +122,10 @@ export function CalculateDualBound(
  * If the result is -0, it converts it to 0.
  */
 export function CalculateGap(
-	a: number,
-	b: number,
+	a: number | string,
+	b: number | string,
 	dir: string,
-	tol = 1e-9
+	tol = Values.TOLERANCE_LEVEL
 ): number {
 	function AreValuesEffectivelyEqual(
 		a: number,
@@ -177,17 +162,17 @@ export function CalculateGap(
 	}
 
 	// Check if the values are effectively equal.
-	if (AreValuesEffectivelyEqual(a, b, tol)) {
+	if (AreValuesEffectivelyEqual(Number(a), Number(b), tol)) {
 		return 0.0;
 	}
 
 	// Check if the gap calculation is not applicable.
-	if (IsGapCalculationNotApplicable(a, b, tol)) {
+	if (IsGapCalculationNotApplicable(Number(a), Number(b), tol)) {
 		return Infinity;
 	}
 
 	// Compute and return the gap.
-	return ComputeGap(a, b);
+	return ComputeGap(Number(a), Number(b));
 }
 
 /**
@@ -257,236 +242,6 @@ export function SetSolverStatus(solverStatus: number | string): string {
 }
 
 /**
- * This function extracts the values of the specified category for each solver from the results data,
- * calculates the statistical measures, and returns these statistics in a structured format.
- *
- * @param {object[]} resultsData - The array of result objects where each object corresponds to a particular solver's output.
- * @param {string} category - The category whose values are to be analyzed. The category could be time, memory, etc.
- *
- * @returns {object} An object with solver names as keys. Each key points to an object that represents the statistical
- * measures (average, min, max, standard deviation, sum, 10th percentile, 25th percentile, 50th percentile, 75th percentile,
- * and 90th percentile) calculated from the values of the specified category for the corresponding solver. If the value of
- * the category is not a finite number, the instance is not added to the final result.
- */
-export function AnalyzeDataByCategory(
-	resultsData: object[],
-	category: string
-): {
-	[SolverName: string]: {
-		average: number;
-		min: number;
-		max: number;
-		std: number;
-		sum: number;
-		percentile_10: number;
-		percentile_25: number;
-		percentile_50: number;
-		percentile_75: number;
-		percentile_90: number;
-	};
-} {
-	const categoryValues = resultsData.reduce((acc, curr) => {
-		const parsedValue = Number(curr[category]);
-
-		if (isFinite(parsedValue)) {
-			if (!acc[curr["SolverName"]]) {
-				acc[curr["SolverName"]] = [];
-			}
-			acc[curr["SolverName"]].push(parsedValue);
-		}
-		return acc;
-	}, {});
-
-	const solverCategoryStats: {
-		[SolverName: string]: {
-			average: number;
-			min: number;
-			max: number;
-			std: number;
-			sum: number;
-			percentile_10: number;
-			percentile_25: number;
-			percentile_50: number;
-			percentile_75: number;
-			percentile_90: number;
-		};
-	} = {};
-
-	for (const solverName in categoryValues) {
-		if (Object.prototype.hasOwnProperty.call(categoryValues, solverName)) {
-			const values = categoryValues[solverName];
-			const avgValue = Number(math.format(math.mean(values), { precision: 7 }));
-			const minValue = Number(math.format(math.min(values), { precision: 7 }));
-			const maxValue = Number(math.format(math.max(values), { precision: 7 }));
-			const stdValue = Number(math.format(math.std(values), { precision: 7 }));
-			const sumValue = Number(math.format(math.sum(values), { precision: 7 }));
-			const p10Value = Number(
-				math.format(math.quantileSeq(values, 0.1), { precision: 7 })
-			);
-			const p25Value = Number(
-				math.format(math.quantileSeq(values, 0.25), { precision: 7 })
-			);
-			const p50Value = Number(
-				math.format(math.quantileSeq(values, 0.5), { precision: 7 })
-			);
-			const p75Value = Number(
-				math.format(math.quantileSeq(values, 0.75), { precision: 7 })
-			);
-			const p90Value = Number(
-				math.format(math.quantileSeq(values, 0.9), { precision: 7 })
-			);
-
-			solverCategoryStats[solverName] = {
-				average: avgValue,
-				min: minValue,
-				max: maxValue,
-				std: stdValue,
-				sum: sumValue,
-				percentile_10: p10Value,
-				percentile_25: p25Value,
-				percentile_50: p50Value,
-				percentile_75: p75Value,
-				percentile_90: p90Value
-			};
-		}
-	}
-	return solverCategoryStats;
-}
-
-/**
- * This function extracts the values of the termination message for each instance per solver, from the results data.
- *
- * @param {object[]} traceData - Array of objects containing the result data.
- * @returns  {string[]} - An object with solver names as keys. Each solver contains a counter of the instance status messages.
- */
-
-export function ExtractStatusMessages(traceData: object[]): string[] {
-	const result = [];
-	const nameErrorMap = new Map();
-
-	traceData.forEach((obj) => {
-		const existingEntry = nameErrorMap.get(obj["SolverName"]);
-
-		if (existingEntry) {
-			existingEntry[obj["SolverStatus"]] =
-				(existingEntry[obj["SolverStatus"]] || 0) + 1;
-		} else {
-			const newEntry = {
-				SolverName: obj["SolverName"],
-				[obj["SolverStatus"]]: 1
-			};
-			nameErrorMap.set(obj["SolverName"], newEntry);
-			result.push(newEntry);
-		}
-	});
-	return result;
-}
-
-/**
- * This function is used to structure trace data (log of the solver) into a more accessible object
- * structure. It takes an array of objects (traceData) and returns an object.
- *
- * The returned object has a unique key for each solver and the value is an array of objects, each containing a 'time'
- * and 'InputFileName'.
- *
- * @param {object[]} traceData - Array of objects containing the result data.
- *
- * @returns {object} - An object with solver names as keys. Each key points to an array of objects where each object
- * contains 'time' and 'InputFileName' property of the corresponding solver. If the time value is 'NA' or is not a number,
- * the instance is not added to the final result.
- */
-export function ExtractAllSolverTimes(traceData: object[]): object {
-	const result = traceData.reduce(
-		(
-			acc: { [key: string]: { time: number; InputFileName: string }[] },
-			obj: object
-		): { [key: string]: { time: number; InputFileName: string }[] } => {
-			if (!acc[obj["SolverName"]]) {
-				acc[obj["SolverName"]] = [];
-			}
-			if (obj["SolverTime"] !== "NA") {
-				const time = Number(obj["SolverTime"]);
-				if (!isNaN(time)) {
-					const inputFileName = obj["InputFileName"];
-					acc[obj["SolverName"]].push({ time, InputFileName: inputFileName });
-				}
-			}
-			return acc;
-		},
-		{}
-	);
-	return result;
-}
-
-/**
- * This function is used to structure trace data (log of the solver) into a more accessible object
- * structure. It takes an array of objects (traceData) and returns an object.
- *
- * The returned object has a unique key for each solver and the value is an array of objects, each containing a 'time'
- * and 'InputFileName'. All results with missing SolverTime, or with a failed status, get a default value of 1000.
- * A fail is if the termination or solver status is "Normal" or "Normal Completion".
- *
- * @param {object[]} traceData - Array of objects containing the result data.
- *
- * @returns {object} - An object with solver names as keys. Each key points to an array of objects where each object
- * contains 'time' and 'InputFileName' property of the corresponding solver.
- */
-export function ExtractAllSolverTimesGapType(
-	traceData: object[],
-	selectedGapType: string,
-	defaultTime?: number | undefined,
-	gapLimit?: number | undefined
-): object {
-	let defaultMaximumTime: number;
-	let primalGapToCompare: number;
-
-	if (!gapLimit || gapLimit < 0) {
-		primalGapToCompare = 0.01;
-		gapLimitDirectInput.value = "0.01";
-	} else {
-		primalGapToCompare = gapLimit;
-	}
-
-	if (!defaultTime || defaultTime < 0) {
-		defaultMaximumTime = 1000.0;
-		defaultTimeDirectInput.value = "1000";
-	} else {
-		defaultMaximumTime = defaultTime;
-	}
-
-	const result = traceData.reduce(
-		(
-			acc: { [key: string]: { time: number; InputFileName: string }[] },
-			obj: object
-		): { [key: string]: { time: number; InputFileName: string }[] } => {
-			if (!acc[obj["SolverName"]]) {
-				acc[obj["SolverName"]] = [];
-			}
-			if (!isNaN(Number(obj["SolverTime"]))) {
-				if (
-					obj[selectedGapType] <= primalGapToCompare &&
-					Number(obj["SolverTime"]) <= defaultMaximumTime &&
-					obj["SolverStatus"] === "Normal Completion"
-				) {
-					acc[obj["SolverName"]].push({
-						time: Number(obj["SolverTime"]),
-						InputFileName: obj["InputFileName"]
-					});
-				}
-			} else {
-				acc[obj["SolverName"]].push({
-					time: defaultMaximumTime,
-					InputFileName: obj["InputFileName"]
-				});
-			}
-			return acc;
-		},
-		{}
-	);
-	return result;
-}
-
-/**
  * This function is used to structure trace data (log of the solver) into a more accessible object
  * structure. It takes an array of objects (traceData) and returns an object.
  *
@@ -500,8 +255,8 @@ export function ExtractAllSolverTimesGapType(
 export function CompareSolvers(
 	solver1: string,
 	solver2: string,
-	solverTimes
-): { better: number; worse: number; equal: number; details: object[] } {
+	solverTimes: object
+): ComparisonSummary {
 	const results1 = solverTimes[solver1];
 	const results2 = solverTimes[solver2];
 
@@ -542,4 +297,138 @@ export function CompareSolvers(
 	});
 
 	return comparisonSummary;
+}
+
+/**
+ * Extracts unique objects from the given traceData array based on the "InputFileName" property.
+ * @param traceData - The array of objects to extract unique objects from.
+ * @returns An array of unique objects based on the "InputFileName" property.
+ */
+export function ExtractUniqueProblems(traceData: TraceData[]): object[] {
+	const unique: object = {};
+	traceData.forEach((item) => {
+		if (!unique[item["InputFileName"]]) {
+			unique[item["InputFileName"]] = {
+				InputFileName: item["InputFileName"],
+				Direction: item["Direction"],
+				NumberOfEquations: item["NumberOfEquations"],
+				NumberOfVariables: item["NumberOfVariables"],
+				NumberOfDiscreteVariables: item["NumberOfDiscreteVariables"],
+				NumberOfNonZeros: item["NumberOfNonZeros"],
+				NumberOfNonlinearNonZeros: item["NumberOfNonlinearNonZeros"],
+				PrimalBoundProblem: item["PrimalBoundProblem"],
+				DualBoundProblem: item["DualBoundProblem"]
+			};
+		}
+	});
+	return Object.values(unique);
+}
+
+/**
+ * This function applies statistical calculations for the instance attributes.
+ * @param data - The data to apply calculations to.
+ * @returns An object containing the calculated statistics.
+ */
+export function CalculateInstanceAttributes(data: object[]): {
+	[key: string]: StatisticsColumns;
+} {
+	const results: {
+		[key: string]: StatisticsColumns;
+	} = {};
+	const keys = Object.keys(data[0]).filter((key) => key !== "InputFileName");
+
+	keys.forEach((key) => {
+		const values: number[] = data
+			.map((item) => Number(item[key]))
+			.filter((value) => !isNaN(value));
+
+		if (values.length > 0) {
+			const avgValue = math.format(math.mean(values), { precision: 7 });
+			const minValue = math.format(math.min(values), { precision: 7 });
+			const maxValue = math.format(math.max(values), { precision: 7 });
+			const stdValue = math.format(math.std(values), { precision: 7 });
+			const p10Value = Number(
+				math.format(math.quantileSeq(values, 0.1), { precision: 7 })
+			);
+			const p25Value = Number(
+				math.format(math.quantileSeq(values, 0.25), { precision: 7 })
+			);
+			const p50Value = Number(
+				math.format(math.quantileSeq(values, 0.5), { precision: 7 })
+			);
+			const p75Value = Number(
+				math.format(math.quantileSeq(values, 0.75), { precision: 7 })
+			);
+			const p90Value = Number(
+				math.format(math.quantileSeq(values, 0.9), { precision: 7 })
+			);
+
+			const countValue = values.length;
+
+			results[key] = {
+				countValue,
+				avgValue: Number(avgValue),
+				minValue: Number(minValue),
+				maxValue: Number(maxValue),
+				stdValue: Number(stdValue),
+				p10Value: Number(p10Value),
+				p25Value: Number(p25Value),
+				p50Value: Number(p50Value),
+				p75Value: Number(p75Value),
+				p90Value: Number(p90Value)
+			};
+		}
+	});
+
+	return results;
+}
+
+/**
+ * This function applies statistical calculations for the solve attributes.
+ * @param data - The data to apply calculations to.
+ * @param specificKeys - The keys to calculate the metrics for.
+ * @returns An object containing the calculated statistics.
+ */
+export function CalculateSolveAttributes(
+	data: object[],
+	specificKeys: string[]
+): {
+	[key: string]: StatisticsColumns;
+} {
+	const results: {
+		[key: string]: StatisticsColumns;
+	} = {};
+
+	specificKeys.forEach((key) => {
+		const values: number[] = data
+			.map((item) => parseFloat(item[key]))
+			.filter((value) => !isNaN(value));
+
+		if (values.length > 0) {
+			results[key] = {
+				countValue: values.length,
+				avgValue: Number(math.format(math.mean(values), { precision: 7 })),
+				minValue: Number(math.format(math.min(values), { precision: 7 })),
+				maxValue: Number(math.format(math.max(values), { precision: 7 })),
+				stdValue: Number(math.format(math.std(values), { precision: 7 })),
+				p10Value: Number(
+					math.format(math.quantileSeq(values, 0.1), { precision: 7 })
+				),
+				p25Value: Number(
+					math.format(math.quantileSeq(values, 0.25), { precision: 7 })
+				),
+				p50Value: Number(
+					math.format(math.quantileSeq(values, 0.5), { precision: 7 })
+				),
+				p75Value: Number(
+					math.format(math.quantileSeq(values, 0.75), { precision: 7 })
+				),
+				p90Value: Number(
+					math.format(math.quantileSeq(values, 0.9), { precision: 7 })
+				)
+			};
+		}
+	});
+
+	return results;
 }

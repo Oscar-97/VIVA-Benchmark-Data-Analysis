@@ -1,502 +1,363 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="theme-color" content="#ffffff" />
-		<meta
-			name="description"
-			content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers."
-		/>
-		<!-- Manifest for PWA -->
-		<link rel="manifest" href="manifest.json" />
-		<!-- Title and icon -->
-		<title id="ReportTitle">Report</title>
-		<link rel="icon" href="./Src/CSS/tab_icon.png" />
-		<!-- Styling -->
-		<link href="./Dist/main.css" rel="stylesheet" />
-	</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta
+      name="description"
+      content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers."
+    />
+    <!-- Manifest for PWA -->
+    <link rel="manifest" href="manifest.json" />
+    <!-- Title and icon -->
+    <title id="ReportTitle">Report</title>
+    <link rel="icon" href="./Src/CSS/tab_icon.png" />
+    <!-- Styling -->
+    <link href="./Dist/main.css" rel="stylesheet" />
+  </head>
 
-	<body>
-		<nav class="navbar sticky-top navbar-expand-xxl navbar-light bg-light">
-			<div class="container-fluid">
-				<span class="navbar-brand">
-					<img
-						src="./Src/CSS/tab_icon.png"
-						width="30"
-						height="30"
-						class="d-inline-block align-top"
-						alt="VIVA logo"
-					/>
-					<b>VIVA</b></span
-				>
-				<button
-					class="navbar-toggler"
-					type="button"
-					data-bs-toggle="collapse"
-					data-bs-target="#navbarNav"
-					aria-controls="navbarNav"
-					aria-expanded="false"
-					aria-label="Toggle navigation"
-				>
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="navbarNav">
-					<ul class="navbar-nav">
-						<li class="nav-item">
-							<span class="nav-link active" aria-current="page"
-								><i class="bi bi-file-spreadsheet"></i> Table</span
-							>
-						</li>
-						<li class="nav-item dropdown">
-							<a
-								class="nav-link dropdown-toggle"
-								role="button"
-								data-bs-toggle="dropdown"
-								aria-expanded="false"
-								><i class="bi bi-bar-chart-steps"></i> Plots</a
-							>
-							<ul
-								class="dropdown-menu mb-2"
-								aria-labelledby="navbarDropdownMenuLink"
-							>
-								<li>
-									<a
-										class="dropdown-item"
-										href="./Src/Pages/absolute_performance_profile.html"
-										><i class="bi bi-graph-up-arrow"> </i>Absolute Performance
-										Profile</a
-									>
-								</li>
-								<li>
-									<a
-										class="dropdown-item"
-										href="./Src/Pages/average_solver_time.html"
-										><i class="bi bi-bar-chart-line-fill"></i> Average Solver
-										Time</a
-									>
-								</li>
-								<li>
-									<a class="dropdown-item" href="./Src/Pages/solver_time.html"
-										><i class="bi bi-graph-up"></i> Solver Time</a
-									>
-								</li>
-								<hr />
-								<li>
-									<a
-										class="dropdown-item"
-										href="./Src/Pages/number_of_nodes.html"
-										><i class="bi bi-bar-chart-line"></i> Number of Nodes</a
-									>
-								</li>
-								<li>
-									<a
-										class="dropdown-item"
-										href="./Src/Pages/number_of_iterations.html"
-										><i class="bi bi-bar-chart-line"></i> Number of
-										Iterations</a
-									>
-								</li>
-								<li>
-									<a
-										class="dropdown-item"
-										href="./Src/Pages/termination_status.html"
-										><i class="bi bi-bar-chart-line"></i> Termination Status</a
-									>
-								</li>
-							</ul>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" aria-current="page" href="./Src/Pages/compare_solvers.html"
-								><i class="bi bi-view-stacked"></i> Compare Solvers</a
-							>
-						</li>
-						<li class="nav-item">
-							<div class="input-group" id="uploadFileGroup">
-								<input
-									type="file"
-									class="form-control"
-									id="fileInput"
-									aria-describedby="inputGroupFileAddon04"
-									aria-label="Upload"
-									value=""
-									data-toggle="tooltip"
-									data-placement="top"
-									title="Select and upload a trace or JSON file."
-									multiple
-								/>
-								<button
-									class="btn btn-outline-primary"
-									type="button"
-									id="importDataButton"
-									disabled="true"
-									data-toggle="tooltip"
-									data-placement="top"
-									title="Upload the selected file for processing."
-								>
-									<i class="bi bi-upload"></i> Upload
-								</button>
-							</div>
-						</li>
-						<li class="nav-item">
-							<div class="input-group" id="librarySelectorGroup">
-								<span class="input-group-text">Library</span>
-								<select class="form-select" id="librarySelector" aria-label="Select library">
-								  <option value="none" selected>None</option>
-								  <option value="MINLPLib">MINLPLib</option>
-								  <option value="MIPLIB">MIPLIB</option>
-								</select>
-							</div>
-						</li>						
-					</ul>
-					<ul class="navbar-nav ms-auto">
-						<li class="nav-item">
-							<a class="nav-link" href="./Docs/index.html" target="_blank"
-								><i class="bi bi-journal-code"></i> Docs</a
-							>
-						</li>
-						<li class="nav-item">
-							<a
-								class="nav-link"
-								href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis"
-								target="_blank"
-								><i class="bi bi-github"></i> GitHub</a
-							>
-						</li>
-						<li class="nav-item">
-							<a
-								class="nav-link"
-								href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues/new"
-								target="_blank"
-								><i class="bi bi-plus-square"></i> Submit Issue</a
-							>
-						</li>
-						<li class="nav-item">
-							<button
-								class="nav-link"
-								aria-label="Help"
-								data-bs-toggle="modal"
-								data-bs-target="#fileFormatInformationModal"
-								name="Help"
-							>
-								<i class="bi bi-question-circle-fill"></i> Help
-							</button>
-						</li>
-						<li class="nav-item">
-							<button
-								class="nav-link"
-								aria-label="Demo-Data"
-								id="demoModeButton"
-							>
-								<i class="bi bi-activity"></i> Demo-Data
-							</button>
-						</li>
-						<li class="nav-item">
-							<a
-								class="nav-link"
-								href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/releases"
-								target="_blank"
-								id="releaseVersionTagSpan"
-							></a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<div class="alert alert-dismissible" role="alert" id="alertNotification">
-			<i id="alertIcon" class="bi"></i>
-			<span id="alertMessage"></span>
-			<button
-				id="closeAlertButton"
-				type="button"
-				class="btn-close"
-				aria-label="Close"
-			></button>
-		</div>
-		<div
-			id="buttonContainer"
-			class="d-flex flex-wrap justify-content-start gap-2"
-		>
-			<div class="col-auto">
-				<button
-					class="btn btn-success btn-sm"
-					id="viewTableButton"
-					disabled="true"
-					data-toggle="tooltip"
-					data-placement="top"
-					title="View the table."
-				>
-					<i class="bi bi-table"></i> View Table
-				</button>
-			</div>
-			<div class="col-auto">
-				<button
-					class="btn btn-primary btn-sm"
-					id="showSelectedRowsButton"
-					disabled="true"
-					data-toggle="tooltip"
-					data-placement="top"
-					title="View rows that have been selected from the table."
-				>
-					<i class="bi bi-funnel"></i> Show Selected Rows
-				</button>
-			</div>
-			<div class="col-auto">
-				<button
-					class="btn btn-primary btn-sm"
-					id="saveLocalStorageButton"
-					disabled="true"
-					data-toggle="tooltip"
-					data-placement="top"
-					title="Save current table configuration to local storage."
-				>
-					<i class="bi bi-save"></i> Save Data
-				</button>
-			</div>
-			<div class="col-auto vertical-separator"></div>
-			<div class="col-auto">
-				<button
-					class="btn btn-dark btn-sm"
-					type="button"
-					id="downloadConfigurationButtonLayer"
-					disabled="true"
-				>
-					<a
-						id="downloadConfigurationButton"
-						data-toggle="tooltip"
-						data-placement="top"
-						title="Download the user configuration."
-						><i class="bi bi-download"></i> Download Saved Data</a
-					>
-				</button>
-			</div>
-			<div class="col-auto">
-				<button
-					class="btn btn-dark btn-sm"
-					type="button"
-					data-bs-toggle="modal"
-					data-bs-target="#configurationSettingsModal"
-					id="configurationSettingsButton"
-					disabled="true"
-					data-toggle="tooltip"
-					data-placement="top"
-					title="Customize the downloadable user configuration file."
-				>
-					<i class="bi bi-gear"></i> Download Data
-				</button>
-			</div>
-			<div class="col-auto vertical-separator"></div>
-			<div class="col-auto">
-				<button
-					class="btn btn-danger btn-sm"
-					id="deleteLocalStorageButton"
-					data-toggle="tooltip"
-					data-placement="top"
-					title="Delete current table configuration from local storage."
-				>
-					<i class="bi bi-trash"></i> Delete Data
-				</button>
-			</div>
-			<div class="col-auto">
-				<button
-					class="btn btn-danger btn-sm"
-					id="clearTableButton"
-					data-toggle="tooltip"
-					data-placement="top"
-					title="Clear current table."
-				>
-					<i class="bi bi-x-circle-fill"></i> Clear Data Table
-				</button>
-			</div>
-		</div>
-		<hr />
-		<div
-			id="loaderContainer"
-			class="align-items-center justify-content-center"
-		></div>
-		<div id="dataTable">
-			<!-- Table element will be created here. -->
-		</div>
-		<!-- Modal with file information. -->
-		<div
-			class="modal fade"
-			id="fileFormatInformationModal"
-			tabindex="-1"
-			aria-labelledby="fileFormatInformationModalLabel"
-			aria-hidden="true"
-		>
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="fileFormatInformationModalLabel">
-							<i class="bi bi-info-circle"></i> Supported File Formats
-						</h5>
-						<button
-							type="button"
-							class="btn-close"
-							data-bs-dismiss="modal"
-							aria-label="Close"
-						></button>
-					</div>
-					<div class="modal-body">
-						<p>
-							Upload either one or more <b>.trc</b> files, or a single
-							<b>.json</b> file with the structure mentioned in the
-							documentation or in this collapsable list of
-							<u>standard</u> headers.
-						</p>
-						<p>
-							Optionally, one can also upload a <b>.csv</b> file containing
-							information about instance properties, or a <b>.solu</b> file
-							containing the best known bounds.
-						</p>
-						<p>
-							See the documentation for more information regarding the
-							application.
-						</p>
-
-						<div class="d-grid gap-2">
-							<button
-								class="btn btn-success"
-								type="button"
-								data-bs-toggle="collapse"
-								data-bs-target="#expandableList"
-								aria-expanded="false"
-								aria-controls="expandableList"
-							>
-								<i class="bi bi-list"></i> List of Headers
-							</button>
-						</div>
-
-						<div class="collapse" id="expandableList">
-							<ul class="list-group mt-3">
-								<li class="list-group-item">InputFileName</li>
-								<li class="list-group-item">ModelType</li>
-								<li class="list-group-item">SolverName</li>
-								<li class="list-group-item">NLP</li>
-								<li class="list-group-item">MIP</li>
-								<li class="list-group-item">JulianDate</li>
-								<li class="list-group-item">Direction</li>
-								<li class="list-group-item">NumberOfEquations</li>
-								<li class="list-group-item">NumberOfVariables</li>
-								<li class="list-group-item">NumberOfDiscreteVariables</li>
-								<li class="list-group-item">NumberOfNonZeros</li>
-								<li class="list-group-item">NumberOfNonlinearNonZeros</li>
-								<li class="list-group-item">OptionFile</li>
-								<li class="list-group-item">ModelStatus</li>
-								<li class="list-group-item">TermStatus</li>
-								<li class="list-group-item">ObjectiveValue</li>
-								<li class="list-group-item">ObjectiveValueEstimate</li>
-								<li class="list-group-item">SolverTime</li>
-								<li class="list-group-item">NumberOfIterations</li>
-								<li class="list-group-item">NumberOfDomainViolations</li>
-								<li class="list-group-item">NumberOfNodes</li>
-								<li class="list-group-item">UserComment</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- Modal with configuration file options. -->
-		<div
-			class="modal fade"
-			id="configurationSettingsModal"
-			tabindex="-1"
-			aria-labelledby="configurationSettingsModalLabel"
-			aria-hidden="true"
-		>
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="userConfigurationSettingsModalLabel">
-							<i class="bi bi-gear-fill"></i> UserConfiguration Settings
-						</h5>
-						<button
-							type="button"
-							class="btn-close"
-							data-bs-dismiss="modal"
-							aria-label="Close"
-						></button>
-					</div>
-					<div class="modal-body">
-						<p>Configure the <b>UserConfiguration.js</b> to be downloaded.</p>
-
-						<i>Required</i>
-						<div class="mb-3">
-							<label for="solverSelector" class="form-label"
-								>Select the solvers to save the instances for.</label
-							>
-							<select
-								class="form-select"
-								multiple
-								aria-label="Select solvers"
-								id="solverSelector"
-							></select>
-						</div>
-
-						<i>Optional</i>
-						<p>
-							Set the defaultTime for the to be used for all results with
-							missing SolverTime or with a failed status. The default fallback
-							value is 1000.
-							<br /><b>NOTE!</b> Only takes effect on the absolute performance
-							profile chart.
-						</p>
-						<div class="form-floating mb-3">
-							<input
-								type="number"
-								class="form-control"
-								placeholder="Enter a defaultTime."
-								aria-label="Input default time"
-								aria-describedby="basic-addon1"
-								min="1"
-								id="defaultTimeInput"
-							/>
-							<label for="defaultTimeInput">defaultTime</label>
-						</div>
-
-						<i>Optional</i>
-						<p>
-							Specify the gapLimit percentage to use for filtering results.
-							<br /><b>NOTE!</b> Only takes effect on the absolute performance
-							profile chart.
-						</p>
-						<div class="form-floating mb-3">
-							<input
-								type="number"
-								class="form-control"
-								placeholder="Enter a gapLimit."
-								aria-label="Input gap limit"
-								aria-describedby="basic-addon1"
-								min="0"
-								step="0.01"
-								id="gapLimitInput"
-							/>
-							<label for="gapLimitInput">gapLimit</label>
-						</div>
-
-						<div class="modal-footer">
-							<button
-								type="button"
-								class="btn btn-primary"
-								id="downloadCustomConfigurationButtonLayer"
-							>
-								<a
-									id="downloadCustomConfigurationButton"
-									data-toggle="tooltip"
-									data-placement="top"
-									title="Download a customized user configuration."
-									><i class="bi bi-download"></i> Download Data</a
-								>
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- Main script -->
-		<script id="MainFunction" src="Dist/bundle.js"></script>
-	</body>
+  <body>
+    <nav class="navbar sticky-top navbar-expand-xxl navbar-light bg-light">
+      <div class="container-fluid">
+        <span class="navbar-brand">
+          <img
+            src="./Src/CSS/tab_icon.png"
+            width="30"
+            height="30"
+            class="d-inline-block align-top"
+            alt="VIVA logo"
+          />
+          <b>VIVA</b></span
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <span class="nav-link active" aria-current="page"
+                ><i class="bi bi-file-spreadsheet"></i> Table</span
+              >
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                ><i class="bi bi-bar-chart-steps"></i> Plots</a
+              >
+              <ul
+                class="dropdown-menu mb-2"
+                aria-labelledby="navbarDropdownMenuLink"
+              >
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="./Src/Pages/performance_profile.html"
+                    ><i class="bi bi-graph-up-arrow"> </i>Performance Profile</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="./Src/Pages/solver_time_all.html"
+                    ><i class="bi bi-bar-chart-line-fill"></i> Solver Time per
+                    Solver</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="./Src/Pages/solver_time.html"
+                    ><i class="bi bi-graph-up"></i> Solver Time per Instance</a
+                  >
+                </li>
+                <hr />
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="./Src/Pages/number_of_nodes.html"
+                    ><i class="bi bi-bar-chart-line"></i> Number of Nodes</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="./Src/Pages/number_of_iterations.html"
+                    ><i class="bi bi-bar-chart-line"></i> Number of
+                    Iterations</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="./Src/Pages/termination_status.html"
+                    ><i class="bi bi-bar-chart-line"></i> Termination Status</a
+                  >
+                </li>
+                <hr />
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="./Src/Pages/solution_quality.html"
+                    ><i class="bi bi-bar-chart-line-fill"></i> Solution
+                    Quality</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="./Src/Pages/solution_time.html"
+                    ><i class="bi bi-circle-square"></i> Solution Time</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                aria-current="page"
+                href="./Src/Pages/compare_solvers.html"
+                ><i class="bi bi-view-stacked"></i> Compare Solvers</a
+              >
+            </li>
+            <li class="nav-item">
+              <div class="input-group" id="uploadFileGroup">
+                <input
+                  type="file"
+                  class="form-control"
+                  id="fileInput"
+                  aria-describedby="inputGroupFileAddon04"
+                  aria-label="Upload"
+                  value=""
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Select and upload a trace or JSON file."
+                  multiple
+                />
+                <button
+                  class="btn btn-outline-primary"
+                  type="button"
+                  id="importDataButton"
+                  disabled="true"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Upload the selected file for processing."
+                >
+                  <i class="bi bi-upload"></i> Upload
+                </button>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="input-group" id="librarySelectorGroup">
+                <span class="input-group-text">Library</span>
+                <select
+                  class="form-select"
+                  id="librarySelector"
+                  aria-label="Select library"
+                >
+                  <option value="none" selected>None</option>
+                  <option value="MINLPLib">MINLPLib</option>
+                  <option value="MIPLIB_2017">MIPLIB 2017</option>
+                  <option value="MIPLIB_2010">MIPLIB 2010</option>
+                </select>
+              </div>
+            </li>
+          </ul>
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="./Docs/index.html" target="_blank"
+                ><i class="bi bi-journal-code"></i> Docs</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis"
+                target="_blank"
+                ><i class="bi bi-github"></i> GitHub</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues/new"
+                target="_blank"
+                ><i class="bi bi-plus-square"></i> New Issue</a
+              >
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link"
+                aria-label="Help"
+                data-bs-toggle="modal"
+                data-bs-target="#fileFormatInformationModal"
+                name="Help"
+              >
+                <i class="bi bi-question-circle-fill"></i> Help
+              </button>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/releases"
+                target="_blank"
+                id="releaseVersionTagSpan"
+              ></a>
+            </li>
+            <li class="nav-item">
+              <div class="input-group" id="demoDataSelectorGroup">
+                <button class="input-group-text" id="demoModeButton">
+                  <i class="bi bi-activity"></i>Demo
+                </button>
+                <select
+                  class="form-select"
+                  id="demoDataSelector"
+                  aria-label="Select demo data"
+                >
+                  <option value="Demo_1">MIP</option>
+                  <option value="Demo_2">MINLP</option>
+                </select>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="alert alert-dismissible" role="alert" id="alertNotification">
+      <i id="alertIcon" class="bi"></i>
+      <span id="alertMessage"></span>
+      <button
+        id="closeAlertButton"
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div
+      id="buttonContainer"
+      class="d-flex flex-wrap justify-content-start gap-2"
+    >
+      <div class="col-auto">
+        <button
+          class="btn btn-success btn-sm"
+          id="viewTableButton"
+          disabled="true"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="View the table."
+        >
+          <i class="bi bi-table"></i> View Table
+        </button>
+      </div>
+      <div class="col-auto">
+        <button
+          class="btn btn-primary btn-sm"
+          id="showSelectedRowsButton"
+          disabled="true"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="View rows that have been selected from the table."
+        >
+          <i class="bi bi-funnel"></i> Show Selected Rows
+        </button>
+      </div>
+      <div class="col-auto">
+        <button
+          class="btn btn-primary btn-sm"
+          id="saveLocalStorageButton"
+          disabled="true"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Save current table configuration to local storage."
+        >
+          <i class="bi bi-save"></i> Save Data
+        </button>
+      </div>
+      <div class="col-auto vertical-separator"></div>
+      <div class="col-auto">
+        <button
+          class="btn btn-dark btn-sm"
+          type="button"
+          id="downloadConfigurationButtonLayer"
+          disabled="true"
+        >
+          <a
+            id="downloadConfigurationButton"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Download the user configuration."
+            ><i class="bi bi-download"></i> Download Saved Data</a
+          >
+        </button>
+      </div>
+      <div class="col-auto">
+        <button
+          class="btn btn-dark btn-sm"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#configurationSettingsModal"
+          id="configurationSettingsButton"
+          disabled="true"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Customize the downloadable user configuration file."
+        >
+          <i class="bi bi-gear"></i> Download Data
+        </button>
+      </div>
+      <div class="col-auto vertical-separator"></div>
+      <div class="col-auto">
+        <button
+          class="btn btn-danger btn-sm"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#deleteDataModal"
+          id="deleteLocalStorageButton"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Delete current table configuration from local storage."
+        >
+          <i class="bi bi-trash"></i> Delete Data
+        </button>
+      </div>
+      <div class="col-auto">
+        <button
+          class="btn btn-danger btn-sm"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#clearDataTableModal"
+          id="clearTableButton"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Clear current table and refresh table page."
+        >
+          <i class="bi bi-x-circle-fill"></i> Clear Data Table
+        </button>
+      </div>
+    </div>
+    <hr />
+    <div
+      id="loaderContainer"
+      class="align-items-center justify-content-center"
+    ></div>
+    <div id="dataTable">
+      <!-- Table element will be created here. -->
+    </div>
+    <div id="instanceAttributesTable">
+      <!-- Instance attributes statistics table element will be created here. -->
+    </div>
+    <div id="solveAttributesTable">
+      <!-- Solve attributes statistics table element will be created here. -->
+    </div>
+    <!-- Main script -->
+    <script id="MainFunction" src="Dist/bundle.js"></script>
+  </body>
 </html>

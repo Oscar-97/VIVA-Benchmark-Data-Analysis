@@ -1,4 +1,5 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path');
 
 module.exports = {
   mode: "production",
@@ -6,8 +7,10 @@ module.exports = {
   output: {
     filename: "bundle.js",
     chunkFilename: "[name].js",
-    path: __dirname + "/Dist",
+    path: path.resolve(__dirname, "Dist"),
+    publicPath: '/Dist/',
   },
+  target: 'web',
   devtool: "source-map",
   resolve: {
     // Add '.ts' and '.tsx' as resolvable extensions.
@@ -42,5 +45,28 @@ module.exports = {
   ],
   optimization: {
     minimize: true
+  },
+  devServer: {
+    static: {
+      directory: path.join(__dirname, ''),
+    },
+    compress: true,
+    port: 9000,
+    hot: false,
+    open: {
+      target: ['/report.html']
+    },
+    devMiddleware: {
+      publicPath: '/Dist/',
+      writeToDisk: true,
+   },
+    watchFiles: ['Src/**/*', 'report.html'],
+    client: {
+      progress: true,
+      overlay: false,
+    },
+    headers: {
+      'Cache-Control': 'no-store',
+    },
   },
 };

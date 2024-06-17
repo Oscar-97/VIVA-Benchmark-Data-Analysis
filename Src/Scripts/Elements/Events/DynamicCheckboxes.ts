@@ -1,25 +1,30 @@
-import { ErrorMessages } from "../Constants/Messages";
+import { ErrorMessages } from "../../Constants/Messages";
+import { TraceData } from "../../Interfaces/Interfaces";
 import { DisplayErrorNotification } from "./DisplayAlertNotification";
 
 /**
  * This function populates checkboxes for solvers.
  *
- * @param {object} solvers - An object containing solver names as keys.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
-export function PopulateCheckboxes(solvers: object): void {
+export function PopulateCheckboxes(traceData: TraceData[]): void {
 	const container = document.getElementById("solverOptions");
 
-	Object.keys(solvers).forEach((solverName) => {
+	const uniqueSolvers = Array.from(
+		new Set(traceData.map((solver) => solver["SolverName"]))
+	);
+
+	uniqueSolvers.forEach((solver: string) => {
 		const checkbox = document.createElement("input");
 		checkbox.type = "checkbox";
-		checkbox.id = solverName;
-		checkbox.value = solverName;
-		checkbox.name = solverName;
+		checkbox.id = solver;
+		checkbox.value = solver;
+		checkbox.name = solver;
 		checkbox.classList.add("form-check-input");
 
 		const label = document.createElement("label");
-		label.htmlFor = solverName;
-		label.appendChild(document.createTextNode(solverName));
+		label.htmlFor = solver;
+		label.appendChild(document.createTextNode(solver));
 		label.classList.add("form-check-label");
 
 		const div = document.createElement("div");

@@ -3,8 +3,9 @@ import {
 	alertIcon,
 	alertMessage,
 	closeAlertButton
-} from "./Elements";
+} from "../Elements";
 import $ from "jquery";
+let notificationTimeout;
 
 /**
  * This function displays a success notification with the specified message.
@@ -15,6 +16,7 @@ import $ from "jquery";
 export function DisplayAlertNotification(message: string): void {
 	try {
 		// Remove other alert classes if notification is already displayed and it is triggered again.
+		alertNotification.style.display = "none";
 		alertNotification.classList.remove("alert-warning", "alert-danger");
 	} finally {
 		alertNotification.classList.add("alert-success");
@@ -29,7 +31,8 @@ export function DisplayAlertNotification(message: string): void {
 			alertNotification.style.display = "none";
 		});
 
-		setTimeout(() => {
+		clearTimeout(notificationTimeout);
+		notificationTimeout = setTimeout(() => {
 			$(alertNotification).animate({ opacity: 0 }, 250, function () {
 				alertNotification.style.display = "none";
 				alertNotification.classList.remove("alert-success");
@@ -46,6 +49,7 @@ export function DisplayAlertNotification(message: string): void {
  */
 export function DisplayWarningNotification(message: string): void {
 	try {
+		alertNotification.style.display = "none";
 		alertNotification.classList.remove("alert-success", "alert-danger");
 	} finally {
 		alertNotification.classList.add("alert-warning");
@@ -60,7 +64,8 @@ export function DisplayWarningNotification(message: string): void {
 			alertNotification.style.display = "none";
 		});
 
-		setTimeout(() => {
+		clearTimeout(notificationTimeout);
+		notificationTimeout = setTimeout(() => {
 			$(alertNotification).animate({ opacity: 0 }, 250, function () {
 				alertNotification.style.display = "none";
 				alertNotification.classList.remove("alert-warning");
@@ -77,6 +82,7 @@ export function DisplayWarningNotification(message: string): void {
  */
 export function DisplayErrorNotification(message: string): void {
 	try {
+		alertNotification.style.display = "none";
 		alertNotification.classList.remove("alert-success", "alert-warning");
 	} finally {
 		alertNotification.classList.add("alert-danger");
@@ -91,7 +97,8 @@ export function DisplayErrorNotification(message: string): void {
 			alertNotification.style.display = "none";
 		});
 
-		setTimeout(() => {
+		clearTimeout(notificationTimeout);
+		notificationTimeout = setTimeout(() => {
 			$(alertNotification).animate({ opacity: 0 }, 250, function () {
 				alertNotification.style.display = "none";
 				alertNotification.classList.remove("alert-danger");

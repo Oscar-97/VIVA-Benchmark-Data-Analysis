@@ -2,6 +2,7 @@
  * Default headers for the trace file.
  */
 import { DEFAULT_HEADERS } from "../Constants/TraceHeaders";
+import { TraceData } from "../Interfaces/Interfaces";
 
 /**
  * This function extracts headers from the array with raw data results.
@@ -60,10 +61,16 @@ function ProcessLines(
 		const fileName = currentLine[0];
 		const solverName = currentLine[2];
 
-		if (previousRow[fileName] === solverName) {
+		if (
+			previousRow["fileName"] === fileName &&
+			previousRow["solverName"] === solverName
+		) {
+			previousRow["fileName"] = "";
+			previousRow["solverName"] = "solverName";
 			continue;
 		}
-		previousRow[fileName] = solverName;
+		previousRow[fileName] = fileName;
+		previousRow[solverName] = solverName;
 
 		if (
 			currentLine.some((cell) => {
@@ -120,8 +127,7 @@ function ProcessLines(
  */
 export function ExtractTraceData(unprocessedData: string[]): object[] {
 	const firstLine = unprocessedData[0].split(",");
-	let traceData: object[] = [];
-
+	let traceData: TraceData[] = [];
 	if (firstLine[0].startsWith("*")) {
 		const headers = ExtractHeaders(unprocessedData);
 		const startIdx = unprocessedData.findIndex((line) => {

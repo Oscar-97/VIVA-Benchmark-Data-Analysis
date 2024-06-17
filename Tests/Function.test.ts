@@ -4,7 +4,7 @@ jest.mock("../Src/Scripts/Elements/Elements", () => ({
 	gapLimitDirectInput: jest.fn()
 }));
 
-jest.doMock("../Src/Scripts/DataProcessing/GetExtraData", () => {
+jest.doMock("../Src/Scripts/DataProcessing/ReadMetaData", () => {
 	return {
 		DOMElement: jest.fn()
 	};
@@ -15,11 +15,16 @@ import {
 	CalculatePrimalBound,
 	CalculateDualBound,
 	CalculateGap,
-	AnalyzeDataByCategory,
-	ExtractAllSolverTimes,
+	CompareSolvers,
 	SetModelStatus,
 	SetSolverStatus
-} from "../Src/Scripts/DataProcessing/CalculateResults";
+} from "../Src/Scripts/DataProcessing/ResultComputations/ComputeResults";
+
+import {
+	ComputeStatisticalMeasures,
+	ExtractAllSolverTimes,
+	ExtractAllSolverTimesGapType
+} from "../Src/Scripts/DataProcessing/ChartsComputations/ComputeChartData";
 
 /**
  * Mockup data.
@@ -27,7 +32,7 @@ import {
 const mockupTraceData = [
 	{
 		SolverName: "TestSolver1",
-		SolverTime: "0.041120867",
+		SolverTime: 0.041120867,
 		InputFileName: "TestInstance",
 		PrimalBound: 1.33594e1,
 		DualBound: 1.96894e1,
@@ -35,7 +40,7 @@ const mockupTraceData = [
 	},
 	{
 		SolverName: "TestSolver1",
-		SolverTime: "0.560621249",
+		SolverTime: 0.560621249,
 		InputFileName: "TestInstance_B",
 		PrimalBound: -5.96e3,
 		DualBound: -3.153852e4,
@@ -43,7 +48,7 @@ const mockupTraceData = [
 	},
 	{
 		SolverName: "TestSolver2",
-		SolverTime: "900.971",
+		SolverTime: 900.971,
 		InputFileName: "TestInstance_X",
 		PrimalBound: -5.905217,
 		DualBound: 1.43358e1,
@@ -51,7 +56,7 @@ const mockupTraceData = [
 	},
 	{
 		SolverName: "TestSolver2",
-		SolverTime: "5.922",
+		SolverTime: 5.922,
 		InputFileName: "TestInstance_Y",
 		PrimalBound: 1.13389e2,
 		DualBound: -2.0423e4,
@@ -774,20 +779,12 @@ describe("Coverage in computation functions with mockup data.", () => {
 
 	describe("ExtractAllSolverTimes", () => {
 		test("Extracts solver times correctly.", () => {
-			const result = ExtractAllSolverTimes(mockupTraceData);
-
-			expect(
-				(result as { [key: string]: { time: number; InputFileName: string }[] })
-					.TestSolver1
-			).toHaveLength(2);
-			expect(
-				(result as { [key: string]: { time: number; InputFileName: string }[] })
-					.TestSolver1[0]
-			).toHaveProperty("time", 0.041120867);
-			expect(
-				(result as { [key: string]: { time: number; InputFileName: string }[] })
-					.TestSolver1[0]
-			).toHaveProperty("InputFileName", "TestInstance");
+			const result = ExtractAllSolverTimes(
+				mockupTraceData.map((data) => ({
+					...data,
+					SolverTime: data.SolverTime
+				}))
+			);
 			expect(
 				(result as { [key: string]: { time: number; InputFileName: string }[] })
 					.TestSolver1[1]
@@ -820,63 +817,123 @@ describe("Coverage in computation functions with mockup data.", () => {
 		});
 	});
 
-	describe("AnalyzeDataByCategory", () => {
+	describe("ExtractAllSolverTimesGapType", () => {
+		it("should return an empty object if traceData is empty", () => {
+			const result = ExtractAllSolverTimesGapType([], "PrimalGap");
+			expect(result).toEqual({
+				"Virtual Best Solver": [],
+				"Virtual Worst Solver": []
+			});
+		});
+	});
+
+	describe("ComputeStatisticalMeasures", () => {
 		const category = "SolverTime";
 
 		test("Calculate the statistics table correctly.", () => {
-			const result = AnalyzeDataByCategory(mockupTraceData, category);
+			const result = ComputeStatisticalMeasures(mockupTraceData, category);
 
 			expect(result).toEqual({
 				TestSolver1: {
-					average: expect.any(Number),
-					min: expect.any(Number),
-					max: expect.any(Number),
-					std: expect.any(Number),
-					sum: expect.any(Number),
-					percentile_10: expect.any(Number),
-					percentile_25: expect.any(Number),
-					percentile_50: expect.any(Number),
-					percentile_75: expect.any(Number),
-					percentile_90: expect.any(Number)
+					avgValue: expect.any(Number),
+					minValue: expect.any(Number),
+					maxValue: expect.any(Number),
+					stdValue: expect.any(Number),
+					sumValue: expect.any(Number),
+					p10Value: expect.any(Number),
+					p25Value: expect.any(Number),
+					p50Value: expect.any(Number),
+					p75Value: expect.any(Number),
+					p90Value: expect.any(Number)
 				},
 				TestSolver2: {
-					average: expect.any(Number),
-					min: expect.any(Number),
-					max: expect.any(Number),
-					std: expect.any(Number),
-					sum: expect.any(Number),
-					percentile_10: expect.any(Number),
-					percentile_25: expect.any(Number),
-					percentile_50: expect.any(Number),
-					percentile_75: expect.any(Number),
-					percentile_90: expect.any(Number)
+					avgValue: expect.any(Number),
+					minValue: expect.any(Number),
+					maxValue: expect.any(Number),
+					stdValue: expect.any(Number),
+					sumValue: expect.any(Number),
+					p10Value: expect.any(Number),
+					p25Value: expect.any(Number),
+					p50Value: expect.any(Number),
+					p75Value: expect.any(Number),
+					p90Value: expect.any(Number)
+				},
+				VirtualBestSolver: {
+					avgValue: expect.any(Number),
+					minValue: expect.any(Number),
+					maxValue: expect.any(Number),
+					stdValue: expect.any(Number),
+					sumValue: expect.any(Number),
+					p10Value: expect.any(Number),
+					p25Value: expect.any(Number),
+					p50Value: expect.any(Number),
+					p75Value: expect.any(Number),
+					p90Value: expect.any(Number)
+				},
+				VirtualWorstSolver: {
+					avgValue: expect.any(Number),
+					minValue: expect.any(Number),
+					maxValue: expect.any(Number),
+					stdValue: expect.any(Number),
+					sumValue: expect.any(Number),
+					p10Value: expect.any(Number),
+					p25Value: expect.any(Number),
+					p50Value: expect.any(Number),
+					p75Value: expect.any(Number),
+					p90Value: expect.any(Number)
 				}
 			});
 
 			expect(result.TestSolver1).toEqual({
-				average: 0.3008711,
-				min: 0.04112087,
-				max: 0.5606212,
-				std: 0.3673422,
-				sum: 0.6017421,
-				percentile_10: 0.09307091,
-				percentile_25: 0.170996,
-				percentile_50: 0.3008711,
-				percentile_75: 0.4307462,
-				percentile_90: 0.5086712
+				avgValue: 0.3008711,
+				minValue: 0.04112087,
+				maxValue: 0.5606212,
+				stdValue: 0.3673422,
+				sumValue: 0.6017421,
+				p10Value: 0.09307091,
+				p25Value: 0.170996,
+				p50Value: 0.3008711,
+				p75Value: 0.4307462,
+				p90Value: 0.5086712
 			});
 
 			expect(result.TestSolver2).toEqual({
-				average: 453.4465,
-				min: 5.922,
-				max: 900.971,
-				std: 632.8952,
-				sum: 906.893,
-				percentile_10: 95.4269,
-				percentile_25: 229.6843,
-				percentile_50: 453.4465,
-				percentile_75: 677.2088,
-				percentile_90: 811.4661
+				avgValue: 453.4465,
+				minValue: 5.922,
+				maxValue: 900.971,
+				stdValue: 632.8952,
+				sumValue: 906.893,
+				p10Value: 95.4269,
+				p25Value: 229.6843,
+				p50Value: 453.4465,
+				p75Value: 677.2088,
+				p90Value: 811.4661
+			});
+
+			expect(result.VirtualBestSolver).toEqual({
+				avgValue: 226.8737,
+				maxValue: 900.971,
+				minValue: 0.04112087,
+				p10Value: 0.196971,
+				p25Value: 0.4307462,
+				p50Value: 3.241311,
+				p75Value: 229.6843,
+				p90Value: 632.4563,
+				stdValue: 449.4061,
+				sumValue: 907.4947
+			});
+
+			expect(result.VirtualWorstSolver).toEqual({
+				avgValue: 226.8737,
+				maxValue: 900.971,
+				minValue: 0.04112087,
+				p10Value: 0.196971,
+				p25Value: 0.4307462,
+				p50Value: 3.241311,
+				p75Value: 229.6843,
+				p90Value: 632.4563,
+				stdValue: 449.4061,
+				sumValue: 907.4947
 			});
 		});
 	});
@@ -1026,5 +1083,52 @@ describe("Status mapping", () => {
 			expect(SetSolverStatus(0)).toBe("Unknown Error");
 			expect(SetSolverStatus("invalid")).toBe("Unknown Error");
 		});
+	});
+});
+
+describe("CompareSolvers", () => {
+	const solverTimes = {
+		Solver1: [
+			{ InputFileName: "File1", time: 10 },
+			{ InputFileName: "File2", time: 25 },
+			{ InputFileName: "File3", time: 30 }
+		],
+		Solver2: [
+			{ InputFileName: "File1", time: 15 },
+			{ InputFileName: "File2", time: 20 },
+			{ InputFileName: "File3", time: 29 }
+		]
+	};
+
+	it("should return the correct comparison summary", () => {
+		const expectedSummary = {
+			better: 1,
+			worse: 2,
+			equal: 0,
+			details: [
+				{
+					InputFileName: "File1",
+					time1: 10,
+					time2: 15,
+					comparison: "better"
+				},
+				{
+					InputFileName: "File2",
+					time1: 25,
+					time2: 20,
+					comparison: "worse"
+				},
+				{
+					InputFileName: "File3",
+					time1: 30,
+					time2: 29,
+					comparison: "worse"
+				}
+			]
+		};
+
+		const comparisonSummary = CompareSolvers("Solver1", "Solver2", solverTimes);
+
+		expect(comparisonSummary).toEqual(expectedSummary);
 	});
 });

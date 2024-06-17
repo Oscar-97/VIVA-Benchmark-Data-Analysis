@@ -74,10 +74,8 @@ describe("UI tests", () => {
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[1]/a");
 			await page.waitForTimeout(2000);
-			const absolutePerformanceProfileTitle = await page.title();
-			expect(absolutePerformanceProfileTitle).toBe(
-				"Absolute Performance Profile"
-			);
+			const performanceProfileTitle = await page.title();
+			expect(performanceProfileTitle).toBe("Performance Profile");
 			await page.screenshot({
 				path: "TestScreenshots/absoluteperformanceprofilepage.png"
 			});
@@ -86,7 +84,7 @@ describe("UI tests", () => {
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[2]/a");
 			await page.waitForTimeout(2000);
 			const averageSolverTimeTitle = await page.title();
-			expect(averageSolverTimeTitle).toBe("Average Solver Time");
+			expect(averageSolverTimeTitle).toBe("Solver Time per Solver");
 			await page.screenshot({
 				path: "TestScreenshots/averagesolvertimepage.png"
 			});
@@ -95,7 +93,7 @@ describe("UI tests", () => {
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[3]/a");
 			await page.waitForTimeout(2000);
 			const solverTimeTitle = await page.title();
-			expect(solverTimeTitle).toBe("Solver Time");
+			expect(solverTimeTitle).toBe("Solver Time per Instance");
 			await page.screenshot({ path: "TestScreenshots/solvertimepage.png" });
 
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
@@ -123,6 +121,24 @@ describe("UI tests", () => {
 			expect(terminationStatusTitle).toBe("Termination Status");
 			await page.screenshot({
 				path: "TestScreenshots/terminationstatus.png"
+			});
+
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[7]/a");
+			await page.waitForTimeout(2000);
+			const solutionQualityTitle = await page.title();
+			expect(solutionQualityTitle).toBe("Solution Quality");
+			await page.screenshot({
+				path: "TestScreenshots/solutionquality.png"
+			});
+
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/a");
+			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[2]/ul/li[8]/a");
+			await page.waitForTimeout(2000);
+			const solutionTimeTitle = await page.title();
+			expect(solutionTimeTitle).toBe("Solution Time");
+			await page.screenshot({
+				path: "TestScreenshots/solutiontime.png"
 			});
 
 			await page.click("xpath=/html/body/nav/div/div/ul[1]/li[3]/a");
@@ -191,6 +207,42 @@ describe("UI tests", () => {
 				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div/a[5]"
 			);
 		}
+
+		test("Demo mode 1", async () => {
+			await page.selectOption("#demoDataSelector", "Demo_1");
+			await page.click("#demoModeButton");
+			await RunTableOperationsJSON(page, "Using demo mode!");
+			const deleteLocalStorageButton = await page.$(
+				"#deleteLocalStorageButton"
+			);
+			expect(await page.locator("#demoDataSelector").isEnabled()).toBeFalsy();
+			await deleteLocalStorageButton?.click();
+			await page.click("#deleteButtonInModal");
+			await page.waitForTimeout(500);
+			await CheckNotification(
+				page,
+				"#alertNotification",
+				"Deleted configuration."
+			);
+		}, 60000);
+
+		test.skip("Demo mode 2", async () => {
+			await page.selectOption("#demoDataSelector", "Demo_2");
+			await page.click("#demoModeButton");
+			await RunTableOperationsJSON(page, "Using demo mode!");
+			const deleteLocalStorageButton = await page.$(
+				"#deleteLocalStorageButton"
+			);
+			expect(await page.locator("#demoDataSelector").isEnabled()).toBeFalsy();
+			await deleteLocalStorageButton?.click();
+			await page.click("deleteButtonInModal");
+			await page.waitForTimeout(500);
+			await CheckNotification(
+				page,
+				"#alertNotification",
+				"Deleted configuration."
+			);
+		}, 60000);
 
 		test("Handle multiple trace files", async () => {
 			await UploadFile(page, [
@@ -264,6 +316,7 @@ describe("UI tests", () => {
 			await page.waitForTimeout(3000);
 			const deleteLocalStorageButton = await page.$(buttonIDs[1]);
 			await deleteLocalStorageButton?.click();
+			await page.click("#deleteButtonInModal");
 			await page.waitForTimeout(500);
 			await CheckNotification(
 				page,
@@ -468,10 +521,10 @@ describe("UI tests", () => {
 			await ShowProblemCells();
 
 			const primalBoundProblemCellValue = await page.$(
-				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[5]"
+				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[3]/td[5]"
 			);
 			const dualBoundProblemCellValue = await page.$(
-				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[4]"
+				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[3]/td[4]"
 			);
 
 			// Check if 'alkylation' problem contains the values from MINLPLib.
@@ -481,7 +534,7 @@ describe("UI tests", () => {
 			expect(await dualBoundProblemCellValue?.innerText()).toBe("1.768807e+3");
 		}, 60000);
 
-		test("Use MIPLIB option", async () => {
+		test("Use MIPLIB 2017 option", async () => {
 			await page.waitForSelector("#fileInput");
 			await page.click("#fileInput");
 			await page.waitForSelector('input[type="file"]');
@@ -490,7 +543,38 @@ describe("UI tests", () => {
 				"./Tests/TestData/library_test.trc"
 			);
 			await page.waitForTimeout(2000);
-			await page.selectOption("#librarySelector", "MIPLIB");
+			await page.selectOption("#librarySelector", "MIPLIB_2017");
+			await WaitForElementAndClick(page, "#importDataButton");
+			await RunTableOperations(
+				page,
+				"Benchmarks loaded with following files: library_test.trc"
+			);
+
+			await ShowProblemCells();
+			const primalBoundProblemCellValue = await page.$(
+				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[5]"
+			);
+			const dualBoundProblemCellValue = await page.$(
+				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[4]"
+			);
+
+			// Check if '50v-10' problem contains the values from MIPLIB.
+			expect(await primalBoundProblemCellValue?.innerText()).toBe(
+				"3.311180e+3"
+			);
+			expect(await dualBoundProblemCellValue?.innerText()).toBe("3.311180e+3");
+		}, 60000);
+
+		test("Use MIPLIB 2010 option", async () => {
+			await page.waitForSelector("#fileInput");
+			await page.click("#fileInput");
+			await page.waitForSelector('input[type="file"]');
+			await page.setInputFiles(
+				'input[type="file"]',
+				"./Tests/TestData/library_test.trc"
+			);
+			await page.waitForTimeout(2000);
+			await page.selectOption("#librarySelector", "MIPLIB_2010");
 			await WaitForElementAndClick(page, "#importDataButton");
 			await RunTableOperations(
 				page,
@@ -505,11 +589,11 @@ describe("UI tests", () => {
 				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[1]/td[4]"
 			);
 
-			// Check if '50v-10' problem contains the values from MIPLIB.
+			// Check if '30_70_45_095_100' problem contains the values from MIPLIB.
 			expect(await primalBoundProblemCellValue?.innerText()).toBe(
-				"3.311180e+3"
+				"3.000000e+0"
 			);
-			expect(await dualBoundProblemCellValue?.innerText()).toBe("3.311180e+3");
+			expect(await dualBoundProblemCellValue?.innerText()).toBe("3.000000e+0");
 		}, 60000);
 	});
 
@@ -533,19 +617,19 @@ describe("UI tests", () => {
 			});
 		}
 
-		test("Absolute Performance Profile Page", async () => {
-			await RunPlotOperations("../Src/Pages/absolute_performance_profile.html");
+		test("Performance Profile Page", async () => {
+			await RunPlotOperations("../Src/Pages/performance_profile.html");
 		}, 10000);
 
-		test("Average Solver Time Page", async () => {
-			await RunPlotOperations("../Src/Pages/average_solver_time.html");
+		test("Solver Time per Solver Page", async () => {
+			await RunPlotOperations("../Src/Pages/solver_time_all.html");
 			await page.waitForSelector("#statisticsTable", {
 				state: "visible",
 				timeout: 3000
 			});
 		}, 10000);
 
-		test("Solver Time Page", async () => {
+		test("Solver Time per Instance Page", async () => {
 			RunPlotOperations("../Src/Pages/solver_time.html");
 		}, 10000);
 
@@ -567,6 +651,18 @@ describe("UI tests", () => {
 
 		test("Termination Status Page", async () => {
 			await RunPlotOperations("../Src/Pages/termination_status.html");
+		}, 10000);
+
+		test("Solution Quality Page", async () => {
+			await RunPlotOperations("../Src/Pages/solution_quality.html");
+			await page.waitForSelector("#statisticsTable", {
+				state: "visible",
+				timeout: 3000
+			});
+		}, 10000);
+
+		test("Solution Time Page", async () => {
+			await RunPlotOperations("../Src/Pages/solution_time.html");
 		}, 10000);
 	});
 
@@ -614,24 +710,24 @@ describe("UI tests", () => {
 
 			// TODO: Column order is not set. Update to some better paths later on.
 			const cell1 = await page.$(
-				"//tbody/tr[td[contains(text(), 'Better')]]/td[contains(@class, 'table-success') and contains(text(), '119')]"
+				"//tbody/tr[td[contains(text(), 'Better')]]/td[contains(@class, 'table-success') and contains(text(), '102')]"
 			);
-			expect(await cell1?.innerText()).toBe("119");
+			expect(await cell1?.innerText()).toBe("102");
 
 			const cell2 = await page.$(
-				"//tbody/tr[td[contains(text(), 'Better')]]/td[contains(@class, 'table-success') and contains(text(), '212')]"
+				"//tbody/tr[td[contains(text(), 'Better')]]/td[contains(@class, 'table-success') and contains(text(), '183')]"
 			);
-			expect(await cell2?.innerText()).toBe("212");
+			expect(await cell2?.innerText()).toBe("183");
 
 			const cell3 = await page.$(
-				"//tbody/tr[td[contains(text(), 'Worse')]]/td[contains(@class, 'table-danger') and contains(text(), '212')]"
+				"//tbody/tr[td[contains(text(), 'Worse')]]/td[contains(@class, 'table-danger') and contains(text(), '183')]"
 			);
-			expect(await cell3?.innerText()).toBe("212");
+			expect(await cell3?.innerText()).toBe("183");
 
 			const cell4 = await page.$(
-				"//tbody/tr[td[contains(text(), 'Worse')]]/td[contains(@class, 'table-danger') and contains(text(), '119')]"
+				"//tbody/tr[td[contains(text(), 'Worse')]]/td[contains(@class, 'table-danger') and contains(text(), '102')]"
 			);
-			expect(await cell4?.innerText()).toBe("119");
+			expect(await cell4?.innerText()).toBe("102");
 
 			const cell5 = await page.$(
 				"//tbody/tr[td[contains(text(), 'Equal')]]/td[contains(@class, 'table-warning') and contains(text(), '4')]"

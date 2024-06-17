@@ -133,6 +133,20 @@
  * Date: 2022-12-20T21:28Z
  */
 
+/*!
+* chartjs-plugin-annotation v3.0.1
+* https://www.chartjs.org/chartjs-plugin-annotation/index
+ * (c) 2023 chartjs-plugin-annotation Contributors
+ * Released under the MIT License
+ */
+
+/*!
+* chartjs-plugin-zoom v2.0.1
+* undefined
+ * (c) 2016-2023 chartjs-plugin-zoom Contributors
+ * Released under the MIT License
+ */
+
 /*! Bootstrap 5 integration for DataTables' SearchPanes
  * © SpryMedia Ltd - datatables.net/license
  */
@@ -162,6 +176,12 @@
 /*! FixedColumns 4.2.1
  * 2019-2022 SpryMedia Ltd - datatables.net/license
  */
+
+/*! Hammer.JS - v2.0.7 - 2016-04-22
+ * http://hammerjs.github.io/
+ *
+ * Copyright (c) 2016 Jorik Tangelder;
+ * Licensed under the MIT license */
 
 /*! SearchBuilder 1.5.0
      * ©SpryMedia Ltd - datatables.net/license/mit

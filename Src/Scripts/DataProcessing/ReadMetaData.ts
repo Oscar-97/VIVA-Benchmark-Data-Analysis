@@ -1,5 +1,5 @@
 import { InfoMessages } from "../Constants/Messages";
-import { DisplayAlertNotification } from "../Elements/DisplayAlertNotification";
+import { DisplayAlertNotification } from "../Elements/Events/DisplayAlertNotification";
 
 /**
  * This function converts an array of strings into an array of objects representing instance information data.
@@ -81,6 +81,8 @@ export function GetInstanceInformation(
  * // ];
  * ```
  */
+
+// eslint-disable-next-line complexity
 export function GetBestKnownBounds(
 	unprocessedSolutionData: string[]
 ): object[] {

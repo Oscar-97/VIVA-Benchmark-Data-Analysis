@@ -3,7 +3,7 @@ import {
 	librarySelector,
 	importDataButton
 } from "../Elements/Elements";
-import { DisplayErrorNotification } from "../Elements/DisplayAlertNotification";
+import { DisplayErrorNotification } from "../Elements/Events/DisplayAlertNotification";
 import { userData } from "../UserConfiguration/UserConfiguration";
 import { Keys } from "../Constants/Keys";
 import { ErrorMessages } from "../Constants/Messages";
@@ -212,6 +212,6 @@ function VerifyConfigurationProperties(parsedData): void {
 		localStorage.setItem(Keys.USER_CONFIGURATION, JSON.stringify(userData));
 	} else {
 		DisplayErrorNotification(ErrorMessages.INVALID_DATA_STRUCTURE);
-		console.log(ErrorMessages.INVALID_DATA_STRUCTURE);
+		console.error(ErrorMessages.INVALID_DATA_STRUCTURE);
 	}
 }

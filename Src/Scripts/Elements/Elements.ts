@@ -103,10 +103,12 @@ export const configurationSettingsButton: HTMLButtonElement =
  * `downloadCustomConfigurationButton` is a reference to the HTMLButtonElement with the ID "downloadCustomConfigurationButton".
  * @type {HTMLAnchorElement}
  */
-export const downloadCustomConfigurationButton: HTMLAnchorElement =
-	document.getElementById(
+export let downloadCustomConfigurationButton: HTMLAnchorElement | null = null;
+document.addEventListener("DOMContentLoaded", () => {
+	downloadCustomConfigurationButton = document.getElementById(
 		"downloadCustomConfigurationButton"
-	) as HTMLAnchorElement;
+	) as HTMLAnchorElement | null;
+});
 
 /**
  * `downloadCustomConfigurationButtonLayer` is a reference to the HTMLButtonElement with the ID "downloadCustomConfigurationButtonLayer".
@@ -125,10 +127,37 @@ export const deleteLocalStorageButton: HTMLButtonElement =
 	document.getElementById("deleteLocalStorageButton") as HTMLButtonElement;
 
 /**
- * `clearTableButton` is a reference to the HTMLButtonElement with the ID "clearTableButton".
+ * `deleteDataModal` is a reference to the HTMLDivElement with the ID "deleteDataModal".
+ */
+export const deleteDataModal: HTMLDivElement = document.getElementById(
+	"deleteDataModal"
+) as HTMLDivElement;
+
+/**
+ * `deleteButtonInModal` is a reference to the HTMLButtonElement with the ID "deleteButtonInModal".
+ */
+export const deleteButtonInModal: HTMLButtonElement = document.getElementById(
+	"deleteButtonInModal"
+) as HTMLButtonElement;
+
+/**
+ * `clearDataTableModal` is a reference to the HTMLDivElement with the ID "clearDataTableModal".
+ */
+export const clearDataTableModal: HTMLDivElement = document.getElementById(
+	"clearDataTableModal"
+) as HTMLDivElement;
+
+/**
+ * `clearTableButtonInModal` is a reference to the HTMLButtonElement with the ID "clearTableButtonInModal".
+ */
+export const clearTableButtonInModal: HTMLButtonElement =
+	document.getElementById("clearTableButtonInModal") as HTMLButtonElement;
+
+/**
+ * `clearDataTableButton` is a reference to the HTMLButtonElement with the ID "clearDataTableButton".
  * @type {HTMLButtonElement}
  */
-export const clearTableButton: HTMLButtonElement = document.getElementById(
+export const clearDataTableButton: HTMLButtonElement = document.getElementById(
 	"clearTableButton"
 ) as HTMLButtonElement;
 
@@ -168,6 +197,21 @@ export const dataTableGeneratedWrapper = document.getElementById(
  */
 export const statisticsTableDiv: HTMLDivElement = document.getElementById(
 	"statisticsTable"
+) as HTMLDivElement;
+
+/**
+ * `instanceAttributesTableDiv` is a reference to the HTMLDivElement with the ID "instanceAttributesTable".
+ * @type {HTMLDivElement}
+ */
+export const instanceAttributesTableDiv: HTMLDivElement =
+	document.getElementById("instanceAttributesTable") as HTMLDivElement;
+
+/**
+ * `solveAttributesTableDiv` is a reference to the HTMLDivElement with the ID "solveAttributesTable".
+ * @type {HTMLDivElement}
+ */
+export const solveAttributesTableDiv: HTMLDivElement = document.getElementById(
+	"solveAttributesTable"
 ) as HTMLDivElement;
 
 /**
@@ -225,6 +269,14 @@ export const demoDataButton: HTMLButtonElement = document.getElementById(
 ) as HTMLButtonElement;
 
 /**
+ * `demoDataSelector` is a reference to the HTMLSelectElement with the ID "demoDataSelector".
+ * @type {HTMLSelectElement}
+ */
+export const demoDataSelector: HTMLSelectElement = document.getElementById(
+	"demoDataSelector"
+) as HTMLSelectElement;
+
+/**
  * `releaseVersionTag` is a reference to the HTMLSpanElement with the ID "releaseVersionTagSpan".
  * @type {HTMLSpanElement}
  */
@@ -236,23 +288,38 @@ export const releaseVersionTag: HTMLSpanElement = document.getElementById(
  * `solverSelector` is a reference to the HTMLSelectElement with the ID "solverSelector".
  * @type {HTMLSelectElement}
  */
-export const solverSelector: HTMLSelectElement = document.getElementById(
-	"solverSelector"
-) as HTMLSelectElement;
+export let solverSelector: HTMLSelectElement | null = null;
+document.addEventListener("DOMContentLoaded", () => {
+	solverSelector = document.getElementById(
+		"solverSelector"
+	) as HTMLSelectElement | null;
+});
+
+/**
+ * `performanceProfileSelector` is a reference to the HTMLSelectElement with the ID "performanceProfileSelector".
+ */
+export const performanceProfileSelector: HTMLSelectElement =
+	document.getElementById("performanceProfileSelector") as HTMLSelectElement;
 
 /**
  * `defaultTimeInput` is a reference the HTMLInputElement with the ID "defaultTimeInput".
  */
-export const defaultTimeInput: HTMLInputElement = document.getElementById(
-	"defaultTimeInput"
-) as HTMLInputElement;
+export let defaultTimeInput: HTMLInputElement | null = null;
+document.addEventListener("DOMContentLoaded", () => {
+	defaultTimeInput = document.getElementById(
+		"defaultTimeInput"
+	) as HTMLInputElement | null;
+});
 
 /**
  * `gapLimitInput` is a reference the HTMLInputElement with the ID "gapLimitInput".
  */
-export const gapLimitInput: HTMLInputElement = document.getElementById(
-	"gapLimitInput"
-) as HTMLInputElement;
+export let gapLimitInput: HTMLInputElement | null = null;
+document.addEventListener("DOMContentLoaded", () => {
+	gapLimitInput = document.getElementById(
+		"gapLimitInput"
+	) as HTMLInputElement | null;
+});
 
 /**
  * `defaultTimeDirectInput` is a reference the HTMLInputElement with the ID "defaultTimeDirectInput".
@@ -274,6 +341,27 @@ export const gapLimitDirectInput: HTMLInputElement = document.getElementById(
  */
 export const gapTypeSelector: HTMLSelectElement = document.getElementById(
 	"gapTypeSelector"
+) as HTMLSelectElement;
+
+/**
+ * `terminationTypeSelector` is a reference to the HTMLSelectElement with the ID "terminationTypeSelector".
+ * @type {HTMLSelectElement}
+ */
+export const terminationTypeSelector: HTMLSelectElement =
+	document.getElementById("terminationTypeSelector") as HTMLSelectElement;
+
+/**
+ * `categorySelector` is a reference to the HTMLSelectElement with the ID "categorySelector".
+ */
+export const categorySelector: HTMLSelectElement = document.getElementById(
+	"categorySelector"
+) as HTMLSelectElement;
+
+/**
+ * `filterTypeSelector` is a reference to the HTMLSelectElement with the ID "filterTypeSelector".
+ */
+export const filterTypeSelector: HTMLSelectElement = document.getElementById(
+	"filterTypeSelector"
 ) as HTMLSelectElement;
 
 /**

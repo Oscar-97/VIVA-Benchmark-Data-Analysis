@@ -1,4 +1,4 @@
-import { PageTitles } from "../Constants/PageTitles";
+import { PageTitles } from "../../Constants/PageTitles";
 import {
 	fileInput,
 	librarySelector,
@@ -9,7 +9,7 @@ import {
 	downloadConfigurationButtonLayer,
 	configurationSettingsButton,
 	deleteLocalStorageButton,
-	clearTableButton,
+	clearDataTableButton,
 	viewPlotsButton,
 	downloadChartDataButtonLayer,
 	loaderContainer,
@@ -17,7 +17,7 @@ import {
 	defaultTimeDirectInput,
 	gapLimitDirectInput,
 	compareSolversButton
-} from "./Elements";
+} from "../Elements";
 
 /**
  * This function resets the status of several elements to their initial state when the user first arrives at,
@@ -45,7 +45,7 @@ export function ElementStatesTablePage(): void {
 	downloadConfigurationButtonLayer.disabled = true;
 	configurationSettingsButton.disabled = true;
 	deleteLocalStorageButton.disabled = true;
-	clearTableButton.disabled = true;
+	clearDataTableButton.disabled = true;
 }
 
 /**
@@ -68,7 +68,7 @@ export function ElementStatesPlotPage(): void {
 	configurationSettingsButton.disabled = true;
 	downloadChartDataButtonLayer.disabled = true;
 	deleteLocalStorageButton.disabled = true;
-	if (document.title === PageTitles.ABSOLUTE_PERFORMANCE_PROFILE) {
+	if (document.title === PageTitles.PERFORMANCE_PROFILE) {
 		defaultTimeDirectInput.value = "";
 		gapLimitDirectInput.value = "";
 	}
@@ -107,7 +107,7 @@ export function ElementStateDisplayedTable(): void {
 	saveLocalStorageButton.disabled = false;
 	downloadConfigurationButtonLayer.disabled = false;
 	deleteLocalStorageButton.disabled = false;
-	clearTableButton.disabled = false;
+	clearDataTableButton.disabled = false;
 }
 
 /**

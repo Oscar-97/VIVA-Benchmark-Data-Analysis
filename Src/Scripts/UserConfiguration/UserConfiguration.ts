@@ -4,22 +4,12 @@ import {
 	DisplayAlertNotification,
 	DisplayWarningNotification,
 	DisplayErrorNotification
-} from "../Elements/DisplayAlertNotification";
+} from "../Elements/Events/DisplayAlertNotification";
 import {
 	downloadConfigurationButton,
 	downloadCustomConfigurationButton
 } from "../Elements/Elements";
-
-/**
- * UserData consists of dataset and file extension.
- * @interface UserData
- */
-export interface UserData {
-	dataSet: string[] | object[];
-	dataFileType: string;
-	defaultTime?: number | undefined;
-	gapLimit?: number | undefined;
-}
+import { UserData } from "../Interfaces/Interfaces";
 
 /**
  * This object is used to store the user configuration.
@@ -36,8 +26,8 @@ export const userData: UserData = {
  *
  * @param {string[]} dataSet - An array of strings representing raw data to be saved.
  * @param {string} dataFileType - A string representing the type of data file.
- * @param {number} defaultTime - Default time used in the the absolute performance profile chart.
- * @param {number} gapLimit - Gap limit used in the the absolute performance profile chart.
+ * @param {number} defaultTime - Default time used in the the performance profile chart.
+ * @param {number} gapLimit - Gap limit used in the the performance profile chart.
  *
  * @throws This function may throw an error if it fails to store the user configuration in the local storage.
  *
@@ -166,18 +156,18 @@ export function DownloadUserConfiguration(): void {
  * The function assumes the existence of a previously defined `downloadCustomConfigurationButton`
  * which should be a reference to an HTML anchor (`<a>`) element used to trigger the file download.
  *
- * @param {object[]} traceData - Array of objects containing the result data.
+ * @param {string[]} newRawData -  Array of strings, where each string is a comma-separated representation of a row of data.
  * @param {number} defaultTime - Default time that will be used on all results with missing SolverTime or with a failed status.
  *
  * @example
  * DownloadCustomizedUserConfiguration(traceData, 1200, 0.02;
  */
 export function DownloadCustomizedUserConfiguration(
-	traceData: string[],
+	newRawData: string[],
 	defaultTime: number,
 	gapLimit: number
 ): void {
-	userData.dataSet = traceData;
+	userData.dataSet = newRawData;
 	userData.dataFileType = "json";
 	userData.defaultTime = defaultTime;
 	userData.gapLimit = gapLimit;

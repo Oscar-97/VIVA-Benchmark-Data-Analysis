@@ -1,7 +1,7 @@
 ![VIVA](https://img.shields.io/github/v/release/Oscar-97/VIVA-Benchmark-Data-Analysis) ![License](https://img.shields.io/badge/License-MIT-brightgreen) ![Languages](https://img.shields.io/github/languages/count/Oscar-97/VIVA-Benchmark-Data-Analysis) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white) ![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=flat&logo=webpack&logoColor=black) ![Bootstrap](https://img.shields.io/badge/bootstrap-%23563D7C.svg?style=flat&logo=bootstrap&logoColor=white) ![Chart.js](https://img.shields.io/badge/chart.js-F5788D.svg?style=flat&logo=chart.js&logoColor=white)
 
 # VIVA: Visualize, Interact, Verify, and Analyze Benchmarking Data for Optimization Solvers
-Building on the concept and implementation of [PAVER 2.0](https://github.com/coin-or/paver), the main goal of this project is to allow end users to interact with their own uploaded benchmark data from mathematical optimization problems and their solvers. The data is presented in a tabular format, with the added ability to visualize specific results through various plots, making it easier to understand and interpret the data. Demo-data is attained from [miplib2010 examples](https://github.com/coin-or/Paver/tree/master/examples/miplib2010). The `.solu` file data from the problem libraries [MINLPLib](https://www.minlplib.org/minlplib.solu) and [MIPLIB 2017](https://miplib.zib.de/downloads/miplib2017-v26.solu) can be accessed directly through a dropdown option in the navigation menu.
+Building on the concept and implementation of [PAVER 2.0](https://github.com/coin-or/paver), the main goal of this project is to allow end users to interact with their own uploaded benchmark data from mathematical optimization problems and their solvers. The data is presented in a tabular format, with the added ability to visualize specific results through various plots, making it easier to understand and interpret the data. Demo-data is attained from [miplib2010 examples](https://github.com/coin-or/Paver/tree/master/examples/miplib2010). The `.solu` file data from the problem libraries [MINLPLib](https://www.minlplib.org/minlplib.solu), [MIPLIB 2017](https://miplib.zib.de/downloads/miplib2017-v26.solu) and [MIPLIB 2010](https://miplib2010.zib.de/download/miplib2010_all.solu) can be accessed directly through a dropdown option in the navigation menu.
 
 This project is developed using TypeScript, DataTables.js, Chart.js and Webpack. Bootstrap is used for styling.  Notably, the application can be run without a live server since Webpack is responsible for bundling the files. It is also possible to install it as a Progressive Web Application by launching the project in a live server, navigating to the report page using a compatible browser, and installing it. Support for offline functionality is incldued in the PWA implementation.
 
@@ -26,12 +26,14 @@ This project is developed using TypeScript, DataTables.js, Chart.js and Webpack.
 - Once you have selected a file or files, click on upload.
 - Click on the View All Results/View Plot button to get a table or plot with the benchmark results, depending on the currently active page.
 - The following plots are available:
-    - Absolute Performance Profile
-    - Average Solver Time
-    - Solver Time"
+    - Performance Profile (Absolute and relative)
+    - Solver Time per Solver
+    - Solver Time per Instance
     - Number of Nodes
     - Number of Iterations
     - Termination Status
+    - Solution Quality
+    - Solution Time
 - Compare a pair of solvers via the "Compare Solvers" page. Direct comparison on how many instances the solver time was better, worse or equal.
 
 ### 1.1 General Button Functionality
@@ -136,6 +138,10 @@ Navigate to the project directory in your terminal and run:
     npm run build
 
 This runs the command "webpack --config webpack.config.js", which will build the application using webpack'. The created `bundle.js` and `main.css` are located in `Dist/`.
+
+Dev server can be run with:
+
+    npnm run start
 
 ### 3.3 Other Scripts
 

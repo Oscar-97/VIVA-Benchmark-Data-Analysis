@@ -1,3 +1,4 @@
+import { TraceData } from "../Interfaces/Interfaces";
 import {
 	CalculateDirection,
 	CalculatePrimalBound,
@@ -5,12 +6,12 @@ import {
 	SetModelStatus,
 	SetSolverStatus,
 	CalculateGap
-} from "./CalculateResults";
+} from "./ResultComputations/ComputeResults";
 
 /**
  * This function adds result categories to each object in the traceData array.
  *
- * @param {object[]} traceData - Array of objects containing the data to be processed.
+ * @param {TraceData[]} traceData - Array of objects containing the data to be processed.
  *
  * @remarks
  * It modifies the passed `traceData` array by adding calculated properties to each object.
@@ -20,7 +21,7 @@ import {
  * The specific calculations performed by this function and the functions it calls are not described here.
  * Please refer to the documentation of those functions for details.
  */
-export function AddResultCategories(traceData: object[]): void {
+export function AddResultCategories(traceData: TraceData[]): void {
 	for (const obj of traceData) {
 		obj["Direction"] = CalculateDirection(obj["Direction"]);
 
@@ -61,20 +62,20 @@ export function AddResultCategories(traceData: object[]): void {
 		);
 
 		obj["Gap_Problem"] = CalculateGap(
-			obj["PrimalBoundProblem"],
-			obj["DualBoundProblem"],
+			obj["PrimalBoundProblem"] as number,
+			obj["DualBoundProblem"] as number,
 			obj["Direction"]
 		);
 
 		obj["PrimalGap"] = CalculateGap(
 			obj["PrimalBoundSolver"],
-			obj["PrimalBoundProblem"],
+			obj["PrimalBoundProblem"] as number,
 			obj["Direction"]
 		);
 
 		obj["DualGap"] = CalculateGap(
 			obj["DualBoundSolver"],
-			obj["DualBoundProblem"],
+			obj["DualBoundProblem"] as number,
 			obj["Direction"]
 		);
 	}
