@@ -82,7 +82,6 @@ import {
 } from "./Elements/Events/ElementStatus";
 import {
 	fileInput,
-	librarySelector,
 	importDataButton,
 	viewTableButton,
 	showSelectedRowsButton,
@@ -94,7 +93,6 @@ import {
 	demoDataButton,
 	viewPlotsButton,
 	downloadChartDataButton,
-	downloadCustomConfigurationButton,
 	solverSelector,
 	defaultTimeInput,
 	configurationSettingsButton,
@@ -105,10 +103,6 @@ import {
 	gapTypeSelector,
 	terminationTypeSelector,
 	categorySelector,
-	deleteButtonInModal,
-	deleteDataModal,
-	clearDataTableModal,
-	clearTableButtonInModal,
 	filterTypeSelector,
 	performanceProfileSelector
 } from "./Elements/Elements";
