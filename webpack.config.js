@@ -7,8 +7,7 @@ module.exports = {
   output: {
     filename: "bundle.js",
     chunkFilename: "[name].js",
-    path: path.resolve(__dirname, "Dist"),
-    publicPath: '/Dist/',
+    path: __dirname + "/Dist",
   },
   target: 'web',
   devtool: "source-map",
