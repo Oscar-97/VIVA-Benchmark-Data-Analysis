@@ -35,6 +35,9 @@ export interface TraceData {
 	SolverTime?: number;
 	NumberOfIterations?: number;
 	NumberOfNodes?: number;
+	NumberOfDomainViolations?: number;
+	Fail?: boolean;
+	FailReason?: string;
 }
 
 /**

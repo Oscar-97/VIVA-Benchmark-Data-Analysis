@@ -1,57 +1,161 @@
 import { TraceData } from "../../Interfaces/Interfaces";
+import { CalculateGap } from "./ComputeResults";
 
 /**
- *	This function computes the best and worst solver times data with the TraceData interface.
+ * This function computes the virtual best and worst solvers from the provided trace data.
+ * Failed results are not considered in the computation.
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  * @param {number} defaultTime - The default time for non-numeric solver times.
- * @returns {TraceData[]} - Array of objects containing the best and worst solver times.
+ * @returns {TraceData[]} - Array of objects containing the best and worst solvers.
  */
 export function ComputeVirtualTimesTraceData(
 	traceData: TraceData[],
 	defaultTime: number
 ): TraceData[] {
-	const groupedByFileName = traceData.reduce((acc, item) => {
-		acc[item.InputFileName] = acc[item.InputFileName] || [];
+	const groupedByProblem = traceData.reduce((acc, item) => {
+		acc[item["InputFileName"]] = acc[item["InputFileName"]] || [];
 		const solverTime =
-			isNaN(item.SolverTime) || item.SolverTime === undefined
+			isNaN(item["SolverTime"]) || item["SolverTime"] === undefined
 				? defaultTime
-				: item.SolverTime;
-		acc[item.InputFileName].push({ ...item, SolverTime: solverTime });
+				: item["SolverTime"];
+		acc[item["InputFileName"]].push({ ...item, SolverTime: solverTime });
 		return acc;
 	}, {} as Record<string, TraceData[]>);
 
+	const noFailedResults = Object.entries(groupedByProblem).reduce(
+		(acc, [key, items]) => {
+			const filteredItems = items.filter(
+				(item) => item["Fail"].toString() === "false"
+			);
+			if (filteredItems.length > 0) {
+				acc[key] = filteredItems;
+			}
+			return acc;
+		},
+		{} as Record<string, TraceData[]>
+	);
+
 	const result: TraceData[] = [];
 
-	Object.keys(groupedByFileName).forEach((fileName) => {
-		const times = groupedByFileName[fileName].map((item) => item.SolverTime);
+	Object.keys(noFailedResults).forEach((fileName) => {
+		const times = groupedByProblem[fileName].map((item) => item["SolverTime"]);
 		const bestTime = Math.min(...times);
-		const worstTime = Math.max(...times);
+		let worstTime = Math.max(...times);
+		if (worstTime > defaultTime) {
+			worstTime = defaultTime;
+		}
 
-		const primalGaps = groupedByFileName[fileName].map(
-			(item) => item.PrimalGap
+		const solverIterations = groupedByProblem[fileName].map(
+			(item) => item["NumberOfIterations"]
 		);
-		const bestPrimalGap = Math.min(...primalGaps);
-		const worstPrimalGap = Math.max(...primalGaps);
+		const bestIterations = Math.min(...solverIterations);
+		const worstIterations = Math.max(...solverIterations);
 
-		const dualGaps = groupedByFileName[fileName].map((item) => item.DualGap);
-		const bestDualGap = Math.min(...dualGaps);
-		const worstDualGap = Math.max(...dualGaps);
+		const solverNodes = groupedByProblem[fileName].map(
+			(item) => item["NumberOfNodes"]
+		);
+		const bestNodes = Math.min(...solverNodes);
+		const worstNodes = Math.max(...solverNodes);
+
+		const solverDomainViolations = groupedByProblem[fileName].map(
+			(item) => item["NumberOfDomainViolations"]
+		);
+		const bestDomainViolations = Math.min(...solverDomainViolations);
+		const worstDomainViolations = Math.max(...solverDomainViolations);
+
+		const dualBoundSolver = groupedByProblem[fileName].map(
+			(item) => item["DualBoundSolver"]
+		);
+		const primalBoundSolver = groupedByProblem[fileName].map(
+			(item) => item["PrimalBoundSolver"]
+		);
+
+		let bestDualboundSolver: number, bestPrimalBoundSolver: number;
+		let worstDualboundSolver: number, worstPrimalBoundSolver: number;
+
+		const direction = groupedByProblem[fileName][0].Direction;
+		if (direction === "min") {
+			bestDualboundSolver = Math.max(Number(...dualBoundSolver));
+			bestPrimalBoundSolver = Math.min(Number(...primalBoundSolver));
+
+			worstDualboundSolver = Math.min(Number(...dualBoundSolver));
+			worstPrimalBoundSolver = Math.max(Number(...primalBoundSolver));
+		} else {
+			bestDualboundSolver = Math.min(Number(...dualBoundSolver));
+			bestPrimalBoundSolver = Math.max(Number(...primalBoundSolver));
+
+			worstDualboundSolver = Math.max(Number(...dualBoundSolver));
+			worstPrimalBoundSolver = Math.min(Number(...primalBoundSolver));
+		}
+
+		const dualBoundProblem = Number(
+			groupedByProblem[fileName][0].DualBoundProblem
+		);
+		const primalBoundProblem = Number(
+			groupedByProblem[fileName][0].PrimalBoundProblem
+		);
+
+		const bestDualGap = CalculateGap(
+			bestDualboundSolver,
+			dualBoundProblem,
+			direction
+		);
+		const worstDualGap = CalculateGap(
+			worstDualboundSolver,
+			dualBoundProblem,
+			direction
+		);
+
+		const bestPrimalGap = CalculateGap(
+			bestPrimalBoundSolver,
+			primalBoundProblem,
+			direction
+		);
+		const worstPrimalGap = CalculateGap(
+			worstPrimalBoundSolver,
+			primalBoundProblem,
+			direction
+		);
+
+		const bestSolverGap = CalculateGap(
+			bestPrimalBoundSolver,
+			worstDualboundSolver,
+			direction
+		);
+		const worstSolverGap = CalculateGap(
+			worstPrimalBoundSolver,
+			worstDualboundSolver,
+			direction
+		);
 
 		result.push({
 			InputFileName: fileName,
-			SolverName: "VirtualBestSolver",
+			Direction: direction,
+			SolverName: "Virtual Best Solver",
 			SolverTime: bestTime,
 			PrimalGap: bestPrimalGap,
-			DualGap: bestDualGap
+			DualGap: bestDualGap,
+			Gap_Solver: bestSolverGap,
+			SolverStatus: "Normal Completion",
+			NumberOfDomainViolations: bestDomainViolations,
+			NumberOfNodes: bestNodes,
+			NumberOfIterations: bestIterations
 		});
 		result.push({
 			InputFileName: fileName,
-			SolverName: "VirtualWorstSolver",
+			Direction: direction,
+			SolverName: "Virtual Worst Solver",
 			SolverTime: worstTime,
 			PrimalGap: worstPrimalGap,
-			DualGap: worstDualGap
+			DualGap: worstDualGap,
+			Gap_Solver: worstSolverGap,
+			SolverStatus: "Normal Completion",
+			NumberOfDomainViolations: worstDomainViolations,
+			NumberOfNodes: worstNodes,
+			NumberOfIterations: worstIterations
 		});
 	});
+
 	return result;
 }
 
