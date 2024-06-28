@@ -104,5 +104,7 @@ export const DEFAULT_VISIBLE_HEADERS: string[] = [
 	"SolverPrimalBound",
 	"SolverPrimalGap[%]",
 	"SolverTime",
-	"SolverGap"
+	"SolverGap",
+	"Fail",
+	"FailReason"
 ];

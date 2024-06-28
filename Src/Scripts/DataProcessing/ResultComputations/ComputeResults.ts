@@ -321,6 +321,7 @@ export function ExtractUniqueProblems(traceData: TraceData[]): object[] {
 			};
 		}
 	});
+
 	return Object.values(unique);
 }
 
@@ -431,4 +432,123 @@ export function CalculateSolveAttributes(
 	});
 
 	return results;
+}
+
+/**
+ * This function sets the fail value and reason based on the termination status and other parameters.
+ * @param terminationStatus
+ * @param direction
+ * @param primalBoundSolver
+ * @param dualBoundSolver
+ * @param primalBoundProblem
+ * @param dualBoundProblem
+ * @returns
+ */
+export function SetFailValueAndReason(
+	terminationStatus: string,
+	direction: string,
+	primalBoundSolver: number | string,
+	dualBoundSolver: number | string,
+	dualBoundProblem: number | string
+): [boolean, string] {
+	function IsRelativeDifference(a: number, b: number, tol: number): boolean {
+		let relDiff: number;
+		if (Math.abs(a) === Infinity || Math.abs(b) === Infinity) {
+			relDiff = a === b ? 0.0 : a - b;
+		} else {
+			relDiff = (a - b) / Math.max(Math.abs(a), Math.abs(b), 1.0);
+		}
+		return relDiff > tol;
+	}
+
+	if (!terminationStatus) {
+		return [true, "No data"];
+	}
+
+	// TODO: Check which termination statuses are considered as failures for this "Failed" condition.
+	if (
+		terminationStatus === "Capability Problem" ||
+		terminationStatus === "Unknown Error" ||
+		terminationStatus === "User Interrupt" ||
+		terminationStatus === "Error"
+	) {
+		return [true, `Termstatus is ${terminationStatus}`];
+	}
+
+	// Compare primal bounds with know dual bounds.
+	if (
+		primalBoundSolver != Infinity &&
+		primalBoundSolver != -Infinity &&
+		dualBoundProblem != Infinity &&
+		dualBoundProblem != -Infinity
+	) {
+		let abserr: boolean, relerr: boolean;
+		if (direction === "min") {
+			abserr =
+				Number(dualBoundProblem) - Number(primalBoundSolver) >
+				Values.ABSOLUTE_TOLERANCE;
+		} else {
+			abserr =
+				Number(primalBoundSolver) - Number(dualBoundProblem) >
+				Values.ABSOLUTE_TOLERANCE;
+		}
+
+		if (direction === "min") {
+			relerr = IsRelativeDifference(
+				Number(dualBoundProblem),
+				Number(primalBoundSolver),
+				Values.RELATIVE_TOLERANCE
+			);
+		} else {
+			relerr = IsRelativeDifference(
+				Number(primalBoundSolver),
+				Number(dualBoundProblem),
+				Values.RELATIVE_TOLERANCE
+			);
+		}
+
+		if (abserr && relerr) {
+			return [true, "Primal bound contradicts best known dual bound"];
+		}
+	}
+
+	// Compare dual bounds with know primal bounds.
+	if (
+		dualBoundSolver != Infinity &&
+		dualBoundSolver != -Infinity &&
+		dualBoundProblem != Infinity &&
+		dualBoundProblem != -Infinity
+	) {
+		let abserr: boolean, relerr: boolean;
+		if (direction === "min") {
+			abserr =
+				Number(dualBoundSolver) - Number(dualBoundProblem) >
+				Values.ABSOLUTE_TOLERANCE;
+		} else {
+			abserr =
+				Number(dualBoundProblem) - Number(dualBoundSolver) >
+				Values.ABSOLUTE_TOLERANCE;
+		}
+
+		if (direction === "min") {
+			relerr = IsRelativeDifference(
+				Number(primalBoundSolver),
+				Number(dualBoundProblem),
+				Values.RELATIVE_TOLERANCE
+			);
+		} else {
+			relerr = IsRelativeDifference(
+				Number(primalBoundSolver),
+				Number(dualBoundProblem),
+				Values.RELATIVE_TOLERANCE
+			);
+		}
+
+		if (abserr && relerr) {
+			return [true, "Dual bound contradicts best known primal bound"];
+		}
+	}
+
+	// If none of the above conditions are met, return false and set it as Normal Completion.
+	return [false, "Normal Completion"];
 }

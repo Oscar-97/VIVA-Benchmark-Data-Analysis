@@ -5,7 +5,8 @@ import {
 	CalculateDualBound,
 	SetModelStatus,
 	SetSolverStatus,
-	CalculateGap
+	CalculateGap,
+	SetFailValueAndReason
 } from "./ResultComputations/ComputeResults";
 
 /**
@@ -78,5 +79,15 @@ export function AddResultCategories(traceData: TraceData[]): void {
 			obj["DualBoundProblem"] as number,
 			obj["Direction"]
 		);
+
+		const [failValue, failReason]: [boolean, string] = SetFailValueAndReason(
+			obj["SolverStatus"],
+			obj["Direction"],
+			obj["PrimalBoundSolver"],
+			obj["DualBoundSolver"],
+			obj["DualBoundProblem"]
+		);
+		obj["Fail"] = failValue;
+		obj["FailReason"] = failReason;
 	}
 }
