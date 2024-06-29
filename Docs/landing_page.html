@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta
+      name="description"
+      content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers."
+    />
+    <!-- Title and icon -->
+    <title id="LandingPageTitle">VIVA</title>
+    <link rel="icon" href="../Src/CSS/tab_icon.png" />
+    <!-- Styling -->
+    <link href="../Dist/main.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div class="px-4 pt-5 my-4 text-center" style="opacity: 1">
+      <h1 class="display-4 fw-bold text-body-emphasis">VIVA-APP</h1>
+      <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">
+          A free, open-source application designed for visualizing, interacting
+          with, verifying, and analyzing benchmarking data for optimization
+          solvers. It presents data in a tabular format and offers various
+          plotting options to enhance understanding and interpretation of the
+          data.
+        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+          <a href="#downloads" class="btn btn-primary btn-lg px-4 me-sm-3">
+            <i class="bi bi-download"></i> Download
+          </a>
+          <a
+            class="btn btn-outline-secondary btn-lg px-4"
+            target="_blank"
+            href="https://viva-app.xyz/report"
+          >
+            <i class="bi bi-box-arrow-up-right"></i> Web Version
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="container px-3">
+          <img
+            src="./Images/OverView_system_new.png"
+            class="img-fluid border rounded-3 shadow-lg mb-4"
+            alt="Example image"
+            width="1500"
+            height="874"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="container px-4 py-5" id="icon-grid" style="opacity: 1">
+      <h2 class="pb-2 border-bottom" id="features">Features</h2>
+
+      <div
+        class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-5"
+      >
+        <div class="col d-flex align-items-start">
+          <svg
+            class="bi text-body-secondary flex-shrink-0 me-3"
+            width="1.75em"
+            height="1.75em"
+          >
+            <use xlink:href="#bootstrap"></use>
+          </svg>
+          <div>
+            <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">
+              <i class="bi bi-table"></i> Interactive Table
+            </h3>
+            <p>
+              Provides an overview of results from benchmark files, allowing
+              dynamic interaction.
+            </p>
+          </div>
+        </div>
+        <div class="col d-flex align-items-start">
+          <svg
+            class="bi text-body-secondary flex-shrink-0 me-3"
+            width="1.75em"
+            height="1.75em"
+          >
+            <use xlink:href="#cpu-fill"></use>
+          </svg>
+          <div>
+            <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">
+              <i class="bi bi-graph-up"></i> Versatile Charts
+            </h3>
+            <p>
+              Includes eight different chart types for comprehensive data
+              visualization.
+            </p>
+          </div>
+        </div>
+        <div class="col d-flex align-items-start">
+          <svg
+            class="bi text-body-secondary flex-shrink-0 me-3"
+            width="1.75em"
+            height="1.75em"
+          >
+            <use xlink:href="#calendar3"></use>
+          </svg>
+          <div>
+            <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">
+              <i class="bi bi-bar-chart-line"></i> Comparison Page
+            </h3>
+            <p>
+              Allows easy comparison of different solvers and solution time per
+              problem.
+            </p>
+          </div>
+        </div>
+        <div class="col d-flex align-items-start">
+          <svg
+            class="bi text-body-secondary flex-shrink-0 me-3"
+            width="1.75em"
+            height="1.75em"
+          >
+            <use xlink:href="#home"></use>
+          </svg>
+          <div>
+            <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">
+              <i class="bi bi-save"></i> Save Functionality
+            </h3>
+            <p>
+              Allows saving filtered results to local storage for quick access.
+            </p>
+          </div>
+        </div>
+        <div class="col d-flex align-items-start">
+          <svg
+            class="bi text-body-secondary flex-shrink-0 me-3"
+            width="1.75em"
+            height="1.75em"
+          >
+            <use xlink:href="#speedometer2"></use>
+          </svg>
+          <div>
+            <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">
+              <i class="bi bi-filter-square"></i> Advanced Filtering
+            </h3>
+            <p>
+              Features a powerful filtering system with custom search queries
+              and per-column filtering options.
+            </p>
+          </div>
+        </div>
+        <div class="col d-flex align-items-start">
+          <svg
+            class="bi text-body-secondary flex-shrink-0 me-3"
+            width="1.75em"
+            height="1.75em"
+          >
+            <use xlink:href="#toggles2"></use>
+          </svg>
+          <div>
+            <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">
+              <i class="bi bi-speedometer2"></i> Performance
+            </h3>
+            <p>Performant when visualizing large benchmarking result sets.</p>
+          </div>
+        </div>
+        <div class="col d-flex align-items-start">
+          <svg
+            class="bi text-body-secondary flex-shrink-0 me-3"
+            width="1.75em"
+            height="1.75em"
+          >
+            <use xlink:href="#geo-fill"></use>
+          </svg>
+          <div>
+            <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">
+              <i class="bi bi-collection"></i> Problem Libraries
+            </h3>
+            <p>
+              In-built popular problem libraries for relevant information
+              integration.
+            </p>
+          </div>
+        </div>
+        <div class="col d-flex align-items-start">
+          <svg
+            class="bi text-body-secondary flex-shrink-0 me-3"
+            width="1.75em"
+            height="1.75em"
+          >
+            <use xlink:href="#tools"></use>
+          </svg>
+          <div>
+            <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">
+              <i class="bi bi-file-code"></i> Open Source
+            </h3>
+            <p>The source code is open for modification and inspection.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container px-4 py-2" id="hanging-icons" style="opacity: 1">
+      <h2 class="pb-2 border-bottom" id="downloads">Downloads</h2>
+      <div class="row g-4 py-4 row-cols-1 row-cols-lg-3">
+        <div class="col d-flex align-items-start">
+          <div>
+            <h3 class="fs-2 text-body-emphasis">Install as a wrapper (WIP)</h3>
+            <p>
+              Get the application to run in your operating system's WebView for
+              a native app experience.
+            </p>
+            <div class="position-relative d-inline-block">
+              <a href="#" class="btn btn-primary disabled">
+                <i class="bi bi-filetype-exe"></i> VIVA_installer.msi
+              </a>
+              <span
+                class="badge bg-warning position-absolute top-0 start-100 translate-middle"
+                >WIP</span
+              >
+            </div>
+            <hr />
+            <div class="position-relative d-inline-block">
+              <a href="#" class="btn btn-primary disabled">
+                <i class="bi bi-filetype-exe"></i> VIVA_installer.deb
+              </a>
+              <span
+                class="badge bg-warning position-absolute top-0 start-100 translate-middle"
+                >WIP</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col d-flex align-items-start">
+          <div>
+            <h3 class="fs-2 text-body-emphasis">Use your own browser</h3>
+            <p>
+              The application can be downloaded and run locally without a live
+              server, thanks to Webpack bundling. Alternatively, install it as a
+              Progressive Web Application (PWA) by launching the project on a
+              live server, navigating to the report page with a compatible
+              browser, and installing it via your selected browser.
+            </p>
+            <a
+              href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/releases"
+              target="_blank"
+              class="btn btn-primary"
+            >
+              <i class="bi bi-file-zip"></i> VIVA_release.zip
+            </a>
+          </div>
+        </div>
+        <div class="col d-flex align-items-start">
+          <div>
+            <h3 class="fs-2 text-body-emphasis">View source on GitHub</h3>
+            <p>
+              Explore the source code, download the latest version, and access
+              previous releases on GitHub.
+            </p>
+            <a
+              href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis"
+              target="_blank"
+              class="btn btn-primary"
+            >
+              <i class="bi bi-github"></i> View Source
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

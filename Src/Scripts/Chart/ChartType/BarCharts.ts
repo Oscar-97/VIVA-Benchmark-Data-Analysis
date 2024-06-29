@@ -34,14 +34,15 @@ export function PlotDataByCategory(
 		filterType
 	);
 	const solverNames = Object.keys(data).filter(
-		(name) => name !== "VirtualBestSolver" && name !== "VirtualWorstSolver"
+		(name) => name !== "Virtual Best Solver" && name !== "Virtual Worst Solver"
 	);
 
 	const averageData = {
 		label: "Average",
 		data: solverNames
 			.filter(
-				(name) => name !== "VirtualBestSolver" && name !== "VirtualWorstSolver"
+				(name) =>
+					name !== "Virtual Best Solver" && name !== "Virtual Worst Solver"
 			)
 			.map((name) => data[name].avgValue),
 		borderColor: "#007bff",
@@ -52,7 +53,8 @@ export function PlotDataByCategory(
 		label: "Min",
 		data: solverNames
 			.filter(
-				(name) => name !== "VirtualBestSolver" && name !== "VirtualWorstSolver"
+				(name) =>
+					name !== "Virtual Best Solver" && name !== "Virtual Worst Solver"
 			)
 			.map((name) => data[name].minValue),
 		borderColor: "#28a745",
@@ -63,7 +65,8 @@ export function PlotDataByCategory(
 		label: "Max",
 		data: solverNames
 			.filter(
-				(name) => name !== "VirtualBestSolver" && name !== "VirtualWorstSolver"
+				(name) =>
+					name !== "Virtual Best Solver" && name !== "Virtual Worst Solver"
 			)
 			.map((name) => data[name].maxValue),
 		borderColor: "#dc3545",
@@ -74,7 +77,8 @@ export function PlotDataByCategory(
 		label: "Std",
 		data: solverNames
 			.filter(
-				(name) => name !== "VirtualBestSolver" && name !== "VirtualWorstSolver"
+				(name) =>
+					name !== "Virtual Best Solver" && name !== "Virtual Worst Solver"
 			)
 			.map((name) => data[name].stdValue),
 		borderColor: "#6f42c1",
@@ -127,8 +131,8 @@ export function PlotDataByCategory(
 			annotations: {
 				line1: {
 					type: "line",
-					yMin: data["VirtualBestSolver"].avgValue,
-					yMax: data["VirtualBestSolver"].avgValue,
+					yMin: data["Virtual Best Solver"].avgValue,
+					yMax: data["Virtual Best Solver"].avgValue,
 					borderColor: "rgb(124,252,0)",
 					borderShadowColor: "rgba(0,0,0, 0)",
 					shadowOffsetY: 2,
@@ -141,8 +145,8 @@ export function PlotDataByCategory(
 				},
 				line2: {
 					type: "line",
-					yMin: data["VirtualWorstSolver"].avgValue,
-					yMax: data["VirtualWorstSolver"].avgValue,
+					yMin: data["Virtual Worst Solver"].avgValue,
+					yMax: data["Virtual Worst Solver"].avgValue,
 					borderColor: "rgb(255, 99, 132)",
 					borderShadowColor: "rgba(0,0,0, 0)",
 					shadowOffsetY: 2,

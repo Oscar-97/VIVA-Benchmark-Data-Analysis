@@ -1,6 +1,6 @@
 {
 	"name": "viva",
-	"version": "1.1",
+	"version": "1.1.1",
 	"description": "Benchmark data analysis for optimization solvers.",
 	"main": "",
 	"scripts": {

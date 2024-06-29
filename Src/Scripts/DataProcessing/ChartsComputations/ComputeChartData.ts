@@ -1,10 +1,7 @@
 import * as math from "mathjs";
 import { Values } from "../../Constants/Values";
 import { StatisticsColumns, TraceData } from "../../Interfaces/Interfaces";
-import {
-	ComputeVirtualTimes,
-	ComputeVirtualTimesTraceData
-} from "../ResultComputations/ComputeVirtualSolvers";
+import { ComputeVirtualTimesTraceData } from "../ResultComputations/ComputeVirtualSolvers";
 import {
 	defaultTimeDirectInput,
 	gapLimitDirectInput
@@ -151,10 +148,6 @@ function FilterByType(
 				(obj) =>
 					obj["DualGap"] <= 10 && obj["SolverStatus"] === "Normal Completion"
 			));
-			return (categoryValues = categoryValues.filter(
-				(obj) =>
-					obj["PrimalGap"] <= 10 && obj["SolverStatus"] === "Normal Completion"
-			));
 		default:
 			return categoryValues;
 	}
@@ -226,12 +219,10 @@ export function ExtractAllSolverTimes(traceData: TraceData[]): object {
 }
 
 /**
- * This function is used to structure trace data (log of the solver) into a more accessible object
- * structure. It takes an array of objects (traceData) and returns an object.
+ * This function Extracts solver times based on the specified gap type, default time, gap limit, and termination status.
  *
  * The returned object has a unique key for each solver and the value is an array of objects, each containing a 'time'
- * and 'InputFileName'. All results with missing SolverTime, or with a failed status, get a default value of 1000.
- * A fail is if the termination or solver status is not "Normal Completion".
+ * and 'InputFileName'.
  *
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  *
@@ -246,14 +237,14 @@ export function ExtractAllSolverTimesGapType(
 	terminationStatusSelector?: string
 ): object {
 	let defaultTimeFallback: number;
-	let primalGapToCompare: number;
+	let gapLimitToCompare: number;
 	let terminationStatus: string;
 
 	if (!gapLimit || gapLimit < 0) {
-		primalGapToCompare = 0.01;
+		gapLimitToCompare = 0.01;
 		gapLimitDirectInput.value = "0.01";
 	} else {
-		primalGapToCompare = gapLimit;
+		gapLimitToCompare = gapLimit;
 	}
 
 	if (!defaultTime || defaultTime < 0) {
@@ -284,7 +275,12 @@ export function ExtractAllSolverTimesGapType(
 		terminationStatus = statusMap[terminationStatusSelector];
 	}
 
-	const filteredSolvers = traceData.reduce(
+	const virtualData = ComputeVirtualTimesTraceData(
+		traceData,
+		defaultTimeFallback
+	);
+	const combinedData = [...traceData, ...virtualData];
+	const filteredData = combinedData.reduce(
 		(
 			acc: { [key: string]: { time: number; InputFileName: string }[] },
 			obj: object
@@ -292,13 +288,18 @@ export function ExtractAllSolverTimesGapType(
 			if (!acc[obj["SolverName"]]) {
 				acc[obj["SolverName"]] = [];
 			}
-			if (!isNaN(Number(obj["SolverTime"]))) {
-				const isTerminationStatusValid =
-					typeof terminationStatus === "undefined" ||
-					obj["SolverStatus"] === terminationStatus;
+			if (!isNaN(obj["SolverTime"])) {
 				if (
-					obj[selectedGapType] <= primalGapToCompare &&
-					isTerminationStatusValid
+					obj[selectedGapType] <= gapLimitToCompare &&
+					obj["SolverStatus"] === terminationStatus
+				) {
+					acc[obj["SolverName"]].push({
+						time: Number(obj["SolverTime"]),
+						InputFileName: obj["InputFileName"]
+					});
+				} else if (
+					obj[selectedGapType] <= gapLimitToCompare &&
+					terminationStatus === undefined
 				) {
 					acc[obj["SolverName"]].push({
 						time: Number(obj["SolverTime"]),
@@ -316,7 +317,6 @@ export function ExtractAllSolverTimesGapType(
 		{}
 	);
 
-	const virtualSolvers = ComputeVirtualTimes(filteredSolvers);
-	const result = { ...filteredSolvers, ...virtualSolvers };
+	const result = filteredData;
 	return result;
 }

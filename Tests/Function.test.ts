@@ -36,7 +36,8 @@ const mockupTraceData = [
 		InputFileName: "TestInstance",
 		PrimalBound: 1.33594e1,
 		DualBound: 1.96894e1,
-		UserComment: "This is will get filtered."
+		UserComment: "This is will get filtered.",
+		Fail: false
 	},
 	{
 		SolverName: "TestSolver1",
@@ -44,7 +45,8 @@ const mockupTraceData = [
 		InputFileName: "TestInstance_B",
 		PrimalBound: -5.96e3,
 		DualBound: -3.153852e4,
-		UserComment: "This is will get filtered."
+		UserComment: "This is will get filtered.",
+		Fail: false
 	},
 	{
 		SolverName: "TestSolver2",
@@ -52,7 +54,8 @@ const mockupTraceData = [
 		InputFileName: "TestInstance_X",
 		PrimalBound: -5.905217,
 		DualBound: 1.43358e1,
-		UserComment: "This is will get filtered."
+		UserComment: "This is will get filtered.",
+		Fail: false
 	},
 	{
 		SolverName: "TestSolver2",
@@ -60,7 +63,8 @@ const mockupTraceData = [
 		InputFileName: "TestInstance_Y",
 		PrimalBound: 1.13389e2,
 		DualBound: -2.0423e4,
-		UserComment: "This is will get filtered."
+		UserComment: "This is will get filtered.",
+		Fail: false
 	}
 ];
 
@@ -820,10 +824,7 @@ describe("Coverage in computation functions with mockup data.", () => {
 	describe("ExtractAllSolverTimesGapType", () => {
 		it("should return an empty object if traceData is empty", () => {
 			const result = ExtractAllSolverTimesGapType([], "PrimalGap");
-			expect(result).toEqual({
-				"Virtual Best Solver": [],
-				"Virtual Worst Solver": []
-			});
+			expect(result).toEqual({});
 		});
 	});
 
@@ -858,7 +859,7 @@ describe("Coverage in computation functions with mockup data.", () => {
 					p75Value: expect.any(Number),
 					p90Value: expect.any(Number)
 				},
-				VirtualBestSolver: {
+				"Virtual Best Solver": {
 					avgValue: expect.any(Number),
 					minValue: expect.any(Number),
 					maxValue: expect.any(Number),
@@ -870,7 +871,7 @@ describe("Coverage in computation functions with mockup data.", () => {
 					p75Value: expect.any(Number),
 					p90Value: expect.any(Number)
 				},
-				VirtualWorstSolver: {
+				"Virtual Worst Solver": {
 					avgValue: expect.any(Number),
 					minValue: expect.any(Number),
 					maxValue: expect.any(Number),
@@ -910,7 +911,7 @@ describe("Coverage in computation functions with mockup data.", () => {
 				p90Value: 811.4661
 			});
 
-			expect(result.VirtualBestSolver).toEqual({
+			expect(result["Virtual Best Solver"]).toEqual({
 				avgValue: 226.8737,
 				maxValue: 900.971,
 				minValue: 0.04112087,
@@ -923,7 +924,7 @@ describe("Coverage in computation functions with mockup data.", () => {
 				sumValue: 907.4947
 			});
 
-			expect(result.VirtualWorstSolver).toEqual({
+			expect(result["Virtual Worst Solver"]).toEqual({
 				avgValue: 226.8737,
 				maxValue: 900.971,
 				minValue: 0.04112087,
