@@ -4,6 +4,7 @@ import { DataTablesConfigurationStats } from "../../DataTable/DataTableWrapper";
 import { TraceData } from "../../Interfaces/Interfaces";
 import {
 	ComputeStatisticalMeasures,
+	ExtractFailedCount,
 	ExtractStatusMessages
 } from "../../DataProcessing/ChartsComputations/ComputeChartData";
 
@@ -181,10 +182,12 @@ export function PlotDataByCategory(
  * This function prepares and plots all the termination status messages per solver.
  *
  * @param {TraceData[]} traceData - Array of objects containing the result data.
+ * @param {string} statusType - The status type to be analyzed.
  * @param {string} title - The title of the chart.
  */
 export function PlotStatusMessages(
 	traceData: TraceData[],
+	statusType: string,
 	title: string
 ): {
 	label: string;
@@ -192,7 +195,7 @@ export function PlotStatusMessages(
 	borderColor: string;
 	backgroundColor: string;
 }[] {
-	const data = ExtractStatusMessages(traceData);
+	const data = ExtractStatusMessages(traceData, statusType);
 	const solverNames = data.map((obj) => {
 		return obj["SolverName"];
 	});
@@ -267,5 +270,78 @@ export function PlotStatusMessages(
 	};
 
 	CreateChart("bar", chartData, solverNames, title, scaleOptions, zoomOptions);
+	return chartData;
+}
+
+/**
+ * This function prepares and plots the fail count per solver.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
+ */
+export function PlotFailCount(traceData: TraceData[]): {
+	label: string;
+	data: number[];
+	borderColor: string;
+	backgroundColor: string;
+}[] {
+	const data = ExtractFailedCount(traceData);
+	const solverNames = data.map((obj) => {
+		return obj["SolverName"];
+	});
+	const statusKeys = Object.keys(data[0]).filter((key) => {
+		return key !== "SolverName";
+	});
+
+	const chartData = statusKeys.map((key) => {
+		return {
+			label: key,
+			data: data.map((obj) => {
+				return obj[key] || 0;
+			}),
+			borderColor: "#f5a2a3",
+			backgroundColor: "#f5a2a3"
+		};
+	});
+
+	const scaleOptions = {
+		x: {
+			title: {
+				display: true,
+				text: "Solver name"
+			}
+		},
+		y: {
+			title: {
+				display: true,
+				text: "Count"
+			}
+		}
+	};
+
+	const zoomOptions = {
+		pan: {
+			enabled: false
+		},
+		zoom: {
+			wheel: {
+				enabled: true
+			},
+			pinch: {
+				enabled: true
+			},
+			mode: "y"
+		},
+		limits: {
+			y: { min: 0 }
+		}
+	};
+
+	CreateChart(
+		"bar",
+		chartData,
+		solverNames,
+		"Number of failed instances",
+		scaleOptions,
+		zoomOptions
+	);
 	return chartData;
 }

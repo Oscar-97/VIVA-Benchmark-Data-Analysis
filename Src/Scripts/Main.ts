@@ -38,6 +38,7 @@ import {
  */
 import {
 	PlotDataByCategory,
+	PlotFailCount,
 	PlotStatusMessages
 } from "./Chart/ChartType/BarCharts";
 
@@ -104,7 +105,9 @@ import {
 	terminationTypeSelector,
 	categorySelector,
 	filterTypeSelector,
-	performanceProfileSelector
+	performanceProfileSelector,
+	chartTypeSelector,
+	statusSelector
 } from "./Elements/Elements";
 import {
 	BodyFadeLoadingAnimation,
@@ -144,6 +147,7 @@ import { TraceHeaderMap } from "./Constants/TraceHeaders";
 import { ClearDataTableModal } from "./Elements/Modals/ClearDataTableModal";
 import { CreateDeleteDataModal } from "./Elements/Modals/DeleteDataModal";
 import { ProcessData } from "./DataProcessing/ProcessTraceData";
+import { PlotTerminationRelation } from "./Chart/ChartType/RadarCharts";
 
 //#endregion
 
@@ -419,8 +423,6 @@ function HandleCommonButtons(
 	 * Delete stored data in local storage when clicking in the "Delete Data" button.
 	 */
 	deleteLocalStorageButton.addEventListener("click", () => {
-		//const confirmDeletionModal = new Modal(deleteDataModal, { keyboard: true });
-		//confirmDeletionModal.show();
 		document
 			.getElementById("deleteButtonInModal")
 			.addEventListener("click", () => {
@@ -601,7 +603,47 @@ function HandlePlotPages(traceData: TraceData[]): void {
 				break;
 			}
 			case PageTitles.TERMINATION_STATUS: {
-				chartData = PlotStatusMessages(traceData, "Termination status by type");
+				const statusType = statusSelector.value;
+				const chartType = chartTypeSelector.value;
+
+				statusSelector.addEventListener("change", () => {
+					if (statusSelector.value === "Fail") {
+						chartTypeSelector.value = "Bar";
+						chartTypeSelector.disabled = true;
+					} else {
+						chartTypeSelector.disabled = false;
+					}
+				});
+
+				chartTypeSelector.addEventListener("change", () => {
+					if (
+						chartTypeSelector.value === "Radar" &&
+						statusSelector.value === "Fail"
+					) {
+						chartTypeSelector.value = "Bar";
+						chartTypeSelector.disabled = true;
+					}
+				});
+
+				if (chartType === "Bar") {
+					if (statusType === "Fail") {
+						chartData = PlotFailCount(traceData);
+					} else {
+						const type = statusType === "SolverStatus" ? "solver" : "model";
+						chartData = PlotStatusMessages(
+							traceData,
+							statusType,
+							`Termination count for ${type} status per solver`
+						);
+					}
+				} else {
+					const type = statusType === "SolverStatus" ? "solver" : "model";
+					chartData = PlotTerminationRelation(
+						traceData,
+						statusType,
+						`Distribution of ${type} terminations between solvers`
+					);
+				}
 				break;
 			}
 			case PageTitles.SOLUTION_QUALITY: {

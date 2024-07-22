@@ -123,11 +123,6 @@ function FilterByType(
 				(obj) =>
 					obj["SolverTime"] <= 10 && obj["SolverStatus"] === "Normal Completion"
 			));
-			return (categoryValues = categoryValues.filter(
-				(obj) =>
-					obj["PrimalGap"] <= 0.1002 &&
-					obj["SolverStatus"] === "Normal Completion"
-			));
 		case "solver_primal_gap_less_than_or_equal_to_1_percent_and_no_fail":
 			return (categoryValues = categoryValues.filter(
 				(obj) =>
@@ -157,10 +152,13 @@ function FilterByType(
  * This function extracts the values of the termination message for each instance per solver, from the results data.
  *
  * @param {TraceData[]} traceData - Array of objects containing the result data.
- * @returns  {string[]} - An object with solver names as keys. Each solver contains a counter of the instance status messages.
+ * @returns {string[]} - An object with solver names as keys. Each solver contains a counter of the instance status messages.
  */
 
-export function ExtractStatusMessages(traceData: TraceData[]): string[] {
+export function ExtractStatusMessages(
+	traceData: TraceData[],
+	statusType: string
+): string[] {
 	const result = [];
 	const nameErrorMap = new Map();
 
@@ -168,12 +166,38 @@ export function ExtractStatusMessages(traceData: TraceData[]): string[] {
 		const existingEntry = nameErrorMap.get(obj["SolverName"]);
 
 		if (existingEntry) {
-			existingEntry[obj["SolverStatus"]] =
-				(existingEntry[obj["SolverStatus"]] || 0) + 1;
+			existingEntry[obj[statusType]] =
+				(existingEntry[obj[statusType]] || 0) + 1;
 		} else {
 			const newEntry = {
 				SolverName: obj["SolverName"],
-				[obj["SolverStatus"]]: 1
+				[obj[statusType]]: 1
+			};
+			nameErrorMap.set(obj["SolverName"], newEntry);
+			result.push(newEntry);
+		}
+	});
+	return result;
+}
+
+/**
+ * This function extracts the number of failed instances per solver from the results data.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
+ * @returns {string[]} - An object with solver names as keys. Each solver contains a counter of the failed instances.
+ */
+export function ExtractFailedCount(traceData: TraceData[]): string[] {
+	const result = [];
+	const nameErrorMap = new Map();
+
+	traceData.forEach((obj) => {
+		const existingEntry = nameErrorMap.get(obj["SolverName"]);
+
+		if (existingEntry) {
+			existingEntry["Failed"] = (existingEntry["Failed"] || 0) + 1;
+		} else {
+			const newEntry = {
+				SolverName: obj["SolverName"],
+				Failed: 1
 			};
 			nameErrorMap.set(obj["SolverName"], newEntry);
 			result.push(newEntry);

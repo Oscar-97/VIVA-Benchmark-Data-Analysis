@@ -312,7 +312,42 @@
       </div>
     </div>
     <hr />
-
+    <div
+      class="d-flex flex-wrap justify-content-start gap-2"
+      style="margin-left: 1rem; margin-top: 1rem"
+    >
+      <div class="col-auto">
+        <div class="input-group mb-1">
+          <div class="form-floating">
+            <select
+              class="form-control form-control-sm"
+              id="statusSelector"
+              aria-label="statusSelector"
+            >
+              <option value="SolverStatus">Solver Status</option>
+              <option value="ModelStatus">Model Status</option>
+              <option value="Fail">Fail</option>
+            </select>
+            <label for="statusSelector">Status Type</label>
+          </div>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="input-group mb-1">
+          <div class="form-floating">
+            <select
+              class="form-control form-control-sm"
+              id="chartTypeSelector"
+              aria-label="chartType"
+            >
+              <option value="Bar">Bar Chart</option>
+              <option value="Radar">Radar Chart</option>
+            </select>
+            <label for="chartTypeSelector">Chart Type</label>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="chartContainer">
       <canvas id="myChart" class="chart">
         <!-- Content created with Chart.js will be displayed here. -->

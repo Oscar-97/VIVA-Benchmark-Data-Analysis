@@ -365,6 +365,20 @@ export const filterTypeSelector: HTMLSelectElement = document.getElementById(
 ) as HTMLSelectElement;
 
 /**
+ * `statusSelector` is a reference to the HTMLSelectElement with the ID "statusSelector".
+ */
+export const statusSelector: HTMLSelectElement = document.getElementById(
+	"statusSelector"
+) as HTMLSelectElement;
+
+/**
+ * `chartTypeSelector` is a reference to the HTMLSelectElement with the ID "chartTypeSelector".
+ */
+export const chartTypeSelector: HTMLSelectElement = document.getElementById(
+	"chartTypeSelector"
+) as HTMLSelectElement;
+
+/**
  * 'solverComparisonModal' is a reference to the HTMLDivElement with the ID "solverComparisonModal".
  * @type {HTMLDivElement}
  */
