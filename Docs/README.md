@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img alt="VIVA Banner" src="./Images/VIVA_banner.png">
+  <img alt="VIVA Banner" src="./Images/VIVA_BANNER.png">
 </h1>
 
 <p align="center">
