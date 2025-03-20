@@ -189,25 +189,6 @@ describe("UI tests", () => {
 			});
 		}
 
-		async function ShowProblemCells(): Promise<void> {
-			await WaitForElementAndClick(
-				page,
-				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]"
-			);
-			await WaitForElementAndClick(
-				page,
-				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div/div[2]"
-			);
-			await WaitForElementAndClick(
-				page,
-				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div/a[4]"
-			);
-			await WaitForElementAndClick(
-				page,
-				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div/a[5]"
-			);
-		}
-
 		test("Demo mode 1", async () => {
 			await page.selectOption("#demoDataSelector", "Demo_1");
 			await page.click("#demoModeButton");
@@ -502,6 +483,133 @@ describe("UI tests", () => {
 			expect(rowCount).toBe(expectedRowCount);
 		}, 60000);
 
+		// test("Use MINLPLib option", async () => {
+		// 	await page.waitForSelector("#fileInput");
+		// 	await page.click("#fileInput");
+		// 	await page.waitForSelector('input[type="file"]');
+		// 	await page.setInputFiles(
+		// 		'input[type="file"]',
+		// 		"./Tests/TestData/library_test.trc"
+		// 	);
+		// 	await page.waitForTimeout(2000);
+		// 	await page.selectOption("#librarySelector", "MINLPLib");
+		// 	await WaitForElementAndClick(page, "#importDataButton");
+		// 	await RunTableOperations(
+		// 		page,
+		// 		"Benchmarks loaded with following files: library_test.trc"
+		// 	);
+
+		// 	await ShowProblemCells();
+
+		// 	const primalBoundProblemCellValue = await page.$(
+		// 		"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[3]/td[5]"
+		// 	);
+		// 	const dualBoundProblemCellValue = await page.$(
+		// 		"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[3]/td[4]"
+		// 	);
+
+		// 	// Check if 'alkylation' problem contains the values from MINLPLib.
+		// 	expect(await primalBoundProblemCellValue?.innerText()).toBe(
+		// 		"1.768807e+3"
+		// 	);
+		// 	expect(await dualBoundProblemCellValue?.innerText()).toBe("1.768807e+3");
+		// }, 60000);
+
+		// test("Use MIPLIB 2017 option", async () => {
+		// 	await page.waitForSelector("#fileInput");
+		// 	await page.click("#fileInput");
+		// 	await page.waitForSelector('input[type="file"]');
+		// 	await page.setInputFiles(
+		// 		'input[type="file"]',
+		// 		"./Tests/TestData/library_test.trc"
+		// 	);
+		// 	await page.waitForTimeout(2000);
+		// 	await page.selectOption("#librarySelector", "MIPLIB_2017");
+		// 	await WaitForElementAndClick(page, "#importDataButton");
+		// 	await RunTableOperations(
+		// 		page,
+		// 		"Benchmarks loaded with following files: library_test.trc"
+		// 	);
+
+		// 	await ShowProblemCells();
+		// 	const primalBoundProblemCellValue = await page.$(
+		// 		"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[5]"
+		// 	);
+		// 	const dualBoundProblemCellValue = await page.$(
+		// 		"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[4]"
+		// 	);
+
+		// 	// Check if '50v-10' problem contains the values from MIPLIB.
+		// 	expect(await primalBoundProblemCellValue?.innerText()).toBe(
+		// 		"3.311180e+3"
+		// 	);
+		// 	expect(await dualBoundProblemCellValue?.innerText()).toBe("3.311180e+3");
+		// }, 60000);
+
+		// test("Use MIPLIB 2010 option", async () => {
+		// 	await page.waitForSelector("#fileInput");
+		// 	await page.click("#fileInput");
+		// 	await page.waitForSelector('input[type="file"]');
+		// 	await page.setInputFiles(
+		// 		'input[type="file"]',
+		// 		"./Tests/TestData/library_test.trc"
+		// 	);
+		// 	await page.waitForTimeout(2000);
+		// 	await page.selectOption("#librarySelector", "MIPLIB_2010");
+		// 	await WaitForElementAndClick(page, "#importDataButton");
+		// 	await RunTableOperations(
+		// 		page,
+		// 		"Benchmarks loaded with following files: library_test.trc"
+		// 	);
+
+		// 	await ShowProblemCells();
+		// 	const primalBoundProblemCellValue = await page.$(
+		// 		"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[1]/td[5]"
+		// 	);
+		// 	const dualBoundProblemCellValue = await page.$(
+		// 		"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[1]/td[4]"
+		// 	);
+
+		// 	// Check if '30_70_45_095_100' problem contains the values from MIPLIB.
+		// 	expect(await primalBoundProblemCellValue?.innerText()).toBe(
+		// 		"3.000000e+0"
+		// 	);
+		// 	expect(await dualBoundProblemCellValue?.innerText()).toBe("3.000000e+0");
+		// }, 60000);
+	});
+
+	describe("Problem Libraries", () => {
+		async function RunTableOperations(
+			page: Page,
+			notification: string
+		): Promise<void> {
+			await CheckNotification(page, "#alertNotification", notification);
+			await WaitForElementAndClick(page, "#viewTableButton");
+
+			await page.waitForSelector("#dataTableGenerated_wrapper", {
+				state: "visible",
+				timeout: 60000
+			});
+		}
+
+		async function ShowProblemCells(): Promise<void> {
+			await WaitForElementAndClick(
+				page,
+				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]"
+			);
+			await WaitForElementAndClick(
+				page,
+				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div/div[2]"
+			);
+			await WaitForElementAndClick(
+				page,
+				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div/a[4]"
+			);
+			await WaitForElementAndClick(
+				page,
+				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div/a[5]"
+			);
+		}
 		test("Use MINLPLib option", async () => {
 			await page.waitForSelector("#fileInput");
 			await page.click("#fileInput");

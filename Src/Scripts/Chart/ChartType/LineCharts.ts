@@ -90,12 +90,9 @@ export function PlotPerformanceProfile(
 	performanceProfile: string,
 	defaultTime?: number | undefined,
 	gapLimit?: number | undefined
-): {
-	data: ({ x: string; y: number } | { x: number; y: number })[];
-	label: string;
-	showLine: boolean;
-}[] {
+): { data: { x: number; y: number }[]; label: string; showLine: boolean }[] {
 	const selectedGapType = gapTypeSelector.value;
+
 	let solverTimes = ExtractAllSolverTimesGapType(
 		traceData,
 		selectedGapType,
@@ -107,102 +104,110 @@ export function PlotPerformanceProfile(
 		solverTimes = GetRelativeTimes(solverTimes);
 	}
 
-	const allLabels = [];
-	const allXValues: number[] = [];
 	const data = (
 		Object.entries(solverTimes) as [
 			string,
 			{ time: number; InputFileName: string }[]
 		][]
 	).map(([key, values]) => {
-		const bucketCounts: { [key: number]: number } = {};
-		const uniqueKeys: number[] = [];
+		const totalInstances = values.length;
+		let cumulativeCounts: { x: number; y: number }[];
 
-		// Group times into buckets.
+		const bucketCounts: { [key: number]: number } = {};
 		values.forEach(({ time }) => {
 			let bucket: number;
-
 			if (time < 0.1) bucket = 0.1;
 			else if (time < 1) bucket = 1;
 			else bucket = Math.floor(time) + 1;
 
-			if (!bucketCounts[bucket]) {
-				bucketCounts[bucket] = 0;
-				uniqueKeys.push(bucket);
+			bucketCounts[bucket] = (bucketCounts[bucket] || 0) + 1;
+		});
+
+		if (performanceProfile === "Absolute") {
+			let cumulativeCount = 0;
+			cumulativeCounts = Object.entries(bucketCounts)
+				.sort(([a], [b]) => Number(a) - Number(b))
+				.map(([bucket, count]) => {
+					cumulativeCount += count;
+					return { x: Number(bucket), y: cumulativeCount };
+				});
+		} else {
+			let cumulativeCount = 0;
+			cumulativeCounts = Object.entries(bucketCounts)
+				.sort(([a], [b]) => Number(a) - Number(b))
+				.map(([bucket, count]) => {
+					cumulativeCount += count;
+					return {
+						x: Number(bucket),
+						y: cumulativeCount / totalInstances
+					};
+				});
+
+			if (
+				cumulativeCounts.length > 0 &&
+				cumulativeCounts[cumulativeCounts.length - 1].y < 1
+			) {
+				cumulativeCounts.push({
+					x: cumulativeCounts[cumulativeCounts.length - 1].x,
+					y: 1
+				});
 			}
-			bucketCounts[bucket]++;
-		});
-
-		uniqueKeys.sort((a: number, b: number) => {
-			return a - b;
-		});
-
-		let cumulativeCount = 0;
-		const cumulativeCounts: { x: number; y: number }[] = [];
-
-		// Create cumulative counts.
-		uniqueKeys.forEach((key) => {
-			cumulativeCount += bucketCounts[key];
-			cumulativeCounts.push({ x: key, y: cumulativeCount });
-		});
+		}
 
 		return {
 			label: key,
 			data: cumulativeCounts,
 			showLine: true,
 			spanGaps: true,
-			stepped: true
+			stepped: performanceProfile === "Absolute" ? true : "before"
 		};
 	});
 
+	const maxX = Math.max(
+		...data.flatMap((dataset) => dataset.data.map((point) => point.x))
+	);
+
 	const chartData = data.map((dataset) => {
-		// Update all labels with unique x values.
-		dataset.data.forEach((point) => {
-			if (!allLabels.includes(point.x)) {
-				allLabels.push(point.x);
-			}
-		});
-
-		// Sort the data based on the labels.
-		const sortedData = allLabels
-			.map((label) => {
-				const point = dataset.data.find((d) => {
-					return d.x === label;
-				});
-				return point || { x: label, y: null };
-			})
-			.sort((a, b) => {
-				return parseFloat(a.x) - parseFloat(b.x);
+		if (dataset.data[dataset.data.length - 1].x < maxX) {
+			dataset.data.push({
+				x: maxX,
+				y: dataset.data[dataset.data.length - 1].y
 			});
-
-		// Update all X axis values from the sorted data.
-		sortedData.forEach((point) => {
-			if (!allXValues.includes(point.x)) {
-				allXValues.push(point.x);
-			}
-		});
-
-		return { ...dataset, data: sortedData };
+		}
+		return dataset;
 	});
 
 	const scaleOptions = {
 		x: {
 			title: {
 				display: true,
-				text: "SolverTime [s]"
+				text:
+					performanceProfile === "Relative"
+						? "Performance Ratio"
+						: "SolverTime [s]"
 			},
 			type: "linear",
 			min: 0,
-			max: defaultTime ? Number(defaultTime) + 10 : Values.DEFAULT_TIME + 10,
+			max:
+				performanceProfile === "Relative"
+					? Math.min(maxX, 10)
+					: defaultTime
+					? Number(defaultTime) + 10
+					: Values.DEFAULT_TIME + 10,
 			ticks: {
-				stepSize: 50
+				stepSize: performanceProfile === "Relative" ? 0.5 : 50
 			}
 		},
 		y: {
 			title: {
 				display: true,
-				text: "Number of instances"
-			}
+				text:
+					performanceProfile === "Relative"
+						? "Fraction of instances solved"
+						: "Number of instances"
+			},
+			min: 0,
+			max: performanceProfile === "Relative" ? 1 : undefined
 		}
 	};
 
@@ -222,7 +227,7 @@ export function PlotPerformanceProfile(
 			mode: "xy"
 		},
 		limits: {
-			y: { min: 0 }
+			y: { min: 0, max: performanceProfile === "Relative" ? 1 : undefined }
 		}
 	};
 
@@ -241,26 +246,36 @@ export function PlotPerformanceProfile(
 	return chartData;
 }
 
-function GetRelativeTimes(data): object {
+/**
+ * This function gets the relative times of the solver times.
+ */
+export function GetRelativeTimes(data: object): object {
 	const bestSolverTimes: { [key: string]: number } = {};
-	data["Virtual Best Solver"].forEach((entry) => {
-		bestSolverTimes[entry.InputFileName] = entry.time;
-	});
-
-	const result = {};
-
 	Object.keys(data).forEach((solver) => {
 		if (solver !== "Virtual Best Solver" && solver !== "Virtual Worst Solver") {
-			result[solver] = data[solver].map((entry) => {
-				const bestTime = bestSolverTimes[entry.InputFileName];
-				return {
-					...entry,
-					time: entry.time / bestTime
-				};
+			data[solver].forEach((entry) => {
+				const fileName = entry.InputFileName;
+				if (
+					!bestSolverTimes[fileName] ||
+					entry.SolverTime < bestSolverTimes[fileName]
+				) {
+					bestSolverTimes[fileName] = entry.SolverTime;
+				}
 			});
-		} else {
-			result[solver] = data[solver];
 		}
+	});
+
+	const result: { [key: string]: any[] } = {};
+
+	Object.keys(data).forEach((solver) => {
+		result[solver] = data[solver].map((entry) => {
+			const bestTime = bestSolverTimes[entry.InputFileName] || 1;
+
+			return {
+				...entry,
+				SolverTime: bestTime > 0 ? entry.SolverTime / bestTime : 1
+			};
+		});
 	});
 
 	return result;

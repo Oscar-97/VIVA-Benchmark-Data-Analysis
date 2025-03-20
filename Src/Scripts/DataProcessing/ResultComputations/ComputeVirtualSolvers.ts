@@ -25,7 +25,7 @@ export function ComputeVirtualTimesTraceData(
 	const noFailedResults = Object.entries(groupedByProblem).reduce(
 		(acc, [key, items]) => {
 			const filteredItems = items.filter(
-				(item) => item["Fail"].toString() === "false"
+				(item) => item["Fail"] != null && item["Fail"].toString() === "false"
 			);
 			if (filteredItems.length > 0) {
 				acc[key] = filteredItems;
