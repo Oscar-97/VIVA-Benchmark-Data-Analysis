@@ -40,6 +40,8 @@ export function PickColor(numberOfColors: number): string[] {
  * @param {string} title - The title of the chart.
  * @param scaleOptions - The scape options for the chart.
  * @param zoomOptions - The zoom options for the chart.
+ * @param annotationOptions - The annotation options for the chart.
+ * @param subtitle - The subtitle of the chart.
  *
  * @example
  * ```typescript

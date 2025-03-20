@@ -180,6 +180,7 @@ body > :not(nav, hr) {
 .navbar-brand {
 	font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode",
 		"Lucida Sans", sans-serif;
+	user-select: none;
 }
 
 .navbar-collapse {

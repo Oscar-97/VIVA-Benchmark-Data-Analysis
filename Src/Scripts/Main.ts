@@ -148,7 +148,8 @@ import { ClearDataTableModal } from "./Elements/Modals/ClearDataTableModal";
 import { CreateDeleteDataModal } from "./Elements/Modals/DeleteDataModal";
 import { ProcessData } from "./DataProcessing/ProcessTraceData";
 import { PlotTerminationRelation } from "./Chart/ChartType/RadarCharts";
-
+import { CreateScreenSizeToast } from "./Elements/Toasts/ScreenSizeToast";
+import { InitializeScreenSizeToast } from "./Elements/Events/DisplayScreenSizeToast";
 //#endregion
 
 /**
@@ -160,6 +161,11 @@ CreateDeleteDataModal();
 if (document.title === PageTitles.TABLE) {
 	ClearDataTableModal();
 }
+/**
+ * Toast component for screen size notification.
+ */
+CreateScreenSizeToast();
+
 /**
  * Fetches and displays the latest release of the application.
  */
@@ -221,6 +227,11 @@ function InitializeProgram(): void {
 	} else {
 		ElementStatesPlotPage();
 	}
+
+	/**
+	 * Initializes the screen size toast and sets up the event listener for the screen size toast.
+	 */
+	InitializeScreenSizeToast();
 
 	/**
 	 * Tries to retrieve stored configuration when arriving at
@@ -507,6 +518,7 @@ function HandleReportPage(traceData: TraceData[]): void {
 		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
+		sessionStorage.setItem(Keys.ALERTED_STORAGE, "true");
 	});
 
 	/**
@@ -550,6 +562,7 @@ function HandlePlotPages(traceData: TraceData[]): void {
 		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
+		sessionStorage.setItem(Keys.ALERTED_STORAGE, "true");
 	});
 
 	/**
@@ -703,6 +716,7 @@ function HandleCompareSolversPage(traceData: TraceData[]): void {
 		CreateUserConfiguration(newRawData, dataFileType);
 		deleteLocalStorageButton.disabled = false;
 		downloadConfigurationButtonLayer.disabled = false;
+		sessionStorage.setItem(Keys.ALERTED_STORAGE, "true");
 	});
 
 	/**
