@@ -4,4 +4,5 @@ Release
 !/Test/TestData/
 TestScreenshots
 Tests/downloads
+test-results
 .vscode/settings.json
