@@ -33,6 +33,9 @@ export function GetDataFileType(): string {
 	const extensions = [];
 	const fileCounts = { csv: 0, solu: 0, json: 0 };
 
+	if (!files) {
+		throw new Error("No files were selected.");
+	}
 	for (let i = 0; i < files.length; i++) {
 		const extension = CheckFileExtension(files[i], fileCounts);
 
@@ -62,7 +65,7 @@ export function GetDataFileType(): string {
 
 	return extensions.find((ext) => {
 		return ext === "trc" || ext === "json";
-	});
+	}) ?? "";
 }
 
 /**
@@ -82,14 +85,11 @@ function CheckFileExtension(
 	file: File,
 	fileCounts: {
 		[x: string]: number;
-		csv?: number;
-		solu?: number;
-		json?: number;
 	}
 ): string {
 	const extension = file.name.split(".").pop();
 
-	if (!IsValidExtension(extension)) {
+	if (!extension || !IsValidExtension(extension)) {
 		DisplayErrorNotification(ErrorMessages.INVALID_EXTENSION);
 		throw new Error(ErrorMessages.INVALID_EXTENSION);
 	}
@@ -146,6 +146,9 @@ export function ReadData(
 	 * Input multiple files.
 	 * For instance: trace1.trc, trace2.trc and minlp.solu.
 	 */
+	if (!fileInput.files) {
+		throw new Error("No files were selected.");
+	}
 	for (let i = 0; i < fileInput.files.length; i++) {
 		const reader = new FileReader();
 		const file = fileInput.files[i];
@@ -197,7 +200,14 @@ export function ReadData(
 /**
  * This function checks the properties of the data in the JSON file.
  */
-function VerifyConfigurationProperties(parsedData): void {
+interface ParsedData {
+	dataSet: string[];
+	dataFileType: string;
+	defaultTime?: string;
+	[key: string]: any;
+}
+
+function VerifyConfigurationProperties(parsedData: ParsedData): void {
 	if (
 		parsedData.hasOwnProperty.call(parsedData, "dataSet") &&
 		parsedData.hasOwnProperty.call(parsedData, "dataFileType")
@@ -205,8 +215,8 @@ function VerifyConfigurationProperties(parsedData): void {
 		userData.dataSet = parsedData.dataSet;
 		userData.dataFileType = parsedData.dataFileType;
 
-		if (parsedData.hasOwnProperty.call("defaultTime")) {
-			userData.defaultTime = parsedData.defaultTime;
+		if (parsedData.hasOwnProperty.call(parsedData, "defaultTime")) {
+			userData.defaultTime = parsedData.defaultTime ? Number(parsedData.defaultTime) : undefined;
 		}
 
 		localStorage.setItem(Keys.USER_CONFIGURATION, JSON.stringify(userData));

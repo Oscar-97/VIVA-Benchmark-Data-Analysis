@@ -210,11 +210,14 @@ function DataTablesConfiguration(): void {
 				.css("visibility", "visible")
 				.animate({ opacity: 1 }, 500);
 			const columnNamesToShow = DEFAULT_VISIBLE_HEADERS;
+			// @ts-expect-error Remake in the future.
 			this.api()
 				.columns()
 				.every(function () {
+					// @ts-expect-error Remake in the future.
 					const columnName = this.header().textContent;
 					if (!columnNamesToShow.includes(columnName)) {
+						// @ts-expect-error Remake in the future.
 						this.visible(false);
 					}
 				});

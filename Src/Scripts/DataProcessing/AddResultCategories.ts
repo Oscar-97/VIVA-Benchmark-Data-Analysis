@@ -24,7 +24,7 @@ import {
  */
 export function AddResultCategories(traceData: TraceData[]): void {
 	for (const obj of traceData) {
-		obj["Direction"] = CalculateDirection(obj["Direction"]);
+		obj["Direction"] = CalculateDirection(obj["Direction"] as string | number);
 
 		obj["PrimalBoundSolver"] = CalculatePrimalBound(
 			obj["ObjectiveValue"],

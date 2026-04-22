@@ -53,7 +53,7 @@ function ProcessLines(
 	startIdx: number
 ): object[] {
 	const traceData = [];
-	const previousRow = {};
+	const previousRow: { [key: string]: string } = {};
 	for (let i = Math.max(startIdx, 0); i < unprocessedData.length; i++) {
 		if (unprocessedData[i].startsWith("*")) continue;
 
@@ -77,7 +77,7 @@ function ProcessLines(
 				return cell.trim() !== "";
 			})
 		) {
-			const obj = {};
+			const obj: { [key: string]: string } = {};
 			for (let j = 0; j < headers.length; j++) {
 				let value = currentLine[j];
 

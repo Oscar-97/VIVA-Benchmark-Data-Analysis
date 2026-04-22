@@ -31,7 +31,7 @@ export function MergeData(
 					traceDataObj["InputFileName"] === dataObj["InputFileName"]) ||
 				(dataObj["name"] && traceDataObj["InputFileName"] === dataObj["name"])
 			) {
-				const mergedObj = { ...traceDataObj, ...dataObj };
+				const mergedObj: { [key: string]: any } = { ...traceDataObj, ...dataObj };
 				allProps.forEach((prop) => {
 					if (mergedObj[prop] === undefined) {
 						mergedObj[prop] = null;
@@ -45,8 +45,8 @@ export function MergeData(
 		if (!isMatchFound) {
 			const objWithAllProps = { ...traceDataObj };
 			allProps.forEach((prop) => {
-				if (objWithAllProps[prop] === undefined) {
-					objWithAllProps[prop] = null;
+				if ((objWithAllProps as any)[prop] === undefined) {
+					(objWithAllProps as any)[prop] = null;
 				}
 			});
 			mergedData.push(objWithAllProps);

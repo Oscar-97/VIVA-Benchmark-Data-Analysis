@@ -255,12 +255,17 @@ export function SetSolverStatus(solverStatus: number | string): string {
 export function CompareSolvers(
 	solver1: string,
 	solver2: string,
-	solverTimes: object
+	solverTimes: { [key: string]: { InputFileName: string; time: number }[] }
 ): ComparisonSummary {
 	const results1 = solverTimes[solver1];
 	const results2 = solverTimes[solver2];
 
-	const comparisonSummary = { better: 0, worse: 0, equal: 0, details: [] };
+	const comparisonSummary: {
+		better: number;
+		worse: number;
+		equal: number;
+		details: { InputFileName: string; time1: number; time2: number; comparison: string }[];
+	} = { better: 0, worse: 0, equal: 0, details: [] };
 
 	results1.forEach((result1: { InputFileName: string; time: number }) => {
 		const result2 = results2.find(
@@ -330,7 +335,7 @@ export function ExtractUniqueProblems(traceData: TraceData[]): object[] {
  * @param data - The data to apply calculations to.
  * @returns An object containing the calculated statistics.
  */
-export function CalculateInstanceAttributes(data: object[]): {
+export function CalculateInstanceAttributes(data: { [key: string]: any }[]): {
 	[key: string]: StatisticsColumns;
 } {
 	const results: {
@@ -340,7 +345,7 @@ export function CalculateInstanceAttributes(data: object[]): {
 
 	keys.forEach((key) => {
 		const values: number[] = data
-			.map((item) => Number(item[key]))
+			.map((item: { [key: string]: any }) => Number(item[key]))
 			.filter((value) => !isNaN(value));
 
 		if (values.length > 0) {
@@ -391,7 +396,7 @@ export function CalculateInstanceAttributes(data: object[]): {
  * @returns An object containing the calculated statistics.
  */
 export function CalculateSolveAttributes(
-	data: object[],
+	data: { [key: string]: any }[],
 	specificKeys: string[]
 ): {
 	[key: string]: StatisticsColumns;
@@ -402,7 +407,7 @@ export function CalculateSolveAttributes(
 
 	specificKeys.forEach((key) => {
 		const values: number[] = data
-			.map((item) => parseFloat(item[key]))
+			.map((item: { [key: string]: any }) => parseFloat(item[key]))
 			.filter((value) => !isNaN(value));
 
 		if (values.length > 0) {

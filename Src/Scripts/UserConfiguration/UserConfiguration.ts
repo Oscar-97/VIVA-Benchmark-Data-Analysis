@@ -10,6 +10,7 @@ import {
 	downloadCustomConfigurationButton
 } from "../Elements/Elements";
 import { UserData } from "../Interfaces/Interfaces";
+import { Values } from "../Constants/Values";
 
 /**
  * This object is used to store the user configuration.
@@ -47,7 +48,7 @@ export function CreateUserConfiguration(
 	try {
 		localStorage.setItem(Keys.USER_CONFIGURATION, JSON.stringify(userData));
 	} catch (error) {
-		switch (error.name) {
+		switch ((error as { name: string }).name) {
 			case "QuotaExceededError":
 				DisplayErrorNotification(UserConfigurationMessages.QUOTA_EXCEEDED);
 				break;
@@ -74,11 +75,15 @@ export function CreateUserConfiguration(
  * @returns An array that includes the raw data, data file type, default time, and gap limit.
  */
 export function GetUserConfiguration(): [string[], string, number, number] {
-	let userConfig: UserData;
+	let userConfig: UserData = { dataSet: [], dataFileType: "", defaultTime: undefined, gapLimit: undefined };
 	try {
-		userConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
+		const userConfigString = localStorage.getItem("UserConfiguration");
+		if (!userConfigString) {
+			throw new Error(UserConfigurationMessages.NO_STORED_CONFIG);
+		}
+		userConfig = JSON.parse(userConfigString);
 	} catch (error) {
-		switch (error.message) {
+		switch ((error as { message: string }).message) {
 			case "SecurityError":
 				DisplayErrorNotification(UserConfigurationMessages.SECURITY_ERROR);
 				break;
@@ -93,18 +98,22 @@ export function GetUserConfiguration(): [string[], string, number, number] {
 				}
 				break;
 			default:
-				DisplayErrorNotification(error);
+				DisplayErrorNotification(String(error));
 				break;
 		}
 	}
-	const unprocessedData = [];
+	const unprocessedData: string[] = [];
 	userConfig.dataSet.forEach((value) => {
-		unprocessedData.push(value);
+		if (typeof value === "string") {
+			unprocessedData.push(value);
+		} else {
+			unprocessedData.push(JSON.stringify(value));
+		}
 	});
 
 	const dataFileType = userConfig.dataFileType;
-	const defaultTime = userConfig.defaultTime;
-	const gapLimit = userConfig.gapLimit;
+	const defaultTime = userConfig.defaultTime ?? Values.DEFAULT_TIME; 
+	const gapLimit = userConfig.gapLimit ?? Values.DEFAULT_GAP_LIMIT;
 	return [unprocessedData, dataFileType, defaultTime, gapLimit];
 }
 
@@ -116,7 +125,7 @@ export function DeleteUserConfiguration(): void {
 		localStorage.removeItem(Keys.USER_CONFIGURATION);
 		localStorage.removeItem(Keys.DEMO_DATA);
 	} catch (error) {
-		switch (error.name) {
+		switch ((error as { name: string }).name) {
 			case "SecurityError":
 				DisplayErrorNotification(UserConfigurationMessages.SECURITY_ERROR);
 				break;
@@ -137,7 +146,8 @@ export function DeleteUserConfiguration(): void {
  * which should be a reference to an HTML anchor (`<a>`) element used to trigger the file download.
  */
 export function DownloadUserConfiguration(): void {
-	const userConfig = JSON.parse(localStorage.getItem(Keys.USER_CONFIGURATION));
+	const userConfigString = localStorage?.getItem(Keys.USER_CONFIGURATION);
+	const userConfig = userConfigString ? JSON.parse(userConfigString) : null;
 	if (userConfig) {
 		const downloadAbleFile = JSON.stringify(userConfig);
 		const blob = new Blob([downloadAbleFile], { type: "application/json" });
@@ -175,6 +185,8 @@ export function DownloadCustomizedUserConfiguration(
 	const downloadAbleFile = JSON.stringify(userData);
 	const blob = new Blob([downloadAbleFile], { type: "application/json" });
 
-	downloadCustomConfigurationButton.href = window.URL.createObjectURL(blob);
-	downloadCustomConfigurationButton.download = "UserConfiguration.json";
+	if (downloadCustomConfigurationButton) {
+		downloadCustomConfigurationButton.href = window.URL.createObjectURL(blob);
+		downloadCustomConfigurationButton.download = "UserConfiguration.json";
+	}
 }

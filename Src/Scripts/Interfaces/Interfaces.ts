@@ -22,7 +22,7 @@ export interface TraceData {
 	NumberOfVariables?: number;
 	NumberOfDiscreteVariables?: number;
 	NumberOfEquations?: number;
-	NumberOfNonzeros?: number;
+	NumberOfNonZeros?: number;
 	NumberOfNonlinearNonZeros?: number;
 	SolverName?: string;
 	ModelStatus?: string;
@@ -38,6 +38,8 @@ export interface TraceData {
 	NumberOfDomainViolations?: number;
 	Fail?: boolean;
 	FailReason?: string;
+	ObjectiveValue?: number | string;
+	ObjectiveValueEstimate?: number | string;
 }
 
 /**

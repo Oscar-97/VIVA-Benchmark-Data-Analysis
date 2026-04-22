@@ -191,12 +191,12 @@ RegisterServiceWorker();
  * @param chartData - Processed data used in the different charts.
  */
 let dataFileType = "";
-let defaultTime = undefined;
+let defaultTime: number | undefined = undefined;
 let gapLimit = undefined;
 let unprocessedData: string[] = [];
 let unprocessedInstanceInformationData: string[] = [];
 let unprocessedSolutionData: string[] = [];
-let chartData = [];
+let chartData: object[] = [];
 
 /**
  * Initializing the methods that are needed to run the system.
@@ -208,7 +208,7 @@ function InitializeProgram(): void {
 	 * This occurs when the table is cleared and InitializeProgram() is run again.
 	 */
 	dataFileType = "";
-	defaultTime = "";
+	defaultTime = undefined;
 	gapLimit = "";
 	unprocessedData = [];
 	unprocessedInstanceInformationData = [];
@@ -250,7 +250,7 @@ function InitializeProgram(): void {
 			ImportDataEvents(
 				InfoMessages.DEMO_MODE_MSG,
 				"json",
-				localStorage.getItem(Keys.DEMO_DATA)
+				localStorage.getItem(Keys.DEMO_DATA) ?? undefined
 			);
 			NotifyDemoMode();
 		} else {
@@ -293,11 +293,13 @@ function InitializeProgram(): void {
 	 */
 	importDataButton.addEventListener("click", () => {
 		sessionStorage.removeItem(Keys.SAVED_STORAGE_NOTIFICATION);
-		const fileNames = Array.from(fileInput.files)
-			.map((file) => {
-				return file.name;
-			})
-			.join(", ");
+		const fileNames = fileInput.files
+			? Array.from(fileInput.files)
+					.map((file) => {
+						return file.name;
+					})
+					.join(", ")
+			: "";
 		ImportDataEvents(InfoMessages.LOADED_FILES.concat(fileNames));
 		ManageData();
 		RequestPWANotificationPermission();
@@ -409,7 +411,7 @@ function HandleCommonButtons(
 	 * Fill the solver selector with solvers and update the values in selectedSolvers when the user selects them.
 	 */
 	FillSolverSelectorList(traceData);
-	document.getElementById("solverSelector").addEventListener("change", () => {
+	document.getElementById("solverSelector")?.addEventListener("change", () => {
 		const solverSelector = document.getElementById(
 			"solverSelector"
 		) as HTMLSelectElement;
@@ -434,13 +436,14 @@ function HandleCommonButtons(
 	 * Delete stored data in local storage when clicking in the "Delete Data" button.
 	 */
 	deleteLocalStorageButton.addEventListener("click", () => {
-		document
-			.getElementById("deleteButtonInModal")
-			.addEventListener("click", () => {
+		const deleteButtonInModal = document.getElementById("deleteButtonInModal");
+		if (deleteButtonInModal) {
+			deleteButtonInModal.addEventListener("click", () => {
 				DeleteUserConfiguration();
 				deleteLocalStorageButton.disabled = true;
 				downloadConfigurationButtonLayer.disabled = true;
 			});
+		}
 	});
 
 	/**
@@ -448,29 +451,30 @@ function HandleCommonButtons(
 	 * Filters by the solvers selected in the form selector and gets
 	 * the default time and gap percentage from the number input.
 	 */
-	document
-		.getElementById("downloadCustomConfigurationButton")
-		.addEventListener("click", () => {
+	const downloadCustomConfigButton = document.getElementById("downloadCustomConfigurationButton");
+	if (downloadCustomConfigButton) {
+		downloadCustomConfigButton.addEventListener("click", () => {
 			if (selectedSolvers.length === 0) {
-				selectedSolvers[0] = solverSelector.value;
+				selectedSolvers[0] = solverSelector?.value ?? "";
 			}
 			const customizedTraceData = traceData.filter((solver) => {
-				return selectedSolvers.includes(solver["SolverName"]);
+				return typeof solver["SolverName"] === "string" && selectedSolvers.includes(solver["SolverName"] as string);
 			});
 			const newRawData: string[] = ConvertToTraceFile(customizedTraceData);
 
-			defaultTime = Number(defaultTimeInput.value);
+			defaultTime = Number(defaultTimeInput?.value);
 			if (!defaultTime) {
 				defaultTime = Values.DEFAULT_TIME;
 			}
 
-			gapLimit = Number(gapLimitInput.value);
+			gapLimit = Number(gapLimitInput?.value);
 			if (!gapLimit) {
 				gapLimit = Values.DEFAULT_GAP_LIMIT;
 			}
 
 			DownloadCustomizedUserConfiguration(newRawData, defaultTime, gapLimit);
 		});
+	}
 }
 
 /**
@@ -525,8 +529,7 @@ function HandleReportPage(traceData: TraceData[]): void {
 	 * Destroy the data table and reinitializes the program when clicking on "Clear Data Table".
 	 */
 	clearDataTableButton.addEventListener("click", () => {
-		document
-			.getElementById("clearTableButtonInModal")
+		(document.getElementById("clearTableButtonInModal") as HTMLElement)
 			.addEventListener("click", () => {
 				DisplayWarningNotification(TableMessages.TABLE_CLEARING);
 				clearDataTableButton.disabled = true;
@@ -547,7 +550,7 @@ function HandlePlotPages(traceData: TraceData[]): void {
 	const defaultTimeInput = document.getElementById(
 		"defaultTimeInput"
 	) as HTMLInputElement;
-	defaultTime = defaultTimeInput.value;
+	defaultTime = Number(defaultTimeInput.value);
 	if (!defaultTime) {
 		defaultTime = Values.DEFAULT_TIME;
 	}
@@ -572,8 +575,8 @@ function HandlePlotPages(traceData: TraceData[]): void {
 	viewPlotsButton.addEventListener("click", () => {
 		switch (document.title) {
 			case PageTitles.PERFORMANCE_PROFILE: {
-				defaultTime = defaultTimeDirectInput.value;
-				gapLimit = gapLimitDirectInput.value;
+				defaultTime = Number(defaultTimeDirectInput.value);
+				gapLimit = Number(gapLimitDirectInput.value);
 
 				chartData = PlotPerformanceProfile(
 					traceData,
@@ -661,13 +664,13 @@ function HandlePlotPages(traceData: TraceData[]): void {
 			}
 			case PageTitles.SOLUTION_QUALITY: {
 				const category = categorySelector.value;
-				const categoryTitle = TraceHeaderMap[category];
+				const categoryTitle = TraceHeaderMap[category as keyof typeof TraceHeaderMap];
 				chartData = PlotDataByCategory(
 					traceData,
 					category,
 					`Average, min, max and std for ${categoryTitle}`,
-					null,
-					null,
+					undefined,
+					undefined,
 					"Infinite and NaN values are excluded from the calculations."
 				);
 				break;
@@ -723,8 +726,8 @@ function HandleCompareSolversPage(traceData: TraceData[]): void {
 	 * Event listener for the compare solvers button.
 	 */
 	compareSolversButton.addEventListener("click", () => {
-		defaultTime = defaultTimeDirectInput.value;
-		gapLimit = gapLimitDirectInput.value;
+		defaultTime = Number(defaultTimeDirectInput.value);
+		gapLimit = Number(gapLimitDirectInput.value);
 
 		const solverTimes = ExtractAllSolverTimesGapType(
 			traceData,

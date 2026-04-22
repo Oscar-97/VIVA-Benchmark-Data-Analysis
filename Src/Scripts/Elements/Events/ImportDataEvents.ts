@@ -88,7 +88,7 @@ function TablePageElements(
  * Manage the elements on the compare solvers page after data import.
  * @param fileExtensionType
  */
-function CompareSolversPageElements(fileExtensionType?): void {
+function CompareSolversPageElements(fileExtensionType?: string): void {
 	compareSolversButton.disabled = false;
 	importDataButton.disabled = true;
 	saveLocalStorageButton.disabled = true;
@@ -100,7 +100,7 @@ function CompareSolversPageElements(fileExtensionType?): void {
 /**
  *  Manage the elements on the plot pages after data import.
  */
-function PlotPagesElements(fileExtensionType): void {
+function PlotPagesElements(fileExtensionType: string | undefined): void {
 	viewPlotsButton.disabled = false;
 	importDataButton.disabled = true;
 	saveLocalStorageButton.disabled = true;
@@ -114,7 +114,10 @@ function PlotPagesElements(fileExtensionType): void {
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 export function FillSolverSelectorList(traceData: TraceData[]): void {
-	document.getElementById("solverSelector").innerHTML = "";
+	const solverSelector = document.getElementById("solverSelector");
+	if (solverSelector) {
+		solverSelector.innerHTML = "";
+	}
 	let isSelectedSet = false;
 
 	const uniqueSolvers = traceData
@@ -125,7 +128,7 @@ export function FillSolverSelectorList(traceData: TraceData[]): void {
 			return self.indexOf(solverName) === index;
 		});
 
-	uniqueSolvers.forEach((solver: string) => {
+	uniqueSolvers.filter((solver): solver is string => solver !== undefined).forEach((solver: string) => {
 		const option = document.createElement("option");
 		option.value = solver;
 		option.textContent = solver;
@@ -135,6 +138,9 @@ export function FillSolverSelectorList(traceData: TraceData[]): void {
 			isSelectedSet = true;
 		}
 
-		document.getElementById("solverSelector").appendChild(option);
+		const solverSelectorElement = document.getElementById("solverSelector");
+		if (solverSelectorElement) {
+			solverSelectorElement.appendChild(option);
+		}
 	});
 }

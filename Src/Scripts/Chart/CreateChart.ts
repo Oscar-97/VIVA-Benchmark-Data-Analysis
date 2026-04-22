@@ -1,10 +1,10 @@
-import Chart from "chart.js/auto";
+import Chart, { ChartTypeRegistry } from "chart.js/auto";
 import zoomPlugin from "chartjs-plugin-zoom";
 import annotationPlugin from "chartjs-plugin-annotation";
 import { chartCanvas } from "../Elements/Elements";
 import { ShowPWANotification } from "../PWA/PWA-utils";
 import { ChartMessages } from "../Constants/Messages";
-let myChart = null;
+let myChart: Chart<any, any[], unknown> | null = null;
 
 Chart.register(zoomPlugin);
 Chart.register(annotationPlugin);
@@ -60,11 +60,11 @@ export function PickColor(numberOfColors: number): string[] {
  * ```
  */
 export function CreateChart(
-	type,
-	data,
-	label,
-	title,
-	scaleOptions = null,
+	type: keyof ChartTypeRegistry,
+	data: any[],
+	label: string | string[],
+	title: string,
+	scaleOptions = undefined,
 	zoomOptions = null,
 	annotationOptions = null,
 	subtitle = null
@@ -85,7 +85,7 @@ export function CreateChart(
 		options: {
 			responsive: true,
 			maintainAspectRatio: false,
-			scales: scaleOptions,
+			scales: scaleOptions || undefined,
 			transitions: {
 				zoom: {
 					animation: {
@@ -105,10 +105,10 @@ export function CreateChart(
 				},
 				subtitle: {
 					display: subtitle ? true : false,
-					text: subtitle
+					text: subtitle || undefined
 				},
-				zoom: zoomOptions,
-				annotation: annotationOptions
+				zoom: zoomOptions || undefined,
+				annotation: annotationOptions || undefined
 			}
 		}
 	});

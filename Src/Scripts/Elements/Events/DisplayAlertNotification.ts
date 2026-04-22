@@ -5,7 +5,7 @@ import {
 	closeAlertButton
 } from "../Elements";
 import $ from "jquery";
-let notificationTimeout;
+let notificationTimeout: ReturnType<typeof setTimeout> | undefined;
 
 /**
  * This function displays a success notification with the specified message.

@@ -12,31 +12,39 @@ export function PopulateCheckboxes(traceData: TraceData[]): void {
 
 	const uniqueSolvers = Array.from(
 		new Set(traceData.map((solver) => solver["SolverName"]))
-	);
+	).filter((solver): solver is string => solver !== undefined);
 
-	uniqueSolvers.forEach((solver: string) => {
-		const checkbox = document.createElement("input");
-		checkbox.type = "checkbox";
-		checkbox.id = solver;
-		checkbox.value = solver;
-		checkbox.name = solver;
-		checkbox.classList.add("form-check-input");
+	if (container) {
+		uniqueSolvers.forEach((solver) => {
+			const checkbox = document.createElement("input");
+			checkbox.type = "checkbox";
+			checkbox.id = solver;
+			checkbox.value = solver;
+			checkbox.name = solver;
+			checkbox.classList.add("form-check-input");
 
-		const label = document.createElement("label");
-		label.htmlFor = solver;
-		label.appendChild(document.createTextNode(solver));
-		label.classList.add("form-check-label");
+			const label = document.createElement("label");
+			label.htmlFor = solver;
+			label.appendChild(document.createTextNode(solver));
+			label.classList.add("form-check-label");
 
-		const div = document.createElement("div");
-		div.classList.add("form-check");
+			const div = document.createElement("div");
+			div.classList.add("form-check");
 
-		div.appendChild(checkbox);
-		div.appendChild(label);
+			div.appendChild(checkbox);
+			div.appendChild(label);
 
-		container.appendChild(div);
-	});
+			container.appendChild(div);
+		});
+	} else {
+		console.error("Container element not found.");
+	}
 
-	EnforceCheckboxLimit(container, 2);
+	if (container) {
+		EnforceCheckboxLimit(container, 2);
+	} else {
+		console.error("Container element not found.");
+	}
 }
 
 /**
@@ -67,9 +75,9 @@ export function GetSelectedCheckboxValues(): string[] {
 	const checkboxes = document.querySelectorAll(
 		`input[type="checkbox"]:checked`
 	);
-	checkboxes.forEach((checkbox: HTMLInputElement) => {
-		selectedValues.push(checkbox.value);
-	});
+	checkboxes.forEach((checkbox) => {
+			selectedValues.push((checkbox as HTMLInputElement).value);
+		});
 
 	return selectedValues;
 }

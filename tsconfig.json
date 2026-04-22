@@ -7,7 +7,9 @@
     "module": "es2020",
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "strict": true,
+    "removeComments": true
   },
   "include": ["./Src/**/*"],
   "exclude": ["**/node_modules/**"]

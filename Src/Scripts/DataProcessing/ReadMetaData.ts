@@ -45,7 +45,7 @@ export function GetInstanceInformation(
 	});
 
 	for (let i = 1; i < unprocessedInstanceInformationData.length; i++) {
-		const obj = {};
+		const obj: { [key: string]: any } = {};
 		const currentLine = unprocessedInstanceInformationData[i].split(";");
 		for (let j = 0; j < header.length; j++) {
 			obj[header[j]] = currentLine[j] || "";
@@ -90,7 +90,7 @@ export function GetBestKnownBounds(
 	const regexPattern = /^=(.*?)=\s+(.*?)\s+(.*?)$/;
 
 	for (let i = 0; i < unprocessedSolutionData.length; i++) {
-		const obj = {};
+		const obj: { InputFileName?: string; PrimalBoundProblem?: number; DualBoundProblem?: number } = {};
 		const match = regexPattern.exec(unprocessedSolutionData[i]);
 		if (match !== null) {
 			obj["InputFileName"] = match[2];

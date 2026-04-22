@@ -13,7 +13,7 @@ export async function ProcessData(
 	unprocessedInstanceInformationData: string[],
 	unprocessedSolutionData: string[]
 ): Promise<TraceData[]> {
-	let traceData: TraceData[], instanceInfoData: object[], soluData: object[];
+	let traceData: TraceData[], instanceInfoData: object[], soluData: object[] = [];
 
 	traceData = ExtractTraceData(unprocessedData);
 	if (unprocessedInstanceInformationData.length !== 0) {
