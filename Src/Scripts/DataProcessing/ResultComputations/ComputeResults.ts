@@ -264,7 +264,12 @@ export function CompareSolvers(
 		better: number;
 		worse: number;
 		equal: number;
-		details: { InputFileName: string; time1: number; time2: number; comparison: string }[];
+		details: {
+			InputFileName: string;
+			time1: number;
+			time2: number;
+			comparison: any;
+		}[];
 	} = { better: 0, worse: 0, equal: 0, details: [] };
 
 	results1.forEach((result1: { InputFileName: string; time: number }) => {
@@ -309,12 +314,13 @@ export function CompareSolvers(
  * @param traceData - The array of objects to extract unique objects from.
  * @returns An array of unique objects based on the "InputFileName" property.
  */
-export function ExtractUniqueProblems(traceData: TraceData[]): object[] {
-	const unique: object = {};
+export function ExtractUniqueProblems(traceData: TraceData[]): any[] {
+	const unique: Record<string, any> = {};
 	traceData.forEach((item) => {
-		if (!unique[item["InputFileName"]]) {
-			unique[item["InputFileName"]] = {
-				InputFileName: item["InputFileName"],
+		const fileName = item["InputFileName"] as string;
+		if (!unique[fileName]) {
+			unique[fileName] = {
+				InputFileName: fileName,
 				Direction: item["Direction"],
 				NumberOfEquations: item["NumberOfEquations"],
 				NumberOfVariables: item["NumberOfVariables"],

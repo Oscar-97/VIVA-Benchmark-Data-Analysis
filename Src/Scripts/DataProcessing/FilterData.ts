@@ -125,7 +125,7 @@ function ProcessLines(
  * // ];
  * ```
  */
-export function ExtractTraceData(unprocessedData: string[]): object[] {
+export function ExtractTraceData(unprocessedData: string[]): TraceData[] {
 	const firstLine = unprocessedData[0].split(",");
 	let traceData: TraceData[] = [];
 	if (firstLine[0].startsWith("*")) {
@@ -133,9 +133,13 @@ export function ExtractTraceData(unprocessedData: string[]): object[] {
 		const startIdx = unprocessedData.findIndex((line) => {
 			return !line.startsWith("*");
 		});
-		traceData = ProcessLines(headers, unprocessedData, startIdx);
+		traceData = ProcessLines(headers, unprocessedData, startIdx) as TraceData[];
 	} else if (!firstLine[0].startsWith("*")) {
-		traceData = ProcessLines(DEFAULT_HEADERS, unprocessedData, 0);
+		traceData = ProcessLines(
+			DEFAULT_HEADERS,
+			unprocessedData,
+			0
+		) as TraceData[];
 	}
 	return traceData;
 }

@@ -6,21 +6,23 @@ import { CreateChart } from "../CreateChart";
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 export function PlotSolutionTimes(traceData: TraceData[]): object[] {
-	const data = traceData.reduce((acc, obj) => {
-		const bubbleSize = Math.round((obj.SolverTime / 100) * 100) / 100;
-		if (!acc[obj.SolverName]) {
-			acc[obj.SolverName] = {
-				label: obj.SolverName,
+	const data = traceData.reduce((acc: Record<string, any>, obj) => {
+		const solverTime = obj.SolverTime ?? 0;
+		const bubbleSize = Math.round((solverTime / 100) * 100) / 100;
+		const solverName = obj.SolverName as string;
+		if (!acc[solverName]) {
+			acc[solverName] = {
+				label: solverName,
 				data: [],
 				clip: 1
 			};
 		}
 
-		acc[obj.SolverName].data.push({
+		acc[solverName].data.push({
 			x: obj.NumberOfVariables,
 			y: obj.NumberOfEquations,
 			r: bubbleSize,
-			solverTime: obj.SolverTime
+			solverTime: solverTime
 		});
 
 		return acc;
@@ -63,7 +65,7 @@ export function PlotSolutionTimes(traceData: TraceData[]): object[] {
 	CreateChart(
 		"bubble",
 		chartData,
-		null,
+		[],
 		"Solution time",
 		scaleOptions,
 		zoomOptions,

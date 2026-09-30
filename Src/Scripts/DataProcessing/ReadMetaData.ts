@@ -90,7 +90,11 @@ export function GetBestKnownBounds(
 	const regexPattern = /^=(.*?)=\s+(.*?)\s+(.*?)$/;
 
 	for (let i = 0; i < unprocessedSolutionData.length; i++) {
-		const obj: { InputFileName?: string; PrimalBoundProblem?: number; DualBoundProblem?: number } = {};
+		const obj: {
+			InputFileName?: string;
+			PrimalBoundProblem?: number | string;
+			DualBoundProblem?: number | string;
+		} = {};
 		const match = regexPattern.exec(unprocessedSolutionData[i]);
 		if (match !== null) {
 			obj["InputFileName"] = match[2];

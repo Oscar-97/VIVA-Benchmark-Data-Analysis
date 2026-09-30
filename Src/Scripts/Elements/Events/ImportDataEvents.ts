@@ -128,19 +128,21 @@ export function FillSolverSelectorList(traceData: TraceData[]): void {
 			return self.indexOf(solverName) === index;
 		});
 
-	uniqueSolvers.filter((solver): solver is string => solver !== undefined).forEach((solver: string) => {
-		const option = document.createElement("option");
-		option.value = solver;
-		option.textContent = solver;
+	uniqueSolvers
+		.filter((solver): solver is string => solver !== undefined)
+		.forEach((solver: string) => {
+			const option = document.createElement("option");
+			option.value = solver;
+			option.textContent = solver;
 
-		if (!isSelectedSet) {
-			option.selected = true;
-			isSelectedSet = true;
-		}
+			if (!isSelectedSet) {
+				option.selected = true;
+				isSelectedSet = true;
+			}
 
-		const solverSelectorElement = document.getElementById("solverSelector");
-		if (solverSelectorElement) {
-			solverSelectorElement.appendChild(option);
-		}
-	});
+			const solverSelectorElement = document.getElementById("solverSelector");
+			if (solverSelectorElement) {
+				solverSelectorElement.appendChild(option);
+			}
+		});
 }

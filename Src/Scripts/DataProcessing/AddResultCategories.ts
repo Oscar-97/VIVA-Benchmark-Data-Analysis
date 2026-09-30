@@ -27,13 +27,13 @@ export function AddResultCategories(traceData: TraceData[]): void {
 		obj["Direction"] = CalculateDirection(obj["Direction"] as string | number);
 
 		obj["PrimalBoundSolver"] = CalculatePrimalBound(
-			obj["ObjectiveValue"],
-			obj["Direction"]
+			obj["ObjectiveValue"] as string | number,
+			obj["Direction"] as string
 		);
 
 		obj["DualBoundSolver"] = CalculateDualBound(
-			obj["ObjectiveValueEstimate"],
-			obj["Direction"]
+			obj["ObjectiveValueEstimate"] as string | number,
+			obj["Direction"] as string
 		);
 
 		obj["ModelStatus"] = SetModelStatus(obj["ModelStatus"] as string | number);
@@ -81,11 +81,11 @@ export function AddResultCategories(traceData: TraceData[]): void {
 		);
 
 		const [failValue, failReason]: [boolean, string] = SetFailValueAndReason(
-			obj["SolverStatus"],
-			obj["Direction"],
-			obj["PrimalBoundSolver"],
-			obj["DualBoundSolver"],
-			obj["DualBoundProblem"]
+			obj["SolverStatus"] as string,
+			obj["Direction"] as string,
+			obj["PrimalBoundSolver"] as string | number,
+			obj["DualBoundSolver"] as string | number,
+			obj["DualBoundProblem"] as string | number
 		);
 		obj["Fail"] = failValue;
 		obj["FailReason"] = failReason;

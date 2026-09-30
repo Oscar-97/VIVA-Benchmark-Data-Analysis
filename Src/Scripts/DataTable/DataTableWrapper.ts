@@ -1,4 +1,5 @@
 import $ from "jquery";
+import type { Config, Api } from "datatables.net";
 import "datatables.net-bs5";
 import "datatables.net-fixedcolumns-bs5";
 import "datatables.net-searchpanes-bs5";
@@ -9,6 +10,7 @@ import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-buttons/js/buttons.html5.mjs";
 import "datatables.net-buttons/js/buttons.print.mjs";
 import "datatables.net-datetime";
+import "datatables.net-responsive-bs5";
 
 import {
 	InstanceAttributesTable,
@@ -92,7 +94,6 @@ function DataTablesConfiguration(): void {
 	const table = $("#dataTableGenerated").DataTable({
 		destroy: true,
 		stateSave: true,
-		// @ts-expect-error Add proper types.
 		searchPanes: {
 			layout: "auto"
 		},
@@ -137,7 +138,7 @@ function DataTablesConfiguration(): void {
 			searchBuilder: {
 				button: "<i class='bi bi-search'></i> Advanced Search"
 			}
-		} as DataTables.LanguageSettings,
+		} as Config["language"],
 		buttons: [
 			{
 				extend: "collection",
@@ -146,7 +147,7 @@ function DataTablesConfiguration(): void {
 				buttons: [
 					{
 						extend: "pageLength",
-						text: function (dt: DataTables.Api): string {
+						text: function (dt: Api): string {
 							return (
 								"<i class='bi bi-list-columns-reverse'></i> Show " +
 								dt.page.len() +
@@ -158,7 +159,7 @@ function DataTablesConfiguration(): void {
 						extend: "colvis",
 						text: "<i class='bi bi-layout-three-columns'></i> Column Visibility",
 						columnText: function (
-							_dt: DataTables.Api,
+							_dt: Api,
 							idx: number,
 							title: string
 						): string {
@@ -176,7 +177,6 @@ function DataTablesConfiguration(): void {
 			{
 				text: "<i class='bi bi-filter-square'></i> Toggle Filters",
 				action: function (): void {
-					// @ts-expect-error Add proper types.
 					table.searchPanes.container().toggle();
 				},
 				className: "rounded btn-sm"
@@ -210,14 +210,11 @@ function DataTablesConfiguration(): void {
 				.css("visibility", "visible")
 				.animate({ opacity: 1 }, 500);
 			const columnNamesToShow = DEFAULT_VISIBLE_HEADERS;
-			// @ts-expect-error Remake in the future.
 			this.api()
 				.columns()
 				.every(function () {
-					// @ts-expect-error Remake in the future.
 					const columnName = this.header().textContent;
 					if (!columnNamesToShow.includes(columnName)) {
-						// @ts-expect-error Remake in the future.
 						this.visible(false);
 					}
 				});
@@ -225,11 +222,8 @@ function DataTablesConfiguration(): void {
 	});
 
 	$(".dataTables_length select").addClass("custom-select custom-select-sm");
-	// @ts-expect-error Remake in the future.
 	table.searchPanes.container().prependTo(table.table().container());
-	// @ts-expect-error Remake in the future.
 	table.searchPanes.resizePanes();
-	// @ts-expect-error Remake in the future.
 	table.searchPanes.container().toggle();
 }
 

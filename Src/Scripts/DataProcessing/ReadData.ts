@@ -63,9 +63,11 @@ export function GetDataFileType(): string {
 		throw new Error(ErrorMessages.BOTH_EXTENSIONS);
 	}
 
-	return extensions.find((ext) => {
-		return ext === "trc" || ext === "json";
-	}) ?? "";
+	return (
+		extensions.find((ext) => {
+			return ext === "trc" || ext === "json";
+		}) ?? ""
+	);
 }
 
 /**
@@ -216,7 +218,9 @@ function VerifyConfigurationProperties(parsedData: ParsedData): void {
 		userData.dataFileType = parsedData.dataFileType;
 
 		if (parsedData.hasOwnProperty.call(parsedData, "defaultTime")) {
-			userData.defaultTime = parsedData.defaultTime ? Number(parsedData.defaultTime) : undefined;
+			userData.defaultTime = parsedData.defaultTime
+				? Number(parsedData.defaultTime)
+				: undefined;
 		}
 
 		localStorage.setItem(Keys.USER_CONFIGURATION, JSON.stringify(userData));

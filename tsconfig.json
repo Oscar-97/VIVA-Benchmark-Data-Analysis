@@ -7,8 +7,9 @@
     "module": "es2020",
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "strict": true,
+    "types": ["jest"],
     "removeComments": true
   },
   "include": ["./Src/**/*"],

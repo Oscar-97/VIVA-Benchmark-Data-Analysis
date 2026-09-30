@@ -46,15 +46,18 @@ export function ComputeStatisticalMeasures(
 		category !== "NumberOfIterations" &&
 		category !== "SolverTime"
 	) {
-		data = data.filter((obj) => isFinite(Number(obj[category])));
+		data = data.filter((obj) =>
+			isFinite(Number(obj[category as keyof TraceData]))
+		);
 	}
-	const categoryValues = data.reduce((acc, curr) => {
-		const parsedValue = Number(curr[category]);
+	const categoryValues = data.reduce((acc: Record<string, number[]>, curr) => {
+		const parsedValue = Number(curr[category as keyof TraceData]);
 		if (!isNaN(parsedValue)) {
-			if (!acc[curr["SolverName"]]) {
-				acc[curr["SolverName"]] = [];
+			const solverName = curr["SolverName"] as string;
+			if (!acc[solverName]) {
+				acc[solverName] = [];
 			}
-			acc[curr["SolverName"]].push(parsedValue);
+			acc[solverName].push(parsedValue);
 		}
 		return acc;
 	}, {});
@@ -108,41 +111,46 @@ export function ComputeStatisticalMeasures(
  * This function filters the data based on the filter type provided.
  * @param filterType
  */
-// eslint-disable-next-line complexity
+
 function FilterByType(
 	filterType: string,
 	categoryValues: TraceData[]
 ): TraceData[] {
 	switch (filterType) {
 		case "no_fail_by_all_solver":
-			return (categoryValues = categoryValues.filter(
+			return categoryValues.filter(
 				(obj) => obj["SolverStatus"] === "Normal Completion"
-			));
+			);
 		case "time_greater_than_10_by_at_least_one_solver_and_no_fail":
-			return (categoryValues = categoryValues.filter(
+			return categoryValues.filter(
 				(obj) =>
-					obj["SolverTime"] <= 10 && obj["SolverStatus"] === "Normal Completion"
-			));
+					(obj["SolverTime"] ?? 0) <= 10 &&
+					obj["SolverStatus"] === "Normal Completion"
+			);
 		case "solver_primal_gap_less_than_or_equal_to_1_percent_and_no_fail":
-			return (categoryValues = categoryValues.filter(
+			return categoryValues.filter(
 				(obj) =>
-					obj["PrimalGap"] <= 1 && obj["SolverStatus"] === "Normal Completion"
-			));
+					(obj["PrimalGap"] ?? 0) <= 1 &&
+					obj["SolverStatus"] === "Normal Completion"
+			);
 		case "solver_primal_gap_less_than_or_equal_to_10_percent_and_no_fail":
-			return (categoryValues = categoryValues.filter(
+			return categoryValues.filter(
 				(obj) =>
-					obj["PrimalGap"] <= 10 && obj["SolverStatus"] === "Normal Completion"
-			));
+					(obj["PrimalGap"] ?? 0) <= 10 &&
+					obj["SolverStatus"] === "Normal Completion"
+			);
 		case "solver_dual_gap_less_than_or_equal_to_1_percent_and_not_failed":
-			return (categoryValues = categoryValues.filter(
+			return categoryValues.filter(
 				(obj) =>
-					obj["DualGap"] <= 1 && obj["SolverStatus"] === "Normal Completion"
-			));
+					(obj["DualGap"] ?? 0) <= 1 &&
+					obj["SolverStatus"] === "Normal Completion"
+			);
 		case "solver_dual_gap_less_than_or_equal_to_10_percent_and_not_failed":
-			return (categoryValues = categoryValues.filter(
+			return categoryValues.filter(
 				(obj) =>
-					obj["DualGap"] <= 10 && obj["SolverStatus"] === "Normal Completion"
-			));
+					(obj["DualGap"] ?? 0) <= 10 &&
+					obj["SolverStatus"] === "Normal Completion"
+			);
 		default:
 			return categoryValues;
 	}
@@ -158,20 +166,20 @@ function FilterByType(
 export function ExtractStatusMessages(
 	traceData: TraceData[],
 	statusType: string
-): string[] {
-	const result = [];
+): any[] {
+	const result: any[] = [];
 	const nameErrorMap = new Map();
 
 	traceData.forEach((obj) => {
 		const existingEntry = nameErrorMap.get(obj["SolverName"]);
+		const status = obj[statusType as keyof TraceData] as string;
 
 		if (existingEntry) {
-			existingEntry[obj[statusType]] =
-				(existingEntry[obj[statusType]] || 0) + 1;
+			existingEntry[status] = (existingEntry[status] || 0) + 1;
 		} else {
 			const newEntry = {
 				SolverName: obj["SolverName"],
-				[obj[statusType]]: 1
+				[status]: 1
 			};
 			nameErrorMap.set(obj["SolverName"], newEntry);
 			result.push(newEntry);
@@ -185,8 +193,8 @@ export function ExtractStatusMessages(
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  * @returns {string[]} - An object with solver names as keys. Each solver contains a counter of the failed instances.
  */
-export function ExtractFailedCount(traceData: TraceData[]): string[] {
-	const result = [];
+export function ExtractFailedCount(traceData: TraceData[]): any[] {
+	const result: any[] = [];
 	const nameErrorMap = new Map();
 
 	traceData.forEach((obj) => {
@@ -219,20 +227,26 @@ export function ExtractFailedCount(traceData: TraceData[]): string[] {
  * contains 'time' and 'InputFileName' property of the corresponding solver. If the time value is 'NA' or is not a number,
  * the instance is not added to the final result.
  */
-export function ExtractAllSolverTimes(traceData: TraceData[]): object {
+export function ExtractAllSolverTimes(traceData: TraceData[]): {
+	[key: string]: { time: number; InputFileName: string }[];
+} {
 	const result = traceData.reduce(
 		(
 			acc: { [key: string]: { time: number; InputFileName: string }[] },
-			obj: object
+			obj: TraceData
 		): { [key: string]: { time: number; InputFileName: string }[] } => {
-			if (!acc[obj["SolverName"]]) {
-				acc[obj["SolverName"]] = [];
+			const solverName = obj["SolverName"] as string;
+			if (!acc[solverName]) {
+				acc[solverName] = [];
 			}
-			if (obj["SolverTime"] !== "NA") {
+			if (
+				obj["SolverTime"] !== undefined &&
+				(obj["SolverTime"] as any) !== "NA"
+			) {
 				const time = Number(obj["SolverTime"]);
 				if (!isNaN(time)) {
-					const inputFileName = obj["InputFileName"];
-					acc[obj["SolverName"]].push({ time, InputFileName: inputFileName });
+					const inputFileName = obj["InputFileName"] as string;
+					acc[solverName].push({ time, InputFileName: inputFileName });
 				}
 			}
 			return acc;
@@ -259,10 +273,10 @@ export function ExtractAllSolverTimesGapType(
 	defaultTime?: number | undefined,
 	gapLimit?: number | undefined,
 	terminationStatusSelector?: string
-): object {
+): { [key: string]: { time: number; InputFileName: string }[] } {
 	let defaultTimeFallback: number;
 	let gapLimitToCompare: number;
-	let terminationStatus: string;
+	let terminationStatus: string | undefined;
 
 	if (!gapLimit || gapLimit < 0) {
 		gapLimitToCompare = 0.01;
@@ -281,20 +295,20 @@ export function ExtractAllSolverTimesGapType(
 	if (!terminationStatusSelector) {
 		terminationStatus = undefined;
 	} else {
-		const statusMap: { [key: number]: string } = {
-			1: "Normal Completion",
-			2: "Iteration Interrupt",
-			3: "Resource Interrupt",
-			4: "Terminated By Solver",
-			5: "Evaluation Interrupt",
-			6: "Capability Problems",
-			7: "Licensing Problems",
-			8: "User Interrupt",
-			9: "Error Setup Failure",
-			10: "Error Solver Failure",
-			11: "Error Internal Solver Failure",
-			12: "Solve Processing Skipped",
-			13: "Error System Failure"
+		const statusMap: { [key: string]: string } = {
+			"1": "Normal Completion",
+			"2": "Iteration Interrupt",
+			"3": "Resource Interrupt",
+			"4": "Terminated By Solver",
+			"5": "Evaluation Interrupt",
+			"6": "Capability Problems",
+			"7": "Licensing Problems",
+			"8": "User Interrupt",
+			"9": "Error Setup Failure",
+			"10": "Error Solver Failure",
+			"11": "Error Internal Solver Failure",
+			"12": "Solve Processing Skipped",
+			"13": "Error System Failure"
 		};
 		terminationStatus = statusMap[terminationStatusSelector];
 	}
@@ -307,33 +321,36 @@ export function ExtractAllSolverTimesGapType(
 	const filteredData = combinedData.reduce(
 		(
 			acc: { [key: string]: { time: number; InputFileName: string }[] },
-			obj: object
+			obj: TraceData
 		): { [key: string]: { time: number; InputFileName: string }[] } => {
-			if (!acc[obj["SolverName"]]) {
-				acc[obj["SolverName"]] = [];
+			const solverName = obj["SolverName"] as string;
+			if (!acc[solverName]) {
+				acc[solverName] = [];
 			}
-			if (!isNaN(obj["SolverTime"])) {
+			if (obj["SolverTime"] !== undefined && !isNaN(obj["SolverTime"])) {
 				if (
-					obj[selectedGapType] <= gapLimitToCompare &&
+					(obj[selectedGapType as keyof TraceData] as number) <=
+						gapLimitToCompare &&
 					obj["SolverStatus"] === terminationStatus
 				) {
-					acc[obj["SolverName"]].push({
+					acc[solverName].push({
 						time: Number(obj["SolverTime"]),
-						InputFileName: obj["InputFileName"]
+						InputFileName: obj["InputFileName"] as string
 					});
 				} else if (
-					obj[selectedGapType] <= gapLimitToCompare &&
+					(obj[selectedGapType as keyof TraceData] as number) <=
+						gapLimitToCompare &&
 					terminationStatus === undefined
 				) {
-					acc[obj["SolverName"]].push({
+					acc[solverName].push({
 						time: Number(obj["SolverTime"]),
-						InputFileName: obj["InputFileName"]
+						InputFileName: obj["InputFileName"] as string
 					});
 				}
 			} else {
-				acc[obj["SolverName"]].push({
+				acc[solverName].push({
 					time: defaultTimeFallback,
-					InputFileName: obj["InputFileName"]
+					InputFileName: obj["InputFileName"] as string
 				});
 			}
 			return acc;

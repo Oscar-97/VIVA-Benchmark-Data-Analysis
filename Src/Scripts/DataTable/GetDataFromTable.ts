@@ -23,10 +23,13 @@ export function GetSelectedRows(): object[] {
 	const traceData = Array.from(
 		document.querySelectorAll(".row-selected-problems")
 	).map((row) => {
-		return Array.from(row.querySelectorAll("td")).reduce((obj: Record<string, string>, cell, j) => {
-			obj[headers[j] ?? ""] = cell.textContent ?? "";
-			return obj;
-		}, {} as Record<string, string>);
+		return Array.from(row.querySelectorAll("td")).reduce(
+			(obj: Record<string, string>, cell, j) => {
+				obj[headers[j] ?? ""] = cell.textContent ?? "";
+				return obj;
+			},
+			{} as Record<string, string>
+		);
 	});
 
 	return traceData;
@@ -42,7 +45,10 @@ export function GetFilteredRows(): TraceData[] {
 		return objects.map((obj) => {
 			const remappedObj: Record<string, any> = {};
 			for (const key in obj) {
-				const newKey = key in ReversedTraceHeaderMap ? ReversedTraceHeaderMap[key as keyof typeof ReversedTraceHeaderMap] : key;
+				const newKey =
+					key in ReversedTraceHeaderMap
+						? ReversedTraceHeaderMap[key as keyof typeof ReversedTraceHeaderMap]
+						: key;
 				remappedObj[newKey] = obj[key];
 			}
 			return remappedObj;
@@ -54,14 +60,16 @@ export function GetFilteredRows(): TraceData[] {
 	const headers: string[] = table
 		.columns()
 		.header()
-		// @ts-expect-error 'toArray' does not exist on type 'HTMLElement'
 		.toArray()
 		.map((header: HTMLElement) => $(header).text());
 	const objects = data.map((row) => {
-		return headers.reduce((obj: Record<string, any>, header, index) => {
-			obj[header] = row[index];
-			return obj;
-		}, {} as Record<string, any>);
+		return headers.reduce(
+			(obj: Record<string, any>, header, index) => {
+				obj[header] = row[index];
+				return obj;
+			},
+			{} as Record<string, any>
+		);
 	});
 
 	return RemapObjectProperties(objects);

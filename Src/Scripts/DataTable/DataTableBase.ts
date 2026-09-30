@@ -264,7 +264,8 @@ export function ComparisonSummaryTable(
 		const row: HTMLTableRowElement = document.createElement("tr");
 		row.appendChild(CreateCell(comparison));
 
-		let value1: number = 0, value2: number = 0;
+		let value1: number = 0,
+			value2: number = 0;
 		switch (comparison) {
 			case "Better":
 				value1 = comparisonSummary.better;
@@ -347,7 +348,10 @@ function CreateClickableCell(
  * @remarks
  * The modal is added to the 'solverComparisonModal' HTML div.
  */
-function DisplayDetails(comparisonType: string, details: ComparisonDetails[]): void {
+function DisplayDetails(
+	comparisonType: string,
+	details: ComparisonDetails[]
+): void {
 	const filteredDetails = details.filter(
 		(detail) => detail.comparison === comparisonType.toLowerCase()
 	);

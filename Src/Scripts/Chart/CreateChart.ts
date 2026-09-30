@@ -64,10 +64,10 @@ export function CreateChart(
 	data: any[],
 	label: string | string[],
 	title: string,
-	scaleOptions = undefined,
-	zoomOptions = null,
-	annotationOptions = null,
-	subtitle = null
+	scaleOptions: any = undefined,
+	zoomOptions: any = undefined,
+	annotationOptions: any = undefined,
+	subtitle: string | undefined = undefined
 ): void {
 	/**
 	 * Destroy the chart if it already exist.

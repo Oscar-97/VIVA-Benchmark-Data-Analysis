@@ -192,8 +192,8 @@ export function PlotPerformanceProfile(
 				performanceProfile === "Relative"
 					? Math.min(maxX, 10)
 					: defaultTime
-					? Number(defaultTime) + 10
-					: Values.DEFAULT_TIME + 10,
+						? Number(defaultTime) + 10
+						: Values.DEFAULT_TIME + 10,
 			ticks: {
 				stepSize: performanceProfile === "Relative" ? 0.5 : 50
 			}
@@ -234,7 +234,7 @@ export function PlotPerformanceProfile(
 	CreateChart(
 		"line",
 		chartData,
-		null,
+		[],
 		`${performanceProfile} performance profile`,
 		scaleOptions,
 		zoomOptions,
@@ -249,7 +249,9 @@ export function PlotPerformanceProfile(
 /**
  * This function gets the relative times of the solver times.
  */
-export function GetRelativeTimes(data: object): object {
+export function GetRelativeTimes(
+	data: Record<string, { time: number; InputFileName: string }[]>
+): Record<string, { time: number; InputFileName: string }[]> {
 	const bestSolverTimes: { [key: string]: number } = {};
 	Object.keys(data).forEach((solver) => {
 		if (solver !== "Virtual Best Solver" && solver !== "Virtual Worst Solver") {
@@ -257,15 +259,15 @@ export function GetRelativeTimes(data: object): object {
 				const fileName = entry.InputFileName;
 				if (
 					!bestSolverTimes[fileName] ||
-					entry.SolverTime < bestSolverTimes[fileName]
+					entry.time < bestSolverTimes[fileName]
 				) {
-					bestSolverTimes[fileName] = entry.SolverTime;
+					bestSolverTimes[fileName] = entry.time;
 				}
 			});
 		}
 	});
 
-	const result: { [key: string]: any[] } = {};
+	const result: Record<string, { time: number; InputFileName: string }[]> = {};
 
 	Object.keys(data).forEach((solver) => {
 		result[solver] = data[solver].map((entry) => {
@@ -273,7 +275,7 @@ export function GetRelativeTimes(data: object): object {
 
 			return {
 				...entry,
-				SolverTime: bestTime > 0 ? entry.SolverTime / bestTime : 1
+				time: bestTime > 0 ? entry.time / bestTime : 1
 			};
 		});
 	});

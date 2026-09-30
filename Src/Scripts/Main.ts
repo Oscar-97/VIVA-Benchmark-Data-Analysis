@@ -451,14 +451,19 @@ function HandleCommonButtons(
 	 * Filters by the solvers selected in the form selector and gets
 	 * the default time and gap percentage from the number input.
 	 */
-	const downloadCustomConfigButton = document.getElementById("downloadCustomConfigurationButton");
+	const downloadCustomConfigButton = document.getElementById(
+		"downloadCustomConfigurationButton"
+	);
 	if (downloadCustomConfigButton) {
 		downloadCustomConfigButton.addEventListener("click", () => {
 			if (selectedSolvers.length === 0) {
 				selectedSolvers[0] = solverSelector?.value ?? "";
 			}
 			const customizedTraceData = traceData.filter((solver) => {
-				return typeof solver["SolverName"] === "string" && selectedSolvers.includes(solver["SolverName"] as string);
+				return (
+					typeof solver["SolverName"] === "string" &&
+					selectedSolvers.includes(solver["SolverName"] as string)
+				);
 			});
 			const newRawData: string[] = ConvertToTraceFile(customizedTraceData);
 
@@ -529,15 +534,16 @@ function HandleReportPage(traceData: TraceData[]): void {
 	 * Destroy the data table and reinitializes the program when clicking on "Clear Data Table".
 	 */
 	clearDataTableButton.addEventListener("click", () => {
-		(document.getElementById("clearTableButtonInModal") as HTMLElement)
-			.addEventListener("click", () => {
-				DisplayWarningNotification(TableMessages.TABLE_CLEARING);
-				clearDataTableButton.disabled = true;
-				setTimeout(() => {
-					DestroyDataTable();
-					InitializeProgram();
-				}, 5000);
-			});
+		(
+			document.getElementById("clearTableButtonInModal") as HTMLElement
+		).addEventListener("click", () => {
+			DisplayWarningNotification(TableMessages.TABLE_CLEARING);
+			clearDataTableButton.disabled = true;
+			setTimeout(() => {
+				DestroyDataTable();
+				InitializeProgram();
+			}, 5000);
+		});
 	});
 }
 
@@ -664,7 +670,8 @@ function HandlePlotPages(traceData: TraceData[]): void {
 			}
 			case PageTitles.SOLUTION_QUALITY: {
 				const category = categorySelector.value;
-				const categoryTitle = TraceHeaderMap[category as keyof typeof TraceHeaderMap];
+				const categoryTitle =
+					TraceHeaderMap[category as keyof typeof TraceHeaderMap];
 				chartData = PlotDataByCategory(
 					traceData,
 					category,

@@ -75,7 +75,12 @@ export function CreateUserConfiguration(
  * @returns An array that includes the raw data, data file type, default time, and gap limit.
  */
 export function GetUserConfiguration(): [string[], string, number, number] {
-	let userConfig: UserData = { dataSet: [], dataFileType: "", defaultTime: undefined, gapLimit: undefined };
+	let userConfig: UserData = {
+		dataSet: [],
+		dataFileType: "",
+		defaultTime: undefined,
+		gapLimit: undefined
+	};
 	try {
 		const userConfigString = localStorage.getItem("UserConfiguration");
 		if (!userConfigString) {
@@ -112,7 +117,7 @@ export function GetUserConfiguration(): [string[], string, number, number] {
 	});
 
 	const dataFileType = userConfig.dataFileType;
-	const defaultTime = userConfig.defaultTime ?? Values.DEFAULT_TIME; 
+	const defaultTime = userConfig.defaultTime ?? Values.DEFAULT_TIME;
 	const gapLimit = userConfig.gapLimit ?? Values.DEFAULT_GAP_LIMIT;
 	return [unprocessedData, dataFileType, defaultTime, gapLimit];
 }

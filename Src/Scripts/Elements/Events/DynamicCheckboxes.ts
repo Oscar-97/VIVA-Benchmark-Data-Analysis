@@ -76,8 +76,8 @@ export function GetSelectedCheckboxValues(): string[] {
 		`input[type="checkbox"]:checked`
 	);
 	checkboxes.forEach((checkbox) => {
-			selectedValues.push((checkbox as HTMLInputElement).value);
-		});
+		selectedValues.push((checkbox as HTMLInputElement).value);
+	});
 
 	return selectedValues;
 }
