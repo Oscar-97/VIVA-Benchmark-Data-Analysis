@@ -243,6 +243,9 @@ function InitializeProgram(): void {
 	try {
 		[unprocessedData, dataFileType, defaultTime, gapLimit] =
 			GetUserConfiguration();
+		if (unprocessedData.length === 0) {
+			throw new Error(UserConfigurationMessages.NO_STORED_CONFIG);
+		}
 		if (
 			localStorage.getItem(Keys.DEMO_DATA) === "demo1" ||
 			localStorage.getItem(Keys.DEMO_DATA) === "demo2"

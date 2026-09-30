@@ -97,10 +97,12 @@ function DataTablesConfiguration(): void {
 		searchPanes: {
 			layout: "auto"
 		},
-		dom:
-			"<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'f>>" +
-			"<'row'<'col-sm-12'tr>>" +
-			"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 mt-2'p>>",
+		layout: {
+			topStart: "buttons",
+			topEnd: "search",
+			bottomStart: "info",
+			bottomEnd: "paging"
+		},
 		pagingType: "numbers",
 		lengthChange: true,
 		lengthMenu: [
@@ -221,7 +223,6 @@ function DataTablesConfiguration(): void {
 		}
 	});
 
-	$(".dataTables_length select").addClass("custom-select custom-select-sm");
 	table.searchPanes.container().prependTo(table.table().container());
 	table.searchPanes.resizePanes();
 	table.searchPanes.container().toggle();

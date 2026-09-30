@@ -405,36 +405,46 @@ describe("UI tests", () => {
 				page,
 				"Benchmarks loaded with following files: shotALL.trc"
 			);
+
+			const firstCell =
+				"table#dataTableGenerated > tbody > tr:first-child > td:first-child";
+			expect(await page.locator(firstCell).innerText()).toBe("alan");
+
+			// Problem is sorted ascending by default, clicking the header sorts descending.
 			await WaitForElementAndClick(
 				page,
-				"//html/body/div[4]/div/div[3]/div/div/div[1]/div/table/thead/tr/th[1]"
+				'th:visible:has(.dt-column-title:text-is("Problem"))'
+			);
+			await page.waitForFunction(
+				(selector) =>
+					document.querySelector(selector)?.textContent ===
+					"watercontamination0303r",
+				firstCell
+			);
+			expect(await page.locator(firstCell).innerText()).toBe(
+				"watercontamination0303r"
 			);
 
-			const firstCellValueSorted = await page.$(
-				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[1]/td[1]"
-			);
-			const firstCellValueSortedText = await firstCellValueSorted?.innerText();
-			expect(firstCellValueSortedText).toBe("watercontamination0303r");
-
+			await WaitForElementAndClick(page, 'button:has-text("Settings")');
 			await WaitForElementAndClick(
 				page,
-				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/button"
+				'.dt-button-collection :text("Column Visibility")'
 			);
 			await WaitForElementAndClick(
 				page,
-				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div/div[2]/a"
+				'.dt-button-collection :text("2: Direction")'
 			);
 
-			await WaitForElementAndClick(
-				page,
-				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div/a[2]"
-			);
-
-			const firstHeaderValue = await page.$(
-				"//html/body/div[4]/div/div[3]/div/div/div[1]/div/table/thead/tr/th[1]"
-			);
-			const firstHeaderValueText = await firstHeaderValue?.innerText();
-			expect(firstHeaderValueText).toBe("Problem");
+			expect(
+				await page
+					.locator('th:visible:has(.dt-column-title:text-is("Direction"))')
+					.count()
+			).toBe(0);
+			expect(
+				await page
+					.locator('th:visible:has(.dt-column-title:text-is("Problem"))')
+					.count()
+			).toBe(1);
 		}, 60000);
 
 		test("Use pagination on the table", async () => {
@@ -444,24 +454,16 @@ describe("UI tests", () => {
 				"Benchmarks loaded with following files: shotALL.trc"
 			);
 
-			await WaitForElementAndClick(
-				page,
-				"//html/body/div[4]/div/div[4]/div[2]/div/ul/li[2]/a"
-			);
-			await WaitForElementAndClick(
-				page,
-				"//html/body/div[4]/div/div[4]/div[2]/div/ul/li[7]/a"
-			);
-			await WaitForElementAndClick(
-				page,
-				"//html/body/div[4]/div/div[4]/div[2]/div/ul/li[3]/a"
-			);
+			const activePage = ".dt-paging li.active button";
+			await WaitForElementAndClick(page, '.dt-paging button:text-is("2")');
+			expect(await page.locator(activePage).innerText()).toBe("2");
 
-			const currentPageValue = await page.$(
-				"//html/body/div[4]/div/div[4]/div[2]/div/ul/li[4]/a"
-			);
-			const currentPageValueText = await currentPageValue?.innerText();
-			expect(currentPageValueText).toBe("30");
+			// The last page button is the total page count.
+			const lastPageButton = page.locator(".dt-paging li:last-child button");
+			const lastPage = await lastPageButton.innerText();
+			expect(Number(lastPage)).toBeGreaterThan(2);
+			await lastPageButton.click();
+			expect(await page.locator(activePage).innerText()).toBe(lastPage);
 		}, 60000);
 
 		test("Search in the displayed data", async () => {
@@ -470,17 +472,17 @@ describe("UI tests", () => {
 				page,
 				"Benchmarks loaded with following files: shotALL.trc"
 			);
-			await page
-				.locator("//html/body/div[4]/div/div[2]/div[2]/div/label/input")
-				.type("watercontamination");
-			const rowCount = await page.$$eval(
-				"table#dataTableGenerated" + " > tbody > tr",
-				(rows) => {
-					return rows.length;
-				}
+			await page.locator(".dt-search input").fill("watercontamination");
+			await page.waitForFunction(
+				() =>
+					document.querySelectorAll("table#dataTableGenerated > tbody > tr")
+						.length === 4
 			);
-			const expectedRowCount = 4;
-			expect(rowCount).toBe(expectedRowCount);
+			const rowCount = await page.$$eval(
+				"table#dataTableGenerated > tbody > tr",
+				(rows: Element[]) => rows.length
+			);
+			expect(rowCount).toBe(4);
 		}, 60000);
 
 		// test("Use MINLPLib option", async () => {
@@ -502,10 +504,10 @@ describe("UI tests", () => {
 		// 	await ShowProblemCells();
 
 		// 	const primalBoundProblemCellValue = await page.$(
-		// 		"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[3]/td[5]"
+		// 		ProblemCell(3, 5)
 		// 	);
 		// 	const dualBoundProblemCellValue = await page.$(
-		// 		"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[3]/td[4]"
+		// 		ProblemCell(3, 4)
 		// 	);
 
 		// 	// Check if 'alkylation' problem contains the values from MINLPLib.
@@ -533,10 +535,10 @@ describe("UI tests", () => {
 
 		// 	await ShowProblemCells();
 		// 	const primalBoundProblemCellValue = await page.$(
-		// 		"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[5]"
+		// 		ProblemCell(2, 5)
 		// 	);
 		// 	const dualBoundProblemCellValue = await page.$(
-		// 		"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[4]"
+		// 		ProblemCell(2, 4)
 		// 	);
 
 		// 	// Check if '50v-10' problem contains the values from MIPLIB.
@@ -564,10 +566,10 @@ describe("UI tests", () => {
 
 		// 	await ShowProblemCells();
 		// 	const primalBoundProblemCellValue = await page.$(
-		// 		"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[1]/td[5]"
+		// 		ProblemCell(1, 5)
 		// 	);
 		// 	const dualBoundProblemCellValue = await page.$(
-		// 		"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[1]/td[4]"
+		// 		ProblemCell(1, 4)
 		// 	);
 
 		// 	// Check if '30_70_45_095_100' problem contains the values from MIPLIB.
@@ -579,6 +581,18 @@ describe("UI tests", () => {
 	});
 
 	describe("Problem Libraries", () => {
+		const fileUrl = `file://${path.resolve(__dirname, "../report.html")}`;
+
+		beforeEach(async () => {
+			// Earlier tests may have saved a configuration that the app restores on load.
+			await page.goto(fileUrl);
+			await page.evaluate(() => {
+				localStorage.clear();
+				sessionStorage.clear();
+			});
+			await page.goto(fileUrl);
+		});
+
 		async function RunTableOperations(
 			page: Page,
 			notification: string
@@ -593,23 +607,26 @@ describe("UI tests", () => {
 		}
 
 		async function ShowProblemCells(): Promise<void> {
+			await WaitForElementAndClick(page, 'button:has-text("Settings")');
 			await WaitForElementAndClick(
 				page,
-				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]"
+				'.dt-button-collection :text("Column Visibility")'
+			);
+			// Show the ProblemDualBound (4) and ProblemPrimalBound (5) columns.
+			await WaitForElementAndClick(
+				page,
+				'.dt-button-collection li[data-cv-idx="3"] a'
 			);
 			await WaitForElementAndClick(
 				page,
-				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div/div[2]"
-			);
-			await WaitForElementAndClick(
-				page,
-				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div/a[4]"
-			);
-			await WaitForElementAndClick(
-				page,
-				"//html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div/a[5]"
+				'.dt-button-collection li[data-cv-idx="4"] a'
 			);
 		}
+
+		function ProblemCell(row: number, column: number): string {
+			return `table#dataTableGenerated > tbody > tr:nth-child(${row}) > td:nth-child(${column})`;
+		}
+
 		test("Use MINLPLib option", async () => {
 			await page.waitForSelector("#fileInput");
 			await page.click("#fileInput");
@@ -628,12 +645,8 @@ describe("UI tests", () => {
 
 			await ShowProblemCells();
 
-			const primalBoundProblemCellValue = await page.$(
-				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[3]/td[5]"
-			);
-			const dualBoundProblemCellValue = await page.$(
-				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[3]/td[4]"
-			);
+			const primalBoundProblemCellValue = await page.$(ProblemCell(3, 5));
+			const dualBoundProblemCellValue = await page.$(ProblemCell(3, 4));
 
 			// Check if 'alkylation' problem contains the values from MINLPLib.
 			expect(await primalBoundProblemCellValue?.innerText()).toBe(
@@ -659,12 +672,8 @@ describe("UI tests", () => {
 			);
 
 			await ShowProblemCells();
-			const primalBoundProblemCellValue = await page.$(
-				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[5]"
-			);
-			const dualBoundProblemCellValue = await page.$(
-				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[2]/td[4]"
-			);
+			const primalBoundProblemCellValue = await page.$(ProblemCell(2, 5));
+			const dualBoundProblemCellValue = await page.$(ProblemCell(2, 4));
 
 			// Check if '50v-10' problem contains the values from MIPLIB.
 			expect(await primalBoundProblemCellValue?.innerText()).toBe(
@@ -690,12 +699,8 @@ describe("UI tests", () => {
 			);
 
 			await ShowProblemCells();
-			const primalBoundProblemCellValue = await page.$(
-				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[1]/td[5]"
-			);
-			const dualBoundProblemCellValue = await page.$(
-				"//html/body/div[4]/div/div[3]/div/div/div[2]/table/tbody/tr[1]/td[4]"
-			);
+			const primalBoundProblemCellValue = await page.$(ProblemCell(1, 5));
+			const dualBoundProblemCellValue = await page.$(ProblemCell(1, 4));
 
 			// Check if '30_70_45_095_100' problem contains the values from MIPLIB.
 			expect(await primalBoundProblemCellValue?.innerText()).toBe(
@@ -738,7 +743,7 @@ describe("UI tests", () => {
 		}, 10000);
 
 		test("Solver Time per Instance Page", async () => {
-			RunPlotOperations("../Src/Pages/solver_time.html");
+			await RunPlotOperations("../Src/Pages/solver_time.html");
 		}, 10000);
 
 		test("Number of Nodes Page", async () => {
@@ -805,7 +810,7 @@ describe("UI tests", () => {
 		}
 
 		test("Select solvers and compare them", async () => {
-			RunCompareSolversOperations();
+			await RunCompareSolversOperations();
 
 			await WaitForElementAndClick(page, "#scip");
 			await WaitForElementAndClick(page, "#shot");
@@ -849,7 +854,7 @@ describe("UI tests", () => {
 		}, 10000);
 
 		test("Select one solver and try to compare", async () => {
-			RunCompareSolversOperations();
+			await RunCompareSolversOperations();
 			await WaitForElementAndClick(page, "#shot");
 			await WaitForElementAndClick(page, "#compareSolversButton");
 			await CheckNotification(
