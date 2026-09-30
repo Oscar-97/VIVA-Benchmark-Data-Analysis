@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run lint)",
+      "Bash(npm run build)",
+      "Bash(npm run test:functions)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ],
+    "deny": [
+      "Read(./node_modules/**)",
+      "Read(./Dist/**/*.map)",
+      "Read(./Docs/**)",
+      "Read(./package-lock.json)",
+      "Edit(./Dist/**)",
+      "Edit(./Docs/**)",
+      "Edit(./Release/**)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/lint-ts.js"
+          }
+        ]
+      }
+    ]
+  }
+}
