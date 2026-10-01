@@ -26,6 +26,10 @@ import {
 	ExtractAllSolverTimesGapType
 } from "../Src/Scripts/DataProcessing/ChartsComputations/ComputeChartData";
 
+import { ResetAppState, state } from "../Src/Scripts/App/AppState";
+import { GetPageKind, PageKind } from "../Src/Scripts/App/CurrentPage";
+import { PageTitles } from "../Src/Scripts/Constants/PageTitles";
+
 /**
  * Mockup data.
  */
@@ -1131,5 +1135,53 @@ describe("CompareSolvers", () => {
 		const comparisonSummary = CompareSolvers("Solver1", "Solver2", solverTimes);
 
 		expect(comparisonSummary).toEqual(expectedSummary);
+	});
+});
+
+describe("GetPageKind", () => {
+	it("should recognize the table page", () => {
+		expect(GetPageKind(PageTitles.TABLE)).toBe(PageKind.TABLE);
+	});
+
+	it("should recognize the compare solvers page", () => {
+		expect(GetPageKind(PageTitles.COMPARE_SOLVERS)).toBe(
+			PageKind.COMPARE_SOLVERS
+		);
+	});
+
+	it("should treat every other page as a plot page", () => {
+		expect(GetPageKind(PageTitles.PERFORMANCE_PROFILE)).toBe(PageKind.PLOT);
+		expect(GetPageKind(PageTitles.SOLUTION_TIME)).toBe(PageKind.PLOT);
+		expect(GetPageKind("An unknown page")).toBe(PageKind.PLOT);
+	});
+});
+
+describe("ResetAppState", () => {
+	it("should reset all values of the shared state", () => {
+		state.dataFileType = "trc";
+		state.defaultTime = 10;
+		state.gapLimit = 0.5;
+		state.unprocessedData = ["data"];
+		state.unprocessedInstanceInformationData = ["instances"];
+		state.unprocessedSolutionData = ["solutions"];
+		state.chartData = [{ label: "chart" }];
+
+		ResetAppState();
+
+		expect(state).toEqual({
+			dataFileType: "",
+			defaultTime: undefined,
+			gapLimit: undefined,
+			unprocessedData: [],
+			unprocessedInstanceInformationData: [],
+			unprocessedSolutionData: [],
+			chartData: []
+		});
+	});
+
+	it("should keep the same state object so imported references stay valid", () => {
+		const reference = state;
+		ResetAppState();
+		expect(state).toBe(reference);
 	});
 });
