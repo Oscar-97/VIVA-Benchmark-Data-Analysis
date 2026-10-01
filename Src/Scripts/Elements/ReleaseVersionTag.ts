@@ -1,5 +1,5 @@
 import { Keys } from "../Constants/Keys";
-import { releaseVersionTag } from "./Elements";
+import { elements } from "./Elements";
 
 /**
  * This function fetches the release version number from Github and sets it in the release tag element.
@@ -20,7 +20,7 @@ export function ReleaseVersionTag(): void {
 			if (version === null || version === undefined) {
 				version = "Releases";
 			}
-			releaseVersionTag.innerHTML = `<i class="bi bi-git"></i> ${version}`;
+			elements.releaseVersionTag.innerHTML = `<i class="bi bi-git"></i> ${version}`;
 			localStorage.setItem(Keys.RELEASE_VERSION, version);
 			sessionStorage.setItem(Keys.RELEASE_VERSION_FETCHED, "true");
 		});
@@ -30,10 +30,10 @@ export function ReleaseVersionTag(): void {
 		if (
 			releaseVersion === null ||
 			releaseVersion === undefined ||
-			releaseVersionTag.innerHTML === `<i class="bi bi-git"></i> null`
+			elements.releaseVersionTag.innerHTML === `<i class="bi bi-git"></i> null`
 		) {
 			releaseVersion = "Releases";
 		}
-		releaseVersionTag.innerHTML = `<i class="bi bi-git"></i> ${releaseVersion}`;
+		elements.releaseVersionTag.innerHTML = `<i class="bi bi-git"></i> ${releaseVersion}`;
 	}
 }

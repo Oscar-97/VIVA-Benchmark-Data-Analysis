@@ -1,11 +1,7 @@
 import { NotifyDemoMode } from "../Actions/DemoMode";
 import { Keys } from "../Constants/Keys";
 import { InfoMessages, UserConfigurationMessages } from "../Constants/Messages";
-import {
-	deleteLocalStorageButton,
-	downloadConfigurationButtonLayer,
-	saveLocalStorageButton
-} from "../Elements/Elements";
+import { elements } from "../Elements/Elements";
 import { ImportDataEvents } from "../Elements/Events/ImportDataEvents";
 import { InitializeScreenSizeToast } from "../Elements/Events/DisplayScreenSizeToast";
 import {
@@ -14,9 +10,10 @@ import {
 	ElementStatesTablePage
 } from "../Elements/Events/ElementStatus";
 import { GetUserConfiguration } from "../UserConfiguration/UserConfiguration";
-import { ResetAppState, state } from "./AppState";
+import { ApplyStoredConfiguration, ResetAppState } from "./AppState";
 import { GetPageKind, PageKind } from "./CurrentPage";
 import { ManageData } from "./ManageData";
+import { ResetPageListeners } from "./PageListeners";
 
 /**
  * Sets the status of all buttons based on the kind of page that is shown.
@@ -43,16 +40,14 @@ function SetElementStates(): void {
  * Configuration" buttons are enabled, and the ManageData() function is called.
  */
 function RestoreStoredConfiguration(): void {
+	const config = GetUserConfiguration();
+	if (!config) {
+		console.info(UserConfigurationMessages.NO_STORED_CONFIG);
+		return;
+	}
+	ApplyStoredConfiguration(config);
+
 	try {
-		[
-			state.unprocessedData,
-			state.dataFileType,
-			state.defaultTime,
-			state.gapLimit
-		] = GetUserConfiguration();
-		if (state.unprocessedData.length === 0) {
-			throw new Error(UserConfigurationMessages.NO_STORED_CONFIG);
-		}
 		if (
 			localStorage.getItem(Keys.DEMO_DATA) === "demo1" ||
 			localStorage.getItem(Keys.DEMO_DATA) === "demo2"
@@ -66,14 +61,13 @@ function RestoreStoredConfiguration(): void {
 		} else {
 			ImportDataEvents(InfoMessages.FOUND_STORED_CONFIG, "json");
 		}
-		saveLocalStorageButton.disabled = true;
-		deleteLocalStorageButton.disabled = false;
-		downloadConfigurationButtonLayer.disabled = false;
+		elements.saveLocalStorageButton.disabled = true;
+		elements.deleteLocalStorageButton.disabled = false;
+		elements.downloadConfigurationButtonLayer.disabled = false;
 		sessionStorage.setItem(Keys.SAVED_STORAGE_NOTIFICATION, "true");
 		ManageData();
 	} catch (error) {
-		console.info(UserConfigurationMessages.NO_STORED_CONFIG);
-		console.warn("Warn: ", error);
+		console.error("Could not restore the stored configuration: ", error);
 	}
 }
 
@@ -82,6 +76,7 @@ function RestoreStoredConfiguration(): void {
  * This occurs when the page is loaded, and again when the table is cleared.
  */
 export function InitializeProgram(): void {
+	ResetPageListeners();
 	ResetAppState();
 	SetElementStates();
 

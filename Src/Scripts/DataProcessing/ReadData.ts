@@ -1,8 +1,4 @@
-import {
-	fileInput,
-	librarySelector,
-	importDataButton
-} from "../Elements/Elements";
+import { elements } from "../Elements/Elements";
 import { DisplayErrorNotification } from "../Elements/Events/DisplayAlertNotification";
 import { userData } from "../UserConfiguration/UserConfiguration";
 import { Keys } from "../Constants/Keys";
@@ -29,7 +25,7 @@ import { ErrorMessages } from "../Constants/Messages";
  * - There are both .trc and .json files.
  */
 export function GetDataFileType(): string {
-	const files = fileInput.files;
+	const files = elements.fileInput.files;
 	const extensions = [];
 	const fileCounts = { csv: 0, solu: 0, json: 0 };
 
@@ -141,19 +137,19 @@ export function ReadData(
 	UnprocessedInstanceInformationData: string[];
 	UnprocessedSolutionData: string[];
 } {
-	importDataButton.disabled = false;
-	librarySelector.disabled = false;
+	elements.importDataButton.disabled = false;
+	elements.librarySelector.disabled = false;
 
 	/**
 	 * Input multiple files.
 	 * For instance: trace1.trc, trace2.trc and minlp.solu.
 	 */
-	if (!fileInput.files) {
+	if (!elements.fileInput.files) {
 		throw new Error("No files were selected.");
 	}
-	for (let i = 0; i < fileInput.files.length; i++) {
+	for (let i = 0; i < elements.fileInput.files.length; i++) {
 		const reader = new FileReader();
-		const file = fileInput.files[i];
+		const file = elements.fileInput.files[i];
 		const fileName = file.name;
 		const fileExtension = fileName.split(".").pop();
 
@@ -206,7 +202,7 @@ interface ParsedData {
 	dataSet: string[];
 	dataFileType: string;
 	defaultTime?: string;
-	[key: string]: any;
+	[key: string]: unknown;
 }
 
 function VerifyConfigurationProperties(parsedData: ParsedData): void {

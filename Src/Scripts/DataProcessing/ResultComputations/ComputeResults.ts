@@ -260,17 +260,12 @@ export function CompareSolvers(
 	const results1 = solverTimes[solver1];
 	const results2 = solverTimes[solver2];
 
-	const comparisonSummary: {
-		better: number;
-		worse: number;
-		equal: number;
-		details: {
-			InputFileName: string;
-			time1: number;
-			time2: number;
-			comparison: any;
-		}[];
-	} = { better: 0, worse: 0, equal: 0, details: [] };
+	const comparisonSummary: ComparisonSummary = {
+		better: 0,
+		worse: 0,
+		equal: 0,
+		details: []
+	};
 
 	results1.forEach((result1: { InputFileName: string; time: number }) => {
 		const result2 = results2.find(
@@ -314,8 +309,8 @@ export function CompareSolvers(
  * @param traceData - The array of objects to extract unique objects from.
  * @returns An array of unique objects based on the "InputFileName" property.
  */
-export function ExtractUniqueProblems(traceData: TraceData[]): any[] {
-	const unique: Record<string, any> = {};
+export function ExtractUniqueProblems(traceData: TraceData[]): TraceData[] {
+	const unique: Record<string, TraceData> = {};
 	traceData.forEach((item) => {
 		const fileName = item["InputFileName"] as string;
 		if (!unique[fileName]) {
@@ -341,7 +336,7 @@ export function ExtractUniqueProblems(traceData: TraceData[]): any[] {
  * @param data - The data to apply calculations to.
  * @returns An object containing the calculated statistics.
  */
-export function CalculateInstanceAttributes(data: { [key: string]: any }[]): {
+export function CalculateInstanceAttributes(data: object[]): {
 	[key: string]: StatisticsColumns;
 } {
 	const results: {
@@ -351,7 +346,7 @@ export function CalculateInstanceAttributes(data: { [key: string]: any }[]): {
 
 	keys.forEach((key) => {
 		const values: number[] = data
-			.map((item: { [key: string]: any }) => Number(item[key]))
+			.map((item) => Number((item as Record<string, unknown>)[key]))
 			.filter((value) => !isNaN(value));
 
 		if (values.length > 0) {
@@ -402,7 +397,7 @@ export function CalculateInstanceAttributes(data: { [key: string]: any }[]): {
  * @returns An object containing the calculated statistics.
  */
 export function CalculateSolveAttributes(
-	data: { [key: string]: any }[],
+	data: object[],
 	specificKeys: string[]
 ): {
 	[key: string]: StatisticsColumns;
@@ -413,7 +408,7 @@ export function CalculateSolveAttributes(
 
 	specificKeys.forEach((key) => {
 		const values: number[] = data
-			.map((item: { [key: string]: any }) => parseFloat(item[key]))
+			.map((item) => parseFloat(String((item as Record<string, unknown>)[key])))
 			.filter((value) => !isNaN(value));
 
 		if (values.length > 0) {

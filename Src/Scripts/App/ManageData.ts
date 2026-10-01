@@ -1,14 +1,15 @@
 import { ExtractTraceData } from "../DataProcessing/FilterData";
 import { ProcessData } from "../DataProcessing/ProcessTraceData";
-import { viewPlotsButton, viewTableButton } from "../Elements/Elements";
+import { elements } from "../Elements/Elements";
 import { TraceData } from "../Interfaces/Interfaces";
 import { HandleCommonButtons } from "../Pages/CommonButtons";
 import { HandleCompareSolversPage } from "../Pages/CompareSolversPage";
 import { HandlePlotPages } from "../Pages/PlotPages";
 import { HandleReportPage } from "../Pages/ReportPage";
 import { GetUserConfiguration } from "../UserConfiguration/UserConfiguration";
-import { state } from "./AppState";
+import { ApplyStoredConfiguration, state } from "./AppState";
 import { GetPageKind, PageKind } from "./CurrentPage";
+import { ResetPageListeners } from "./PageListeners";
 
 /**
  * Manage the benchmark results data.
@@ -29,12 +30,11 @@ export async function ManageData(): Promise<void> {
 	 * and updates the unprocessedData and dataFileType variables.
 	 */
 	if (state.dataFileType === "json") {
-		[
-			state.unprocessedData,
-			state.dataFileType,
-			state.defaultTime,
-			state.gapLimit
-		] = GetUserConfiguration();
+		const config = GetUserConfiguration();
+		if (!config) {
+			return;
+		}
+		ApplyStoredConfiguration(config);
 		traceData = ExtractTraceData(state.unprocessedData);
 	}
 
@@ -52,6 +52,11 @@ export async function ManageData(): Promise<void> {
 	}
 
 	/**
+	 * Remove the listeners of earlier data, so only the ones for this data run.
+	 */
+	ResetPageListeners();
+
+	/**
 	 * Handle and set up the common buttons for all pages.
 	 */
 	HandleCommonButtons(traceData, selectedSolvers);
@@ -63,7 +68,7 @@ export async function ManageData(): Promise<void> {
 		case PageKind.TABLE:
 			HandleReportPage(traceData);
 			if (state.dataFileType === "json") {
-				viewTableButton.click();
+				elements.viewTableButton.click();
 			}
 			break;
 		case PageKind.COMPARE_SOLVERS:
@@ -72,7 +77,7 @@ export async function ManageData(): Promise<void> {
 		case PageKind.PLOT:
 			HandlePlotPages(traceData);
 			if (state.dataFileType === "json") {
-				viewPlotsButton.click();
+				elements.viewPlotsButton.click();
 			}
 			break;
 	}

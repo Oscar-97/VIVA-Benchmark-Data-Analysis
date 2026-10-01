@@ -2,11 +2,7 @@ import { ActivateDemoMode } from "../Actions/DemoMode";
 import { Keys } from "../Constants/Keys";
 import { InfoMessages } from "../Constants/Messages";
 import { GetDataFileType, ReadData } from "../DataProcessing/ReadData";
-import {
-	demoDataButton,
-	fileInput,
-	importDataButton
-} from "../Elements/Elements";
+import { elements } from "../Elements/Elements";
 import { ImportDataEvents } from "../Elements/Events/ImportDataEvents";
 import { RequestPWANotificationPermission } from "../PWA/PWA-utils";
 import { state } from "./AppState";
@@ -26,7 +22,7 @@ export function RegisterGlobalListeners(): void {
 	 * variable and reads data into the unprocessedData, unprocessedInstanceInformationData, and unprocessedSolutionData
 	 * arrays whenever the value of the file input field changes.
 	 */
-	fileInput.addEventListener("change", () => {
+	elements.fileInput.addEventListener("change", () => {
 		state.dataFileType = GetDataFileType();
 		ReadData(
 			state.unprocessedData,
@@ -42,10 +38,10 @@ export function RegisterGlobalListeners(): void {
 	 *
 	 * It also requests permission for push notifications.
 	 */
-	importDataButton.addEventListener("click", () => {
+	elements.importDataButton.addEventListener("click", () => {
 		sessionStorage.removeItem(Keys.SAVED_STORAGE_NOTIFICATION);
-		const fileNames = fileInput.files
-			? Array.from(fileInput.files)
+		const fileNames = elements.fileInput.files
+			? Array.from(elements.fileInput.files)
 					.map((file) => {
 						return file.name;
 					})
@@ -60,7 +56,7 @@ export function RegisterGlobalListeners(): void {
 	 * Adds an event listener to the "Demo-Mode" button that loads a demo data set and savet it to local storage.
 	 */
 	if (GetPageKind() === PageKind.TABLE) {
-		demoDataButton.addEventListener("click", () => {
+		elements.demoDataButton.addEventListener("click", () => {
 			ActivateDemoMode();
 		});
 	}

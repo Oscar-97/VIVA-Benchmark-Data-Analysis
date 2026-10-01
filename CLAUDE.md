@@ -16,6 +16,7 @@ Browser app (PWA) for analyzing optimization-solver benchmark data. TypeScript (
 - `Src/Scripts/App/` – startup (`Bootstrap`, `InitializeProgram`, `ManageData`, `GlobalListeners`), shared `AppState`, `GetPageKind`
 - `Src/Scripts/Pages/` – per-page handlers (report, plot pages via `PlotRegistry`, compare solvers, common buttons)
 - `Src/Scripts/` – `Actions`, `Chart`, `Constants`, `DataProcessing`, `Datasets`, `DataTable`, `Elements`, `Interfaces`, `PWA`, `UserConfiguration`
+- `Src/Scripts/Elements/Elements.ts` – the page elements as lazy getters (`elements.fileInput`); looked up on use, so elements created later work. Missing ones throw an error that names them; nullable ones (typed `| null`) exist on some pages only. Use `FindElement(id)` for one-off lookups.
 - `Src/CSS`, `Src/Pages` – styles and HTML
 - `Tests/` – `Function.test.ts`, `UI.test.ts`, test data
 - `Dist/`, `Docs/`, `Release/` – generated output

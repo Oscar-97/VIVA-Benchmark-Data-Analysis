@@ -1,3 +1,5 @@
+import { StoredConfiguration } from "../Interfaces/Interfaces";
+
 /**
  * The mutable state shared between the application modules.
  *
@@ -32,6 +34,16 @@ function CreateInitialState(): AppState {
 }
 
 export const state: AppState = CreateInitialState();
+
+/**
+ * Copies a configuration that was restored from the local storage to the state.
+ */
+export function ApplyStoredConfiguration(config: StoredConfiguration): void {
+	state.unprocessedData = config.dataSet;
+	state.dataFileType = config.dataFileType;
+	state.defaultTime = config.defaultTime;
+	state.gapLimit = config.gapLimit;
+}
 
 /**
  * Resets the state to its initial values.

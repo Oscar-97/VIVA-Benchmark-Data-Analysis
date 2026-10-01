@@ -41,9 +41,11 @@ export function GetSelectedRows(): object[] {
  * and the values correspond to the cell data in the corresponding row.
  */
 export function GetFilteredRows(): TraceData[] {
-	function RemapObjectProperties(objects: any[]): TraceData[] {
+	function RemapObjectProperties(
+		objects: Record<string, unknown>[]
+	): TraceData[] {
 		return objects.map((obj) => {
-			const remappedObj: Record<string, any> = {};
+			const remappedObj: Record<string, unknown> = {};
 			for (const key in obj) {
 				const newKey =
 					key in ReversedTraceHeaderMap
@@ -51,7 +53,7 @@ export function GetFilteredRows(): TraceData[] {
 						: key;
 				remappedObj[newKey] = obj[key];
 			}
-			return remappedObj;
+			return remappedObj as TraceData;
 		});
 	}
 
@@ -64,11 +66,11 @@ export function GetFilteredRows(): TraceData[] {
 		.map((header: HTMLElement) => $(header).text());
 	const objects = data.map((row) => {
 		return headers.reduce(
-			(obj: Record<string, any>, header, index) => {
+			(obj: Record<string, unknown>, header, index) => {
 				obj[header] = row[index];
 				return obj;
 			},
-			{} as Record<string, any>
+			{} as Record<string, unknown>
 		);
 	});
 

@@ -1,4 +1,4 @@
-import { TraceData } from "../../Interfaces/Interfaces";
+import { SolverTimeEntry, TraceData } from "../../Interfaces/Interfaces";
 import { CalculateGap } from "./ComputeResults";
 
 /**
@@ -17,7 +17,7 @@ export function ComputeVirtualTimesTraceData(
 			const fileName = item["InputFileName"] as string;
 			acc[fileName] = acc[fileName] || [];
 			const solverTime =
-				isNaN(item["SolverTime"] as any) || item["SolverTime"] === undefined
+				isNaN(Number(item["SolverTime"])) || item["SolverTime"] === undefined
 					? defaultTime
 					: (item["SolverTime"] as number);
 			acc[fileName].push({ ...item, SolverTime: solverTime });
@@ -170,35 +170,28 @@ export function ComputeVirtualTimesTraceData(
  * @param {object} data - The data structure containing the filtered and extracted solver times.
  * @returns An object containing the best and worst solver times for the performance profile chart.
  */
-export function ComputeVirtualTimes(data: any): {
-	"Virtual Best Solver": any[];
-	"Virtual Worst Solver": any[];
+export function ComputeVirtualTimes(data: Record<string, SolverTimeEntry[]>): {
+	"Virtual Best Solver": SolverTimeEntry[];
+	"Virtual Worst Solver": SolverTimeEntry[];
 } {
 	const bestWorst: {
-		"Virtual Best Solver": any[];
-		"Virtual Worst Solver": any[];
+		"Virtual Best Solver": SolverTimeEntry[];
+		"Virtual Worst Solver": SolverTimeEntry[];
 	} = { "Virtual Best Solver": [], "Virtual Worst Solver": [] };
-	const bestEntries: Record<string, any> = {};
-	const worstEntries: Record<string, any> = {};
+	const bestEntries: Record<string, SolverTimeEntry> = {};
+	const worstEntries: Record<string, SolverTimeEntry> = {};
 
 	for (const group of Object.values(data)) {
-		/* eslint-disable  @typescript-eslint/no-explicit-any */
-		for (const entry of group as any[]) {
-			// eslint-disable-next-line @typescript-eslint/naming-convention
-			const { time, InputFileName } = entry;
+		for (const entry of group) {
+			const { time } = entry;
+			const fileName = entry.InputFileName;
 
-			if (
-				!bestEntries[InputFileName] ||
-				time < bestEntries[InputFileName].time
-			) {
-				bestEntries[InputFileName] = { time, InputFileName };
+			if (!bestEntries[fileName] || time < bestEntries[fileName].time) {
+				bestEntries[fileName] = { time, InputFileName: fileName };
 			}
 
-			if (
-				!worstEntries[InputFileName] ||
-				time > worstEntries[InputFileName].time
-			) {
-				worstEntries[InputFileName] = { time, InputFileName };
+			if (!worstEntries[fileName] || time > worstEntries[fileName].time) {
+				worstEntries[fileName] = { time, InputFileName: fileName };
 			}
 		}
 	}

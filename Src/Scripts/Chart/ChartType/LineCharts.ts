@@ -3,9 +3,13 @@ import {
 	ExtractAllSolverTimes,
 	ExtractAllSolverTimesGapType
 } from "../../DataProcessing/ChartsComputations/ComputeChartData";
-import { gapTypeSelector } from "../../Elements/Elements";
+import { elements } from "../../Elements/Elements";
 import { TraceData } from "../../Interfaces/Interfaces";
-import { CreateChart } from "../CreateChart";
+import {
+	ChartScaleOptions,
+	ChartZoomOptions,
+	CreateChart
+} from "../CreateChart";
 
 /**
  * This function prepares and plots all the solver times without any failed results.
@@ -34,7 +38,7 @@ export function PlotSolverTimes(
 		};
 	});
 
-	const scaleOptions = {
+	const scaleOptions: ChartScaleOptions = {
 		x: {
 			title: {
 				display: true,
@@ -49,11 +53,10 @@ export function PlotSolverTimes(
 		}
 	};
 
-	const zoomOptions = {
+	const zoomOptions: ChartZoomOptions = {
 		pan: {
 			enabled: true,
-			mode: "y",
-			modiferKey: "ctrl"
+			mode: "y"
 		},
 		zoom: {
 			wheel: {
@@ -91,7 +94,7 @@ export function PlotPerformanceProfile(
 	defaultTime?: number | undefined,
 	gapLimit?: number | undefined
 ): { data: { x: number; y: number }[]; label: string; showLine: boolean }[] {
-	const selectedGapType = gapTypeSelector.value;
+	const selectedGapType = elements.gapTypeSelector.value;
 
 	let solverTimes = ExtractAllSolverTimesGapType(
 		traceData,
@@ -177,7 +180,7 @@ export function PlotPerformanceProfile(
 		return dataset;
 	});
 
-	const scaleOptions = {
+	const scaleOptions: ChartScaleOptions = {
 		x: {
 			title: {
 				display: true,
@@ -211,11 +214,10 @@ export function PlotPerformanceProfile(
 		}
 	};
 
-	const zoomOptions = {
+	const zoomOptions: ChartZoomOptions = {
 		pan: {
 			enabled: true,
-			mode: "xy",
-			modiferKey: "ctrl"
+			mode: "xy"
 		},
 		zoom: {
 			wheel: {
@@ -238,7 +240,7 @@ export function PlotPerformanceProfile(
 		`${performanceProfile} performance profile`,
 		scaleOptions,
 		zoomOptions,
-		null,
+		undefined,
 		`${selectedGapType} <= ${
 			gapLimit || Values.DEFAULT_GAP_LIMIT
 		}% and not failed.`

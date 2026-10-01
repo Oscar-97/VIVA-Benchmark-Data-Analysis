@@ -1,4 +1,5 @@
 import { RestartProgram } from "../App/Lifecycle";
+import { Listen } from "../App/PageListeners";
 import { ConvertToTraceFile } from "../DataProcessing/CreateData";
 import {
 	DestroyDataTable,
@@ -9,11 +10,7 @@ import {
 	GetSelectedRows
 } from "../DataTable/GetDataFromTable";
 import { DisplayWarningNotification } from "../Elements/Events/DisplayAlertNotification";
-import {
-	clearDataTableButton,
-	showSelectedRowsButton,
-	viewTableButton
-} from "../Elements/Elements";
+import { elements } from "../Elements/Elements";
 import { TableLoadingAnimation } from "../Elements/LoadingAnimation";
 import { TableMessages } from "../Constants/Messages";
 import { TraceData } from "../Interfaces/Interfaces";
@@ -28,8 +25,8 @@ export function HandleReportPage(traceData: TraceData[]): void {
 	/**
 	 * Show the table when clicking on the "View Table" button.
 	 */
-	viewTableButton.addEventListener("click", () => {
-		viewTableButton.disabled = true;
+	Listen(elements.viewTableButton, "click", () => {
+		elements.viewTableButton.disabled = true;
 		TableLoadingAnimation();
 		DisplayDataTable(traceData);
 	});
@@ -37,13 +34,13 @@ export function HandleReportPage(traceData: TraceData[]): void {
 	/**
 	 * Shows the selected problems when clicking on the "View Selected Problems" button.
 	 */
-	showSelectedRowsButton.addEventListener("click", () => {
-		showSelectedRowsButton.disabled = true;
+	Listen(elements.showSelectedRowsButton, "click", () => {
+		elements.showSelectedRowsButton.disabled = true;
 		const traceDataFiltered = GetSelectedRows();
 
 		if (traceDataFiltered.length === 0) {
 			DisplayWarningNotification(TableMessages.TABLE_NO_ROWS);
-			showSelectedRowsButton.disabled = false;
+			elements.showSelectedRowsButton.disabled = false;
 		} else {
 			DisplayDataTable(traceDataFiltered);
 		}
@@ -59,18 +56,14 @@ export function HandleReportPage(traceData: TraceData[]): void {
 	});
 
 	/**
-	 * Destroy the data table and reinitializes the program when clicking on "Clear Data Table".
+	 * Destroy the data table and reinitializes the program when confirming in the "Clear Data Table" modal.
 	 */
-	clearDataTableButton.addEventListener("click", () => {
-		(
-			document.getElementById("clearTableButtonInModal") as HTMLElement
-		).addEventListener("click", () => {
-			DisplayWarningNotification(TableMessages.TABLE_CLEARING);
-			clearDataTableButton.disabled = true;
-			setTimeout(() => {
-				DestroyDataTable();
-				RestartProgram();
-			}, 5000);
-		});
+	Listen(document.getElementById("clearTableButtonInModal"), "click", () => {
+		DisplayWarningNotification(TableMessages.TABLE_CLEARING);
+		elements.clearDataTableButton.disabled = true;
+		setTimeout(() => {
+			DestroyDataTable();
+			RestartProgram();
+		}, 5000);
 	});
 }

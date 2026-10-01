@@ -1,10 +1,24 @@
-import Chart, { ChartTypeRegistry } from "chart.js/auto";
+import Chart, {
+	ChartDataset,
+	ChartOptions,
+	ChartTypeRegistry
+} from "chart.js/auto";
 import zoomPlugin from "chartjs-plugin-zoom";
 import annotationPlugin from "chartjs-plugin-annotation";
-import { chartCanvas } from "../Elements/Elements";
+import { elements } from "../Elements/Elements";
 import { ShowPWANotification } from "../PWA/PWA-utils";
 import { ChartMessages } from "../Constants/Messages";
-let myChart: Chart<any, any[], unknown> | null = null;
+let myChart: Chart<keyof ChartTypeRegistry, unknown[], string> | null = null;
+
+/**
+ * The data sets, scale, zoom and annotation options of a chart.
+ */
+export type ChartDatasets = ChartDataset<keyof ChartTypeRegistry, unknown[]>[];
+export type ChartScaleOptions = ChartOptions["scales"];
+export type ChartZoomOptions = NonNullable<ChartOptions["plugins"]>["zoom"];
+export type ChartAnnotationOptions = NonNullable<
+	ChartOptions["plugins"]
+>["annotation"];
 
 Chart.register(zoomPlugin);
 Chart.register(annotationPlugin);
@@ -61,13 +75,13 @@ export function PickColor(numberOfColors: number): string[] {
  */
 export function CreateChart(
 	type: keyof ChartTypeRegistry,
-	data: any[],
+	data: ChartDatasets,
 	label: string | string[],
 	title: string,
-	scaleOptions: any = undefined,
-	zoomOptions: any = undefined,
-	annotationOptions: any = undefined,
-	subtitle: string | undefined = undefined
+	scaleOptions?: ChartScaleOptions,
+	zoomOptions?: ChartZoomOptions,
+	annotationOptions?: ChartAnnotationOptions,
+	subtitle?: string
 ): void {
 	/**
 	 * Destroy the chart if it already exist.
@@ -76,7 +90,7 @@ export function CreateChart(
 		myChart.destroy();
 	}
 
-	myChart = new Chart(chartCanvas, {
+	myChart = new Chart(elements.chartCanvas, {
 		type: type,
 		data: {
 			labels: typeof label === "string" ? [label] : label,

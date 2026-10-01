@@ -1,15 +1,8 @@
 import { state } from "../App/AppState";
+import { Listen } from "../App/PageListeners";
 import { ConvertToTraceFile } from "../DataProcessing/CreateData";
 import { FillSolverSelectorList } from "../Elements/Events/ImportDataEvents";
-import {
-	configurationSettingsButton,
-	defaultTimeInput,
-	deleteLocalStorageButton,
-	downloadConfigurationButton,
-	downloadConfigurationButtonLayer,
-	gapLimitInput,
-	solverSelector
-} from "../Elements/Elements";
+import { elements } from "../Elements/Elements";
 import { TraceData } from "../Interfaces/Interfaces";
 import { Values } from "../Constants/Values";
 import {
@@ -31,7 +24,7 @@ export function HandleCommonButtons(
 	 * Fill the solver selector with solvers and update the values in selectedSolvers when the user selects them.
 	 */
 	FillSolverSelectorList(traceData);
-	document.getElementById("solverSelector")?.addEventListener("change", () => {
+	Listen(document.getElementById("solverSelector"), "change", () => {
 		const solverSelector = document.getElementById(
 			"solverSelector"
 		) as HTMLSelectElement;
@@ -43,27 +36,22 @@ export function HandleCommonButtons(
 				return option.value;
 			});
 	});
-	configurationSettingsButton.disabled = false;
+	elements.configurationSettingsButton.disabled = false;
 
 	/**
 	 * Download the current configuration when clicking on the "Download Configuration" button.
 	 */
-	downloadConfigurationButton.addEventListener("click", () => {
+	Listen(elements.downloadConfigurationButton, "click", () => {
 		DownloadUserConfiguration();
 	});
 
 	/**
-	 * Delete stored data in local storage when clicking in the "Delete Data" button.
+	 * Delete stored data in local storage when confirming in the "Delete Data" modal.
 	 */
-	deleteLocalStorageButton.addEventListener("click", () => {
-		const deleteButtonInModal = document.getElementById("deleteButtonInModal");
-		if (deleteButtonInModal) {
-			deleteButtonInModal.addEventListener("click", () => {
-				DeleteUserConfiguration();
-				deleteLocalStorageButton.disabled = true;
-				downloadConfigurationButtonLayer.disabled = true;
-			});
-		}
+	Listen(document.getElementById("deleteButtonInModal"), "click", () => {
+		DeleteUserConfiguration();
+		elements.deleteLocalStorageButton.disabled = true;
+		elements.downloadConfigurationButtonLayer.disabled = true;
 	});
 
 	/**
@@ -75,9 +63,9 @@ export function HandleCommonButtons(
 		"downloadCustomConfigurationButton"
 	);
 	if (downloadCustomConfigButton) {
-		downloadCustomConfigButton.addEventListener("click", () => {
+		Listen(downloadCustomConfigButton, "click", () => {
 			if (selectedSolvers.length === 0) {
-				selectedSolvers[0] = solverSelector?.value ?? "";
+				selectedSolvers[0] = elements.solverSelector?.value ?? "";
 			}
 			const customizedTraceData = traceData.filter((solver) => {
 				return (
@@ -87,12 +75,12 @@ export function HandleCommonButtons(
 			});
 			const newRawData: string[] = ConvertToTraceFile(customizedTraceData);
 
-			state.defaultTime = Number(defaultTimeInput?.value);
+			state.defaultTime = Number(elements.defaultTimeInput?.value);
 			if (!state.defaultTime) {
 				state.defaultTime = Values.DEFAULT_TIME;
 			}
 
-			state.gapLimit = Number(gapLimitInput?.value);
+			state.gapLimit = Number(elements.gapLimitInput?.value);
 			if (!state.gapLimit) {
 				state.gapLimit = Values.DEFAULT_GAP_LIMIT;
 			}

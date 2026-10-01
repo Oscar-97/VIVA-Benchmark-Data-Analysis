@@ -1,9 +1,4 @@
-import {
-	alertNotification,
-	alertIcon,
-	alertMessage,
-	closeAlertButton
-} from "../Elements";
+import { elements } from "../Elements";
 import $ from "jquery";
 let notificationTimeout: ReturnType<typeof setTimeout> | undefined;
 
@@ -16,26 +11,29 @@ let notificationTimeout: ReturnType<typeof setTimeout> | undefined;
 export function DisplayAlertNotification(message: string): void {
 	try {
 		// Remove other alert classes if notification is already displayed and it is triggered again.
-		alertNotification.style.display = "none";
-		alertNotification.classList.remove("alert-warning", "alert-danger");
+		elements.alertNotification.style.display = "none";
+		elements.alertNotification.classList.remove(
+			"alert-warning",
+			"alert-danger"
+		);
 	} finally {
-		alertNotification.classList.add("alert-success");
-		alertMessage.innerText = message;
-		alertIcon.innerHTML = "<i class='bi bi-check-circle-fill'></i>";
+		elements.alertNotification.classList.add("alert-success");
+		elements.alertMessage.innerText = message;
+		elements.alertIcon.innerHTML = "<i class='bi bi-check-circle-fill'></i>";
 
-		$(alertNotification)
+		$(elements.alertNotification)
 			.css({ display: "block", opacity: 0 })
 			.animate({ opacity: 1 }, 125);
 
-		closeAlertButton.addEventListener("click", function () {
-			alertNotification.style.display = "none";
+		elements.closeAlertButton.addEventListener("click", function () {
+			elements.alertNotification.style.display = "none";
 		});
 
 		clearTimeout(notificationTimeout);
 		notificationTimeout = setTimeout(() => {
-			$(alertNotification).animate({ opacity: 0 }, 250, function () {
-				alertNotification.style.display = "none";
-				alertNotification.classList.remove("alert-success");
+			$(elements.alertNotification).animate({ opacity: 0 }, 250, function () {
+				elements.alertNotification.style.display = "none";
+				elements.alertNotification.classList.remove("alert-success");
 			});
 		}, 10000);
 	}
@@ -49,26 +47,30 @@ export function DisplayAlertNotification(message: string): void {
  */
 export function DisplayWarningNotification(message: string): void {
 	try {
-		alertNotification.style.display = "none";
-		alertNotification.classList.remove("alert-success", "alert-danger");
+		elements.alertNotification.style.display = "none";
+		elements.alertNotification.classList.remove(
+			"alert-success",
+			"alert-danger"
+		);
 	} finally {
-		alertNotification.classList.add("alert-warning");
-		alertMessage.innerText = message;
-		alertIcon.innerHTML = "<i class='bi bi-exclamation-triangle-fill'></i>";
+		elements.alertNotification.classList.add("alert-warning");
+		elements.alertMessage.innerText = message;
+		elements.alertIcon.innerHTML =
+			"<i class='bi bi-exclamation-triangle-fill'></i>";
 
-		$(alertNotification)
+		$(elements.alertNotification)
 			.css({ display: "block", opacity: 0 })
 			.animate({ opacity: 1 }, 125);
 
-		closeAlertButton.addEventListener("click", function () {
-			alertNotification.style.display = "none";
+		elements.closeAlertButton.addEventListener("click", function () {
+			elements.alertNotification.style.display = "none";
 		});
 
 		clearTimeout(notificationTimeout);
 		notificationTimeout = setTimeout(() => {
-			$(alertNotification).animate({ opacity: 0 }, 250, function () {
-				alertNotification.style.display = "none";
-				alertNotification.classList.remove("alert-warning");
+			$(elements.alertNotification).animate({ opacity: 0 }, 250, function () {
+				elements.alertNotification.style.display = "none";
+				elements.alertNotification.classList.remove("alert-warning");
 			});
 		}, 5000);
 	}
@@ -82,26 +84,30 @@ export function DisplayWarningNotification(message: string): void {
  */
 export function DisplayErrorNotification(message: string): void {
 	try {
-		alertNotification.style.display = "none";
-		alertNotification.classList.remove("alert-success", "alert-warning");
+		elements.alertNotification.style.display = "none";
+		elements.alertNotification.classList.remove(
+			"alert-success",
+			"alert-warning"
+		);
 	} finally {
-		alertNotification.classList.add("alert-danger");
-		alertMessage.innerText = message;
-		alertIcon.innerHTML = "<i class='bi bi-exclamation-triangle-fill'></i>";
+		elements.alertNotification.classList.add("alert-danger");
+		elements.alertMessage.innerText = message;
+		elements.alertIcon.innerHTML =
+			"<i class='bi bi-exclamation-triangle-fill'></i>";
 
-		$(alertNotification)
+		$(elements.alertNotification)
 			.css({ display: "block", opacity: 0 })
 			.animate({ opacity: 1 }, 125);
 
-		closeAlertButton.addEventListener("click", function () {
-			alertNotification.style.display = "none";
+		elements.closeAlertButton.addEventListener("click", function () {
+			elements.alertNotification.style.display = "none";
 		});
 
 		clearTimeout(notificationTimeout);
 		notificationTimeout = setTimeout(() => {
-			$(alertNotification).animate({ opacity: 0 }, 250, function () {
-				alertNotification.style.display = "none";
-				alertNotification.classList.remove("alert-danger");
+			$(elements.alertNotification).animate({ opacity: 0 }, 250, function () {
+				elements.alertNotification.style.display = "none";
+				elements.alertNotification.classList.remove("alert-danger");
 			});
 		}, 5000);
 	}

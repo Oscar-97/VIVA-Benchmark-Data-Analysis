@@ -1,4 +1,5 @@
 import { state } from "../App/AppState";
+import { Listen } from "../App/PageListeners";
 import {
 	PlotDataByCategory,
 	PlotFailCount,
@@ -10,15 +11,7 @@ import {
 } from "../Chart/ChartType/LineCharts";
 import { PlotSolutionTimes } from "../Chart/ChartType/BubbleCharts";
 import { PlotTerminationRelation } from "../Chart/ChartType/RadarCharts";
-import {
-	categorySelector,
-	chartTypeSelector,
-	defaultTimeDirectInput,
-	filterTypeSelector,
-	gapLimitDirectInput,
-	performanceProfileSelector,
-	statusSelector
-} from "../Elements/Elements";
+import { elements } from "../Elements/Elements";
 import { PageTitles } from "../Constants/PageTitles";
 import { TraceHeaderMap } from "../Constants/TraceHeaders";
 import { TraceData } from "../Interfaces/Interfaces";
@@ -29,19 +22,19 @@ import { TraceData } from "../Interfaces/Interfaces";
 export type PlotFunction = (traceData: TraceData[]) => object[];
 
 function PlotPerformanceProfilePage(traceData: TraceData[]): object[] {
-	state.defaultTime = Number(defaultTimeDirectInput.value);
-	state.gapLimit = Number(gapLimitDirectInput.value);
+	state.defaultTime = Number(elements.defaultTimeDirectInput.value);
+	state.gapLimit = Number(elements.gapLimitDirectInput.value);
 
 	return PlotPerformanceProfile(
 		traceData,
-		performanceProfileSelector.value,
+		elements.performanceProfileSelector.value,
 		state.defaultTime,
 		state.gapLimit
 	);
 }
 
 function PlotSolverTimePerSolverPage(traceData: TraceData[]): object[] {
-	const filterType = filterTypeSelector.value;
+	const filterType = elements.filterTypeSelector.value;
 	return PlotDataByCategory(
 		traceData,
 		"SolverTime",
@@ -73,25 +66,25 @@ function PlotNumberOfIterationsPage(traceData: TraceData[]): object[] {
 }
 
 function PlotTerminationStatusPage(traceData: TraceData[]): object[] {
-	const statusType = statusSelector.value;
-	const chartType = chartTypeSelector.value;
+	const statusType = elements.statusSelector.value;
+	const chartType = elements.chartTypeSelector.value;
 
-	statusSelector.addEventListener("change", () => {
-		if (statusSelector.value === "Fail") {
-			chartTypeSelector.value = "Bar";
-			chartTypeSelector.disabled = true;
+	Listen(elements.statusSelector, "change", () => {
+		if (elements.statusSelector.value === "Fail") {
+			elements.chartTypeSelector.value = "Bar";
+			elements.chartTypeSelector.disabled = true;
 		} else {
-			chartTypeSelector.disabled = false;
+			elements.chartTypeSelector.disabled = false;
 		}
 	});
 
-	chartTypeSelector.addEventListener("change", () => {
+	Listen(elements.chartTypeSelector, "change", () => {
 		if (
-			chartTypeSelector.value === "Radar" &&
-			statusSelector.value === "Fail"
+			elements.chartTypeSelector.value === "Radar" &&
+			elements.statusSelector.value === "Fail"
 		) {
-			chartTypeSelector.value = "Bar";
-			chartTypeSelector.disabled = true;
+			elements.chartTypeSelector.value = "Bar";
+			elements.chartTypeSelector.disabled = true;
 		}
 	});
 
@@ -114,7 +107,7 @@ function PlotTerminationStatusPage(traceData: TraceData[]): object[] {
 }
 
 function PlotSolutionQualityPage(traceData: TraceData[]): object[] {
-	const category = categorySelector.value;
+	const category = elements.categorySelector.value;
 	const categoryTitle = TraceHeaderMap[category as keyof typeof TraceHeaderMap];
 	return PlotDataByCategory(
 		traceData,

@@ -10,6 +10,16 @@ export interface UserData {
 }
 
 /**
+ * A user configuration that was restored from the local storage, with the defaults filled in.
+ */
+export interface StoredConfiguration {
+	dataSet: string[];
+	dataFileType: string;
+	defaultTime: number;
+	gapLimit: number;
+}
+
+/**
  * Interface for the parsed data object.
  */
 export interface TraceData {
@@ -40,6 +50,22 @@ export interface TraceData {
 	FailReason?: string;
 	ObjectiveValue?: number | string;
 	ObjectiveValueEstimate?: number | string;
+}
+
+/**
+ * A solver and the number of its instances per status message, for example `{ SolverName: "SCIP", Failed: 2 }`.
+ */
+export interface StatusCount {
+	SolverName?: string;
+	[status: string]: string | number | undefined;
+}
+
+/**
+ * The time a solver needed for one instance.
+ */
+export interface SolverTimeEntry {
+	time: number;
+	InputFileName: string;
 }
 
 /**

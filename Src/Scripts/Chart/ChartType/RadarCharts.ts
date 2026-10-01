@@ -15,7 +15,7 @@ export function PlotTerminationRelation(
 ): { label: string; data: number[] }[] {
 	const data = ExtractStatusMessages(traceData, statusType);
 	const solverNames = data.map((obj) => {
-		return obj["SolverName"];
+		return obj["SolverName"] as string;
 	});
 	const statusKeys = Object.keys(data[0]).filter((key) => {
 		return key !== "SolverName";
@@ -25,7 +25,7 @@ export function PlotTerminationRelation(
 		return {
 			label: key,
 			data: data.map((obj) => {
-				return obj[key] || 0;
+				return Number(obj[key]) || 0;
 			})
 		};
 	});

@@ -45,7 +45,7 @@ export function GetInstanceInformation(
 	});
 
 	for (let i = 1; i < unprocessedInstanceInformationData.length; i++) {
-		const obj: { [key: string]: any } = {};
+		const obj: { [key: string]: string } = {};
 		const currentLine = unprocessedInstanceInformationData[i].split(";");
 		for (let j = 0; j < header.length; j++) {
 			obj[header[j]] = currentLine[j] || "";

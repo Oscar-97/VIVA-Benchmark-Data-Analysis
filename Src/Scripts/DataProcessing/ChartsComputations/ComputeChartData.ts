@@ -1,11 +1,12 @@
 import * as math from "mathjs";
 import { Values } from "../../Constants/Values";
-import { StatisticsColumns, TraceData } from "../../Interfaces/Interfaces";
-import { ComputeVirtualTimesTraceData } from "../ResultComputations/ComputeVirtualSolvers";
 import {
-	defaultTimeDirectInput,
-	gapLimitDirectInput
-} from "../../Elements/Elements";
+	StatisticsColumns,
+	StatusCount,
+	TraceData
+} from "../../Interfaces/Interfaces";
+import { ComputeVirtualTimesTraceData } from "../ResultComputations/ComputeVirtualSolvers";
+import { elements } from "../../Elements/Elements";
 
 /**
  * This function extracts the values of the specified category for each solver from the results data,
@@ -166,18 +167,18 @@ function FilterByType(
 export function ExtractStatusMessages(
 	traceData: TraceData[],
 	statusType: string
-): any[] {
-	const result: any[] = [];
-	const nameErrorMap = new Map();
+): StatusCount[] {
+	const result: StatusCount[] = [];
+	const nameErrorMap = new Map<string | undefined, StatusCount>();
 
 	traceData.forEach((obj) => {
 		const existingEntry = nameErrorMap.get(obj["SolverName"]);
 		const status = obj[statusType as keyof TraceData] as string;
 
 		if (existingEntry) {
-			existingEntry[status] = (existingEntry[status] || 0) + 1;
+			existingEntry[status] = ((existingEntry[status] as number) || 0) + 1;
 		} else {
-			const newEntry = {
+			const newEntry: StatusCount = {
 				SolverName: obj["SolverName"],
 				[status]: 1
 			};
@@ -193,17 +194,17 @@ export function ExtractStatusMessages(
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  * @returns {string[]} - An object with solver names as keys. Each solver contains a counter of the failed instances.
  */
-export function ExtractFailedCount(traceData: TraceData[]): any[] {
-	const result: any[] = [];
-	const nameErrorMap = new Map();
+export function ExtractFailedCount(traceData: TraceData[]): StatusCount[] {
+	const result: StatusCount[] = [];
+	const nameErrorMap = new Map<string | undefined, StatusCount>();
 
 	traceData.forEach((obj) => {
 		const existingEntry = nameErrorMap.get(obj["SolverName"]);
 
 		if (existingEntry) {
-			existingEntry["Failed"] = (existingEntry["Failed"] || 0) + 1;
+			existingEntry["Failed"] = ((existingEntry["Failed"] as number) || 0) + 1;
 		} else {
-			const newEntry = {
+			const newEntry: StatusCount = {
 				SolverName: obj["SolverName"],
 				Failed: 1
 			};
@@ -241,7 +242,7 @@ export function ExtractAllSolverTimes(traceData: TraceData[]): {
 			}
 			if (
 				obj["SolverTime"] !== undefined &&
-				(obj["SolverTime"] as any) !== "NA"
+				(obj["SolverTime"] as unknown) !== "NA"
 			) {
 				const time = Number(obj["SolverTime"]);
 				if (!isNaN(time)) {
@@ -280,14 +281,14 @@ export function ExtractAllSolverTimesGapType(
 
 	if (!gapLimit || gapLimit < 0) {
 		gapLimitToCompare = 0.01;
-		gapLimitDirectInput.value = "0.01";
+		elements.gapLimitDirectInput.value = "0.01";
 	} else {
 		gapLimitToCompare = gapLimit;
 	}
 
 	if (!defaultTime || defaultTime < 0) {
 		defaultTimeFallback = Values.DEFAULT_TIME;
-		defaultTimeDirectInput.value = Values.DEFAULT_TIME.toString();
+		elements.defaultTimeDirectInput.value = Values.DEFAULT_TIME.toString();
 	} else {
 		defaultTimeFallback = defaultTime;
 	}

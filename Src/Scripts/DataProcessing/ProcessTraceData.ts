@@ -2,7 +2,7 @@ import { AddResultCategories } from "./AddResultCategories";
 import { ExtractTraceData } from "./FilterData";
 import { MergeData } from "./MergeData";
 import { GetBestKnownBounds, GetInstanceInformation } from "./ReadMetaData";
-import { librarySelector } from "../Elements/Elements";
+import { elements } from "../Elements/Elements";
 import { TraceData } from "../Interfaces/Interfaces";
 
 /**
@@ -27,17 +27,17 @@ export async function ProcessData(
 
 	if (unprocessedSolutionData.length !== 0) {
 		soluData = GetBestKnownBounds(unprocessedSolutionData);
-	} else if (librarySelector.value === "MINLPLib") {
+	} else if (elements.librarySelector.value === "MINLPLib") {
 		const module = await import(
 			/* webpackChunkName: "minlplib-dataset" */ "../Datasets/MINLPLib"
 		);
 		soluData = module.MINLPLIB_SOLUTION_DATA;
-	} else if (librarySelector.value === "MIPLIB_2017") {
+	} else if (elements.librarySelector.value === "MIPLIB_2017") {
 		const module = await import(
 			/* webpackChunkName: "miplib2017-dataset" */ "../Datasets/MIPLIB_2017"
 		);
 		soluData = module.MIPLIB_2017_SOLUTION_DATA;
-	} else if (librarySelector.value === "MIPLIB_2010") {
+	} else if (elements.librarySelector.value === "MIPLIB_2010") {
 		const module = await import(
 			/* webpackChunkName: "miplib2010-dataset" */ "../Datasets/MIPLIB_2010"
 		);

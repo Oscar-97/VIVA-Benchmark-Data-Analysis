@@ -1,13 +1,4 @@
-import {
-	comparisonTableDiv,
-	dataTable,
-	instanceAttributesTableDiv,
-	solveAttributesTableDiv,
-	solverComparisonModal,
-	solverComparisonModalBody,
-	solverComparisonModalLabel,
-	statisticsTableDiv
-} from "../Elements/Elements";
+import { elements } from "../Elements/Elements";
 import { TraceHeaderMap } from "../Constants/TraceHeaders";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "bootstrap/js/dist/modal";
@@ -79,7 +70,7 @@ export function TraceTableData(traceData: TraceData[]): void {
 	/**
 	 * Div that contains the data table.
 	 */
-	const dataTableDiv = dataTable;
+	const dataTableDiv = elements.dataTable;
 	dataTableDiv.innerHTML = "";
 
 	const dataTableHeaders = document.createElement("thead");
@@ -153,7 +144,7 @@ export function StatisticsTable(
 	},
 	title: string
 ): void {
-	statisticsTableDiv.innerHTML = "";
+	elements.statisticsTableDiv.innerHTML = "";
 	const statisticsTable = document.createElement("table");
 	statisticsTable.id = "statisticsTable_inner";
 	statisticsTable.classList.add(
@@ -207,7 +198,7 @@ export function StatisticsTable(
 		});
 	});
 
-	statisticsTableDiv.appendChild(statisticsTable);
+	elements.statisticsTableDiv.appendChild(statisticsTable);
 }
 
 /**
@@ -230,9 +221,9 @@ export function ComparisonSummaryTable(
 	solver1Name: string,
 	solver2Name: string
 ): void {
-	if (!comparisonTableDiv) return;
+	if (!elements.comparisonTableDiv) return;
 
-	comparisonTableDiv.innerHTML = "";
+	elements.comparisonTableDiv.innerHTML = "";
 
 	const comparisonTable: HTMLTableElement = document.createElement("table");
 	comparisonTable.classList.add(
@@ -291,7 +282,7 @@ export function ComparisonSummaryTable(
 		tableBody.appendChild(row);
 	});
 
-	comparisonTableDiv.appendChild(comparisonTable);
+	elements.comparisonTableDiv.appendChild(comparisonTable);
 }
 
 /**
@@ -356,10 +347,10 @@ function DisplayDetails(
 		(detail) => detail.comparison === comparisonType.toLowerCase()
 	);
 
-	if (solverComparisonModalLabel)
-		solverComparisonModalLabel.innerHTML = `<i class="bi bi-clock-history"></i> ${Captions.COMPARSION_MODAL_LABEL} ${comparisonType}`;
-	if (solverComparisonModalBody) {
-		solverComparisonModalBody.innerHTML = "";
+	if (elements.solverComparisonModalLabel)
+		elements.solverComparisonModalLabel.innerHTML = `<i class="bi bi-clock-history"></i> ${Captions.COMPARSION_MODAL_LABEL} ${comparisonType}`;
+	if (elements.solverComparisonModalBody) {
+		elements.solverComparisonModalBody.innerHTML = "";
 		const listGroup = document.createElement("ul");
 		listGroup.className = "list-group";
 
@@ -370,10 +361,10 @@ function DisplayDetails(
 			listGroup.appendChild(listItem);
 		});
 
-		solverComparisonModalBody.appendChild(listGroup);
+		elements.solverComparisonModalBody.appendChild(listGroup);
 	}
 
-	const modal = new Modal(solverComparisonModal, {
+	const modal = new Modal(elements.solverComparisonModal, {
 		keyboard: true
 	});
 	modal.show();
@@ -385,7 +376,7 @@ function DisplayDetails(
  * @param {object[]} traceData - Array of objects containing the result data.
  */
 export function InstanceAttributesTable(traceData: TraceData[]): void {
-	instanceAttributesTableDiv.innerHTML = "";
+	elements.instanceAttributesTableDiv.innerHTML = "";
 	const instanceAttributesTable = document.createElement("table");
 	instanceAttributesTable.id = "instanceAttributesTable_inner";
 	instanceAttributesTable.classList.add(
@@ -437,7 +428,7 @@ export function InstanceAttributesTable(traceData: TraceData[]): void {
 		});
 	});
 
-	instanceAttributesTableDiv.appendChild(instanceAttributesTable);
+	elements.instanceAttributesTableDiv.appendChild(instanceAttributesTable);
 }
 
 /**
@@ -445,7 +436,7 @@ export function InstanceAttributesTable(traceData: TraceData[]): void {
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 export function SolveAttributesTable(traceData: TraceData[]): void {
-	solveAttributesTableDiv.innerHTML = "";
+	elements.solveAttributesTableDiv.innerHTML = "";
 	const solveAttributesTable = document.createElement("table");
 	solveAttributesTable.id = "solveAttributesTable_inner";
 	solveAttributesTable.classList.add(
@@ -511,5 +502,5 @@ export function SolveAttributesTable(traceData: TraceData[]): void {
 		});
 	});
 
-	solveAttributesTableDiv.appendChild(solveAttributesTable);
+	elements.solveAttributesTableDiv.appendChild(solveAttributesTable);
 }

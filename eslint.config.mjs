@@ -30,8 +30,6 @@ export default tseslint.config(
 		},
 		rules: {
 			"@typescript-eslint/explicit-function-return-type": "error",
-			// Warn until the `any` types from the strict-TS migration are burned down.
-			"@typescript-eslint/no-explicit-any": "warn",
 			"@typescript-eslint/naming-convention": [
 				"error",
 				{

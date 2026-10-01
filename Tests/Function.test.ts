@@ -1,7 +1,9 @@
 /* eslint-disable max-lines */
 jest.mock("../Src/Scripts/Elements/Elements", () => ({
-	defaultTimeDirectInput: jest.fn(),
-	gapLimitDirectInput: jest.fn()
+	elements: {
+		defaultTimeDirectInput: jest.fn(),
+		gapLimitDirectInput: jest.fn()
+	}
 }));
 
 jest.doMock("../Src/Scripts/DataProcessing/ReadMetaData", () => {
@@ -26,8 +28,13 @@ import {
 	ExtractAllSolverTimesGapType
 } from "../Src/Scripts/DataProcessing/ChartsComputations/ComputeChartData";
 
-import { ResetAppState, state } from "../Src/Scripts/App/AppState";
+import {
+	ApplyStoredConfiguration,
+	ResetAppState,
+	state
+} from "../Src/Scripts/App/AppState";
 import { GetPageKind, PageKind } from "../Src/Scripts/App/CurrentPage";
+import { Listen, ResetPageListeners } from "../Src/Scripts/App/PageListeners";
 import { PageTitles } from "../Src/Scripts/Constants/PageTitles";
 
 /**
@@ -1183,5 +1190,68 @@ describe("ResetAppState", () => {
 		const reference = state;
 		ResetAppState();
 		expect(state).toBe(reference);
+	});
+});
+
+describe("Page listeners", () => {
+	function CreateTarget(): HTMLElement {
+		return new EventTarget() as HTMLElement;
+	}
+
+	it("should call a registered listener", () => {
+		const target = CreateTarget();
+		const handler = jest.fn();
+		Listen(target, "click", handler);
+		target.dispatchEvent(new Event("click"));
+		expect(handler).toHaveBeenCalledTimes(1);
+	});
+
+	it("should remove all registered listeners when reset", () => {
+		const target = CreateTarget();
+		const otherTarget = CreateTarget();
+		const handler = jest.fn();
+		const otherHandler = jest.fn();
+		Listen(target, "click", handler);
+		Listen(otherTarget, "click", otherHandler);
+
+		ResetPageListeners();
+		target.dispatchEvent(new Event("click"));
+		otherTarget.dispatchEvent(new Event("click"));
+
+		expect(handler).not.toHaveBeenCalled();
+		expect(otherHandler).not.toHaveBeenCalled();
+	});
+
+	it("should keep working for listeners registered after a reset", () => {
+		const target = CreateTarget();
+		const handler = jest.fn();
+		ResetPageListeners();
+		Listen(target, "click", handler);
+		target.dispatchEvent(new Event("click"));
+		expect(handler).toHaveBeenCalledTimes(1);
+	});
+
+	it("should ignore elements that do not exist", () => {
+		expect(() => Listen(null, "click", jest.fn())).not.toThrow();
+	});
+});
+
+describe("ApplyStoredConfiguration", () => {
+	it("should copy a stored configuration to the state", () => {
+		ResetAppState();
+		ApplyStoredConfiguration({
+			dataSet: ["line"],
+			dataFileType: "json",
+			defaultTime: 500,
+			gapLimit: 0.5
+		});
+
+		expect(state).toMatchObject({
+			unprocessedData: ["line"],
+			dataFileType: "json",
+			defaultTime: 500,
+			gapLimit: 0.5
+		});
+		ResetAppState();
 	});
 });

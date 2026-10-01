@@ -1,4 +1,9 @@
-import { CreateChart } from "../CreateChart";
+import {
+	ChartAnnotationOptions,
+	ChartScaleOptions,
+	ChartZoomOptions,
+	CreateChart
+} from "../CreateChart";
 import { StatisticsTable } from "../../DataTable/DataTableBase";
 import { DataTablesConfigurationStats } from "../../DataTable/DataTableWrapper";
 import { TraceData } from "../../Interfaces/Interfaces";
@@ -88,7 +93,7 @@ export function PlotDataByCategory(
 
 	const chartData = [averageData, minData, maxData, stdData];
 
-	const scaleOptions = {
+	const scaleOptions: ChartScaleOptions = {
 		x: {
 			title: {
 				display: true,
@@ -103,7 +108,7 @@ export function PlotDataByCategory(
 		}
 	};
 
-	const zoomOptions = {
+	const zoomOptions: ChartZoomOptions = {
 		pan: {
 			enabled: false
 		},
@@ -122,7 +127,7 @@ export function PlotDataByCategory(
 		}
 	};
 
-	let annotationOptions = null;
+	let annotationOptions: ChartAnnotationOptions = undefined;
 
 	/**
 	 * Draw annotations for the virtual best and worst solvers if SolverTime is used.
@@ -191,13 +196,13 @@ export function PlotStatusMessages(
 	title: string
 ): {
 	label: string;
-	data: TraceData[];
+	data: number[];
 	borderColor: string;
 	backgroundColor: string;
 }[] {
 	const data = ExtractStatusMessages(traceData, statusType);
 	const solverNames = data.map((obj) => {
-		return obj["SolverName"];
+		return obj["SolverName"] as string;
 	});
 	const statusKeys = Object.keys(data[0]).filter((key) => {
 		return key !== "SolverName";
@@ -229,14 +234,14 @@ export function PlotStatusMessages(
 		return {
 			label: key,
 			data: data.map((obj) => {
-				return obj[key] || 0;
+				return Number(obj[key]) || 0;
 			}),
 			borderColor: colorMapping[key],
 			backgroundColor: colorMapping[key]
 		};
 	});
 
-	const scaleOptions = {
+	const scaleOptions: ChartScaleOptions = {
 		x: {
 			title: {
 				display: true,
@@ -251,7 +256,7 @@ export function PlotStatusMessages(
 		}
 	};
 
-	const zoomOptions = {
+	const zoomOptions: ChartZoomOptions = {
 		pan: {
 			enabled: false
 		},
@@ -285,7 +290,7 @@ export function PlotFailCount(traceData: TraceData[]): {
 }[] {
 	const data = ExtractFailedCount(traceData);
 	const solverNames = data.map((obj) => {
-		return obj["SolverName"];
+		return obj["SolverName"] as string;
 	});
 	const statusKeys = Object.keys(data[0]).filter((key) => {
 		return key !== "SolverName";
@@ -295,14 +300,14 @@ export function PlotFailCount(traceData: TraceData[]): {
 		return {
 			label: key,
 			data: data.map((obj) => {
-				return obj[key] || 0;
+				return Number(obj[key]) || 0;
 			}),
 			borderColor: "#f5a2a3",
 			backgroundColor: "#f5a2a3"
 		};
 	});
 
-	const scaleOptions = {
+	const scaleOptions: ChartScaleOptions = {
 		x: {
 			title: {
 				display: true,
@@ -317,7 +322,7 @@ export function PlotFailCount(traceData: TraceData[]): {
 		}
 	};
 
-	const zoomOptions = {
+	const zoomOptions: ChartZoomOptions = {
 		pan: {
 			enabled: false
 		},

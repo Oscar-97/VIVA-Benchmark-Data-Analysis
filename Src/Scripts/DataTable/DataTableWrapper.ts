@@ -17,10 +17,7 @@ import {
 	SolveAttributesTable,
 	TraceTableData
 } from "./DataTableBase";
-import {
-	dataTableGenerated,
-	dataTableGeneratedWrapper
-} from "../Elements/Elements";
+import { elements } from "../Elements/Elements";
 import { ElementStateDisplayedTable } from "../Elements/Events/ElementStatus";
 import { DEFAULT_VISIBLE_HEADERS } from "../Constants/TraceHeaders";
 import { ShowPWANotification } from "../PWA/PWA-utils";
@@ -241,12 +238,12 @@ export function DestroyDataTable(): void {
 	table.destroy();
 	table.state.clear();
 
-	if (dataTableGeneratedWrapper) {
-		dataTableGeneratedWrapper.remove();
+	if (elements.dataTableGeneratedWrapper) {
+		elements.dataTableGeneratedWrapper.remove();
 	}
 
-	if (dataTableGenerated) {
-		dataTableGenerated.remove();
+	if (elements.dataTableGenerated) {
+		elements.dataTableGenerated.remove();
 	}
 }
 

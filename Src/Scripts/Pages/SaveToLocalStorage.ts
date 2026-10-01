@@ -1,9 +1,6 @@
 import { state } from "../App/AppState";
-import {
-	deleteLocalStorageButton,
-	downloadConfigurationButtonLayer,
-	saveLocalStorageButton
-} from "../Elements/Elements";
+import { Listen } from "../App/PageListeners";
+import { elements } from "../Elements/Elements";
 import { Keys } from "../Constants/Keys";
 import { CreateUserConfiguration } from "../UserConfiguration/UserConfiguration";
 
@@ -14,13 +11,13 @@ import { CreateUserConfiguration } from "../UserConfiguration/UserConfiguration"
  * @param {() => string[]} getRawData - Returns the raw data that should be stored when the button is clicked.
  */
 export function RegisterSaveToLocalStorage(getRawData: () => string[]): void {
-	saveLocalStorageButton.addEventListener("click", () => {
+	Listen(elements.saveLocalStorageButton, "click", () => {
 		if (state.dataFileType === "trc") {
 			state.dataFileType = "json";
 		}
 		CreateUserConfiguration(getRawData(), state.dataFileType);
-		deleteLocalStorageButton.disabled = false;
-		downloadConfigurationButtonLayer.disabled = false;
+		elements.deleteLocalStorageButton.disabled = false;
+		elements.downloadConfigurationButtonLayer.disabled = false;
 		sessionStorage.setItem(Keys.ALERTED_STORAGE, "true");
 	});
 }

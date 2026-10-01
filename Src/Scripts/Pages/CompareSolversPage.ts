@@ -1,4 +1,5 @@
 import { state } from "../App/AppState";
+import { Listen } from "../App/PageListeners";
 import { ConvertToTraceFile } from "../DataProcessing/CreateData";
 import { ExtractAllSolverTimesGapType } from "../DataProcessing/ChartsComputations/ComputeChartData";
 import { CompareSolvers } from "../DataProcessing/ResultComputations/ComputeResults";
@@ -9,13 +10,7 @@ import {
 	PopulateCheckboxes
 } from "../Elements/Events/DynamicCheckboxes";
 import { ElementStateDisplayedComparisonTable } from "../Elements/Events/ElementStatus";
-import {
-	compareSolversButton,
-	defaultTimeDirectInput,
-	gapLimitDirectInput,
-	gapTypeSelector,
-	terminationTypeSelector
-} from "../Elements/Elements";
+import { elements } from "../Elements/Elements";
 import { ErrorMessages } from "../Constants/Messages";
 import { TraceData } from "../Interfaces/Interfaces";
 import { RegisterSaveToLocalStorage } from "./SaveToLocalStorage";
@@ -39,16 +34,16 @@ export function HandleCompareSolversPage(traceData: TraceData[]): void {
 	/**
 	 * Event listener for the compare solvers button.
 	 */
-	compareSolversButton.addEventListener("click", () => {
-		state.defaultTime = Number(defaultTimeDirectInput.value);
-		state.gapLimit = Number(gapLimitDirectInput.value);
+	Listen(elements.compareSolversButton, "click", () => {
+		state.defaultTime = Number(elements.defaultTimeDirectInput.value);
+		state.gapLimit = Number(elements.gapLimitDirectInput.value);
 
 		const solverTimes = ExtractAllSolverTimesGapType(
 			traceData,
-			gapTypeSelector.value,
+			elements.gapTypeSelector.value,
 			state.defaultTime,
 			state.gapLimit,
-			terminationTypeSelector.value
+			elements.terminationTypeSelector.value
 		);
 		const selectedSolvers = GetSelectedCheckboxValues();
 
