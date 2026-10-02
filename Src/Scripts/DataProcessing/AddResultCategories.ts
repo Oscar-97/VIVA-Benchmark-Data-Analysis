@@ -85,6 +85,7 @@ export function AddResultCategories(traceData: TraceData[]): void {
 			obj["Direction"] as string,
 			obj["PrimalBoundSolver"] as string | number,
 			obj["DualBoundSolver"] as string | number,
+			obj["PrimalBoundProblem"] as string | number,
 			obj["DualBoundProblem"] as string | number
 		);
 		obj["Fail"] = failValue;

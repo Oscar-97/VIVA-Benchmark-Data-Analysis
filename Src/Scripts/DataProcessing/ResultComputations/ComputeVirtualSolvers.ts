@@ -42,7 +42,7 @@ export function ComputeVirtualTimesTraceData(
 	const result: TraceData[] = [];
 
 	Object.keys(noFailedResults).forEach((fileName) => {
-		const times = groupedByProblem[fileName].map(
+		const times = noFailedResults[fileName].map(
 			(item) => item["SolverTime"] as number
 		);
 		const bestTime = Math.min(...times);
@@ -51,35 +51,35 @@ export function ComputeVirtualTimesTraceData(
 			worstTime = defaultTime;
 		}
 
-		const solverIterations = groupedByProblem[fileName].map(
+		const solverIterations = noFailedResults[fileName].map(
 			(item) => item["NumberOfIterations"] as number
 		);
 		const bestIterations = Math.min(...solverIterations);
 		const worstIterations = Math.max(...solverIterations);
 
-		const solverNodes = groupedByProblem[fileName].map(
+		const solverNodes = noFailedResults[fileName].map(
 			(item) => item["NumberOfNodes"] as number
 		);
 		const bestNodes = Math.min(...solverNodes);
 		const worstNodes = Math.max(...solverNodes);
 
-		const solverDomainViolations = groupedByProblem[fileName].map(
+		const solverDomainViolations = noFailedResults[fileName].map(
 			(item) => item["NumberOfDomainViolations"] as number
 		);
 		const bestDomainViolations = Math.min(...solverDomainViolations);
 		const worstDomainViolations = Math.max(...solverDomainViolations);
 
-		const dualBoundSolver = groupedByProblem[fileName].map((item) =>
+		const dualBoundSolver = noFailedResults[fileName].map((item) =>
 			Number(item["DualBoundSolver"])
 		);
-		const primalBoundSolver = groupedByProblem[fileName].map((item) =>
+		const primalBoundSolver = noFailedResults[fileName].map((item) =>
 			Number(item["PrimalBoundSolver"])
 		);
 
 		let bestDualboundSolver: number, bestPrimalBoundSolver: number;
 		let worstDualboundSolver: number, worstPrimalBoundSolver: number;
 
-		const direction = groupedByProblem[fileName][0].Direction;
+		const direction = noFailedResults[fileName][0].Direction;
 		if (direction === "min") {
 			bestDualboundSolver = Math.max(...dualBoundSolver);
 			bestPrimalBoundSolver = Math.min(...primalBoundSolver);
@@ -95,10 +95,10 @@ export function ComputeVirtualTimesTraceData(
 		}
 
 		const dualBoundProblem = Number(
-			groupedByProblem[fileName][0].DualBoundProblem
+			noFailedResults[fileName][0].DualBoundProblem
 		);
 		const primalBoundProblem = Number(
-			groupedByProblem[fileName][0].PrimalBoundProblem
+			noFailedResults[fileName][0].PrimalBoundProblem
 		);
 
 		const bestDualGap = CalculateGap(

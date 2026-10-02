@@ -441,22 +441,16 @@ export function CalculateSolveAttributes(
 }
 
 /**
- * This function sets the fail value and reason based on the termination status and other parameters.
- * @param terminationStatus
- * @param direction
- * @param primalBoundSolver
- * @param dualBoundSolver
- * @param primalBoundProblem
- * @param dualBoundProblem
- * @returns
+ * Checks if the value is minus or plus infinity.
  */
-export function SetFailValueAndReason(
-	terminationStatus: string,
-	direction: string,
-	primalBoundSolver: number | string,
-	dualBoundSolver: number | string,
-	dualBoundProblem: number | string
-): [boolean, string] {
+function IsInfinite(value: number | string): boolean {
+	return value == Infinity || value == -Infinity;
+}
+
+/**
+ * Checks if `a` is larger than `b` by more than both the absolute and the relative tolerance.
+ */
+function ExceedsBound(a: number, b: number): boolean {
 	function IsRelativeDifference(a: number, b: number, tol: number): boolean {
 		let relDiff: number;
 		if (Math.abs(a) === Infinity || Math.abs(b) === Infinity) {
@@ -467,6 +461,35 @@ export function SetFailValueAndReason(
 		return relDiff > tol;
 	}
 
+	return (
+		a - b > Values.ABSOLUTE_TOLERANCE &&
+		IsRelativeDifference(a, b, Values.RELATIVE_TOLERANCE)
+	);
+}
+
+/**
+ * This function sets the fail value and reason based on the termination status and other parameters.
+ *
+ * The bounds of the solver are checked against the best known bounds of the problem:
+ * a solver cannot have a primal bound that is better than the best known dual bound,
+ * nor a dual bound that is better than the best known primal bound.
+ *
+ * @param terminationStatus - The termination status of the solver.
+ * @param direction - The direction of the problem, "min" or "max".
+ * @param primalBoundSolver - The primal bound of the solver.
+ * @param dualBoundSolver - The dual bound of the solver.
+ * @param primalBoundProblem - The best known primal bound of the problem.
+ * @param dualBoundProblem - The best known dual bound of the problem.
+ * @returns Whether the result failed, and the reason.
+ */
+export function SetFailValueAndReason(
+	terminationStatus: string,
+	direction: string,
+	primalBoundSolver: number | string,
+	dualBoundSolver: number | string,
+	primalBoundProblem: number | string,
+	dualBoundProblem: number | string
+): [boolean, string] {
 	if (!terminationStatus) {
 		return [true, "No data"];
 	}
@@ -481,76 +504,28 @@ export function SetFailValueAndReason(
 		return [true, `Termstatus is ${terminationStatus}`];
 	}
 
+	const isMinimization = direction === "min";
+
 	// Compare primal bounds with know dual bounds.
-	if (
-		primalBoundSolver != Infinity &&
-		primalBoundSolver != -Infinity &&
-		dualBoundProblem != Infinity &&
-		dualBoundProblem != -Infinity
-	) {
-		let abserr: boolean, relerr: boolean;
-		if (direction === "min") {
-			abserr =
-				Number(dualBoundProblem) - Number(primalBoundSolver) >
-				Values.ABSOLUTE_TOLERANCE;
-		} else {
-			abserr =
-				Number(primalBoundSolver) - Number(dualBoundProblem) >
-				Values.ABSOLUTE_TOLERANCE;
-		}
-
-		if (direction === "min") {
-			relerr = IsRelativeDifference(
-				Number(dualBoundProblem),
-				Number(primalBoundSolver),
-				Values.RELATIVE_TOLERANCE
-			);
-		} else {
-			relerr = IsRelativeDifference(
-				Number(primalBoundSolver),
-				Number(dualBoundProblem),
-				Values.RELATIVE_TOLERANCE
-			);
-		}
-
-		if (abserr && relerr) {
+	if (!IsInfinite(primalBoundSolver) && !IsInfinite(dualBoundProblem)) {
+		const primal = Number(primalBoundSolver);
+		const dual = Number(dualBoundProblem);
+		const contradicts = isMinimization
+			? ExceedsBound(dual, primal)
+			: ExceedsBound(primal, dual);
+		if (contradicts) {
 			return [true, "Primal bound contradicts best known dual bound"];
 		}
 	}
 
 	// Compare dual bounds with know primal bounds.
-	if (
-		dualBoundSolver != Infinity &&
-		dualBoundSolver != -Infinity &&
-		dualBoundProblem != Infinity &&
-		dualBoundProblem != -Infinity
-	) {
-		let abserr: boolean, relerr: boolean;
-		if (direction === "min") {
-			abserr =
-				Number(dualBoundSolver) - Number(dualBoundProblem) >
-				Values.ABSOLUTE_TOLERANCE;
-		} else {
-			abserr =
-				Number(dualBoundProblem) - Number(dualBoundSolver) >
-				Values.ABSOLUTE_TOLERANCE;
-		}
-
-		if (direction === "min") {
-			relerr = IsRelativeDifference(
-				Number(primalBoundSolver),
-				Number(dualBoundProblem),
-				Values.RELATIVE_TOLERANCE
-			);
-		} else {
-			relerr = IsRelativeDifference(
-				Number(primalBoundSolver),
-				Number(dualBoundProblem),
-				Values.RELATIVE_TOLERANCE
-			);
-		}
-
-		if (abserr && relerr) {
+	if (!IsInfinite(dualBoundSolver) && !IsInfinite(primalBoundProblem)) {
+		const dual = Number(dualBoundSolver);
+		const primal = Number(primalBoundProblem);
+		const contradicts = isMinimization
+			? ExceedsBound(dual, primal)
+			: ExceedsBound(primal, dual);
+		if (contradicts) {
 			return [true, "Dual bound contradicts best known primal bound"];
 		}
 	}

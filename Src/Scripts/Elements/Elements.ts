@@ -136,7 +136,7 @@ export const elements = {
 	},
 
 	/**
-	 * `downloadCustomConfigurationButton` is a reference to the HTMLButtonElement with the ID "downloadCustomConfigurationButton".
+	 * `downloadCustomConfigurationButton` is a reference to the HTMLAnchorElement with the ID "downloadCustomConfigurationButton".
 	 * @type {HTMLAnchorElement}
 	 */
 	get downloadCustomConfigurationButton(): HTMLAnchorElement | null {
@@ -148,7 +148,9 @@ export const elements = {
 	 * @type {HTMLButtonElement}
 	 */
 	get downloadCustomConfigurationButtonLayer(): HTMLButtonElement {
-		return GetElement<HTMLButtonElement>("downloadCustomConfigurationButton");
+		return GetElement<HTMLButtonElement>(
+			"downloadCustomConfigurationButtonLayer"
+		);
 	},
 
 	/**

@@ -213,6 +213,36 @@ describe("ComputeVirtualTimesTraceData", () => {
 		expect(Virtual(result, "Virtual Worst Solver").SolverTime).toBe(1000);
 	});
 
+	it("should not consider failed results in the best and worst values", () => {
+		const result = ComputeVirtualTimesTraceData(
+			[
+				...twoSolvers,
+				Row({
+					SolverName: "SolverC",
+					SolverTime: 1,
+					NumberOfIterations: 5,
+					NumberOfNodes: 0,
+					NumberOfDomainViolations: 9,
+					DualBoundSolver: 10,
+					PrimalBoundSolver: 10,
+					Fail: true
+				})
+			],
+			1000
+		);
+		const best = Virtual(result, "Virtual Best Solver");
+		const worst = Virtual(result, "Virtual Worst Solver");
+
+		// Only SolverA and SolverB count, SolverC failed.
+		expect([best.SolverTime, worst.SolverTime]).toEqual([2, 5]);
+		expect([best.NumberOfIterations, worst.NumberOfIterations]).toEqual([
+			10, 20
+		]);
+		expect([best.NumberOfNodes, worst.NumberOfNodes]).toEqual([1, 3]);
+		expect(worst.NumberOfDomainViolations).toBe(1);
+		expect(best.DualGap).toBe(CalculateGap(9, 10, "min"));
+		expect(best.PrimalGap).toBe(CalculateGap(11, 10, "min"));
+	});
 	it("should leave out problems where every solver failed", () => {
 		const result = ComputeVirtualTimesTraceData(
 			[
@@ -286,8 +316,11 @@ describe("ComputeVirtualTimes", () => {
 });
 
 describe("SetFailValueAndReason", () => {
+	// Arguments: status, direction, primal and dual bound of the solver, primal and dual bound of the problem.
+	const OK = "Normal Completion";
+
 	it("should fail without a termination status", () => {
-		expect(SetFailValueAndReason("", "min", 1, 1, 1)).toEqual([
+		expect(SetFailValueAndReason("", "min", 1, 1, 1, 1)).toEqual([
 			true,
 			"No data"
 		]);
@@ -296,53 +329,77 @@ describe("SetFailValueAndReason", () => {
 	it.each(["Capability Problem", "Unknown Error", "User Interrupt", "Error"])(
 		"should fail for the termination status %s",
 		(status) => {
-			expect(SetFailValueAndReason(status, "min", 1, 1, 1)).toEqual([
+			expect(SetFailValueAndReason(status, "min", 1, 1, 1, 1)).toEqual([
 				true,
 				`Termstatus is ${status}`
 			]);
 		}
 	);
 
-	it("should fail if the primal bound contradicts the best known dual bound (min)", () => {
-		expect(
-			SetFailValueAndReason("Normal Completion", "min", 1, 0, 100)
-		).toEqual([true, "Primal bound contradicts best known dual bound"]);
+	it("should fail if the primal bound is better than the best known dual bound (min)", () => {
+		expect(SetFailValueAndReason(OK, "min", 1, 0, 100, 100)).toEqual([
+			true,
+			"Primal bound contradicts best known dual bound"
+		]);
 	});
 
-	it("should fail if the primal bound contradicts the best known dual bound (max)", () => {
-		expect(
-			SetFailValueAndReason("Normal Completion", "max", 100, 0, 1)
-		).toEqual([true, "Primal bound contradicts best known dual bound"]);
+	it("should fail if the primal bound is better than the best known dual bound (max)", () => {
+		expect(SetFailValueAndReason(OK, "max", 100, 200, 1, 1)).toEqual([
+			true,
+			"Primal bound contradicts best known dual bound"
+		]);
 	});
 
-	it("should fail if the dual bound contradicts the best known primal bound", () => {
-		expect(
-			SetFailValueAndReason("Normal Completion", "min", 20, 15, 10)
-		).toEqual([true, "Dual bound contradicts best known primal bound"]);
+	it("should fail if the dual bound is better than the best known primal bound (min)", () => {
+		expect(SetFailValueAndReason(OK, "min", 20, 15, 10, 5)).toEqual([
+			true,
+			"Dual bound contradicts best known primal bound"
+		]);
+	});
+
+	it("should fail if the dual bound is better than the best known primal bound (max)", () => {
+		expect(SetFailValueAndReason(OK, "max", 5, 5, 10, 100)).toEqual([
+			true,
+			"Dual bound contradicts best known primal bound"
+		]);
+	});
+
+	it("should not fail a solver that proves a better dual bound than the best known one (min)", () => {
+		// The dual bound 9 is above the best known dual bound 8, but below the best known primal bound 10.
+		expect(SetFailValueAndReason(OK, "min", 10, 9, 10, 8)).toEqual([false, OK]);
+	});
+
+	it("should not fail a solver that proves a better dual bound than the best known one (max)", () => {
+		// The dual bound 11 is below the best known dual bound 12, but above the best known primal bound 10.
+		expect(SetFailValueAndReason(OK, "max", 10, 11, 10, 12)).toEqual([
+			false,
+			OK
+		]);
 	});
 
 	it("should pass if the bounds agree", () => {
-		expect(
-			SetFailValueAndReason("Normal Completion", "min", 10, 10, 10)
-		).toEqual([false, "Normal Completion"]);
+		expect(SetFailValueAndReason(OK, "min", 10, 10, 10, 10)).toEqual([
+			false,
+			OK
+		]);
 	});
 
 	it("should ignore differences within the tolerance", () => {
 		expect(
-			SetFailValueAndReason("Normal Completion", "min", 10, 10, 10.00001)
-		).toEqual([false, "Normal Completion"]);
+			SetFailValueAndReason(OK, "min", 10, 10, 10.00001, 10.00001)
+		).toEqual([false, OK]);
 	});
 
-	it("should pass without checking the bounds if they are infinite", () => {
-		expect(
-			SetFailValueAndReason("Normal Completion", "min", Infinity, -Infinity, 5)
-		).toEqual([false, "Normal Completion"]);
-		expect(
-			SetFailValueAndReason("Normal Completion", "min", 1, 0, Infinity)
-		).toEqual([false, "Normal Completion"]);
+	it("should pass without checking the bounds that are infinite", () => {
+		expect(SetFailValueAndReason(OK, "min", Infinity, -Infinity, 5, 5)).toEqual(
+			[false, OK]
+		);
+		expect(SetFailValueAndReason(OK, "min", 1, 0, Infinity, Infinity)).toEqual([
+			false,
+			OK
+		]);
 	});
 });
-
 describe("ExtractUniqueProblems", () => {
 	it("should keep the first object of each problem with only the problem properties", () => {
 		const problems = ExtractUniqueProblems([
