@@ -8,6 +8,8 @@ module.exports = {
     filename: "bundle.js",
     chunkFilename: "[name].js",
     path: __dirname + "/Dist",
+    // Dist is committed, so remove what an earlier build left behind (renamed or removed chunks).
+    clean: true,
   },
   target: 'web',
   devtool: "source-map",

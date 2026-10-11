@@ -23,6 +23,11 @@ export default tseslint.config(
 	tseslint.configs.recommended,
 	prettierRecommended,
 	{
+		// The page generator and its templates run in Node.
+		files: ["scripts/**/*.mjs", "Src/Templates/**/*.mjs"],
+		languageOptions: { globals: { ...globals.node } }
+	},
+	{
 		files: ["**/*.ts", "**/*.tsx", "**/*.html"],
 		plugins: { html },
 		languageOptions: {

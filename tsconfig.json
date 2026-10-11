@@ -10,7 +10,7 @@
     "moduleResolution": "bundler",
     "strict": true,
     "types": ["jest"],
-    "removeComments": true
+    "removeComments": false
   },
   "include": ["./Src/**/*"],
   "exclude": ["**/node_modules/**"]

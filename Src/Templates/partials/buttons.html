@@ -1,0 +1,160 @@
+<!-- @button view-plots -->
+      <div class="col-auto">
+        <button
+          class="btn btn-success btn-sm"
+          type="submit"
+          id="viewPlotsButton"
+          disabled="true"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="{{title}}"
+        >
+          <i class="bi bi-diagram-2"></i> {{label}}
+        </button>
+      </div>
+
+<!-- @button compare-solvers -->
+      <div class="col-auto">
+        <button
+          class="btn btn-success btn-sm"
+          type="submit"
+          id="compareSolversButton"
+          disabled="true"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Compare the selected solvers."
+        >
+          <i class="bi bi-grid"></i> Compare Solvers
+        </button>
+      </div>
+
+<!-- @button view-table -->
+      <div class="col-auto">
+        <button
+          class="btn btn-success btn-sm"
+          id="viewTableButton"
+          disabled="true"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="View the table."
+        >
+          <i class="bi bi-table"></i> View Table
+        </button>
+      </div>
+
+<!-- @button show-selected -->
+      <div class="col-auto">
+        <button
+          class="btn btn-primary btn-sm"
+          id="showSelectedRowsButton"
+          disabled="true"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="View rows that have been selected from the table."
+        >
+          <i class="bi bi-funnel"></i> Show Selected Rows
+        </button>
+      </div>
+
+<!-- @button save -->
+      <div class="col-auto">
+        <button
+          class="btn btn-primary btn-sm"
+          id="saveLocalStorageButton"
+          disabled="true"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="{{title}}"
+        >
+          <i class="bi bi-save"></i> Save Data
+        </button>
+      </div>
+
+<!-- @button separator -->
+      <div class="col-auto vertical-separator"></div>
+
+<!-- @button download-saved -->
+      <div class="col-auto">
+        <button
+          class="btn btn-dark btn-sm"
+          type="button"
+          id="downloadConfigurationButtonLayer"
+          disabled="true"
+        >
+          <a
+            id="downloadConfigurationButton"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Download the user configuration."
+            ><i class="bi bi-download"></i> Download Saved Data</a
+          >
+        </button>
+      </div>
+
+<!-- @button configure -->
+      <div class="col-auto">
+        <button
+          class="btn btn-dark btn-sm"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#configurationSettingsModal"
+          id="configurationSettingsButton"
+          disabled="true"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Customize the downloadable user configuration file."
+        >
+          <i class="bi bi-gear"></i> Download Data
+        </button>
+      </div>
+
+<!-- @button download-chart-data -->
+      <div class="col-auto">
+        <button
+          class="btn btn-dark btn-sm"
+          type="button"
+          id="downloadChartDataButtonLayer"
+          disabled="true"
+        >
+          <a
+            id="downloadChartDataButton"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Download the chart data."
+            ><i class="bi bi-file-earmark-arrow-down"></i> Download Chart
+            Data</a
+          >
+        </button>
+      </div>
+
+<!-- @button delete -->
+      <div class="col-auto">
+        <button
+          class="btn btn-danger btn-sm"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#deleteDataModal"
+          id="deleteLocalStorageButton"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="{{title}}"
+        >
+          <i class="bi bi-trash"></i> Delete Data
+        </button>
+      </div>
+
+<!-- @button clear-table -->
+      <div class="col-auto">
+        <button
+          class="btn btn-danger btn-sm"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#clearDataTableModal"
+          id="clearTableButton"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Clear current table and refresh table page."
+        >
+          <i class="bi bi-x-circle-fill"></i> Clear Data Table
+        </button>
+      </div>

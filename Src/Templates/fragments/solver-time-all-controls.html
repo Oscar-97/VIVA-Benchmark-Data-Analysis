@@ -1,0 +1,47 @@
+<div
+      class="d-flex flex-wrap justify-content-start gap-2"
+      style="margin-left: 1rem; margin-top: 1rem"
+    >
+      <div class="col-auto">
+        <div class="input-group mb-1">
+          <div class="form-floating">
+            <select
+              class="form-control form-control-sm"
+              id="filterTypeSelector"
+              aria-label="filterType"
+            >
+              <option value="None">None</option>
+              <option value="no_fail_by_all_solver">
+                No fail for all solvers (Normal Completion only)
+              </option>
+              <option
+                value="time_less_than_10_by_at_least_one_solver_and_no_fail"
+              >
+                Time &lt;= 10.0 and no fail for all solvers
+              </option>
+              <option
+                value="solver_primal_gap_less_than_or_equal_to_1_percent_and_no_fail"
+              >
+                SolverPrimalGap[%] &lt;= 1.0% and no fail for all solvers
+              </option>
+              <option
+                value="solver_primal_gap_less_than_or_equal_to_10_percent_and_no_fail"
+              >
+                SolverPrimalGap[%] &lt;= 10.0% and no fail for all solvers
+              </option>
+              <option
+                value="solver_dual_gap_less_than_or_equal_to_1_percent_and_not_failed"
+              >
+                SolverDualGap[%] &lt;= 1.0% and no fail for all solvers
+              </option>
+              <option
+                value="solver_dual_gap_less_than_or_equal_to_10_percent_and_not_failed"
+              >
+                SolverDualGap[%] &lt;= 10.0% and no fail for all solvers
+              </option>
+            </select>
+            <label for="filterTypeSelector">Filter type</label>
+          </div>
+        </div>
+      </div>
+    </div>
