@@ -10,7 +10,12 @@ import {
  */
 interface BubbleDataset {
 	label: string;
-	data: { x?: number; y?: number; r: number; solverTime: number }[];
+	data: {
+		x: number | undefined;
+		y: number | undefined;
+		r: number;
+		solverTime: number;
+	}[];
 	clip: number;
 }
 

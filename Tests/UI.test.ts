@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { chromium, Browser, Page, BrowserContext, Download } from "playwright";
 import * as path from "path";
+import { At } from "./TestHelpers";
 
 describe("UI tests", () => {
 	let browser: Browser;
@@ -295,7 +296,7 @@ describe("UI tests", () => {
 				expect(isEnabled).toBeTruthy();
 			}
 			await page.waitForTimeout(3000);
-			const deleteLocalStorageButton = await page.$(buttonIDs[1]);
+			const deleteLocalStorageButton = await page.$(At(buttonIDs, 1));
 			await deleteLocalStorageButton?.click();
 			await page.click("#deleteButtonInModal");
 			await page.waitForTimeout(500);

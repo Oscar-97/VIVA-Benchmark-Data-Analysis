@@ -17,7 +17,8 @@ export function PlotTerminationRelation(
 	const solverNames = data.map((obj) => {
 		return obj["SolverName"] as string;
 	});
-	const statusKeys = Object.keys(data[0]).filter((key) => {
+	const [firstEntry] = data;
+	const statusKeys = Object.keys(firstEntry ?? {}).filter((key) => {
 		return key !== "SolverName";
 	});
 

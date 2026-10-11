@@ -36,6 +36,7 @@ import {
 import { GetPageKind, PageKind } from "../Src/Scripts/App/CurrentPage";
 import { Listen, ResetPageListeners } from "../Src/Scripts/App/PageListeners";
 import { PageTitles } from "../Src/Scripts/Constants/PageTitles";
+import { At } from "./TestHelpers";
 
 /**
  * Mockup data.
@@ -224,101 +225,101 @@ describe("Gap computation from real benchmarks.", () => {
 		it("Solver Scp2804s and problem alan", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[0]["PrimalBoundSolver"],
-					minlpBenchmarksData[0]["DualBoundSolver"],
-					minlpBenchmarksData[0]["Direction"]
+					At(minlpBenchmarksData, 0)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 0)["DualBoundSolver"],
+					At(minlpBenchmarksData, 0)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[0]["Gap_Solver"]);
+			).toBe(At(minlpBenchmarksData, 0)["Gap_Solver"]);
 		});
 
 		it("Solver baron and problem alan", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[1]["PrimalBoundSolver"],
-					minlpBenchmarksData[1]["DualBoundSolver"],
-					minlpBenchmarksData[1]["Direction"]
+					At(minlpBenchmarksData, 1)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 1)["DualBoundSolver"],
+					At(minlpBenchmarksData, 1)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[1]["Gap_Solver"]);
+			).toBe(At(minlpBenchmarksData, 1)["Gap_Solver"]);
 		});
 
 		it("Solver baron and problem smallinvDAXr1b150-165", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[2]["PrimalBoundSolver"],
-					minlpBenchmarksData[2]["DualBoundSolver"],
-					minlpBenchmarksData[2]["Direction"]
+					At(minlpBenchmarksData, 2)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 2)["DualBoundSolver"],
+					At(minlpBenchmarksData, 2)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[2]["Gap_Solver"]);
+			).toBe(At(minlpBenchmarksData, 2)["Gap_Solver"]);
 		});
 
 		it("Solver Scp2804s and problem pedigree_ex485", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[3]["PrimalBoundSolver"],
-					minlpBenchmarksData[3]["DualBoundSolver"],
-					minlpBenchmarksData[3]["Direction"]
+					At(minlpBenchmarksData, 3)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 3)["DualBoundSolver"],
+					At(minlpBenchmarksData, 3)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[3]["Gap_Solver"]);
+			).toBe(At(minlpBenchmarksData, 3)["Gap_Solver"]);
 		});
 
 		it("Solver Scp2804s and problem syn30h", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[4]["PrimalBoundSolver"],
-					minlpBenchmarksData[4]["DualBoundSolver"],
-					minlpBenchmarksData[4]["Direction"]
+					At(minlpBenchmarksData, 4)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 4)["DualBoundSolver"],
+					At(minlpBenchmarksData, 4)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[4]["Gap_Solver"]);
+			).toBe(At(minlpBenchmarksData, 4)["Gap_Solver"]);
 		});
 
 		it("Solver Scp2804s and problem ball_mk4_15", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[5]["PrimalBoundSolver"],
-					minlpBenchmarksData[5]["DualBoundSolver"],
-					minlpBenchmarksData[5]["Direction"]
+					At(minlpBenchmarksData, 5)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 5)["DualBoundSolver"],
+					At(minlpBenchmarksData, 5)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[5]["Gap_Solver"]);
+			).toBe(At(minlpBenchmarksData, 5)["Gap_Solver"]);
 		});
 
 		it("Solver Scp2804s and problem flay06m", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[6]["PrimalBoundSolver"],
-					minlpBenchmarksData[6]["DualBoundSolver"],
-					minlpBenchmarksData[6]["Direction"]
+					At(minlpBenchmarksData, 6)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 6)["DualBoundSolver"],
+					At(minlpBenchmarksData, 6)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[6]["Gap_Solver"]);
+			).toBe(At(minlpBenchmarksData, 6)["Gap_Solver"]);
 		});
 
 		it("Solver aecp and problem gams01", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[7]["PrimalBoundSolver"],
-					minlpBenchmarksData[7]["DualBoundSolver"],
-					minlpBenchmarksData[7]["Direction"]
+					At(minlpBenchmarksData, 7)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 7)["DualBoundSolver"],
+					At(minlpBenchmarksData, 7)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[7]["Gap_Solver"]);
+			).toBe(At(minlpBenchmarksData, 7)["Gap_Solver"]);
 		});
 
 		it("Solver aecp and problem tls12", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[8]["PrimalBoundSolver"],
-					minlpBenchmarksData[8]["DualBoundSolver"],
-					minlpBenchmarksData[8]["Direction"]
+					At(minlpBenchmarksData, 8)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 8)["DualBoundSolver"],
+					At(minlpBenchmarksData, 8)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[8]["Gap_Solver"]);
+			).toBe(At(minlpBenchmarksData, 8)["Gap_Solver"]);
 		});
 
 		it("Solver aoa and problem st_miqp4", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[9]["PrimalBoundSolver"],
-					minlpBenchmarksData[9]["DualBoundSolver"],
-					minlpBenchmarksData[9]["Direction"]
+					At(minlpBenchmarksData, 9)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 9)["DualBoundSolver"],
+					At(minlpBenchmarksData, 9)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[9]["Gap_Solver"]);
+			).toBe(At(minlpBenchmarksData, 9)["Gap_Solver"]);
 		});
 	});
 
@@ -326,101 +327,101 @@ describe("Gap computation from real benchmarks.", () => {
 		it("Solver Scp2804s and problem alan", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[0]["PrimalBoundProblem"],
-					minlpBenchmarksData[0]["DualBoundProblem"],
-					minlpBenchmarksData[0]["Direction"]
+					At(minlpBenchmarksData, 0)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 0)["DualBoundProblem"],
+					At(minlpBenchmarksData, 0)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[0]["Gap_Problem"]);
+			).toBe(At(minlpBenchmarksData, 0)["Gap_Problem"]);
 		});
 
 		it("Solver baron and problem alan", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[1]["PrimalBoundProblem"],
-					minlpBenchmarksData[1]["DualBoundProblem"],
-					minlpBenchmarksData[1]["Direction"]
+					At(minlpBenchmarksData, 1)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 1)["DualBoundProblem"],
+					At(minlpBenchmarksData, 1)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[1]["Gap_Problem"]);
+			).toBe(At(minlpBenchmarksData, 1)["Gap_Problem"]);
 		});
 
 		it("Solver baron and problem smallinvDAXr1b150-165", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[2]["PrimalBoundProblem"],
-					minlpBenchmarksData[2]["DualBoundProblem"],
-					minlpBenchmarksData[2]["Direction"]
+					At(minlpBenchmarksData, 2)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 2)["DualBoundProblem"],
+					At(minlpBenchmarksData, 2)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[2]["Gap_Problem"]);
+			).toBe(At(minlpBenchmarksData, 2)["Gap_Problem"]);
 		});
 
 		it("Solver Scp2804s and problem pedigree_ex485", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[3]["PrimalBoundProblem"],
-					minlpBenchmarksData[3]["DualBoundProblem"],
-					minlpBenchmarksData[3]["Direction"]
+					At(minlpBenchmarksData, 3)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 3)["DualBoundProblem"],
+					At(minlpBenchmarksData, 3)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[3]["Gap_Problem"]);
+			).toBe(At(minlpBenchmarksData, 3)["Gap_Problem"]);
 		});
 
 		it("Solver Scp2804s and problem syn30h", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[4]["PrimalBoundProblem"],
-					minlpBenchmarksData[4]["DualBoundProblem"],
-					minlpBenchmarksData[4]["Direction"]
+					At(minlpBenchmarksData, 4)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 4)["DualBoundProblem"],
+					At(minlpBenchmarksData, 4)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[4]["Gap_Problem"]);
+			).toBe(At(minlpBenchmarksData, 4)["Gap_Problem"]);
 		});
 
 		it("Solver Scp2804s and problem ball_mk4_15", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[5]["PrimalBoundProblem"],
-					minlpBenchmarksData[5]["DualBoundProblem"],
-					minlpBenchmarksData[5]["Direction"]
+					At(minlpBenchmarksData, 5)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 5)["DualBoundProblem"],
+					At(minlpBenchmarksData, 5)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[5]["Gap_Problem"]);
+			).toBe(At(minlpBenchmarksData, 5)["Gap_Problem"]);
 		});
 
 		it("Solver Scp2804s and problem flay06m", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[6]["PrimalBoundProblem"],
-					minlpBenchmarksData[6]["DualBoundProblem"],
-					minlpBenchmarksData[6]["Direction"]
+					At(minlpBenchmarksData, 6)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 6)["DualBoundProblem"],
+					At(minlpBenchmarksData, 6)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[6]["Gap_Problem"]);
+			).toBe(At(minlpBenchmarksData, 6)["Gap_Problem"]);
 		});
 
 		it("Solver aecp and problem gams01", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[7]["PrimalBoundProblem"],
-					minlpBenchmarksData[7]["DualBoundProblem"],
-					minlpBenchmarksData[7]["Direction"]
+					At(minlpBenchmarksData, 7)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 7)["DualBoundProblem"],
+					At(minlpBenchmarksData, 7)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[7]["Gap_Problem"]);
+			).toBe(At(minlpBenchmarksData, 7)["Gap_Problem"]);
 		});
 
 		it("Solver aecp and problem tls12", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[8]["PrimalBoundProblem"],
-					minlpBenchmarksData[8]["DualBoundProblem"],
-					minlpBenchmarksData[8]["Direction"]
+					At(minlpBenchmarksData, 8)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 8)["DualBoundProblem"],
+					At(minlpBenchmarksData, 8)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[8]["Gap_Problem"]);
+			).toBe(At(minlpBenchmarksData, 8)["Gap_Problem"]);
 		});
 
 		it("Solver aoa and problem st_miqp4", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[9]["PrimalBoundProblem"],
-					minlpBenchmarksData[9]["DualBoundProblem"],
-					minlpBenchmarksData[9]["Direction"]
+					At(minlpBenchmarksData, 9)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 9)["DualBoundProblem"],
+					At(minlpBenchmarksData, 9)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[9]["Gap_Problem"]);
+			).toBe(At(minlpBenchmarksData, 9)["Gap_Problem"]);
 		});
 	});
 
@@ -428,101 +429,101 @@ describe("Gap computation from real benchmarks.", () => {
 		it("Solver Scp2804s and problem alan", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[0]["PrimalBoundSolver"],
-					minlpBenchmarksData[0]["PrimalBoundProblem"],
-					minlpBenchmarksData[0]["Direction"]
+					At(minlpBenchmarksData, 0)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 0)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 0)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[0]["PrimalGap"]);
+			).toBe(At(minlpBenchmarksData, 0)["PrimalGap"]);
 		});
 
 		it("Solver baron and problem alan", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[1]["PrimalBoundSolver"],
-					minlpBenchmarksData[1]["PrimalBoundProblem"],
-					minlpBenchmarksData[1]["Direction"]
+					At(minlpBenchmarksData, 1)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 1)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 1)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[1]["PrimalGap"]);
+			).toBe(At(minlpBenchmarksData, 1)["PrimalGap"]);
 		});
 
 		it("Solver baron and problem smallinvDAXr1b150-165", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[2]["PrimalBoundSolver"],
-					minlpBenchmarksData[2]["PrimalBoundProblem"],
-					minlpBenchmarksData[2]["Direction"]
+					At(minlpBenchmarksData, 2)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 2)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 2)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[2]["PrimalGap"]);
+			).toBe(At(minlpBenchmarksData, 2)["PrimalGap"]);
 		});
 
 		it("Solver Scp2804s and problem pedigree_ex485", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[3]["PrimalBoundSolver"],
-					minlpBenchmarksData[3]["PrimalBoundProblem"],
-					minlpBenchmarksData[3]["Direction"]
+					At(minlpBenchmarksData, 3)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 3)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 3)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[3]["PrimalGap"]);
+			).toBe(At(minlpBenchmarksData, 3)["PrimalGap"]);
 		});
 
 		it("Solver Scp2804s and problem syn30h", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[4]["PrimalBoundSolver"],
-					minlpBenchmarksData[4]["PrimalBoundProblem"],
-					minlpBenchmarksData[4]["Direction"]
+					At(minlpBenchmarksData, 4)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 4)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 4)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[4]["PrimalGap"]);
+			).toBe(At(minlpBenchmarksData, 4)["PrimalGap"]);
 		});
 
 		it("Solver Scp2804s and problem ball_mk4_15", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[5]["PrimalBoundSolver"],
-					minlpBenchmarksData[5]["PrimalBoundProblem"],
-					minlpBenchmarksData[5]["Direction"]
+					At(minlpBenchmarksData, 5)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 5)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 5)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[5]["PrimalGap"]);
+			).toBe(At(minlpBenchmarksData, 5)["PrimalGap"]);
 		});
 
 		it("Solver Scp2804s and problem flay06m", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[6]["PrimalBoundSolver"],
-					minlpBenchmarksData[6]["PrimalBoundProblem"],
-					minlpBenchmarksData[6]["Direction"]
+					At(minlpBenchmarksData, 6)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 6)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 6)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[6]["PrimalGap"]);
+			).toBe(At(minlpBenchmarksData, 6)["PrimalGap"]);
 		});
 
 		it("Solver aecp and problem gams01", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[7]["PrimalBoundSolver"],
-					minlpBenchmarksData[7]["PrimalBoundProblem"],
-					minlpBenchmarksData[7]["Direction"]
+					At(minlpBenchmarksData, 7)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 7)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 7)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[7]["PrimalGap"]);
+			).toBe(At(minlpBenchmarksData, 7)["PrimalGap"]);
 		});
 
 		it("Solver aecp and problem tls12", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[8]["PrimalBoundSolver"],
-					minlpBenchmarksData[8]["PrimalBoundProblem"],
-					minlpBenchmarksData[8]["Direction"]
+					At(minlpBenchmarksData, 8)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 8)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 8)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[8]["PrimalGap"]);
+			).toBe(At(minlpBenchmarksData, 8)["PrimalGap"]);
 		});
 
 		it("Solver aoa and problem st_miqp4", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[9]["PrimalBoundSolver"],
-					minlpBenchmarksData[9]["PrimalBoundProblem"],
-					minlpBenchmarksData[9]["Direction"]
+					At(minlpBenchmarksData, 9)["PrimalBoundSolver"],
+					At(minlpBenchmarksData, 9)["PrimalBoundProblem"],
+					At(minlpBenchmarksData, 9)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[9]["PrimalGap"]);
+			).toBe(At(minlpBenchmarksData, 9)["PrimalGap"]);
 		});
 	});
 
@@ -530,101 +531,101 @@ describe("Gap computation from real benchmarks.", () => {
 		it("Solver Scp2804s and problem alan", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[0]["DualBoundSolver"],
-					minlpBenchmarksData[0]["DualBoundProblem"],
-					minlpBenchmarksData[0]["Direction"]
+					At(minlpBenchmarksData, 0)["DualBoundSolver"],
+					At(minlpBenchmarksData, 0)["DualBoundProblem"],
+					At(minlpBenchmarksData, 0)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[0]["DualGap"]);
+			).toBe(At(minlpBenchmarksData, 0)["DualGap"]);
 		});
 
 		it("Solver baron and problem alan", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[1]["DualBoundSolver"],
-					minlpBenchmarksData[1]["DualBoundProblem"],
-					minlpBenchmarksData[1]["Direction"]
+					At(minlpBenchmarksData, 1)["DualBoundSolver"],
+					At(minlpBenchmarksData, 1)["DualBoundProblem"],
+					At(minlpBenchmarksData, 1)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[1]["DualGap"]);
+			).toBe(At(minlpBenchmarksData, 1)["DualGap"]);
 		});
 
 		it("Solver baron and problem smallinvDAXr1b150-165", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[2]["DualBoundSolver"],
-					minlpBenchmarksData[2]["DualBoundProblem"],
-					minlpBenchmarksData[2]["Direction"]
+					At(minlpBenchmarksData, 2)["DualBoundSolver"],
+					At(minlpBenchmarksData, 2)["DualBoundProblem"],
+					At(minlpBenchmarksData, 2)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[2]["DualGap"]);
+			).toBe(At(minlpBenchmarksData, 2)["DualGap"]);
 		});
 
 		it("Solver Scp2804s and problem pedigree_ex485", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[3]["DualBoundSolver"],
-					minlpBenchmarksData[3]["DualBoundProblem"],
-					minlpBenchmarksData[3]["Direction"]
+					At(minlpBenchmarksData, 3)["DualBoundSolver"],
+					At(minlpBenchmarksData, 3)["DualBoundProblem"],
+					At(minlpBenchmarksData, 3)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[3]["DualGap"]);
+			).toBe(At(minlpBenchmarksData, 3)["DualGap"]);
 		});
 
 		it("Solver Scp2804s and problem syn30h", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[4]["DualBoundSolver"],
-					minlpBenchmarksData[4]["DualBoundProblem"],
-					minlpBenchmarksData[4]["Direction"]
+					At(minlpBenchmarksData, 4)["DualBoundSolver"],
+					At(minlpBenchmarksData, 4)["DualBoundProblem"],
+					At(minlpBenchmarksData, 4)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[4]["DualGap"]);
+			).toBe(At(minlpBenchmarksData, 4)["DualGap"]);
 		});
 
 		it("Solver Scp2804s and problem ball_mk4_15", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[5]["DualBoundSolver"],
-					minlpBenchmarksData[5]["DualBoundProblem"],
-					minlpBenchmarksData[5]["Direction"]
+					At(minlpBenchmarksData, 5)["DualBoundSolver"],
+					At(minlpBenchmarksData, 5)["DualBoundProblem"],
+					At(minlpBenchmarksData, 5)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[5]["DualGap"]);
+			).toBe(At(minlpBenchmarksData, 5)["DualGap"]);
 		});
 
 		it("Solver Scp2804s and problem flay06m", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[6]["DualBoundSolver"],
-					minlpBenchmarksData[6]["DualBoundProblem"],
-					minlpBenchmarksData[6]["Direction"]
+					At(minlpBenchmarksData, 6)["DualBoundSolver"],
+					At(minlpBenchmarksData, 6)["DualBoundProblem"],
+					At(minlpBenchmarksData, 6)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[6]["DualGap"]);
+			).toBe(At(minlpBenchmarksData, 6)["DualGap"]);
 		});
 
 		it("Solver aecp and problem gams01", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[7]["DualBoundSolver"],
-					minlpBenchmarksData[7]["DualBoundProblem"],
-					minlpBenchmarksData[7]["Direction"]
+					At(minlpBenchmarksData, 7)["DualBoundSolver"],
+					At(minlpBenchmarksData, 7)["DualBoundProblem"],
+					At(minlpBenchmarksData, 7)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[7]["DualGap"]);
+			).toBe(At(minlpBenchmarksData, 7)["DualGap"]);
 		});
 
 		it("Solver aecp and problem tls12", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[8]["DualBoundSolver"],
-					minlpBenchmarksData[8]["DualBoundProblem"],
-					minlpBenchmarksData[8]["Direction"]
+					At(minlpBenchmarksData, 8)["DualBoundSolver"],
+					At(minlpBenchmarksData, 8)["DualBoundProblem"],
+					At(minlpBenchmarksData, 8)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[8]["DualGap"]);
+			).toBe(At(minlpBenchmarksData, 8)["DualGap"]);
 		});
 
 		it("Solver aoa and problem st_miqp4", () => {
 			expect(
 				CalculateGap(
-					minlpBenchmarksData[9]["DualBoundSolver"],
-					minlpBenchmarksData[9]["DualBoundProblem"],
-					minlpBenchmarksData[9]["Direction"]
+					At(minlpBenchmarksData, 9)["DualBoundSolver"],
+					At(minlpBenchmarksData, 9)["DualBoundProblem"],
+					At(minlpBenchmarksData, 9)["Direction"]
 				)
-			).toBe(minlpBenchmarksData[9]["DualGap"]);
+			).toBe(At(minlpBenchmarksData, 9)["DualGap"]);
 		});
 	});
 });
@@ -756,29 +757,29 @@ describe("Coverage in computation functions with mockup data.", () => {
 		it("should return the gap between a and b when none of the above conditions are met", () => {
 			expect(
 				CalculateGap(
-					mockupTraceData[0].PrimalBound as number,
-					mockupTraceData[0].DualBound as number,
+					At(mockupTraceData, 0).PrimalBound as number,
+					At(mockupTraceData, 0).DualBound as number,
 					"max"
 				)
 			).toBeCloseTo(47.38);
 			expect(
 				CalculateGap(
-					mockupTraceData[1].PrimalBound as number,
-					mockupTraceData[1].DualBound as number,
+					At(mockupTraceData, 1).PrimalBound as number,
+					At(mockupTraceData, 1).DualBound as number,
 					"min"
 				)
 			).toBeCloseTo(429.17);
 			expect(
 				CalculateGap(
-					mockupTraceData[2].PrimalBound as number,
-					mockupTraceData[2].DualBound as number,
+					At(mockupTraceData, 2).PrimalBound as number,
+					At(mockupTraceData, 2).DualBound as number,
 					"max"
 				)
 			).toBe(Infinity);
 			expect(
 				CalculateGap(
-					mockupTraceData[3].PrimalBound as number,
-					mockupTraceData[3].DualBound as number,
+					At(mockupTraceData, 3).PrimalBound as number,
+					At(mockupTraceData, 3).DualBound as number,
 					"min"
 				)
 			).toBe(Infinity);
@@ -794,41 +795,23 @@ describe("Coverage in computation functions with mockup data.", () => {
 
 	describe("ExtractAllSolverTimes", () => {
 		test("Extracts solver times correctly.", () => {
-			const result = ExtractAllSolverTimes(
+			const times = ExtractAllSolverTimes(
 				mockupTraceData.map((data) => ({
 					...data,
 					SolverTime: data.SolverTime
 				}))
 			);
-			expect(
-				(result as { [key: string]: { time: number; InputFileName: string }[] })
-					.TestSolver1[1]
-			).toHaveProperty("time", 0.560621249);
-			expect(
-				(result as { [key: string]: { time: number; InputFileName: string }[] })
-					.TestSolver1[1]
-			).toHaveProperty("InputFileName", "TestInstance_B");
+			const solver1 = times["TestSolver1"] ?? [];
+			const solver2 = times["TestSolver2"] ?? [];
 
-			expect(
-				(result as { [key: string]: { time: number; InputFileName: string }[] })
-					.TestSolver2
-			).toHaveLength(2);
-			expect(
-				(result as { [key: string]: { time: number; InputFileName: string }[] })
-					.TestSolver2[0]
-			).toHaveProperty("time", 900.971);
-			expect(
-				(result as { [key: string]: { time: number; InputFileName: string }[] })
-					.TestSolver2[0]
-			).toHaveProperty("InputFileName", "TestInstance_X");
-			expect(
-				(result as { [key: string]: { time: number; InputFileName: string }[] })
-					.TestSolver2[1]
-			).toHaveProperty("time", 5.922);
-			expect(
-				(result as { [key: string]: { time: number; InputFileName: string }[] })
-					.TestSolver2[1]
-			).toHaveProperty("InputFileName", "TestInstance_Y");
+			expect(At(solver1, 1)).toHaveProperty("time", 0.560621249);
+			expect(At(solver1, 1)).toHaveProperty("InputFileName", "TestInstance_B");
+
+			expect(solver2).toHaveLength(2);
+			expect(At(solver2, 0)).toHaveProperty("time", 900.971);
+			expect(At(solver2, 0)).toHaveProperty("InputFileName", "TestInstance_X");
+			expect(At(solver2, 1)).toHaveProperty("time", 5.922);
+			expect(At(solver2, 1)).toHaveProperty("InputFileName", "TestInstance_Y");
 		});
 	});
 

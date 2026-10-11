@@ -99,7 +99,7 @@ export function CreateChart(
 		options: {
 			responsive: true,
 			maintainAspectRatio: false,
-			scales: scaleOptions || undefined,
+			...(scaleOptions ? { scales: scaleOptions } : {}),
 			transitions: {
 				zoom: {
 					animation: {
@@ -117,12 +117,11 @@ export function CreateChart(
 						family: `system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"`
 					}
 				},
-				subtitle: {
-					display: subtitle ? true : false,
-					text: subtitle || undefined
-				},
-				zoom: zoomOptions || undefined,
-				annotation: annotationOptions || undefined
+				subtitle: subtitle
+					? { display: true, text: subtitle }
+					: { display: false },
+				...(zoomOptions ? { zoom: zoomOptions } : {}),
+				...(annotationOptions ? { annotation: annotationOptions } : {})
 			}
 		}
 	});

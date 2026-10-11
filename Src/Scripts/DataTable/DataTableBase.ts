@@ -80,7 +80,8 @@ export function TraceTableData(traceData: TraceData[]): void {
 	 * Thead created from the categories.
 	 */
 	const headerRow = document.createElement("tr");
-	const sortedKeys = SortKeysByEnum(traceData[0]);
+	const [firstRow] = traceData;
+	const sortedKeys = firstRow ? SortKeysByEnum(firstRow) : [];
 
 	for (const key of sortedKeys) {
 		const th = document.createElement("th");
@@ -184,15 +185,13 @@ export function StatisticsTable(
 	 * Create value table rows.
 	 */
 	const tableBody = statisticsTable.createTBody();
-	const dataKeys = Object.keys(solverTimeStats);
-	dataKeys.forEach((dataKey) => {
+	Object.entries(solverTimeStats).forEach(([dataKey, statistics]) => {
 		const row = tableBody.insertRow();
 		const nameCell = row.insertCell();
 		nameCell.textContent = dataKey;
 		nameCell.style.fontWeight = "bold";
 
-		const dataValues = Object.values(solverTimeStats[dataKey]);
-		dataValues.forEach((dataValue) => {
+		Object.values(statistics).forEach((dataValue) => {
 			const cell = row.insertCell();
 			cell.textContent = dataValue.toString();
 		});

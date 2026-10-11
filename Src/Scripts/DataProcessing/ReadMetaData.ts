@@ -32,9 +32,12 @@ export function GetInstanceInformation(
 	unprocessedInstanceInformationData: string[]
 ): object[] {
 	const instanceInfo = [];
-	let header = unprocessedInstanceInformationData[0].split(";");
+	const [headerLine, ...rows] = unprocessedInstanceInformationData;
+	if (headerLine === undefined) {
+		return [];
+	}
 
-	header = header.map((x) => {
+	const header = headerLine.split(";").map((x) => {
 		if (x === "primalbound") {
 			return "PrimalBoundProblem";
 		}
@@ -44,11 +47,11 @@ export function GetInstanceInformation(
 		return x;
 	});
 
-	for (let i = 1; i < unprocessedInstanceInformationData.length; i++) {
+	for (const row of rows) {
 		const obj: { [key: string]: string } = {};
-		const currentLine = unprocessedInstanceInformationData[i].split(";");
-		for (let j = 0; j < header.length; j++) {
-			obj[header[j]] = currentLine[j] || "";
+		const currentLine = row.split(";");
+		for (const [j, name] of header.entries()) {
+			obj[name] = currentLine[j] || "";
 		}
 		instanceInfo.push(obj);
 	}
@@ -89,16 +92,18 @@ export function GetBestKnownBounds(
 	const soluData = [];
 	const regexPattern = /^=(.*?)=\s+(.*?)\s+(.*?)$/;
 
-	for (let i = 0; i < unprocessedSolutionData.length; i++) {
+	for (const line of unprocessedSolutionData) {
 		const obj: {
 			InputFileName?: string;
 			PrimalBoundProblem?: number | string;
 			DualBoundProblem?: number | string;
 		} = {};
-		const match = regexPattern.exec(unprocessedSolutionData[i]);
+		const match = regexPattern.exec(line);
 		if (match !== null) {
-			obj["InputFileName"] = match[2];
-			switch (match[1]) {
+			// All three groups take part in a match, the last two can be empty.
+			const [, keyword = "", fileName = "", value = ""] = match;
+			obj["InputFileName"] = fileName;
+			switch (keyword) {
 				case "inf":
 					try {
 						obj["PrimalBoundProblem"] = Infinity;
@@ -111,7 +116,7 @@ export function GetBestKnownBounds(
 					break;
 				case "best":
 					try {
-						obj["PrimalBoundProblem"] = Number(match[3]).toExponential(6);
+						obj["PrimalBoundProblem"] = Number(value).toExponential(6);
 					} catch (err) {
 						console.error(err);
 						obj["PrimalBoundProblem"] = NaN;
@@ -119,7 +124,7 @@ export function GetBestKnownBounds(
 					break;
 				case "bestdual":
 					try {
-						obj["DualBoundProblem"] = Number(match[3]).toExponential(6);
+						obj["DualBoundProblem"] = Number(value).toExponential(6);
 					} catch (err) {
 						console.error(err);
 						obj["DualBoundProblem"] = NaN;
@@ -127,8 +132,8 @@ export function GetBestKnownBounds(
 					break;
 				case "opt":
 					try {
-						obj["PrimalBoundProblem"] = Number(match[3]).toExponential(6);
-						obj["DualBoundProblem"] = Number(match[3]).toExponential(6);
+						obj["PrimalBoundProblem"] = Number(value).toExponential(6);
+						obj["DualBoundProblem"] = Number(value).toExponential(6);
 					} catch (err) {
 						console.error(err);
 						obj["PrimalBoundProblem"] = NaN;

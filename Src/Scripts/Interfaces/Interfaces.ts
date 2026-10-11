@@ -23,40 +23,40 @@ export interface StoredConfiguration {
  * Interface for the parsed data object.
  */
 export interface TraceData {
-	InputFileName?: string;
-	Direction?: string;
-	ModelType?: string;
-	DualBoundProblem?: number | string;
-	PrimalBoundProblem?: number | string;
-	Gap_Problem?: number;
-	NumberOfVariables?: number;
-	NumberOfDiscreteVariables?: number;
-	NumberOfEquations?: number;
-	NumberOfNonZeros?: number;
-	NumberOfNonlinearNonZeros?: number;
-	SolverName?: string;
-	ModelStatus?: string;
-	SolverStatus?: string;
-	DualBoundSolver?: number | string;
-	DualGap?: number;
-	PrimalBoundSolver?: number | string;
-	PrimalGap?: number;
-	Gap_Solver?: number;
-	SolverTime?: number;
-	NumberOfIterations?: number;
-	NumberOfNodes?: number;
-	NumberOfDomainViolations?: number;
-	Fail?: boolean;
-	FailReason?: string;
-	ObjectiveValue?: number | string;
-	ObjectiveValueEstimate?: number | string;
+	InputFileName?: string | undefined;
+	Direction?: string | undefined;
+	ModelType?: string | undefined;
+	DualBoundProblem?: number | string | undefined;
+	PrimalBoundProblem?: number | string | undefined;
+	Gap_Problem?: number | undefined;
+	NumberOfVariables?: number | undefined;
+	NumberOfDiscreteVariables?: number | undefined;
+	NumberOfEquations?: number | undefined;
+	NumberOfNonZeros?: number | undefined;
+	NumberOfNonlinearNonZeros?: number | undefined;
+	SolverName?: string | undefined;
+	ModelStatus?: string | undefined;
+	SolverStatus?: string | undefined;
+	DualBoundSolver?: number | string | undefined;
+	DualGap?: number | undefined;
+	PrimalBoundSolver?: number | string | undefined;
+	PrimalGap?: number | undefined;
+	Gap_Solver?: number | undefined;
+	SolverTime?: number | undefined;
+	NumberOfIterations?: number | undefined;
+	NumberOfNodes?: number | undefined;
+	NumberOfDomainViolations?: number | undefined;
+	Fail?: boolean | undefined;
+	FailReason?: string | undefined;
+	ObjectiveValue?: number | string | undefined;
+	ObjectiveValueEstimate?: number | string | undefined;
 }
 
 /**
  * A solver and the number of its instances per status message, for example `{ SolverName: "SCIP", Failed: 2 }`.
  */
 export interface StatusCount {
-	SolverName?: string;
+	SolverName?: string | undefined;
 	[status: string]: string | number | undefined;
 }
 

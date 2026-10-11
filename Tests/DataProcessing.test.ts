@@ -479,7 +479,7 @@ describe("CalculateInstanceAttributes", () => {
 			maxValue: 3,
 			p50Value: 2
 		});
-		expect(result["variables"].stdValue).toBeCloseTo(1.414214, 6);
+		expect(result["variables"]?.stdValue).toBeCloseTo(1.414214, 6);
 	});
 
 	it("should skip values that are not numbers", () => {

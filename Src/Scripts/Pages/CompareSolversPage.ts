@@ -47,24 +47,30 @@ export function HandleCompareSolversPage(traceData: TraceData[]): void {
 		);
 		const selectedSolvers = GetSelectedCheckboxValues();
 
-		if (selectedSolvers.length !== 2) {
+		const [firstSolver, secondSolver] = selectedSolvers;
+		if (
+			selectedSolvers.length !== 2 ||
+			firstSolver === undefined ||
+			secondSolver === undefined
+		) {
 			DisplayErrorNotification(ErrorMessages.SELECT_SOLVER_AMOUNT);
+			return;
 		}
 		const comparisonSummary = CompareSolvers(
-			selectedSolvers[0],
-			selectedSolvers[1],
+			firstSolver,
+			secondSolver,
 			solverTimes
 		);
 		const inverseComparisonSummary = CompareSolvers(
-			selectedSolvers[1],
-			selectedSolvers[0],
+			secondSolver,
+			firstSolver,
 			solverTimes
 		);
 		ComparisonSummaryTable(
 			comparisonSummary,
 			inverseComparisonSummary,
-			selectedSolvers[0],
-			selectedSolvers[1]
+			firstSolver,
+			secondSolver
 		);
 		ElementStateDisplayedComparisonTable();
 	});

@@ -146,14 +146,9 @@ export function PlotPerformanceProfile(
 					};
 				});
 
-			if (
-				cumulativeCounts.length > 0 &&
-				cumulativeCounts[cumulativeCounts.length - 1].y < 1
-			) {
-				cumulativeCounts.push({
-					x: cumulativeCounts[cumulativeCounts.length - 1].x,
-					y: 1
-				});
+			const last = cumulativeCounts.at(-1);
+			if (last && last.y < 1) {
+				cumulativeCounts.push({ x: last.x, y: 1 });
 			}
 		}
 
@@ -171,11 +166,10 @@ export function PlotPerformanceProfile(
 	);
 
 	const chartData = data.map((dataset) => {
-		if (dataset.data[dataset.data.length - 1].x < maxX) {
-			dataset.data.push({
-				x: maxX,
-				y: dataset.data[dataset.data.length - 1].y
-			});
+		// Extend the line of the data set to the end of the chart.
+		const last = dataset.data.at(-1);
+		if (last && last.x < maxX) {
+			dataset.data.push({ x: maxX, y: last.y });
 		}
 		return dataset;
 	});
@@ -255,9 +249,9 @@ export function GetRelativeTimes(
 	data: Record<string, { time: number; InputFileName: string }[]>
 ): Record<string, { time: number; InputFileName: string }[]> {
 	const bestSolverTimes: { [key: string]: number } = {};
-	Object.keys(data).forEach((solver) => {
+	Object.entries(data).forEach(([solver, entries]) => {
 		if (solver !== "Virtual Best Solver" && solver !== "Virtual Worst Solver") {
-			data[solver].forEach((entry) => {
+			entries.forEach((entry) => {
 				const fileName = entry.InputFileName;
 				if (
 					!bestSolverTimes[fileName] ||
@@ -271,8 +265,8 @@ export function GetRelativeTimes(
 
 	const result: Record<string, { time: number; InputFileName: string }[]> = {};
 
-	Object.keys(data).forEach((solver) => {
-		result[solver] = data[solver].map((entry) => {
+	Object.entries(data).forEach(([solver, entries]) => {
+		result[solver] = entries.map((entry) => {
 			const bestTime = bestSolverTimes[entry.InputFileName] || 1;
 
 			return {

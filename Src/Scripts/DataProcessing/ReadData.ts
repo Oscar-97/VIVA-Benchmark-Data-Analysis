@@ -32,8 +32,8 @@ export function GetDataFileType(): string {
 	if (!files) {
 		throw new Error("No files were selected.");
 	}
-	for (let i = 0; i < files.length; i++) {
-		const extension = CheckFileExtension(files[i], fileCounts);
+	for (const file of Array.from(files)) {
+		const extension = CheckFileExtension(file, fileCounts);
 
 		if (["trc", "solu", "json", "csv"].includes(extension)) {
 			extensions.push(extension);
@@ -93,8 +93,9 @@ function CheckFileExtension(
 	}
 
 	if (extension in fileCounts) {
-		fileCounts[extension]++;
-		if (fileCounts[extension] > 1) {
+		const count = (fileCounts[extension] ?? 0) + 1;
+		fileCounts[extension] = count;
+		if (count > 1) {
 			DisplayErrorNotification(`Cannot upload multiple .${extension} files.`);
 			throw new Error(`Cannot upload multiple .${extension} files.`);
 		}
@@ -147,9 +148,8 @@ export function ReadData(
 	if (!elements.fileInput.files) {
 		throw new Error("No files were selected.");
 	}
-	for (let i = 0; i < elements.fileInput.files.length; i++) {
+	for (const file of Array.from(elements.fileInput.files)) {
 		const reader = new FileReader();
-		const file = elements.fileInput.files[i];
 		const fileName = file.name;
 		const fileExtension = fileName.split(".").pop();
 
@@ -166,20 +166,17 @@ export function ReadData(
 				const lines = (<string>reader.result).split(/\r?\n/).map((line) => {
 					return line.trim();
 				});
-				for (let i = 0; i <= lines.length - 1; i++) {
-					const line = lines[i];
+				for (const line of lines) {
 					unprocessedData.push(line);
 				}
 			} else if (fileExtension === "csv") {
 				const lines = (<string>reader.result).split("\n");
-				for (let i = 0; i <= lines.length - 1; i++) {
-					const line = lines[i];
+				for (const line of lines) {
 					unprocessedInstanceInformationData.push(line);
 				}
 			} else if (fileExtension === "solu") {
 				const lines = (<string>reader.result).split(/\r?\n/);
-				for (let i = 0; i <= lines.length - 1; i++) {
-					const line = lines[i];
+				for (const line of lines) {
 					unprocessedSolutionData.push(line);
 				}
 			}

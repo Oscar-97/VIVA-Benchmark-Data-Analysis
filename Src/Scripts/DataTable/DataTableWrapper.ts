@@ -137,7 +137,7 @@ function DataTablesConfiguration(): void {
 			searchBuilder: {
 				button: "<i class='bi bi-search'></i> Advanced Search"
 			}
-		} as Config["language"],
+		} as NonNullable<Config["language"]>,
 		buttons: [
 			{
 				extend: "collection",

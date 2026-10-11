@@ -14,6 +14,11 @@ import {
 } from "../../DataProcessing/ChartsComputations/ComputeChartData";
 
 /**
+ * The color Chart.js uses for a data set without a color of its own.
+ */
+const DEFAULT_COLOR = "rgba(0, 0, 0, 0.1)";
+
+/**
  * This function prepares and plots data by a specific category.
  *
  * @param {TraceData[]} traceData - Array of objects containing the result data.
@@ -39,54 +44,37 @@ export function PlotDataByCategory(
 		defaultTime,
 		filterType
 	);
-	const solverNames = Object.keys(data).filter(
-		(name) => name !== "Virtual Best Solver" && name !== "Virtual Worst Solver"
+	// The virtual solvers are shown as lines, not as bars.
+	const solverStatistics = Object.entries(data).filter(
+		([name]) =>
+			name !== "Virtual Best Solver" && name !== "Virtual Worst Solver"
 	);
+	const solverNames = solverStatistics.map(([name]) => name);
 
 	const averageData = {
 		label: "Average",
-		data: solverNames
-			.filter(
-				(name) =>
-					name !== "Virtual Best Solver" && name !== "Virtual Worst Solver"
-			)
-			.map((name) => data[name].avgValue),
+		data: solverStatistics.map(([, statistics]) => statistics.avgValue),
 		borderColor: "#007bff",
 		backgroundColor: "#007bffAA"
 	};
 
 	const minData = {
 		label: "Min",
-		data: solverNames
-			.filter(
-				(name) =>
-					name !== "Virtual Best Solver" && name !== "Virtual Worst Solver"
-			)
-			.map((name) => data[name].minValue),
+		data: solverStatistics.map(([, statistics]) => statistics.minValue),
 		borderColor: "#28a745",
 		backgroundColor: "#28a745AA"
 	};
 
 	const maxData = {
 		label: "Max",
-		data: solverNames
-			.filter(
-				(name) =>
-					name !== "Virtual Best Solver" && name !== "Virtual Worst Solver"
-			)
-			.map((name) => data[name].maxValue),
+		data: solverStatistics.map(([, statistics]) => statistics.maxValue),
 		borderColor: "#dc3545",
 		backgroundColor: "#dc3545AA"
 	};
 
 	const stdData = {
 		label: "Std",
-		data: solverNames
-			.filter(
-				(name) =>
-					name !== "Virtual Best Solver" && name !== "Virtual Worst Solver"
-			)
-			.map((name) => data[name].stdValue),
+		data: solverStatistics.map(([, statistics]) => statistics.stdValue),
 		borderColor: "#6f42c1",
 		backgroundColor: "#6f42c1AA"
 	};
@@ -132,13 +120,15 @@ export function PlotDataByCategory(
 	/**
 	 * Draw annotations for the virtual best and worst solvers if SolverTime is used.
 	 */
-	if (category === "SolverTime") {
+	const virtualBest = data["Virtual Best Solver"];
+	const virtualWorst = data["Virtual Worst Solver"];
+	if (category === "SolverTime" && virtualBest && virtualWorst) {
 		annotationOptions = {
 			annotations: {
 				line1: {
 					type: "line",
-					yMin: data["Virtual Best Solver"].avgValue,
-					yMax: data["Virtual Best Solver"].avgValue,
+					yMin: virtualBest.avgValue,
+					yMax: virtualBest.avgValue,
 					borderColor: "rgb(124,252,0)",
 					borderShadowColor: "rgba(0,0,0, 0)",
 					shadowOffsetY: 2,
@@ -151,8 +141,8 @@ export function PlotDataByCategory(
 				},
 				line2: {
 					type: "line",
-					yMin: data["Virtual Worst Solver"].avgValue,
-					yMax: data["Virtual Worst Solver"].avgValue,
+					yMin: virtualWorst.avgValue,
+					yMax: virtualWorst.avgValue,
 					borderColor: "rgb(255, 99, 132)",
 					borderShadowColor: "rgba(0,0,0, 0)",
 					shadowOffsetY: 2,
@@ -204,7 +194,8 @@ export function PlotStatusMessages(
 	const solverNames = data.map((obj) => {
 		return obj["SolverName"] as string;
 	});
-	const statusKeys = Object.keys(data[0]).filter((key) => {
+	const [firstEntry] = data;
+	const statusKeys = Object.keys(firstEntry ?? {}).filter((key) => {
 		return key !== "SolverName";
 	});
 
@@ -236,8 +227,8 @@ export function PlotStatusMessages(
 			data: data.map((obj) => {
 				return Number(obj[key]) || 0;
 			}),
-			borderColor: colorMapping[key],
-			backgroundColor: colorMapping[key]
+			borderColor: colorMapping[key] ?? DEFAULT_COLOR,
+			backgroundColor: colorMapping[key] ?? DEFAULT_COLOR
 		};
 	});
 
@@ -292,7 +283,8 @@ export function PlotFailCount(traceData: TraceData[]): {
 	const solverNames = data.map((obj) => {
 		return obj["SolverName"] as string;
 	});
-	const statusKeys = Object.keys(data[0]).filter((key) => {
+	const [firstEntry] = data;
+	const statusKeys = Object.keys(firstEntry ?? {}).filter((key) => {
 		return key !== "SolverName";
 	});
 

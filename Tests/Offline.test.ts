@@ -19,7 +19,9 @@ const contentTypes: Record<string, string> = {
  */
 function StartServer(): Promise<http.Server> {
 	const server = http.createServer((request, response) => {
-		const requested = decodeURIComponent((request.url ?? "/").split("?")[0]);
+		const requested = decodeURIComponent(
+			(request.url ?? "/").split("?")[0] ?? "/"
+		);
 		const file = path.join(root, requested === "/" ? "report.html" : requested);
 		if (
 			!file.startsWith(root) ||
@@ -47,7 +49,9 @@ function ReadServiceWorker(): { cacheName: string; files: string[] } {
 	const source = fs.readFileSync(path.join(root, "service-worker.js"), "utf8");
 	const cacheName = /const CACHE_NAME = "([^"]+)"/.exec(source)?.[1] ?? "";
 	const list = /const filesToCache = \[([\s\S]*?)\];/.exec(source)?.[1] ?? "";
-	const files = [...list.matchAll(/"([^"]+)"/g)].map((match) => match[1]);
+	const files = [...list.matchAll(/"([^"]+)"/g)].flatMap((match) =>
+		match[1] ? [match[1]] : []
+	);
 	return { cacheName, files };
 }
 
@@ -111,7 +115,9 @@ describe("Offline use", () => {
 		const listed = expected.files.map((file) =>
 			file === "/" ? "/" : `/${file}`
 		);
-		expect([...cached[expected.cacheName]].sort()).toEqual([...listed].sort());
+		expect([...(cached[expected.cacheName] ?? [])].sort()).toEqual(
+			[...listed].sort()
+		);
 	}, 60000);
 
 	test("The application works without a network connection, with demo data and a library", async () => {

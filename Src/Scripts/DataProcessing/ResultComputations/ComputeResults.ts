@@ -257,8 +257,9 @@ export function CompareSolvers(
 	solver2: string,
 	solverTimes: { [key: string]: { InputFileName: string; time: number }[] }
 ): ComparisonSummary {
-	const results1 = solverTimes[solver1];
-	const results2 = solverTimes[solver2];
+	// A solver that has no times has nothing to compare.
+	const results1 = solverTimes[solver1] ?? [];
+	const results2 = solverTimes[solver2] ?? [];
 
 	const comparisonSummary: ComparisonSummary = {
 		better: 0,
@@ -342,7 +343,11 @@ export function CalculateInstanceAttributes(data: object[]): {
 	const results: {
 		[key: string]: StatisticsColumns;
 	} = {};
-	const keys = Object.keys(data[0]).filter((key) => key !== "InputFileName");
+	const [firstItem] = data;
+	if (firstItem === undefined) {
+		return results;
+	}
+	const keys = Object.keys(firstItem).filter((key) => key !== "InputFileName");
 
 	keys.forEach((key) => {
 		const values: number[] = data
