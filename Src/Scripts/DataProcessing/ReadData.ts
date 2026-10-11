@@ -115,6 +115,21 @@ function IsValidExtension(extension: string): boolean {
 }
 
 /**
+ * Splits the content of a file into lines, for the line endings of Windows (\r\n) and of Unix (\n).
+ * The lines of a trace file are also trimmed.
+ *
+ * @param extension - The kind of file: a trace file, the instance information (.csv) or the best known bounds (.solu).
+ * @param content - The text of the file.
+ */
+export function SplitIntoLines(
+	extension: "trc" | "csv" | "solu",
+	content: string
+): string[] {
+	const lines = content.split(/\r?\n/);
+	return extension === "trc" ? lines.map((line) => line.trim()) : lines;
+}
+
+/**
  * This function reads data from multiple file inputs, returning the raw data, instance information data and solu data.
  *
  * @param {string[]} unprocessedData - An array to store the raw data from .trc files.
@@ -163,20 +178,15 @@ export function ReadData(
 
 				VerifyConfigurationProperties(parsedData);
 			} else if (fileExtension === "trc") {
-				const lines = (<string>reader.result).split(/\r?\n/).map((line) => {
-					return line.trim();
-				});
-				for (const line of lines) {
+				for (const line of SplitIntoLines("trc", <string>reader.result)) {
 					unprocessedData.push(line);
 				}
 			} else if (fileExtension === "csv") {
-				const lines = (<string>reader.result).split("\n");
-				for (const line of lines) {
+				for (const line of SplitIntoLines("csv", <string>reader.result)) {
 					unprocessedInstanceInformationData.push(line);
 				}
 			} else if (fileExtension === "solu") {
-				const lines = (<string>reader.result).split(/\r?\n/);
-				for (const line of lines) {
+				for (const line of SplitIntoLines("solu", <string>reader.result)) {
 					unprocessedSolutionData.push(line);
 				}
 			}
