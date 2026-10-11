@@ -10,7 +10,8 @@ import { TraceData } from "../../Interfaces/Interfaces";
 import {
 	ComputeStatisticalMeasures,
 	ExtractFailedCount,
-	ExtractStatusMessages
+	ExtractStatusMessages,
+	GetStatusKeys
 } from "../../DataProcessing/ChartsComputations/ComputeChartData";
 
 /**
@@ -194,10 +195,7 @@ export function PlotStatusMessages(
 	const solverNames = data.map((obj) => {
 		return obj["SolverName"] as string;
 	});
-	const [firstEntry] = data;
-	const statusKeys = Object.keys(firstEntry ?? {}).filter((key) => {
-		return key !== "SolverName";
-	});
+	const statusKeys = GetStatusKeys(data);
 
 	const colorMapping: { [key: string]: string } = {
 		Optimal: "#d5fa87",
@@ -283,10 +281,7 @@ export function PlotFailCount(traceData: TraceData[]): {
 	const solverNames = data.map((obj) => {
 		return obj["SolverName"] as string;
 	});
-	const [firstEntry] = data;
-	const statusKeys = Object.keys(firstEntry ?? {}).filter((key) => {
-		return key !== "SolverName";
-	});
+	const statusKeys = GetStatusKeys(data);
 
 	const chartData = statusKeys.map((key) => {
 		return {

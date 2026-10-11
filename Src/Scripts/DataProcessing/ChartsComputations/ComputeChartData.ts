@@ -187,26 +187,44 @@ export function ExtractStatusMessages(
 }
 
 /**
+ * Gets the status messages that occur for at least one of the solvers, in the order in which they are first found.
+ * A chart needs all of them: a status that only a later solver has would otherwise not be shown.
+ *
+ * @param counts - The status counts per solver, see ExtractStatusMessages.
+ */
+export function GetStatusKeys(counts: StatusCount[]): string[] {
+	const keys = new Set<string>();
+	for (const count of counts) {
+		for (const key of Object.keys(count)) {
+			if (key !== "SolverName") {
+				keys.add(key);
+			}
+		}
+	}
+	return [...keys];
+}
+
+/**
  * This function extracts the number of failed instances per solver from the results data.
+ * Every solver is in the result, with 0 if none of its instances failed.
  * @param {TraceData[]} traceData - Array of objects containing the result data.
- * @returns {string[]} - An object with solver names as keys. Each solver contains a counter of the failed instances.
+ * @returns {StatusCount[]} - One entry per solver, with the solver name and the counter of its failed instances.
  */
 export function ExtractFailedCount(traceData: TraceData[]): StatusCount[] {
 	const result: StatusCount[] = [];
 	const nameErrorMap = new Map<string | undefined, StatusCount>();
 
 	traceData.forEach((obj) => {
-		const existingEntry = nameErrorMap.get(obj["SolverName"]);
+		let entry = nameErrorMap.get(obj["SolverName"]);
+		if (!entry) {
+			entry = { SolverName: obj["SolverName"], Failed: 0 };
+			nameErrorMap.set(obj["SolverName"], entry);
+			result.push(entry);
+		}
 
-		if (existingEntry) {
-			existingEntry["Failed"] = ((existingEntry["Failed"] as number) || 0) + 1;
-		} else {
-			const newEntry: StatusCount = {
-				SolverName: obj["SolverName"],
-				Failed: 1
-			};
-			nameErrorMap.set(obj["SolverName"], newEntry);
-			result.push(newEntry);
+		// Fail is a boolean, or the text "true" once the data has been stored and read again.
+		if (String(obj["Fail"]) === "true") {
+			entry["Failed"] = ((entry["Failed"] as number) || 0) + 1;
 		}
 	});
 	return result;
