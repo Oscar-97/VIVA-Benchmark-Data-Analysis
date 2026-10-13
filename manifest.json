@@ -13,8 +13,9 @@
 		{
 			"src": "Docs/Images/OverView_system_new.png",
 			"type": "image/png",
-			"sizes": "1252x659",
-			"purpose": "any"
+			"sizes": "1497x1203",
+			"form_factor": "wide",
+			"label": "Overview of the VIVA application"
 		}
 	],
 	"icons": [
@@ -55,7 +56,7 @@
 			"icons": [
 				{
 					"src": "Src/CSS/icon_maskable.png",
-					"sizes": "192x192",
+					"sizes": "512x512",
 					"type": "image/png"
 				}
 			]
@@ -67,7 +68,7 @@
 			"icons": [
 				{
 					"src": "Src/CSS/icon_maskable.png",
-					"sizes": "192x192",
+					"sizes": "512x512",
 					"type": "image/png"
 				}
 			]
@@ -79,7 +80,7 @@
 			"icons": [
 				{
 					"src": "Src/CSS/icon_maskable.png",
-					"sizes": "192x192",
+					"sizes": "512x512",
 					"type": "image/png"
 				}
 			]
@@ -91,7 +92,7 @@
 			"icons": [
 				{
 					"src": "Src/CSS/icon_maskable.png",
-					"sizes": "192x192",
+					"sizes": "512x512",
 					"type": "image/png"
 				}
 			]
@@ -103,7 +104,7 @@
 			"icons": [
 				{
 					"src": "Src/CSS/icon_maskable.png",
-					"sizes": "192x192",
+					"sizes": "512x512",
 					"type": "image/png"
 				}
 			]
@@ -115,7 +116,7 @@
 			"icons": [
 				{
 					"src": "Src/CSS/icon_maskable.png",
-					"sizes": "192x192",
+					"sizes": "512x512",
 					"type": "image/png"
 				}
 			]
@@ -127,7 +128,7 @@
 			"icons": [
 				{
 					"src": "Src/CSS/icon_maskable.png",
-					"sizes": "192x192",
+					"sizes": "512x512",
 					"type": "image/png"
 				}
 			]
@@ -139,7 +140,7 @@
 			"icons": [
 				{
 					"src": "Src/CSS/icon_maskable.png",
-					"sizes": "192x192",
+					"sizes": "512x512",
 					"type": "image/png"
 				}
 			]
@@ -151,7 +152,7 @@
 			"icons": [
 				{
 					"src": "Src/CSS/icon_maskable.png",
-					"sizes": "192x192",
+					"sizes": "512x512",
 					"type": "image/png"
 				}
 			]
@@ -163,7 +164,7 @@
 			"icons": [
 				{
 					"src": "Src/CSS/icon_maskable.png",
-					"sizes": "192x192",
+					"sizes": "512x512",
 					"type": "image/png"
 				}
 			]

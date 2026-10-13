@@ -8,6 +8,5 @@ export enum Keys {
 	RELEASE_VERSION_FETCHED = "releaseVersionFetched",
 	RELEASE_VERSION = "releaseVersion",
 	ALERTED_STORAGE = "alertedStorage",
-	ALERTED_SCREEN_SIZE = "alertedScreenSize",
-	NOTIFICATION_PERMISSION = "notificationPermission"
+	ALERTED_SCREEN_SIZE = "alertedScreenSize"
 }

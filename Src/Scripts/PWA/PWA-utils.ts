@@ -1,5 +1,3 @@
-import { Keys } from "../Constants/Keys";
-
 /**
  * This function checks if the browser supports service workers, a technology that enables
  * offline caching and background syncing for Progressive Web Apps (PWAs). If supported,
@@ -27,14 +25,19 @@ export function RegisterServiceWorker(): void {
 }
 
 /**
+ * This function checks if the application runs as an installed app, and not in a browser tab.
+ */
+function IsInstalledApp(): boolean {
+	return ["standalone", "window-controls-overlay", "minimal-ui"].some(
+		(mode) => window.matchMedia(`(display-mode: ${mode})`).matches
+	);
+}
+
+/**
  * This function requests permission for desktop notifications in the browser.
  */
 export function RequestPWANotificationPermission(): void {
-	if (
-		!window.matchMedia("(display-mode: standalone)").matches &&
-		!window.matchMedia("(display-mode: window-controls-overlay)").matches &&
-		!window.matchMedia("(display-mode: minimal-ui)").matches
-	) {
+	if (!IsInstalledApp()) {
 		return;
 	}
 
@@ -42,10 +45,8 @@ export function RequestPWANotificationPermission(): void {
 		console.error("This browser does not support desktop notification");
 	} else if (Notification.permission === "granted") {
 		console.info("Notification permission already granted.");
-		localStorage.setItem(Keys.NOTIFICATION_PERMISSION, "granted");
 	} else if (Notification.permission !== "denied") {
 		Notification.requestPermission().then((permission) => {
-			localStorage.setItem(Keys.NOTIFICATION_PERMISSION, permission);
 			if (permission === "granted") {
 				console.info("Notification permission granted.");
 			} else {
@@ -65,11 +66,7 @@ export function ShowPWANotification(
 	title: string,
 	options: NotificationOptions
 ): void {
-	if (
-		!window.matchMedia("(display-mode: standalone)").matches &&
-		!window.matchMedia("(display-mode: window-controls-overlay)").matches &&
-		!window.matchMedia("(display-mode: minimal-ui)").matches
-	) {
+	if (!IsInstalledApp()) {
 		return;
 	}
 
@@ -78,7 +75,7 @@ export function ShowPWANotification(
 		return;
 	}
 
-	if (localStorage.getItem(Keys.NOTIFICATION_PERMISSION) === "granted") {
+	if (Notification.permission === "granted") {
 		new Notification(title, options);
 	} else if (Notification.permission === "denied") {
 		console.warn("Notification permission denied.");

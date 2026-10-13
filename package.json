@@ -5,7 +5,7 @@
 	"main": "",
 	"scripts": {
 		"test": "jest",
-		"test:functions": "jest Function.test.ts DataProcessing.test.ts UserConfiguration.test.ts Pages.test.ts ChartData.test.ts Parsers.test.ts Statistics.test.ts",
+		"test:functions": "jest Function.test.ts DataProcessing.test.ts UserConfiguration.test.ts Pages.test.ts Manifest.test.ts ChartData.test.ts Parsers.test.ts Statistics.test.ts",
 		"test:ui": "jest UI.test.ts Offline.test.ts ChartPages.test.ts",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
