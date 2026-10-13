@@ -29,7 +29,14 @@ module.exports = {
         use: [
           // MiniCssExtractPlugin.loader to extract CSS into a separate file.
           MiniCssExtractPlugin.loader,
-          'css-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              // bootstrap-icons lists a woff2 and a woff font. Browsers use the first format that they
+              // support (woff2, since 2016), so the woff copy, 235 KB inlined, is left out.
+              url: { filter: (url) => !/\.woff(\?|#|$)/.test(url) },
+            },
+          },
         ],
       },
       {

@@ -1,8 +1,25 @@
-import Chart, {
+import {
+	BarController,
+	BarElement,
+	BubbleController,
+	CategoryScale,
+	Chart,
 	ChartDataset,
 	ChartOptions,
-	ChartTypeRegistry
-} from "chart.js/auto";
+	ChartTypeRegistry,
+	Colors,
+	Filler,
+	Legend,
+	LinearScale,
+	LineController,
+	LineElement,
+	PointElement,
+	RadarController,
+	RadialLinearScale,
+	SubTitle,
+	Title,
+	Tooltip
+} from "chart.js";
 import zoomPlugin from "chartjs-plugin-zoom";
 import annotationPlugin from "chartjs-plugin-annotation";
 import { elements } from "../Elements/Elements";
@@ -20,8 +37,33 @@ export type ChartAnnotationOptions = NonNullable<
 	ChartOptions["plugins"]
 >["annotation"];
 
+/**
+ * Only what the application draws is registered, not everything that chart.js/auto does:
+ * bar, line, bubble and radar charts, with the scales and elements that they use, and the plugins
+ * for the colors, the filled areas of a radar chart, the legend, the titles and the tooltips.
+ * A chart of another kind needs its controller, scale and elements added here.
+ */
+Chart.register(
+	BarController,
+	LineController,
+	BubbleController,
+	RadarController,
+	CategoryScale,
+	LinearScale,
+	RadialLinearScale,
+	BarElement,
+	LineElement,
+	PointElement,
+	Colors,
+	Filler,
+	Legend,
+	SubTitle,
+	Title,
+	Tooltip
+);
 Chart.register(zoomPlugin);
 Chart.register(annotationPlugin);
+
 /**
  * This function generates an array of random hex color codes.
  *

@@ -5,7 +5,7 @@
 	"main": "",
 	"scripts": {
 		"test": "jest",
-		"test:functions": "jest Function.test.ts DataProcessing.test.ts UserConfiguration.test.ts Pages.test.ts ChartData.test.ts Parsers.test.ts",
+		"test:functions": "jest Function.test.ts DataProcessing.test.ts UserConfiguration.test.ts Pages.test.ts ChartData.test.ts Parsers.test.ts Statistics.test.ts",
 		"test:ui": "jest UI.test.ts Offline.test.ts ChartPages.test.ts",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
@@ -52,6 +52,7 @@
 		"gulp-replace": "^1.1.4",
 		"gulp-zip": "^6.1.0",
 		"jest": "^30.3.0",
+		"mathjs": "^15.2.0",
 		"merge-stream": "^2.0.0",
 		"mini-css-extract-plugin": "^2.10.2",
 		"playwright": "^1.59.1",
@@ -82,8 +83,7 @@
 		"datatables.net-searchbuilder-bs5": "^1.8.4",
 		"datatables.net-searchpanes-bs5": "^2.3.5",
 		"datatables.net-select-bs5": "^3.1.3",
-		"jquery": "^4.0.0",
-		"mathjs": "^15.2.0"
+		"jquery": "^4.0.0"
 	},
 	"engines": {
 		"node": "^20.19.0 || ^22.13.0 || >=24"

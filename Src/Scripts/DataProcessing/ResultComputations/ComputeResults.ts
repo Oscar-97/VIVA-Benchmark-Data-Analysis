@@ -1,10 +1,10 @@
-import * as math from "mathjs";
 import {
 	ComparisonSummary,
 	StatisticsColumns,
 	TraceData
 } from "../../Interfaces/Interfaces";
 import { Values } from "../../Constants/Values";
+import { SummarizeValues } from "../Statistics";
 
 /**
  * This function calculates a direction, based on an input parameter 'direction'.
@@ -355,39 +355,9 @@ export function CalculateInstanceAttributes(data: object[]): {
 			.filter((value) => !isNaN(value));
 
 		if (values.length > 0) {
-			const avgValue = math.format(math.mean(values), { precision: 7 });
-			const minValue = math.format(math.min(values), { precision: 7 });
-			const maxValue = math.format(math.max(values), { precision: 7 });
-			const stdValue = math.format(math.std(values), { precision: 7 });
-			const p10Value = Number(
-				math.format(math.quantileSeq(values, 0.1), { precision: 7 })
-			);
-			const p25Value = Number(
-				math.format(math.quantileSeq(values, 0.25), { precision: 7 })
-			);
-			const p50Value = Number(
-				math.format(math.quantileSeq(values, 0.5), { precision: 7 })
-			);
-			const p75Value = Number(
-				math.format(math.quantileSeq(values, 0.75), { precision: 7 })
-			);
-			const p90Value = Number(
-				math.format(math.quantileSeq(values, 0.9), { precision: 7 })
-			);
-
-			const countValue = values.length;
-
 			results[key] = {
-				countValue,
-				avgValue: Number(avgValue),
-				minValue: Number(minValue),
-				maxValue: Number(maxValue),
-				stdValue: Number(stdValue),
-				p10Value: Number(p10Value),
-				p25Value: Number(p25Value),
-				p50Value: Number(p50Value),
-				p75Value: Number(p75Value),
-				p90Value: Number(p90Value)
+				countValue: values.length,
+				...SummarizeValues(values)
 			};
 		}
 	});
@@ -419,25 +389,7 @@ export function CalculateSolveAttributes(
 		if (values.length > 0) {
 			results[key] = {
 				countValue: values.length,
-				avgValue: Number(math.format(math.mean(values), { precision: 7 })),
-				minValue: Number(math.format(math.min(values), { precision: 7 })),
-				maxValue: Number(math.format(math.max(values), { precision: 7 })),
-				stdValue: Number(math.format(math.std(values), { precision: 7 })),
-				p10Value: Number(
-					math.format(math.quantileSeq(values, 0.1), { precision: 7 })
-				),
-				p25Value: Number(
-					math.format(math.quantileSeq(values, 0.25), { precision: 7 })
-				),
-				p50Value: Number(
-					math.format(math.quantileSeq(values, 0.5), { precision: 7 })
-				),
-				p75Value: Number(
-					math.format(math.quantileSeq(values, 0.75), { precision: 7 })
-				),
-				p90Value: Number(
-					math.format(math.quantileSeq(values, 0.9), { precision: 7 })
-				)
+				...SummarizeValues(values)
 			};
 		}
 	});

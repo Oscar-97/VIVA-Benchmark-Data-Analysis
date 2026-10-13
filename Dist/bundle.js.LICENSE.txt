@@ -77,14 +77,6 @@
   */
 
 /*!
- *  decimal.js v10.4.3
- *  An arbitrary-precision Decimal type for JavaScript.
- *  https://github.com/MikeMcl/decimal.js
- *  Copyright (c) 2022 Michael Mclaughlin <M8ch88l@gmail.com>
- *  MIT Licence
- */
-
-/*!
  * @kurkle/color v0.3.2
  * https://github.com/kurkle/color#readme
  * (c) 2023 Jukka Kurkela
