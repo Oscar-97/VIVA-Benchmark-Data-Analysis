@@ -425,6 +425,43 @@ function ExceedsBound(a: number, b: number): boolean {
 }
 
 /**
+ * The termination statuses that make a result fail.
+ */
+// TODO: Check which termination statuses are considered as failures for this "Failed" condition.
+const FAILED_TERMINATION_STATUSES = [
+	"Capability Problem",
+	"Unknown Error",
+	"User Interrupt",
+	"Error"
+];
+
+/**
+ * Checks if a bound of the solver contradicts the best known bound of the problem, which is the
+ * dual bound for a primal bound of the solver and the primal bound for a dual bound of the solver.
+ *
+ * A solver cannot have a primal bound that is better than the best known dual bound, nor a
+ * dual bound that is better than the best known primal bound: for a minimization problem
+ * the primal bound of the solver cannot be below the dual bound that is known, and the dual bound
+ * of the solver cannot be above the primal bound that is known; for a maximization problem it is
+ * the other way around. A bound that is infinite is not checked.
+ */
+function ContradictsKnownBound(
+	solverBound: number | string,
+	knownBound: number | string,
+	isMinimization: boolean,
+	solverBoundIsPrimal: boolean
+): boolean {
+	if (IsInfinite(solverBound) || IsInfinite(knownBound)) {
+		return false;
+	}
+	const solver = Number(solverBound);
+	const known = Number(knownBound);
+	return solverBoundIsPrimal !== isMinimization
+		? ExceedsBound(solver, known)
+		: ExceedsBound(known, solver);
+}
+
+/**
  * This function sets the fail value and reason based on the termination status and other parameters.
  *
  * The bounds of the solver are checked against the best known bounds of the problem:
@@ -451,40 +488,32 @@ export function SetFailValueAndReason(
 		return [true, "No data"];
 	}
 
-	// TODO: Check which termination statuses are considered as failures for this "Failed" condition.
-	if (
-		terminationStatus === "Capability Problem" ||
-		terminationStatus === "Unknown Error" ||
-		terminationStatus === "User Interrupt" ||
-		terminationStatus === "Error"
-	) {
+	if (FAILED_TERMINATION_STATUSES.includes(terminationStatus)) {
 		return [true, `Termstatus is ${terminationStatus}`];
 	}
 
 	const isMinimization = direction === "min";
 
-	// Compare primal bounds with know dual bounds.
-	if (!IsInfinite(primalBoundSolver) && !IsInfinite(dualBoundProblem)) {
-		const primal = Number(primalBoundSolver);
-		const dual = Number(dualBoundProblem);
-		const contradicts = isMinimization
-			? ExceedsBound(dual, primal)
-			: ExceedsBound(primal, dual);
-		if (contradicts) {
-			return [true, "Primal bound contradicts best known dual bound"];
-		}
+	if (
+		ContradictsKnownBound(
+			primalBoundSolver,
+			dualBoundProblem,
+			isMinimization,
+			true
+		)
+	) {
+		return [true, "Primal bound contradicts best known dual bound"];
 	}
 
-	// Compare dual bounds with know primal bounds.
-	if (!IsInfinite(dualBoundSolver) && !IsInfinite(primalBoundProblem)) {
-		const dual = Number(dualBoundSolver);
-		const primal = Number(primalBoundProblem);
-		const contradicts = isMinimization
-			? ExceedsBound(dual, primal)
-			: ExceedsBound(primal, dual);
-		if (contradicts) {
-			return [true, "Dual bound contradicts best known primal bound"];
-		}
+	if (
+		ContradictsKnownBound(
+			dualBoundSolver,
+			primalBoundProblem,
+			isMinimization,
+			false
+		)
+	) {
+		return [true, "Dual bound contradicts best known primal bound"];
 	}
 
 	// If none of the above conditions are met, return false and set it as Normal Completion.
