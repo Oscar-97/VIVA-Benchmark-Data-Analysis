@@ -7,7 +7,10 @@
 		"test": "jest",
 		"test:functions": "jest Function.test.ts DataProcessing.test.ts UserConfiguration.test.ts Pages.test.ts Manifest.test.ts ChartData.test.ts ChartDataFilters.test.ts UserConfigurationStorage.test.ts PWAUtils.test.ts PlotRegistry.test.ts BarCharts.test.ts LineBubbleRadarCharts.test.ts AddResultCategories.test.ts Parsers.test.ts Statistics.test.ts",
 		"test:coverage": "jest --coverage Function.test.ts DataProcessing.test.ts UserConfiguration.test.ts Pages.test.ts Manifest.test.ts ChartData.test.ts ChartDataFilters.test.ts UserConfigurationStorage.test.ts PWAUtils.test.ts PlotRegistry.test.ts BarCharts.test.ts LineBubbleRadarCharts.test.ts AddResultCategories.test.ts Parsers.test.ts Statistics.test.ts",
-		"test:ui":"jest UI.test.ts Offline.test.ts ChartPages.test.ts",
+		"test:ui": "playwright test --project=chromium",
+		"test:ui:update": "playwright test --project=chromium --update-snapshots",
+		"test:visual": "playwright test --project=visual",
+		"test:visual:update": "playwright test --project=visual --update-snapshots",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
 		"start": "webpack serve --config webpack.config.js",
@@ -16,6 +19,7 @@
 		"build:pages": "node scripts/build-pages.mjs",
 		"check:pages": "node scripts/build-pages.mjs --check",
 		"check:sw": "node scripts/build-service-worker.mjs --check",
+		"check:e2e-types": "tsc --noEmit -p Tests/E2E",
 		"release": "gulp release",
 		"release:web": "gulp release-web"
 	},
@@ -26,6 +30,10 @@
 	"jest": {
 		"preset": "ts-jest",
 		"testEnvironment": "node",
+		"testPathIgnorePatterns": [
+			"/node_modules/",
+			"/Tests/E2E/"
+		],
 		"collectCoverageFrom": [
 			"Src/Scripts/**/*.ts",
 			"!Src/Scripts/Datasets/**",
@@ -55,7 +63,9 @@
 	},
 	"homepage": "https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis#readme",
 	"devDependencies": {
+		"@axe-core/playwright": "^4.13.0",
 		"@eslint/js": "^10.0.1",
+		"@playwright/test": "^1.64.0",
 		"@types/bootstrap": "^5.2.10",
 		"@types/jest": "^30.0.0",
 		"@types/jquery": "^4.0.0",
@@ -73,7 +83,6 @@
 		"mathjs": "^15.2.0",
 		"merge-stream": "^2.0.0",
 		"mini-css-extract-plugin": "^2.10.2",
-		"playwright": "^1.59.1",
 		"pre-commit": "^1.2.2",
 		"prettier": "^3.8.3",
 		"source-map-loader": "^5.0.0",

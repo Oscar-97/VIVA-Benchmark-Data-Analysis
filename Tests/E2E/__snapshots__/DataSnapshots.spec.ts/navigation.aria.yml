@@ -1,0 +1,37 @@
+- navigation:
+  - img "VIVA logo"
+  - text: VIVA
+  - list:
+    - listitem:
+      - link " Table":
+        - /url: ../../report.html
+    - listitem:
+      - button " Plots"
+    - listitem:
+      - link " Compare Solvers":
+        - /url: ../Pages/compare_solvers.html
+    - listitem:
+      - button "Upload"
+      - button " Upload" [disabled]
+    - listitem:
+      - text: Library
+      - combobox "Select library" [disabled]:
+        - option "None" [selected]
+        - option "MINLPLib"
+        - option /MIPLIB \d+/
+        - option /MIPLIB \d+/
+  - list:
+    - listitem:
+      - link " Docs":
+        - /url: ../../Docs/index.html
+    - listitem:
+      - link " GitHub":
+        - /url: https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis
+    - listitem:
+      - link " New Issue":
+        - /url: https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues/new
+    - listitem:
+      - button "Help":  Help
+    - listitem:
+      - link " Releases":
+        - /url: https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/releases

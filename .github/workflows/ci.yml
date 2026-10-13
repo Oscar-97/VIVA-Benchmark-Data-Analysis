@@ -26,6 +26,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npx tsc --noEmit
+      - run: npm run check:e2e-types
       # The generated files must be what the sources produce, see CLAUDE.md.
       - run: npm run check:pages
       - run: npm run check:sw
@@ -58,3 +59,16 @@ jobs:
         run: git diff --stat --exit-code -- Dist service-worker.js
       - run: npx playwright install --with-deps chromium
       - run: npm run test:ui
+      # The screenshots are made by the workflow "Update screenshots". Until they are committed, they are not checked.
+      - name: Compare the screenshots
+        if: hashFiles('Tests/E2E/__snapshots__/Visual.spec.ts/*') != ''
+        run: npm run test:visual
+      # The report has the traces of the tests that were retried, and the screenshots of the ones that failed.
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report
+            test-results
+          if-no-files-found: ignore

@@ -5,7 +5,7 @@ Browser app (PWA) for analyzing optimization-solver benchmark data. TypeScript (
 ## Commands
 - `npm run build` – webpack build to `Dist/` (cleaned first), then writes the cache list and cache name into `service-worker.js`; `npm run check:sw` fails if that block is out of date
 - `npm start` – webpack dev server
-- `npm test` – all jest tests; `npm run test:functions` (unit tests and the checks of the generated files); `npm run test:ui` (Playwright, headless Chromium: the UI tests open the pages via `file://`, the offline test serves the app on localhost; run `npm run build` first)
+- `npm test` – all jest tests; `npm run test:functions` (unit tests and the checks of the generated files); `npm run test:coverage` (the unit tests with coverage and its thresholds in `package.json`); `npm run test:ui` (`@playwright/test`, headless Chromium, configured in `playwright.config.ts`: the tests open the pages via `file://`, the offline test serves the app on localhost; run `npm run build` first, and `npx playwright install chromium` once; `npm run test:ui:update` rewrites the text snapshots in `Tests/E2E/__snapshots__/`, check the difference). The screenshots of `Visual.spec.ts` (`npm run test:visual`) are made on Linux only: run the workflow "Update screenshots" to make or update them, never commit ones from another operating system
 - `npm run lint` / `npm run lint:fix` – eslint + prettier
 - `npm run build:pages` – regenerate `report.html` and `Src/Pages/*.html` from `Src/Templates`; `npm run check:pages` fails if they are out of date
 - `npm run build:docs` – typedoc into `Docs/`
@@ -21,7 +21,7 @@ Browser app (PWA) for analyzing optimization-solver benchmark data. TypeScript (
 - `Src/Templates/` – the source of the HTML pages: `pages.mjs` (the pages and their buttons), `layout.mjs`, `partials/` (navigation, alert, button catalog) and `fragments/` (page-specific controls and bodies). `scripts/build-pages.mjs` renders them and formats the result with Prettier
 - `report.html` (the entry page, used by the manifest, the service worker and the UI tests) and `Src/Pages/*.html` – **generated** from `Src/Templates`, but committed, so the app still opens from the file system. Edit the templates and run `npm run build:pages`, never the pages
 - `Src/CSS` – styles
-- `Tests/` – unit tests (`Function`, `DataProcessing`, `Parsers`, `ChartData`, `UserConfiguration`, `Pages`), browser tests (`UI`, `ChartPages`, `Offline`), `TestHelpers.ts` and `TestData/`
+- `Tests/` – unit tests (jest, in Node; the chart builders are tested with `CreateChart` mocked), `Tests/E2E/*.spec.ts` (Playwright browser tests, with `Helpers.ts`; wait on conditions, never `waitForTimeout`; `A11y.spec.ts` lists the accessibility rules that the pages still break), `TestHelpers.ts` and `TestData/`
 - `.github/workflows/ci.yml` – CI: lint, types, generated files, unit tests, `npm audit --omit=dev`, then build and browser tests
 - `Dist/`, `Docs/`, `Release/` – generated output
 
