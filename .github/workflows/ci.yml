@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+# A newer push to the same branch makes the run of the older one unnecessary.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Lint, types, unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      # The generated files must be what the sources produce, see CLAUDE.md.
+      - run: npm run check:pages
+      - run: npm run check:sw
+      - run: npm run test:functions
+      # What users get must be free of known vulnerabilities. The tools for development are not checked.
+      - run: npm audit --omit=dev --audit-level=high
+
+  ui:
+    name: Build and browser tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      # Dist is committed. Tell if it differs from what this machine builds, to learn if the build is
+      # the same on every operating system. This does not fail the run yet.
+      - name: Is the committed Dist what the build produces? (information)
+        continue-on-error: true
+        run: git diff --stat --exit-code -- Dist service-worker.js
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:ui
