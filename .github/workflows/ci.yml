@@ -29,7 +29,14 @@ jobs:
       # The generated files must be what the sources produce, see CLAUDE.md.
       - run: npm run check:pages
       - run: npm run check:sw
-      - run: npm run test:functions
+      # The same tests as test:functions, with coverage; the thresholds are in package.json.
+      - run: npm run test:coverage
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: coverage/lcov-report
+          if-no-files-found: ignore
       # What users get must be free of known vulnerabilities. The tools for development are not checked.
       - run: npm audit --omit=dev --audit-level=high
 

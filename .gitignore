@@ -3,6 +3,7 @@ Release
 /TestData/
 !/Test/TestData/
 TestScreenshots
+coverage
 Tests/downloads
 .vscode/settings.json
 

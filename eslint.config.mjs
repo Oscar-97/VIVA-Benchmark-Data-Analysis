@@ -10,6 +10,7 @@ export default tseslint.config(
 			"Docs/",
 			"Dist/",
 			"Release/",
+			"coverage/",
 			"TestData/",
 			"TestData*.txt/",
 			"node_modules/",
