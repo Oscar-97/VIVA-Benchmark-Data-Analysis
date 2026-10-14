@@ -5,7 +5,7 @@
 	"main": "",
 	"scripts": {
 		"test": "jest",
-		"test:functions": "jest Function.test.ts DataProcessing.test.ts UserConfiguration.test.ts Pages.test.ts Manifest.test.ts ChartData.test.ts ChartDataFilters.test.ts UserConfigurationStorage.test.ts PWAUtils.test.ts PlotRegistry.test.ts BarCharts.test.ts LineBubbleRadarCharts.test.ts AddResultCategories.test.ts Parsers.test.ts Statistics.test.ts",
+		"test:functions": "jest Function.test.ts DataProcessing.test.ts UserConfiguration.test.ts Pages.test.ts Manifest.test.ts ChartData.test.ts ChartDataFilters.test.ts UserConfigurationStorage.test.ts PWAUtils.test.ts PlotRegistry.test.ts BarCharts.test.ts LineBubbleRadarCharts.test.ts AddResultCategories.test.ts Parsers.test.ts Statistics.test.ts Theme.test.ts",
 		"test:coverage": "jest --coverage Function.test.ts DataProcessing.test.ts UserConfiguration.test.ts Pages.test.ts Manifest.test.ts ChartData.test.ts ChartDataFilters.test.ts UserConfigurationStorage.test.ts PWAUtils.test.ts PlotRegistry.test.ts BarCharts.test.ts LineBubbleRadarCharts.test.ts AddResultCategories.test.ts Parsers.test.ts Statistics.test.ts",
 		"test:ui": "playwright test --project=chromium",
 		"test:ui:update": "playwright test --project=chromium --update-snapshots",
@@ -15,7 +15,7 @@
 		"lint:fix": "eslint . --fix",
 		"start": "webpack serve --config webpack.config.js",
 		"build": "webpack --config webpack.config.js && node scripts/build-service-worker.mjs",
-		"build:docs": "typedoc --options typedoc.json",
+		"build:docs": "node scripts/clean-docs.mjs && typedoc --options typedoc.json",
 		"build:pages": "node scripts/build-pages.mjs",
 		"check:pages": "node scripts/build-pages.mjs --check",
 		"check:sw": "node scripts/build-service-worker.mjs --check",

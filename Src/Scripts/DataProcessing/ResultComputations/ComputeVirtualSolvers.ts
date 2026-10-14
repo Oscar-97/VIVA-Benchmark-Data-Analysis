@@ -96,8 +96,22 @@ export function ComputeVirtualTimesTraceData(
 			worstPrimalBoundSolver = Math.min(...primalBoundSolver);
 		}
 
-		const dualBoundProblem = Number(first.DualBoundProblem);
-		const primalBoundProblem = Number(first.PrimalBoundProblem);
+		// Without a known bound for the problem, each row has the bound of its own solver.
+		// Taking the best of them, and not the one of the first row, does not depend on the order of the rows.
+		const dualBoundsProblem = items.map((item) =>
+			Number(item.DualBoundProblem)
+		);
+		const primalBoundsProblem = items.map((item) =>
+			Number(item.PrimalBoundProblem)
+		);
+		const dualBoundProblem =
+			direction === "min"
+				? Math.max(...dualBoundsProblem)
+				: Math.min(...dualBoundsProblem);
+		const primalBoundProblem =
+			direction === "min"
+				? Math.min(...primalBoundsProblem)
+				: Math.max(...primalBoundsProblem);
 
 		const bestDualGap = CalculateGap(
 			bestDualboundSolver,

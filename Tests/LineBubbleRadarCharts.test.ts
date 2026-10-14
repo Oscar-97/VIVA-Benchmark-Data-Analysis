@@ -98,6 +98,18 @@ describe("GetRelativeTimes", () => {
 		expect(relative["A"]).toEqual([{ time: 1, InputFileName: "a" }]);
 	});
 
+	it("keeps a best time of 0 when a later solver is slower", () => {
+		const relative = GetRelativeTimes({
+			A: [{ time: 0, InputFileName: "a" }],
+			B: [{ time: 5, InputFileName: "a" }]
+		});
+
+		// Without a positive best time the times cannot be divided, so they count as 1.
+		// Before, the time of B replaced the 0 and A got 0 / 5 = 0.
+		expect(relative["A"]?.map((entry) => entry.time)).toEqual([1]);
+		expect(relative["B"]?.map((entry) => entry.time)).toEqual([1]);
+	});
+
 	it("is empty without data", () => {
 		expect(GetRelativeTimes({})).toEqual({});
 	});

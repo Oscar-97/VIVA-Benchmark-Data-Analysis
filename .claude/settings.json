@@ -7,12 +7,12 @@
       "Bash(npx tsc --noEmit)",
       "Bash(git status)",
       "Bash(git diff:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Read(./Docs/**)"
     ],
     "deny": [
       "Read(./node_modules/**)",
       "Read(./Dist/**/*.map)",
-      "Read(./Docs/**)",
       "Read(./package-lock.json)",
       "Edit(./Dist/**)",
       "Edit(./Docs/**)",

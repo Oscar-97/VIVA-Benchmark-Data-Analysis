@@ -24,7 +24,7 @@ export async function ActivateDemoMode(): Promise<void> {
 
 export function NotifyDemoMode(): void {
 	if (document.title === PageTitles.TABLE) {
-		elements.demoDataButton.style.color = "#198754";
+		elements.demoDataButton.classList.add("text-success");
 		elements.demoDataButton.disabled = true;
 		elements.demoDataSelector.disabled = true;
 	}

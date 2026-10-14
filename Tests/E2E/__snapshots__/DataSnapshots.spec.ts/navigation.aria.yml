@@ -33,5 +33,7 @@
     - listitem:
       - button "Help":  Help
     - listitem:
+      - button "Switch to dark theme"
+    - listitem:
       - link " Releases":
         - /url: https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/releases

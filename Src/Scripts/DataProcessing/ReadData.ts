@@ -144,18 +144,15 @@ export function SplitIntoLines(
  * and processes each line as required, storing the results in the relevant arrays (unprocessedData, unprocessedInstanceInformationData, unprocessedSolutionData).
  * If the file extension is .json, the function stores the uploaded UserConfiguration in the localStorage.
  */
-export function ReadData(
+export async function ReadData(
 	unprocessedData: string[],
 	unprocessedInstanceInformationData: string[],
 	unprocessedSolutionData: string[]
-): {
+): Promise<{
 	UnprocessedData: string[];
 	UnprocessedInstanceInformationData: string[];
 	UnprocessedSolutionData: string[];
-} {
-	elements.importDataButton.disabled = false;
-	elements.librarySelector.disabled = false;
-
+}> {
 	/**
 	 * Input multiple files.
 	 * For instance: trace1.trc, trace2.trc and minlp.solu.
@@ -163,37 +160,44 @@ export function ReadData(
 	if (!elements.fileInput.files) {
 		throw new Error("No files were selected.");
 	}
-	for (const file of Array.from(elements.fileInput.files)) {
-		const reader = new FileReader();
-		const fileName = file.name;
-		const fileExtension = fileName.split(".").pop();
+	const files = Array.from(elements.fileInput.files);
+
+	// The import is not possible until all files are read.
+	elements.importDataButton.disabled = true;
+
+	// All files are read at the same time, but the results are used in the order of the selection,
+	// so the order of the rows does not depend on which read finishes first.
+	let contents: string[];
+	try {
+		contents = await Promise.all(files.map((file) => file.text()));
+	} finally {
+		elements.importDataButton.disabled = false;
+		elements.librarySelector.disabled = false;
+	}
+
+	files.forEach((file, index) => {
+		const fileExtension = file.name.split(".").pop();
+		const content = contents[index] ?? "";
 
 		/**
-		 * Split the file's content into an array of lines and iterate over the lines array and process each line as needed.
+		 * Split the file's content into an array of lines and process each line as needed.
 		 */
-		reader.addEventListener("load", function () {
-			if (fileExtension === "json") {
-				const dataJSON = <string>reader.result;
-				const parsedData = JSON.parse(dataJSON);
-
-				VerifyConfigurationProperties(parsedData);
-			} else if (fileExtension === "trc") {
-				for (const line of SplitIntoLines("trc", <string>reader.result)) {
-					unprocessedData.push(line);
-				}
-			} else if (fileExtension === "csv") {
-				for (const line of SplitIntoLines("csv", <string>reader.result)) {
-					unprocessedInstanceInformationData.push(line);
-				}
-			} else if (fileExtension === "solu") {
-				for (const line of SplitIntoLines("solu", <string>reader.result)) {
-					unprocessedSolutionData.push(line);
-				}
+		if (fileExtension === "json") {
+			VerifyConfigurationProperties(JSON.parse(content));
+		} else if (fileExtension === "trc") {
+			for (const line of SplitIntoLines("trc", content)) {
+				unprocessedData.push(line);
 			}
-		});
-
-		reader.readAsText(file);
-	}
+		} else if (fileExtension === "csv") {
+			for (const line of SplitIntoLines("csv", content)) {
+				unprocessedInstanceInformationData.push(line);
+			}
+		} else if (fileExtension === "solu") {
+			for (const line of SplitIntoLines("solu", content)) {
+				unprocessedSolutionData.push(line);
+			}
+		}
+	});
 
 	return {
 		UnprocessedData: unprocessedData,

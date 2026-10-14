@@ -28,7 +28,9 @@ export function RegisterGlobalListeners(): void {
 			state.unprocessedData,
 			state.unprocessedInstanceInformationData,
 			state.unprocessedSolutionData
-		);
+		).catch((error: unknown) => {
+			console.error(error);
+		});
 	});
 
 	/**

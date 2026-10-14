@@ -2356,20 +2356,63 @@ body > :not(nav, hr) {
 	touch-action: pan-x pinch-zoom;
 }
 
-@media (max-width: 1250px) {
-	.dt-buttons button {
-		margin-bottom: 5px;
+/* Space between the buttons of the table, instead of a joined button group. */
+.dt-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+/* The empty spacers would add a second gap. */
+.dt-buttons > .dt-button-spacer {
+	display: none;
+}
+
+.dt-buttons > .btn,
+.dt-buttons > .btn-group > .btn {
+	margin: 0;
+	border-radius: var(--bs-btn-border-radius);
+}
+
+/* Bootstrap only expands the navbar at its fixed breakpoints (xxl is 1400px), so the toolbar
+   expands at 1470px here. Same rules as .navbar-expand-xxl. */
+@media (min-width: 1470px) {
+	.navbar-expand-viva {
+		flex-wrap: nowrap;
+		justify-content: flex-start;
+	}
+
+	.navbar-expand-viva .navbar-nav {
+		flex-direction: row;
+	}
+
+	.navbar-expand-viva .navbar-nav .dropdown-menu {
+		position: absolute;
+	}
+
+	.navbar-expand-viva .navbar-nav .nav-link {
+		padding-right: var(--bs-navbar-nav-link-padding-x);
+		padding-left: var(--bs-navbar-nav-link-padding-x);
+	}
+
+	.navbar-expand-viva .navbar-collapse {
+		display: flex !important;
+		flex-basis: auto;
+	}
+
+	.navbar-expand-viva .navbar-toggler {
+		display: none;
 	}
 }
 
-@media (max-width: 1399px) {
+@media (max-width: 1469px) {
 	#librarySelectorGroup {
 		margin-top: 0.5rem;
 		margin-left: 0px;
 	}
   }
 
-@media (min-width: 1400px) {
+@media (min-width: 1470px) {
     #librarySelectorGroup {
         margin-left: 10px;
 		/* The UL on the right side in the navbar is not pushed away with margin. */
@@ -2377,7 +2420,7 @@ body > :not(nav, hr) {
     }
 }
 
-@media (max-width: 1399px) {
+@media (max-width: 1469px) {
 	#navbarNav .dropdown-menu {
 		position: absolute;
 		display: block;
@@ -2394,7 +2437,7 @@ body > :not(nav, hr) {
 	}
 }
 
-@media (min-width: 1399px) {
+@media (min-width: 1470px) {
 	#navbarNav .dropdown-menu{
 		display: block;
 		opacity: 0;
@@ -2422,6 +2465,7 @@ body > :not(nav, hr) {
 #alertNotification {
 	display: none;
 	width: auto;
+	margin-top: 0.5rem;
 	margin-left: 1rem;
 	margin-right: 1rem;
 }
@@ -2432,7 +2476,7 @@ body > :not(nav, hr) {
 
 #buttonContainer {
 	margin-left: 1rem;
-	margin-top: 0.5rem;
+	margin-top: 1rem;
 }
 
 #chartContainer {
@@ -2524,6 +2568,9 @@ body > :not(nav, hr) {
 }
 
 .navbar-brand {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
 	font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode",
 		"Lucida Sans", sans-serif;
 	user-select: none;
@@ -2555,7 +2602,7 @@ body > :not(nav, hr) {
 }
 
 .vertical-separator {
-	border-left: 1px solid #ccc;
+	border-left: 1px solid var(--bs-border-color);
 	height: auto;
 	margin: 0 5px;
 }
@@ -2618,6 +2665,54 @@ tr.odd.bg-primary.row-selected-problems th.dtfc-fixed-left.sorting_1 {
 	background-color: #0d6efd !important;
 	color: #ffffff;
 	font-weight: bold;
+}
+
+/* Dark theme (Bootstrap sets data-bs-theme on the html element) */
+[data-bs-theme="dark"] .navbar-toggler:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-bs-theme="dark"] .navbar-toggler:active {
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-bs-theme="dark"] .navbar-toggler-icon {
+	filter: invert(1);
+}
+
+[data-bs-theme="dark"] .btn-dark {
+	--bs-btn-bg: #495057;
+	--bs-btn-border-color: #6c757d;
+	--bs-btn-hover-bg: #5c636a;
+	--bs-btn-hover-border-color: #6c757d;
+	--bs-btn-active-bg: #6c757d;
+	--bs-btn-active-border-color: #adb5bd;
+	--bs-btn-disabled-bg: #343a40;
+	--bs-btn-disabled-border-color: #495057;
+}
+
+[data-bs-theme="dark"] .table-light {
+	--bs-table-color: var(--bs-body-color);
+	--bs-table-bg: var(--bs-tertiary-bg);
+	--bs-table-border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] tbody tr.even td.dtfc-fixed-left {
+	background-color: #2b3035 !important;
+}
+
+[data-bs-theme="dark"] tbody tr.odd td.dtfc-fixed-left {
+	background-color: #343a40 !important;
+}
+
+[data-bs-theme="dark"] tr.even td,
+[data-bs-theme="dark"] tr.even th {
+	background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+[data-bs-theme="dark"] tr.odd td,
+[data-bs-theme="dark"] tr.odd th {
+	background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 

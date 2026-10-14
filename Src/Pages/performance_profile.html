@@ -4,7 +4,23 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ffffff" />
+    <!-- Theme, set before the first paint -->
+    <script>
+      (function () {
+        var theme = null;
+        try {
+          theme = localStorage.getItem("theme");
+        } catch (e) {}
+        if (theme !== "light" && theme !== "dark") {
+          theme = window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
+        document.documentElement.setAttribute("data-bs-theme", theme);
+      })();
+    </script>
     <meta
       name="description"
       content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers."
@@ -17,7 +33,7 @@
   </head>
 
   <body>
-    <nav class="navbar sticky-top navbar-expand-xxl navbar-light bg-light">
+    <nav class="navbar sticky-top navbar-expand-viva bg-body-tertiary">
       <div class="container-fluid">
         <span class="navbar-brand">
           <img
@@ -193,6 +209,18 @@
                 name="Help"
               >
                 <i class="bi bi-question-circle-fill"></i> Help
+              </button>
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link"
+                id="themeToggleButton"
+                type="button"
+                aria-label="Switch to dark theme"
+                aria-pressed="false"
+                name="Theme"
+              >
+                <i class="bi bi-moon-stars"></i>
               </button>
             </li>
             <li class="nav-item">

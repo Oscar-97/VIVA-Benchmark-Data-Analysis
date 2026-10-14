@@ -10,6 +10,7 @@ import { RegisterGlobalListeners } from "./GlobalListeners";
 import { InitializeProgram } from "./InitializeProgram";
 import { GetPageKind, PageKind } from "./CurrentPage";
 import { SetRestartHandler } from "./Lifecycle";
+import { InitializeTheme } from "../Theme";
 
 /**
  * Create modals.
@@ -28,6 +29,7 @@ function CreateModals(): void {
  * and registers the listeners that live as long as the page.
  */
 export function Bootstrap(): void {
+	InitializeTheme();
 	CreateModals();
 
 	/**

@@ -253,10 +253,8 @@ export function GetRelativeTimes(
 		if (solver !== "Virtual Best Solver" && solver !== "Virtual Worst Solver") {
 			entries.forEach((entry) => {
 				const fileName = entry.InputFileName;
-				if (
-					!bestSolverTimes[fileName] ||
-					entry.time < bestSolverTimes[fileName]
-				) {
+				const best = bestSolverTimes[fileName];
+				if (best === undefined || entry.time < best) {
 					bestSolverTimes[fileName] = entry.time;
 				}
 			});
@@ -267,7 +265,7 @@ export function GetRelativeTimes(
 
 	Object.entries(data).forEach(([solver, entries]) => {
 		result[solver] = entries.map((entry) => {
-			const bestTime = bestSolverTimes[entry.InputFileName] || 1;
+			const bestTime = bestSolverTimes[entry.InputFileName] ?? 1;
 
 			return {
 				...entry,

@@ -152,6 +152,20 @@ function RenderNavItems(activePage, prefixes) {
   ].join("");
 }
 
+/**
+ * Sets the theme before the first paint. Keep it in step with Src/Scripts/Theme.ts.
+ */
+const THEME_SCRIPT = `(function () {
+        var theme = null;
+        try {
+          theme = localStorage.getItem("theme");
+        } catch (e) {}
+        if (theme !== "light" && theme !== "dark") {
+          theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-bs-theme", theme);
+      })();`;
+
 function RenderHead(page, prefixes) {
   const manifest = page.manifest
     ? '\n    <!-- Manifest for PWA -->\n    <link rel="manifest" href="manifest.json" />'
@@ -160,7 +174,12 @@ function RenderHead(page, prefixes) {
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ffffff" />
+    <!-- Theme, set before the first paint -->
+    <script>
+      ${THEME_SCRIPT}
+    </script>
     <meta
       name="description"
       content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers."

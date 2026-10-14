@@ -25,6 +25,7 @@ import annotationPlugin from "chartjs-plugin-annotation";
 import { elements } from "../Elements/Elements";
 import { ShowPWANotification } from "../PWA/PWA-utils";
 import { ChartMessages } from "../Constants/Messages";
+import { GetCurrentTheme, THEME_CHANGE_EVENT } from "../Theme";
 let myChart: Chart<keyof ChartTypeRegistry, unknown[], string> | null = null;
 
 /**
@@ -125,6 +126,41 @@ export function CreateChart(
 	annotationOptions?: ChartAnnotationOptions,
 	subtitle?: string
 ): void {
+	lastChart = {
+		type,
+		data,
+		label,
+		title,
+		scaleOptions,
+		zoomOptions,
+		annotationOptions,
+		subtitle
+	};
+	DrawChart(lastChart);
+
+	ShowPWANotification(ChartMessages.CHART_SUCCESS_HEADER, {
+		body: ChartMessages.CHART_SUCCESS,
+		icon: "../CSS/tab_icon.png",
+		silent: true
+	});
+}
+
+/**
+ * Draws the chart with the colors of the current theme.
+ * If a chart already exists, it is destroyed before a new one is created.
+ */
+function DrawChart(chart: ChartArguments): void {
+	const {
+		type,
+		data,
+		label,
+		title,
+		scaleOptions,
+		zoomOptions,
+		annotationOptions,
+		subtitle
+	} = chart;
+
 	/**
 	 * Destroy the chart if it already exist.
 	 */
@@ -132,11 +168,13 @@ export function CreateChart(
 		myChart.destroy();
 	}
 
+	ApplyChartTheme();
+
 	myChart = new Chart(elements.chartCanvas, {
 		type: type,
 		data: {
 			labels: typeof label === "string" ? [label] : label,
-			datasets: data
+			datasets: data.map(AdaptDatasetToTheme)
 		},
 		options: {
 			responsive: true,
@@ -167,10 +205,107 @@ export function CreateChart(
 			}
 		}
 	});
+}
 
-	ShowPWANotification(ChartMessages.CHART_SUCCESS_HEADER, {
-		body: ChartMessages.CHART_SUCCESS,
-		icon: "../CSS/tab_icon.png",
-		silent: true
+/**
+ * Chart.js does not read the CSS, so the colors of the text, the grid and the tooltips come
+ * from the Bootstrap variables of the current theme and are set as the defaults of every chart.
+ */
+function ApplyChartTheme(): void {
+	const style = getComputedStyle(document.documentElement);
+	const bodyColor = style.getPropertyValue("--bs-body-color").trim();
+	const borderColor = style.getPropertyValue("--bs-border-color").trim();
+	if (bodyColor) {
+		Chart.defaults.color = bodyColor;
+	}
+	if (borderColor) {
+		/**
+		 * Not `Chart.defaults.borderColor`: that is also the default color of the bars and lines,
+		 * and it stops the Colors plugin from picking colors for the data sets.
+		 */
+		Chart.defaults.scale.grid.color = borderColor;
+		Chart.defaults.scales.radialLinear.grid.color = borderColor;
+		Chart.defaults.scales.radialLinear.angleLines.color = borderColor;
+	}
+}
+
+/**
+ * Relative luminance of a "#rrggbb" or "#rrggbbaa" color, or null for any other format.
+ */
+function GetLuminance(color: string): number | null {
+	const match = /^#([0-9a-f]{6})([0-9a-f]{2})?$/i.exec(color);
+	if (!match?.[1]) {
+		return null;
+	}
+	const [r, g, b] = [0, 2, 4].map(
+		(start) => parseInt(match[1]?.slice(start, start + 2) ?? "0", 16) / 255
+	);
+	return 0.2126 * (r ?? 0) + 0.7152 * (g ?? 0) + 0.0722 * (b ?? 0);
+}
+
+/**
+ * Mixes a "#rrggbb" or "#rrggbbaa" color with white.
+ */
+function Lighten(color: string, amount: number): string {
+	const channels = [1, 3, 5].map((start) => {
+		const value = parseInt(color.slice(start, start + 2), 16);
+		return Math.round(value + (255 - value) * amount)
+			.toString(16)
+			.padStart(2, "0");
+	});
+	return "#" + channels.join("") + color.slice(7);
+}
+
+/**
+ * Very dark colors (the status colors of the termination chart) disappear on the dark theme,
+ * so they are lightened when drawn. The data of the chart is left as it is.
+ */
+export function AdaptColorToTheme(color: unknown, theme: string): unknown {
+	if (theme !== "dark" || typeof color !== "string") {
+		return color;
+	}
+	const luminance = GetLuminance(color);
+	return luminance !== null && luminance < 0.2 ? Lighten(color, 0.55) : color;
+}
+
+function AdaptDatasetToTheme(
+	dataset: ChartDatasets[number]
+): ChartDatasets[number] {
+	const theme = GetCurrentTheme();
+	return {
+		...dataset,
+		...(dataset.borderColor !== undefined
+			? { borderColor: AdaptColorToTheme(dataset.borderColor, theme) }
+			: {}),
+		...(dataset.backgroundColor !== undefined
+			? { backgroundColor: AdaptColorToTheme(dataset.backgroundColor, theme) }
+			: {})
+	} as ChartDatasets[number];
+}
+
+/**
+ * The arguments of the last chart, to draw it again when the theme changes.
+ */
+interface ChartArguments {
+	type: keyof ChartTypeRegistry;
+	data: ChartDatasets;
+	label: string | string[];
+	title: string;
+	scaleOptions: ChartScaleOptions | undefined;
+	zoomOptions: ChartZoomOptions | undefined;
+	annotationOptions: ChartAnnotationOptions | undefined;
+	subtitle: string | undefined;
+}
+
+let lastChart: ChartArguments | null = null;
+
+/**
+ * Draws the chart again with the new colors. The zoom of the chart is reset.
+ */
+if (typeof window !== "undefined") {
+	window.addEventListener(THEME_CHANGE_EVENT, () => {
+		if (lastChart && myChart) {
+			DrawChart(lastChart);
+		}
 	});
 }

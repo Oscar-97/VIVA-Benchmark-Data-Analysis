@@ -1,6 +1,6 @@
 // @generated-start
 // This block is written by scripts/build-service-worker.mjs (npm run build). Do not edit it by hand.
-const CACHE_NAME = "VIVA-cache-1.1.2-7f1a8b73997d";
+const CACHE_NAME = "VIVA-cache-1.1.2-b6e9d2f88a4c";
 const filesToCache = [
 	"/",
 	"manifest.json",
