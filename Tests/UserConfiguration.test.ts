@@ -101,6 +101,11 @@ describe("GetUserConfiguration", () => {
 		expect(DisplayWarningNotification).toHaveBeenCalledTimes(1);
 	});
 
+	it("should return undefined without a warning if nothing is stored and the report is off", () => {
+		expect(GetUserConfiguration(false)).toBeUndefined();
+		expect(DisplayWarningNotification).not.toHaveBeenCalled();
+	});
+
 	it("should return undefined and report an error if the stored data is not valid", () => {
 		localStorage.setItem(Keys.USER_CONFIGURATION, "{not json");
 

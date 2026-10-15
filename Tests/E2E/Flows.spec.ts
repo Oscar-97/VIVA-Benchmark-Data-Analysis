@@ -77,8 +77,12 @@ test.describe("Modals", () => {
 		await expect(modal).toBeVisible();
 		await expect(modal).toContainText("Result File Formats and Headers");
 
-		await modal.locator(".btn-close").click();
-		await expect(modal).toBeHidden();
+		// Bootstrap ignores a close while the modal is still fading in, and the modal is visible for
+		// the browser from the start of the fade, so the click is repeated until the modal has closed.
+		await expect(async () => {
+			await modal.locator(".btn-close").click();
+			await expect(modal).toBeHidden({ timeout: 1000 });
+		}).toPass();
 	});
 
 	test("Cancelling the delete modal keeps the stored data", async ({

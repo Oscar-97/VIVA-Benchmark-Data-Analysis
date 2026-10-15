@@ -122,7 +122,7 @@ function RenderNavLink(label, href, isActive) {
   const content = `<li class="nav-item">`;
   return isActive
     ? `${content}<span class="nav-link active" aria-current="page">${label}</span></li>`
-    : `${content}<a class="nav-link" aria-current="page" href="${href}">${label}</a></li>`;
+    : `${content}<a class="nav-link" href="${href}">${label}</a></li>`;
 }
 
 function RenderNavItems(activePage, prefixes) {
@@ -143,7 +143,7 @@ function RenderNavItems(activePage, prefixes) {
     ),
     `<li class="nav-item dropdown"><a class="nav-link dropdown-toggle${
       PLOT_PAGES.has(activePage) ? " active" : ""
-    }" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-bar-chart-steps"></i> Plots</a><ul class="dropdown-menu mb-2" aria-labelledby="navbarDropdownMenuLink">${menuItems}</ul></li>`,
+    }" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-bar-chart-steps"></i> Plots</a><ul class="dropdown-menu mb-2" aria-labelledby="navbarDropdownMenuLink">${menuItems}</ul></li>`,
     RenderNavLink(
       '<i class="bi bi-view-stacked"></i> Compare Solvers',
       `${prefixes.pages}compare_solvers.html`,
@@ -189,6 +189,14 @@ function RenderHead(page, prefixes) {
     <link rel="icon" href="${prefixes.css}tab_icon.png" />
     <!-- Styling -->
     <link href="${prefixes.dist}main.css" rel="stylesheet" />
+    <!-- The content is shown by a script, without one it is shown at once -->
+    <noscript>
+      <style>
+        body > :not(nav, hr) {
+          opacity: 1;
+        }
+      </style>
+    </noscript>
   </head>`;
 }
 
@@ -196,10 +204,14 @@ function RenderHead(page, prefixes) {
  * The body below the line that follows the buttons: a fragment of the page, or the chart.
  */
 function RenderContent(content) {
+  const chartTools = ReadTemplate("partials/chart-tools.html");
   if (content.fragment) {
-    return ReadTemplate(`fragments/${content.fragment}.html`).trim();
+    return ReadTemplate(`fragments/${content.fragment}.html`)
+      .replace("<!-- @chart-tools -->", chartTools)
+      .trim();
   }
-  const chart = `<div id="chartContainer">
+  const chart = `${chartTools}
+    <div id="chartContainer">
       <canvas id="myChart" class="chart">
         <!-- Content created with Chart.js will be displayed here. -->
       </canvas>
@@ -224,6 +236,7 @@ export function RenderPage(page) {
       page.location === "root" ? ReadTemplate("partials/nav-demo.html") : "",
   });
   const alert = ReadTemplate("partials/alert.html");
+  const emptyState = ReadTemplate("partials/empty-state.html");
   const controls = page.controls
     ? `\n\n    ${ReadTemplate(`fragments/${page.controls}.html`).trim()}\n`
     : "";
@@ -235,12 +248,14 @@ export function RenderPage(page) {
   ${RenderHead(page, prefixes)}
 
   <body>
+    <a class="visually-hidden-focusable" href="#buttonContainer">Skip to content</a>
     ${navigation}
     ${alert}
     <div id="buttonContainer" class="d-flex flex-wrap justify-content-start gap-2">
       ${page.buttons.map(RenderButton).join("\n")}
     </div>${controls}
-    <hr />${gap}    ${RenderContent(page.content)}${gap}    <!-- Main script -->
+    <hr />
+    ${emptyState}${gap}    ${RenderContent(page.content)}${gap}    <!-- Main script -->
     <script id="MainFunction" src="${prefixes.script}bundle.js"></script>
   </body>
 </html>

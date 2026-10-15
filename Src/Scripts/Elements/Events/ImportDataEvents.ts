@@ -1,4 +1,6 @@
 import { elements } from "../Elements";
+import { SetEmptyStateVisible } from "../EmptyState";
+import { ClearLoadStatus } from "../LoadStatus";
 import { DisplayAlertNotification } from "./DisplayAlertNotification";
 import { Keys } from "../../Constants/Keys";
 import { PageTitles } from "../../Constants/PageTitles";
@@ -24,6 +26,8 @@ export function ImportDataEvents(
 	demoModeName?: string
 ): void {
 	elements.librarySelector.disabled = true;
+	SetEmptyStateVisible(false);
+	ClearLoadStatus();
 	if (document.title === PageTitles.TABLE) {
 		TablePageElements(fileExtensionType, demoModeName);
 	} else if (document.title === PageTitles.COMPARE_SOLVERS) {

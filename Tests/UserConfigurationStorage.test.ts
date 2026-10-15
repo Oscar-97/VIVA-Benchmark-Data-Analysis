@@ -115,7 +115,7 @@ describe("CreateUserConfiguration", () => {
 		UseStorage(CreateStorage({ name: "Strange" }));
 		CreateUserConfiguration(["a"], "trc");
 		expect(DisplayErrorNotification).toHaveBeenCalledWith(
-			expect.stringContaining("Error occured")
+			expect.stringContaining("An error occurred")
 		);
 	});
 });

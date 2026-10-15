@@ -84,7 +84,7 @@ test.describe("Table page", () => {
 		await ImportAndView(
 			page,
 			["shotALL.trc", "instancedata.csv"],
-			"Instance information succesfully loaded!"
+			"Instance information successfully loaded!"
 		);
 	});
 
@@ -131,6 +131,19 @@ test.describe("Table page", () => {
 		// The import stops with an error, which is the only one that is expected.
 		expect(errors).toEqual([message]);
 		errors.length = 0;
+	});
+
+	test("A JSON file that is not valid names the file, and keeps the upload closed", async ({
+		page
+	}) => {
+		await page.setInputFiles('input[type="file"]', {
+			name: "broken.json",
+			mimeType: "application/json",
+			buffer: Buffer.from("{ not json")
+		});
+		await ExpectNotification(page, "broken.json: The file is not valid JSON.");
+
+		await expect(page.locator("#importDataButton")).toBeDisabled();
 	});
 
 	test("Select rows and filter table", async ({ page }) => {
@@ -214,6 +227,84 @@ test.describe("Table page", () => {
 		expect(Number(lastPage)).toBeGreaterThan(2);
 		await lastPageButton.click();
 		await expect(activePage).toHaveText(lastPage);
+	});
+
+	test("The hint counts the columns that are shown, and follows the column visibility", async ({
+		page
+	}) => {
+		await ImportAndView(page, ["shotALL.trc"], SHOT_LOADED);
+		const hint = page.locator("#tableHint");
+		await expect(hint).toBeVisible();
+		await expect(hint).toContainText(/\d+ of \d+ columns are shown\./);
+		await expect(hint).toContainText("Column Visibility");
+		await expect(hint).toContainText("hold Ctrl or Shift");
+		const shown = Number(
+			/(\d+) of \d+ columns/.exec(await hint.innerText())?.[1]
+		);
+
+		await page.locator('button:has-text("Settings")').click();
+		await page
+			.locator('.dt-button-collection :text("Column Visibility")')
+			.click();
+		await page.locator('.dt-button-collection :text("2: Direction")').click();
+
+		await expect(hint).toContainText(`${shown - 1} of`);
+	});
+
+	test("Reset View puts the table back as it was", async ({ page }) => {
+		await ImportAndView(page, ["shotALL.trc"], SHOT_LOADED);
+		const hint = page.locator("#tableHint");
+		const header = (title: string): ReturnType<Page["locator"]> =>
+			page.locator(`th:visible:has(.dt-column-title:text-is("${title}"))`);
+		const original = await hint.innerText();
+
+		await page.locator(".dt-search input").fill("watercontamination");
+		await expect(page.locator(ROWS)).toHaveCount(4);
+		await header("Problem").click();
+		await page.locator('button:has-text("Settings")').click();
+		await page
+			.locator('.dt-button-collection :text("Column Visibility")')
+			.click();
+		await page.locator('.dt-button-collection :text("2: Direction")').click();
+		await expect(header("Direction")).toHaveCount(0);
+		// The menu is closed with a click beside it. (Escape closes it too, but throws an error in the
+		// dropdown code of Bootstrap, which is not part of this test.)
+		await page.mouse.click(1500, 700);
+		await expect(page.locator(".dt-button-collection")).toHaveCount(0);
+
+		await page.locator('button:has-text("Reset View")').click();
+
+		await expect(page.locator(".dt-search input")).toHaveValue("");
+		await expect(page.locator(FIRST_CELL)).toHaveText("alan");
+		await expect(header("Direction")).toHaveCount(1);
+		await expect(page.locator(ROWS)).toHaveCount(10);
+		await expect(hint).toHaveText(original);
+	});
+
+	test("The search says what to search, and what to do when it finds nothing", async ({
+		page
+	}) => {
+		await ImportAndView(page, ["shotALL.trc"], SHOT_LOADED);
+		const search = page.locator(".dt-search input");
+		await expect(search).toHaveAttribute("placeholder", "Search all columns");
+
+		await search.fill("no problem has this name");
+
+		await expect(page.locator(".dt-empty")).toContainText(
+			"No rows match the search."
+		);
+	});
+
+	test("Clearing the table is done at once, and says so", async ({ page }) => {
+		await ImportAndView(page, ["shotALL.trc"], SHOT_LOADED);
+
+		await page.locator("#clearTableButton").click();
+		await page.locator("#clearTableButtonInModal").click();
+
+		await ExpectNotification(page, "Table cleared.");
+		await expect(page.locator("#dataTableGenerated_wrapper")).toHaveCount(0);
+		await expect(page.locator("#tableHint")).toBeHidden();
+		await expect(page.locator("#emptyState")).toBeVisible();
 	});
 
 	test("Search in the displayed data", async ({ page }) => {

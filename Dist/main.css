@@ -2715,5 +2715,55 @@ tr.odd.bg-primary.row-selected-problems th.dtfc-fixed-left.sorting_1 {
 	background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
+/* The explanation that is shown while no data is loaded. It is also the target of a drop. */
+.empty-state {
+	max-width: 40rem;
+	margin: 1.5rem auto;
+	padding: 1.5rem 1rem;
+	border: 2px dashed var(--bs-border-color);
+	border-radius: var(--bs-border-radius-lg);
+}
+
+.empty-state-icon {
+	font-size: 2.5rem;
+	line-height: 1;
+}
+
+.load-status {
+	margin: 0.5rem 1rem;
+	min-height: 1.5rem;
+}
+
+body.drop-active .empty-state {
+	border-color: var(--bs-primary);
+	background-color: var(--bs-primary-bg-subtle);
+}
+
+body.drop-active {
+	outline: 3px dashed var(--bs-primary);
+	outline-offset: -6px;
+}
+
+/* The tools above a chart: reset the zoom, show or hide the data sets, download an image. */
+.chart-tools {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 1rem 1rem 0;
+}
+
+.chart-tools-status {
+	color: var(--bs-secondary-color);
+	font-size: 0.875rem;
+}
+
+/* What a user may not find out alone about the table: hidden columns and how to select rows. */
+.table-hint {
+	margin: 0.5rem 1rem 0;
+	color: var(--bs-secondary-color);
+	font-size: 0.875rem;
+}
+
 
 /*# sourceMappingURL=main.css.map*/

@@ -9,7 +9,10 @@ import {
 	GetFilteredRows,
 	GetSelectedRows
 } from "../DataTable/GetDataFromTable";
-import { DisplayWarningNotification } from "../Elements/Events/DisplayAlertNotification";
+import {
+	DisplayAlertNotification,
+	DisplayWarningNotification
+} from "../Elements/Events/DisplayAlertNotification";
 import { elements } from "../Elements/Elements";
 import { TableLoadingAnimation } from "../Elements/LoadingAnimation";
 import { TableMessages } from "../Constants/Messages";
@@ -59,11 +62,8 @@ export function HandleReportPage(traceData: TraceData[]): void {
 	 * Destroy the data table and reinitializes the program when confirming in the "Clear Data Table" modal.
 	 */
 	Listen(document.getElementById("clearTableButtonInModal"), "click", () => {
-		DisplayWarningNotification(TableMessages.TABLE_CLEARING);
-		elements.clearDataTableButton.disabled = true;
-		setTimeout(() => {
-			DestroyDataTable();
-			RestartProgram();
-		}, 5000);
+		DestroyDataTable();
+		RestartProgram();
+		DisplayAlertNotification(TableMessages.TABLE_CLEARED);
 	});
 }

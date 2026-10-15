@@ -169,11 +169,22 @@ export async function ReadData(
 	// so the order of the rows does not depend on which read finishes first.
 	let contents: string[];
 	try {
-		contents = await Promise.all(files.map((file) => file.text()));
-	} finally {
-		elements.importDataButton.disabled = false;
+		contents = await Promise.all(
+			files.map((file) =>
+				file.text().catch((error: unknown) => {
+					throw new Error(`The file ${file.name} could not be read.`, {
+						cause: error
+					});
+				})
+			)
+		);
+	} catch (error) {
+		// Without all files the import stays closed, until other files are chosen.
 		elements.librarySelector.disabled = false;
+		throw error;
 	}
+	elements.importDataButton.disabled = false;
+	elements.librarySelector.disabled = false;
 
 	files.forEach((file, index) => {
 		const fileExtension = file.name.split(".").pop();
@@ -183,7 +194,14 @@ export async function ReadData(
 		 * Split the file's content into an array of lines and process each line as needed.
 		 */
 		if (fileExtension === "json") {
-			VerifyConfigurationProperties(JSON.parse(content));
+			let parsedData: unknown;
+			try {
+				parsedData = JSON.parse(content);
+			} catch {
+				RejectConfigurationFile(file.name, ErrorMessages.INVALID_JSON);
+				return;
+			}
+			VerifyConfigurationProperties(file.name, parsedData);
 		} else if (fileExtension === "trc") {
 			for (const line of SplitIntoLines("trc", content)) {
 				unprocessedData.push(line);
@@ -216,7 +234,29 @@ interface ParsedData {
 	[key: string]: unknown;
 }
 
-function VerifyConfigurationProperties(parsedData: ParsedData): void {
+/**
+ * Reports a configuration file that cannot be used, and keeps the import closed until another file is chosen,
+ * so that the configuration that was stored earlier is not loaded instead.
+ */
+function RejectConfigurationFile(fileName: string, reason: string): void {
+	const message = `${fileName}: ${reason}`;
+	DisplayErrorNotification(message);
+	console.error(message);
+	elements.importDataButton.disabled = true;
+}
+
+function IsParsedData(value: unknown): value is ParsedData {
+	return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function VerifyConfigurationProperties(
+	fileName: string,
+	parsedData: unknown
+): void {
+	if (!IsParsedData(parsedData)) {
+		RejectConfigurationFile(fileName, ErrorMessages.INVALID_DATA_STRUCTURE);
+		return;
+	}
 	if (
 		parsedData.hasOwnProperty.call(parsedData, "dataSet") &&
 		parsedData.hasOwnProperty.call(parsedData, "dataFileType")
@@ -232,7 +272,6 @@ function VerifyConfigurationProperties(parsedData: ParsedData): void {
 
 		localStorage.setItem(Keys.USER_CONFIGURATION, JSON.stringify(userData));
 	} else {
-		DisplayErrorNotification(ErrorMessages.INVALID_DATA_STRUCTURE);
-		console.error(ErrorMessages.INVALID_DATA_STRUCTURE);
+		RejectConfigurationFile(fileName, ErrorMessages.INVALID_DATA_STRUCTURE);
 	}
 }

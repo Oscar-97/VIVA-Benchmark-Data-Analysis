@@ -56,7 +56,7 @@ export function CreateUserConfiguration(
 				DisplayErrorNotification(UserConfigurationMessages.INVALID_ACCESS);
 				break;
 			default:
-				DisplayErrorNotification("Error occured: " + error);
+				DisplayErrorNotification("An error occurred: " + error);
 				break;
 		}
 	}
@@ -65,15 +65,18 @@ export function CreateUserConfiguration(
 
 /**
  * Notifies the user that the stored configuration could not be read.
- * A missing configuration is only reported once per session.
+ * A missing configuration is only reported once per session, and not at all when `notifyMissing` is false.
  */
-function NotifyConfigurationReadError(error: unknown): void {
+function NotifyConfigurationReadError(
+	error: unknown,
+	notifyMissing: boolean
+): void {
 	switch ((error as { message: string }).message) {
 		case "SecurityError":
 			DisplayErrorNotification(UserConfigurationMessages.SECURITY_ERROR);
 			break;
 		case UserConfigurationMessages.NO_STORED_CONFIG:
-			if (sessionStorage.getItem(Keys.ALERTED_STORAGE)) {
+			if (!notifyMissing || sessionStorage.getItem(Keys.ALERTED_STORAGE)) {
 				console.info(UserConfigurationMessages.PREVIOUSLY_VISITED);
 			} else {
 				DisplayWarningNotification(UserConfigurationMessages.NO_STORED_CONFIG);
@@ -90,10 +93,15 @@ function NotifyConfigurationReadError(error: unknown): void {
  * This function retrieves the user configuration from the browser's local storage.
  * The user is notified if no saved configuration was found and the flag is stored to the session storage.
  *
+ * @param notifyMissing - Whether a missing configuration is reported. A visitor who has not saved anything yet
+ * has nothing to report on arriving at the page, so the start of the application passes false.
+
  * @returns The raw data, data file type, default time and gap limit,
  * or undefined if there is no stored configuration with data in it.
  */
-export function GetUserConfiguration(): StoredConfiguration | undefined {
+export function GetUserConfiguration(
+	notifyMissing = true
+): StoredConfiguration | undefined {
 	let userConfig: UserData;
 	try {
 		const userConfigString = localStorage.getItem(Keys.USER_CONFIGURATION);
@@ -102,7 +110,7 @@ export function GetUserConfiguration(): StoredConfiguration | undefined {
 		}
 		userConfig = JSON.parse(userConfigString);
 	} catch (error) {
-		NotifyConfigurationReadError(error);
+		NotifyConfigurationReadError(error, notifyMissing);
 		return undefined;
 	}
 
@@ -133,7 +141,7 @@ export function DeleteUserConfiguration(): void {
 				DisplayErrorNotification(UserConfigurationMessages.SECURITY_ERROR);
 				break;
 			default:
-				DisplayErrorNotification("Error occured: " + error);
+				DisplayErrorNotification("An error occurred: " + error);
 				break;
 		}
 	}

@@ -129,7 +129,11 @@ test.describe("Data snapshots", () => {
 	});
 
 	test("The navigation of a plot page", async ({ page }) => {
+		// The last link shows the latest release, which comes from Github. Without the network it shows the
+		// fallback text, which is what the snapshot has, so the answer is not left to the network of the machine.
+		await page.route("https://api.github.com/**", (route) => route.abort());
 		await page.goto(PageUrl("Src/Pages/solver_time.html"));
+		await expect(page.locator("#releaseVersionTagSpan i")).toBeAttached();
 
 		await expect(page.locator("nav").first()).toMatchAriaSnapshot({
 			name: "navigation.aria.yml"

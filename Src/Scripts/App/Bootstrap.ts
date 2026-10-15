@@ -6,6 +6,7 @@ import { CreateFileFormatInformationModal } from "../Elements/Modals/InfoModal";
 import { ReleaseVersionTag } from "../Elements/ReleaseVersionTag";
 import { CreateScreenSizeToast } from "../Elements/Toasts/ScreenSizeToast";
 import { RegisterServiceWorker } from "../PWA/PWA-utils";
+import { RegisterDragAndDrop } from "./DragAndDrop";
 import { RegisterGlobalListeners } from "./GlobalListeners";
 import { InitializeProgram } from "./InitializeProgram";
 import { GetPageKind, PageKind } from "./CurrentPage";
@@ -55,4 +56,5 @@ export function Bootstrap(): void {
 	SetRestartHandler(InitializeProgram);
 	InitializeProgram();
 	RegisterGlobalListeners();
+	RegisterDragAndDrop();
 }

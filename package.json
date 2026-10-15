@@ -5,8 +5,8 @@
 	"main": "",
 	"scripts": {
 		"test": "jest",
-		"test:functions": "jest Function.test.ts DataProcessing.test.ts UserConfiguration.test.ts Pages.test.ts Manifest.test.ts ChartData.test.ts ChartDataFilters.test.ts UserConfigurationStorage.test.ts PWAUtils.test.ts PlotRegistry.test.ts BarCharts.test.ts LineBubbleRadarCharts.test.ts AddResultCategories.test.ts Parsers.test.ts Statistics.test.ts Theme.test.ts",
-		"test:coverage": "jest --coverage Function.test.ts DataProcessing.test.ts UserConfiguration.test.ts Pages.test.ts Manifest.test.ts ChartData.test.ts ChartDataFilters.test.ts UserConfigurationStorage.test.ts PWAUtils.test.ts PlotRegistry.test.ts BarCharts.test.ts LineBubbleRadarCharts.test.ts AddResultCategories.test.ts Parsers.test.ts Statistics.test.ts",
+		"test:functions": "jest Function.test.ts DataProcessing.test.ts UserConfiguration.test.ts Pages.test.ts Manifest.test.ts ChartData.test.ts ChartDataFilters.test.ts UserConfigurationStorage.test.ts PWAUtils.test.ts PlotRegistry.test.ts BarCharts.test.ts LineBubbleRadarCharts.test.ts AddResultCategories.test.ts Parsers.test.ts ReadData.test.ts TableHint.test.ts Palette.test.ts ChartTools.test.ts LoadStatus.test.ts DragAndDrop.test.ts DemoMode.test.ts Statistics.test.ts Theme.test.ts",
+		"test:coverage": "jest --coverage Function.test.ts DataProcessing.test.ts UserConfiguration.test.ts Pages.test.ts Manifest.test.ts ChartData.test.ts ChartDataFilters.test.ts UserConfigurationStorage.test.ts PWAUtils.test.ts PlotRegistry.test.ts BarCharts.test.ts LineBubbleRadarCharts.test.ts AddResultCategories.test.ts Parsers.test.ts ReadData.test.ts TableHint.test.ts Palette.test.ts ChartTools.test.ts LoadStatus.test.ts DragAndDrop.test.ts DemoMode.test.ts Statistics.test.ts",
 		"test:ui": "playwright test --project=chromium",
 		"test:ui:update": "playwright test --project=chromium --update-snapshots",
 		"test:visual": "playwright test --project=visual",

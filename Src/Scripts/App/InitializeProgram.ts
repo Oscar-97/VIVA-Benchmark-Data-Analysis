@@ -2,6 +2,8 @@ import { NotifyDemoMode } from "../Actions/DemoMode";
 import { Keys } from "../Constants/Keys";
 import { InfoMessages, UserConfigurationMessages } from "../Constants/Messages";
 import { elements } from "../Elements/Elements";
+import { SetEmptyStateVisible } from "../Elements/EmptyState";
+import { ClearLoadStatus } from "../Elements/LoadStatus";
 import { ImportDataEvents } from "../Elements/Events/ImportDataEvents";
 import { InitializeScreenSizeToast } from "../Elements/Events/DisplayScreenSizeToast";
 import {
@@ -40,7 +42,7 @@ function SetElementStates(): void {
  * Configuration" buttons are enabled, and the ManageData() function is called.
  */
 function RestoreStoredConfiguration(): void {
-	const config = GetUserConfiguration();
+	const config = GetUserConfiguration(false);
 	if (!config) {
 		console.info(UserConfigurationMessages.NO_STORED_CONFIG);
 		return;
@@ -79,6 +81,8 @@ export function InitializeProgram(): void {
 	ResetPageListeners();
 	ResetAppState();
 	SetElementStates();
+	SetEmptyStateVisible(true);
+	ClearLoadStatus();
 
 	/**
 	 * Initializes the screen size toast and sets up the event listener for the screen size toast.

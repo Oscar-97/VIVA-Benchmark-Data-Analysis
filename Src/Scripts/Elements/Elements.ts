@@ -32,6 +32,30 @@ function GetElement<T extends HTMLElement>(id: string): T {
  */
 export const elements = {
 	/**
+	 * `emptyState` is a reference to the HTMLDivElement with the ID "emptyState".
+	 * @type {HTMLDivElement}
+	 */
+	get emptyState(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("emptyState");
+	},
+
+	/**
+	 * `emptyStateDemoButton` is a reference to the HTMLButtonElement with the ID "emptyStateDemoButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get emptyStateDemoButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("emptyStateDemoButton");
+	},
+
+	/**
+	 * `loadStatus` is a reference to the HTMLDivElement with the ID "loadStatus".
+	 * @type {HTMLDivElement}
+	 */
+	get loadStatus(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("loadStatus");
+	},
+
+	/**
 	 * `fileInput` is a reference to the HTMLInputElement with the ID "fileInput".
 	 * @type {HTMLInputElement}
 	 */

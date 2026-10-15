@@ -1,8 +1,14 @@
-import { ActivateDemoMode } from "../Actions/DemoMode";
+import { RequestDemoMode } from "../Actions/DemoMode";
 import { Keys } from "../Constants/Keys";
 import { InfoMessages } from "../Constants/Messages";
 import { GetDataFileType, ReadData } from "../DataProcessing/ReadData";
 import { elements } from "../Elements/Elements";
+import { DisplayErrorNotification } from "../Elements/Events/DisplayAlertNotification";
+import {
+	ClearLoadStatus,
+	DescribeFiles,
+	ShowLoadStatus
+} from "../Elements/LoadStatus";
 import { ImportDataEvents } from "../Elements/Events/ImportDataEvents";
 import { RequestPWANotificationPermission } from "../PWA/PWA-utils";
 import { state } from "./AppState";
@@ -23,14 +29,33 @@ export function RegisterGlobalListeners(): void {
 	 * arrays whenever the value of the file input field changes.
 	 */
 	elements.fileInput.addEventListener("change", () => {
+		ClearLoadStatus();
 		state.dataFileType = GetDataFileType();
+		const files = Array.from(elements.fileInput.files ?? []);
+		ShowLoadStatus(`Reading ${DescribeFiles(files)}`, true);
 		ReadData(
 			state.unprocessedData,
 			state.unprocessedInstanceInformationData,
 			state.unprocessedSolutionData
-		).catch((error: unknown) => {
-			console.error(error);
-		});
+		)
+			.then(() => {
+				// A file that cannot be used keeps the import closed, and has been reported.
+				if (elements.importDataButton.disabled) {
+					ClearLoadStatus();
+				} else {
+					ShowLoadStatus(
+						`Ready to upload: ${DescribeFiles(files)}. Click Upload to continue.`,
+						false
+					);
+				}
+			})
+			.catch((error: unknown) => {
+				console.error(error);
+				ClearLoadStatus();
+				DisplayErrorNotification(
+					error instanceof Error ? error.message : String(error)
+				);
+			});
 	});
 
 	/**
@@ -59,7 +84,14 @@ export function RegisterGlobalListeners(): void {
 	 */
 	if (GetPageKind() === PageKind.TABLE) {
 		elements.demoDataButton.addEventListener("click", () => {
-			ActivateDemoMode();
+			RequestDemoMode();
 		});
 	}
+
+	/**
+	 * The explanation for an empty page offers the first demo data set, on every page.
+	 */
+	elements.emptyStateDemoButton.addEventListener("click", () => {
+		RequestDemoMode("Demo_1");
+	});
 }
