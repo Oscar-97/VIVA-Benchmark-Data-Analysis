@@ -187,6 +187,12 @@ body > :not(nav, hr) {
 	max-width: 95vw;
   }
 
+/* The row has margins, so without solvers (before data is loaded) it is a gap above the line. */
+.solver-options-row:not(:has(#solverOptions input)) {
+	/* Bootstrap sets display: flex with !important on .d-flex. */
+	display: none !important;
+}
+
 #statisticsTable, #instanceAttributesTable, #solveAttributesTable {
 	visibility: visible;
 	padding: 1rem;
@@ -382,6 +388,10 @@ tr.odd.bg-primary.row-selected-problems th.dtfc-fixed-left.sorting_1 {
 .load-status {
 	margin: 0.5rem 1rem;
 	min-height: 1.5rem;
+}
+
+.load-status:empty {
+	display: none;
 }
 
 body.drop-active .empty-state {

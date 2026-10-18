@@ -85,3 +85,33 @@ test.describe("Compare solvers page", () => {
 		).toHaveCount(2);
 	});
 });
+
+/**
+ * The space between the last control and the line below the buttons.
+ */
+async function GapBelowControls(page: Page, control: string): Promise<number> {
+	return page.evaluate((id) => {
+		const input = document.querySelector(id);
+		const line = document.querySelector("#buttonContainer ~ hr");
+		return line && input
+			? line.getBoundingClientRect().top - input.getBoundingClientRect().bottom
+			: -1;
+	}, control);
+}
+
+test.describe("Compare solvers page without data", () => {
+	test("has no empty row for the solvers between the inputs and the line", async ({
+		page
+	}) => {
+		await page.goto(PageUrl("Src/Pages/compare_solvers.html"));
+		await expect(page.locator("#gapTypeSelector")).toBeVisible();
+		await expect(page.locator("#solverOptions")).toBeHidden();
+		const gap = await GapBelowControls(page, "#gapTypeSelector");
+
+		// The same space as on a page with a row of controls only.
+		await page.goto(PageUrl("Src/Pages/solution_quality.html"));
+		const reference = await GapBelowControls(page, "#categorySelector");
+		expect(gap).toBeGreaterThanOrEqual(0);
+		expect(Math.abs(gap - reference)).toBeLessThanOrEqual(2);
+	});
+});

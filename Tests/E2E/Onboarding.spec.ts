@@ -34,6 +34,19 @@ async function DropFile(
 	await page.dispatchEvent("body", "drop", { dataTransfer });
 }
 
+/**
+ * The top or bottom edge of an element, relative to the page.
+ */
+async function EdgeOf(
+	page: Page,
+	selector: string,
+	edge: "top" | "bottom"
+): Promise<number> {
+	return page.locator(selector).evaluate((element, side) => {
+		return element.getBoundingClientRect()[side];
+	}, edge);
+}
+
 test.describe("Empty state", () => {
 	let errors: string[];
 
@@ -44,6 +57,26 @@ test.describe("Empty state", () => {
 	test.afterEach(() => {
 		expect(errors).toEqual([]);
 	});
+
+	for (const { file, controls } of [
+		{ file: "Src/Pages/termination_status.html", controls: "#statusSelector" },
+		{
+			file: "Src/Pages/termination_status.html",
+			controls: "#chartTypeSelector"
+		},
+		{ file: "Src/Pages/solution_quality.html", controls: "#categorySelector" }
+	]) {
+		test(`${file} shows ${controls} below the buttons and above the empty state`, async ({
+			page
+		}) => {
+			await page.goto(PageUrl(file));
+			const buttonsBottom = await EdgeOf(page, "#buttonContainer", "bottom");
+			const controlTop = await EdgeOf(page, controls, "top");
+			const emptyStateTop = await EdgeOf(page, "#emptyState", "top");
+			expect(controlTop).toBeGreaterThanOrEqual(buttonsBottom);
+			expect(controlTop).toBeLessThan(emptyStateTop);
+		});
+	}
 
 	for (const file of PAGES) {
 		test(`${file} explains how to load data, until data is loaded`, async ({

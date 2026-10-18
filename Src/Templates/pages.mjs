@@ -88,7 +88,7 @@ export const PAGES = [
     "termination_status",
     "Termination Status",
     { title: "View termination status.", label: "View Termination Status" },
-    { content: { fragment: "termination-status-body" } },
+    { controls: "termination-status-controls" },
   ),
   PlotPage(
     "solution_quality",

@@ -1,13 +1,21 @@
+const fs = require("fs");
 const { task, src, dest } = require("gulp");
 const replace = require("gulp-replace");
-const zip = require("gulp-zip");
 const merge = require("merge-stream");
 const file = require("gulp-file");
 
 const packageJSON = require("./package.json");
 const version = packageJSON.version;
 
-task("release", function () {
+// Gulp 5 decodes the files as text unless encoding is false, which corrupts the images.
+// gulp-zip 6 is an ES module, so it is loaded with import().
+async function LoadZip() {
+	const { default: zip } = await import("gulp-zip");
+	return zip;
+}
+
+task("release", async function () {
+	const zip = await LoadZip();
 	return src(
 		[
 			"Dist/*.{js,css,txt}",
@@ -18,48 +26,38 @@ task("release", function () {
 			"manifest.json",
 			"service-worker.js"
 		],
-		{ base: "." }
+		{ base: ".", encoding: false }
 	)
 		.pipe(zip(`VIVA-release-${version}.zip`))
 		.pipe(dest("Release"));
 });
 
-task("release-web", function () {
+task("release-web", async function () {
+	const zip = await LoadZip();
 	const filesToRemoveHTMLstring = src(
 		["Src/Pages/*.html", "report.html", "service-worker.js", "manifest.json"],
-		{ base: "." }
+		{ base: ".", encoding: false }
 	).pipe(replace(".html", ""));
 
 	const otherFiles = src(
 		["Dist/*.{js,css,txt}", "Docs/**/*", "Src/CSS/*.{png,jpg}"],
-		{ base: "." }
+		{ base: ".", encoding: false }
 	);
 
-	const redirects = [
-		"/ /report.html 301",
-		"/performance_profile /Src/Pages/performance_profile",
-		"/average_solver_time /Src/Pages/average_solver_time 301",
-		"/compare_solvers /Src/Pages/compare_solvers.html 301",
-		"/solver_time /Src/Pages/solver_time 301",
-		"/number_of_nodes /Src/Pages/number_of_nodes 301",
-		"/number_of_iterations /Src/Pages/number_of_iterations 301",
-		"/termination_status /Src/Pages/termination_status 301",
-		"/solution_quality /Src/Pages/solution_quality 301",
-		"/solution_time /Src/Pages/solution_time 301",
-		"/Src/Pages/performance_profile.html /Src/Pages/performance_profile 301",
-		"/Src/Pages/solver_time_all.html /Src/Pages/average_solver_time 301",
-		"/Src/Pages/compare_solvers.html /Src/Pages/compare_solvers 301",
-		"/Src/Pages/solver_time.html /Src/Pages/solver_time 301",
-		"/Src/Pages/number_of_nodes.html /Src/Pages/number_of_nodes 301",
-		"/Src/Pages/number_of_iterations.html /Src/Pages/number_of_iterations 301",
-		"/Src/Pages/termination_status.html /Src/Pages/termination_status 301",
-		"/Src/Pages/solution_quality.html /Src/Pages/solution_quality 301",
-		"/Src/Pages/solution_time.html /Src/Pages/solution_quality 301",
-	];
-	const redirectContent = redirects.join("\n");
-	const redirectFile = file("_redirect", redirectContent, { src: true });
+	const { BuildRedirects, REDIRECTS_FILE } = await import(
+		"./scripts/web-release.mjs"
+	);
+	const redirectFile = file(REDIRECTS_FILE, BuildRedirects(), { src: true });
 
-	return merge(filesToRemoveHTMLstring, otherFiles, redirectFile)
+	// "/" is served from index.html. A redirect to /report would be cached by the service worker as a
+	// redirected response, which the browser refuses to use for a navigation.
+	const indexFile = file(
+		"index.html",
+		fs.readFileSync("report.html", "utf8").split(".html").join(""),
+		{ src: true }
+	);
+
+	return merge(filesToRemoveHTMLstring, otherFiles, redirectFile, indexFile)
 		.pipe(zip(`VIVA-release-web-${version}.zip`))
 		.pipe(dest("Release"));
 });
