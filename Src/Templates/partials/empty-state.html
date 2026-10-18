@@ -1,26 +1,23 @@
-<div id="emptyState" class="empty-state text-center">
-      <i class="bi bi-cloud-arrow-up empty-state-icon" aria-hidden="true"></i>
+<div id="emptyState" class="empty-state">
       <h2 class="h5">Load benchmark data to get started</h2>
       <p>
         Drop files anywhere on this page, or choose them with the file field in
         the navigation bar and click Upload.
       </p>
-      <ul class="list-unstyled">
+      <ul class="list-unstyled mb-3">
         <li><b>.trc</b> trace files, one for each solver</li>
         <li><b>.csv</b> instance information (optional)</li>
         <li><b>.solu</b> best known bounds (optional)</li>
         <li><b>.json</b> a configuration that was saved earlier</li>
       </ul>
-      <p>
-        The buttons above can be used after the data is loaded.
-        <button
-          id="emptyStateDemoButton"
-          class="btn btn-sm btn-primary"
-          type="button"
-        >
-          <i class="bi bi-activity"></i> Try demo data
-        </button>
-      </p>
+      <p class="mb-2">The buttons above can be used after the data is loaded.</p>
+      <button
+        id="emptyStateDemoButton"
+        class="btn btn-sm btn-primary"
+        type="button"
+      >
+        <i class="bi bi-activity"></i> Try demo data
+      </button>
     </div>
     <div
       id="loadStatus"
