@@ -43,9 +43,7 @@
   </head>
 
   <body>
-    <a class="visually-hidden-focusable" href="#buttonContainer"
-      >Skip to content</a
-    >
+    <a class="visually-hidden-focusable" href="#main">Skip to content</a>
     <nav class="navbar sticky-top navbar-expand-viva bg-body-tertiary">
       <div class="container-fluid">
         <span class="navbar-brand">
@@ -278,152 +276,154 @@
         aria-label="Close"
       ></button>
     </div>
-    <div
-      id="buttonContainer"
-      class="d-flex flex-wrap justify-content-start gap-2"
-    >
-      <div class="col-auto">
-        <button
-          class="btn btn-success btn-sm"
-          id="viewTableButton"
-          disabled="true"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="View the table."
-        >
-          <i class="bi bi-table"></i> View Table
-        </button>
-      </div>
-      <div class="col-auto">
-        <button
-          class="btn btn-primary btn-sm"
-          id="showSelectedRowsButton"
-          disabled="true"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="View rows that have been selected from the table."
-        >
-          <i class="bi bi-funnel"></i> Show Selected Rows
-        </button>
-      </div>
-      <div class="col-auto">
-        <button
-          class="btn btn-primary btn-sm"
-          id="saveLocalStorageButton"
-          disabled="true"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Save current table configuration to local storage."
-        >
-          <i class="bi bi-save"></i> Save Data
-        </button>
-      </div>
-      <div class="col-auto vertical-separator"></div>
-      <div class="col-auto">
-        <button
-          class="btn btn-dark btn-sm"
-          type="button"
-          id="downloadConfigurationButtonLayer"
-          disabled="true"
-        >
-          <a
-            id="downloadConfigurationButton"
+    <main id="main" tabindex="-1">
+      <div
+        id="buttonContainer"
+        class="d-flex flex-wrap justify-content-start gap-2"
+      >
+        <div class="col-auto">
+          <button
+            class="btn btn-success btn-sm"
+            id="viewTableButton"
+            disabled="true"
             data-toggle="tooltip"
             data-placement="top"
-            title="Download the user configuration."
-            ><i class="bi bi-download"></i> Download Saved Data</a
+            title="View the table."
           >
-        </button>
+            <i class="bi bi-table"></i> View Table
+          </button>
+        </div>
+        <div class="col-auto">
+          <button
+            class="btn btn-primary btn-sm"
+            id="showSelectedRowsButton"
+            disabled="true"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="View rows that have been selected from the table."
+          >
+            <i class="bi bi-funnel"></i> Show Selected Rows
+          </button>
+        </div>
+        <div class="col-auto">
+          <button
+            class="btn btn-primary btn-sm"
+            id="saveLocalStorageButton"
+            disabled="true"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Save current table configuration to local storage."
+          >
+            <i class="bi bi-save"></i> Save Data
+          </button>
+        </div>
+        <div class="col-auto vertical-separator"></div>
+        <div class="col-auto">
+          <button
+            class="btn btn-dark btn-sm"
+            type="button"
+            id="downloadConfigurationButtonLayer"
+            disabled="true"
+          >
+            <a
+              id="downloadConfigurationButton"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Download the user configuration."
+              ><i class="bi bi-download"></i> Download Saved Data</a
+            >
+          </button>
+        </div>
+        <div class="col-auto">
+          <button
+            class="btn btn-dark btn-sm"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#configurationSettingsModal"
+            id="configurationSettingsButton"
+            disabled="true"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Customize the downloadable user configuration file."
+          >
+            <i class="bi bi-gear"></i> Download Data
+          </button>
+        </div>
+        <div class="col-auto vertical-separator"></div>
+        <div class="col-auto">
+          <button
+            class="btn btn-danger btn-sm"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteDataModal"
+            id="deleteLocalStorageButton"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Delete current table configuration from local storage."
+          >
+            <i class="bi bi-trash"></i> Delete Data
+          </button>
+        </div>
+        <div class="col-auto">
+          <button
+            class="btn btn-danger btn-sm"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#clearDataTableModal"
+            id="clearTableButton"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Clear current table and refresh table page."
+          >
+            <i class="bi bi-x-circle-fill"></i> Clear Data Table
+          </button>
+        </div>
       </div>
-      <div class="col-auto">
+      <hr />
+      <div id="emptyState" class="empty-state">
+        <h2 class="h5">Load benchmark data to get started</h2>
+        <p>
+          Drop files anywhere on this page, or choose them with the file field
+          in the navigation bar and click Upload.
+        </p>
+        <ul class="list-unstyled mb-3">
+          <li><b>.trc</b> trace files, one for each solver</li>
+          <li><b>.csv</b> instance information (optional)</li>
+          <li><b>.solu</b> best known bounds (optional)</li>
+          <li><b>.json</b> a configuration that was saved earlier</li>
+        </ul>
+        <p class="mb-2">
+          The buttons above can be used after the data is loaded.
+        </p>
         <button
-          class="btn btn-dark btn-sm"
+          id="emptyStateDemoButton"
+          class="btn btn-sm btn-primary"
           type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#configurationSettingsModal"
-          id="configurationSettingsButton"
-          disabled="true"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Customize the downloadable user configuration file."
         >
-          <i class="bi bi-gear"></i> Download Data
+          <i class="bi bi-activity"></i> Try demo data
         </button>
       </div>
-      <div class="col-auto vertical-separator"></div>
-      <div class="col-auto">
-        <button
-          class="btn btn-danger btn-sm"
-          type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#deleteDataModal"
-          id="deleteLocalStorageButton"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Delete current table configuration from local storage."
-        >
-          <i class="bi bi-trash"></i> Delete Data
-        </button>
+      <div
+        id="loadStatus"
+        class="load-status text-center"
+        role="status"
+        aria-live="polite"
+      ></div>
+      <div
+        id="loaderContainer"
+        class="align-items-center justify-content-center"
+      ></div>
+      <p id="tableHint" class="table-hint" hidden></p>
+      <div id="dataTable">
+        <!-- Table element will be created here. -->
       </div>
-      <div class="col-auto">
-        <button
-          class="btn btn-danger btn-sm"
-          type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#clearDataTableModal"
-          id="clearTableButton"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Clear current table and refresh table page."
-        >
-          <i class="bi bi-x-circle-fill"></i> Clear Data Table
-        </button>
+      <div id="instanceAttributesTable">
+        <!-- Instance attributes statistics table element will be created here. -->
       </div>
-    </div>
-    <hr />
-    <div id="emptyState" class="empty-state">
-      <h2 class="h5">Load benchmark data to get started</h2>
-      <p>
-        Drop files anywhere on this page, or choose them with the file field in
-        the navigation bar and click Upload.
-      </p>
-      <ul class="list-unstyled mb-3">
-        <li><b>.trc</b> trace files, one for each solver</li>
-        <li><b>.csv</b> instance information (optional)</li>
-        <li><b>.solu</b> best known bounds (optional)</li>
-        <li><b>.json</b> a configuration that was saved earlier</li>
-      </ul>
-      <p class="mb-2">
-        The buttons above can be used after the data is loaded.
-      </p>
-      <button
-        id="emptyStateDemoButton"
-        class="btn btn-sm btn-primary"
-        type="button"
-      >
-        <i class="bi bi-activity"></i> Try demo data
-      </button>
-    </div>
-    <div
-      id="loadStatus"
-      class="load-status text-center"
-      role="status"
-      aria-live="polite"
-    ></div>
-    <div
-      id="loaderContainer"
-      class="align-items-center justify-content-center"
-    ></div>
-    <p id="tableHint" class="table-hint" hidden></p>
-    <div id="dataTable">
-      <!-- Table element will be created here. -->
-    </div>
-    <div id="instanceAttributesTable">
-      <!-- Instance attributes statistics table element will be created here. -->
-    </div>
-    <div id="solveAttributesTable">
-      <!-- Solve attributes statistics table element will be created here. -->
-    </div>
+      <div id="solveAttributesTable">
+        <!-- Solve attributes statistics table element will be created here. -->
+      </div>
+    </main>
     <!-- Main script -->
     <script id="MainFunction" src="Dist/bundle.js"></script>
   </body>

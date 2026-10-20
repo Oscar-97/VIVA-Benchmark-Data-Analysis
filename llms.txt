@@ -1,0 +1,19 @@
+# VIVA – Benchmark Data Analysis
+
+> VIVA is a browser app (PWA) to visualize, interact with, verify and analyze benchmark data of optimization solvers. Data is loaded from trace or JSON files and is processed locally in the browser.
+
+## App
+
+- [Table](https://viva-app.xyz/report): the benchmark data as an interactive table
+- [Compare Solvers](https://viva-app.xyz/Src/Pages/compare_solvers): compare the results of solvers
+- [Performance profile](https://viva-app.xyz/Src/Pages/performance_profile): performance profile plot
+- [Solution quality](https://viva-app.xyz/Src/Pages/solution_quality): solution quality plot
+- [Solution time](https://viva-app.xyz/Src/Pages/solution_time): solution time plot
+- [Termination status](https://viva-app.xyz/Src/Pages/termination_status): termination status plot
+
+## Documentation and source
+
+- [Documentation](https://viva-app.xyz/Docs/index.html): API documentation of the code
+- [GitHub repository](https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis): source code and README
+- [Releases](https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/releases): downloads and release notes
+- [Issues](https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues): bug reports and feature requests

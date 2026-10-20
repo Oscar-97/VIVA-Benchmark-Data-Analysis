@@ -41,9 +41,7 @@
   </head>
 
   <body>
-    <a class="visually-hidden-focusable" href="#buttonContainer"
-      >Skip to content</a
-    >
+    <a class="visually-hidden-focusable" href="#main">Skip to content</a>
     <nav class="navbar sticky-top navbar-expand-viva bg-body-tertiary">
       <div class="container-fluid">
         <span class="navbar-brand">
@@ -255,177 +253,178 @@
         aria-label="Close"
       ></button>
     </div>
-    <div
-      id="buttonContainer"
-      class="d-flex flex-wrap justify-content-start gap-2"
-    >
-      <div class="col-auto">
-        <button
-          class="btn btn-success btn-sm"
-          type="submit"
-          id="viewPlotsButton"
-          disabled="true"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="View solution time."
-        >
-          <i class="bi bi-diagram-2"></i> View Solution Time
-        </button>
-      </div>
-      <div class="col-auto">
-        <button
-          class="btn btn-primary btn-sm"
-          id="saveLocalStorageButton"
-          disabled="true"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Save currently loaded data to local storage."
-        >
-          <i class="bi bi-save"></i> Save Data
-        </button>
-      </div>
-      <div class="col-auto vertical-separator"></div>
-      <div class="col-auto">
-        <button
-          class="btn btn-dark btn-sm"
-          type="button"
-          id="downloadConfigurationButtonLayer"
-          disabled="true"
-        >
-          <a
-            id="downloadConfigurationButton"
+    <main id="main" tabindex="-1">
+      <div
+        id="buttonContainer"
+        class="d-flex flex-wrap justify-content-start gap-2"
+      >
+        <div class="col-auto">
+          <button
+            class="btn btn-success btn-sm"
+            type="submit"
+            id="viewPlotsButton"
+            disabled="true"
             data-toggle="tooltip"
             data-placement="top"
-            title="Download the user configuration."
-            ><i class="bi bi-download"></i> Download Saved Data</a
+            title="View solution time."
           >
-        </button>
-      </div>
-      <div class="col-auto">
-        <button
-          class="btn btn-dark btn-sm"
-          type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#configurationSettingsModal"
-          id="configurationSettingsButton"
-          disabled="true"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Customize the downloadable user configuration file."
-        >
-          <i class="bi bi-gear"></i> Download Data
-        </button>
-      </div>
-      <div class="col-auto">
-        <button
-          class="btn btn-dark btn-sm"
-          type="button"
-          id="downloadChartDataButtonLayer"
-          disabled="true"
-        >
-          <a
-            id="downloadChartDataButton"
+            <i class="bi bi-diagram-2"></i> View Solution Time
+          </button>
+        </div>
+        <div class="col-auto">
+          <button
+            class="btn btn-primary btn-sm"
+            id="saveLocalStorageButton"
+            disabled="true"
             data-toggle="tooltip"
             data-placement="top"
-            title="Download the chart data."
-            ><i class="bi bi-file-earmark-arrow-down"></i> Download Chart
-            Data</a
+            title="Save currently loaded data to local storage."
           >
-        </button>
+            <i class="bi bi-save"></i> Save Data
+          </button>
+        </div>
+        <div class="col-auto vertical-separator"></div>
+        <div class="col-auto">
+          <button
+            class="btn btn-dark btn-sm"
+            type="button"
+            id="downloadConfigurationButtonLayer"
+            disabled="true"
+          >
+            <a
+              id="downloadConfigurationButton"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Download the user configuration."
+              ><i class="bi bi-download"></i> Download Saved Data</a
+            >
+          </button>
+        </div>
+        <div class="col-auto">
+          <button
+            class="btn btn-dark btn-sm"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#configurationSettingsModal"
+            id="configurationSettingsButton"
+            disabled="true"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Customize the downloadable user configuration file."
+          >
+            <i class="bi bi-gear"></i> Download Data
+          </button>
+        </div>
+        <div class="col-auto">
+          <button
+            class="btn btn-dark btn-sm"
+            type="button"
+            id="downloadChartDataButtonLayer"
+            disabled="true"
+          >
+            <a
+              id="downloadChartDataButton"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Download the chart data."
+              ><i class="bi bi-file-earmark-arrow-down"></i> Download Chart
+              Data</a
+            >
+          </button>
+        </div>
+        <div class="col-auto vertical-separator"></div>
+        <div class="col-auto">
+          <button
+            class="btn btn-danger btn-sm"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteDataModal"
+            id="deleteLocalStorageButton"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Delete currently saved data in local storage."
+          >
+            <i class="bi bi-trash"></i> Delete Data
+          </button>
+        </div>
       </div>
-      <div class="col-auto vertical-separator"></div>
-      <div class="col-auto">
+      <hr />
+      <div id="emptyState" class="empty-state">
+        <h2 class="h5">Load benchmark data to get started</h2>
+        <p>
+          Drop files anywhere on this page, or choose them with the file field
+          in the navigation bar and click Upload.
+        </p>
+        <ul class="list-unstyled mb-3">
+          <li><b>.trc</b> trace files, one for each solver</li>
+          <li><b>.csv</b> instance information (optional)</li>
+          <li><b>.solu</b> best known bounds (optional)</li>
+          <li><b>.json</b> a configuration that was saved earlier</li>
+        </ul>
+        <p class="mb-2">
+          The buttons above can be used after the data is loaded.
+        </p>
         <button
-          class="btn btn-danger btn-sm"
+          id="emptyStateDemoButton"
+          class="btn btn-sm btn-primary"
           type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#deleteDataModal"
-          id="deleteLocalStorageButton"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Delete currently saved data in local storage."
         >
-          <i class="bi bi-trash"></i> Delete Data
+          <i class="bi bi-activity"></i> Try demo data
         </button>
       </div>
-    </div>
-    <hr />
-    <div id="emptyState" class="empty-state">
-      <h2 class="h5">Load benchmark data to get started</h2>
-      <p>
-        Drop files anywhere on this page, or choose them with the file field in
-        the navigation bar and click Upload.
-      </p>
-      <ul class="list-unstyled mb-3">
-        <li><b>.trc</b> trace files, one for each solver</li>
-        <li><b>.csv</b> instance information (optional)</li>
-        <li><b>.solu</b> best known bounds (optional)</li>
-        <li><b>.json</b> a configuration that was saved earlier</li>
-      </ul>
-      <p class="mb-2">
-        The buttons above can be used after the data is loaded.
-      </p>
-      <button
-        id="emptyStateDemoButton"
-        class="btn btn-sm btn-primary"
-        type="button"
-      >
-        <i class="bi bi-activity"></i> Try demo data
-      </button>
-    </div>
-    <div
-      id="loadStatus"
-      class="load-status text-center"
-      role="status"
-      aria-live="polite"
-    ></div>
-
-    <div id="chartTools" class="chart-tools" hidden>
-      <button
-        id="resetZoomButton"
-        class="btn btn-dark btn-sm"
-        type="button"
-        title="Show the whole chart again."
-        disabled
-      >
-        <i class="bi bi-zoom-out"></i> Reset Zoom
-      </button>
-      <button
-        id="showAllSeriesButton"
-        class="btn btn-dark btn-sm"
-        type="button"
-        title="Show all data sets of the chart."
-      >
-        <i class="bi bi-eye"></i> Show All
-      </button>
-      <button
-        id="hideAllSeriesButton"
-        class="btn btn-dark btn-sm"
-        type="button"
-        title="Hide all data sets of the chart, to show only the ones you pick in the legend."
-      >
-        <i class="bi bi-eye-slash"></i> Hide All
-      </button>
-      <button
-        id="downloadChartImageButton"
-        class="btn btn-dark btn-sm"
-        type="button"
-        title="Download the chart as an image."
-      >
-        <i class="bi bi-file-earmark-image"></i> Download Image
-      </button>
-      <span
-        id="chartToolsStatus"
-        class="chart-tools-status"
+      <div
+        id="loadStatus"
+        class="load-status text-center"
         role="status"
-      ></span>
-    </div>
-    <div id="chartContainer">
-      <canvas id="myChart" class="chart">
-        <!-- Content created with Chart.js will be displayed here. -->
-      </canvas>
-    </div>
+        aria-live="polite"
+      ></div>
 
+      <div id="chartTools" class="chart-tools" hidden>
+        <button
+          id="resetZoomButton"
+          class="btn btn-dark btn-sm"
+          type="button"
+          title="Show the whole chart again."
+          disabled
+        >
+          <i class="bi bi-zoom-out"></i> Reset Zoom
+        </button>
+        <button
+          id="showAllSeriesButton"
+          class="btn btn-dark btn-sm"
+          type="button"
+          title="Show all data sets of the chart."
+        >
+          <i class="bi bi-eye"></i> Show All
+        </button>
+        <button
+          id="hideAllSeriesButton"
+          class="btn btn-dark btn-sm"
+          type="button"
+          title="Hide all data sets of the chart, to show only the ones you pick in the legend."
+        >
+          <i class="bi bi-eye-slash"></i> Hide All
+        </button>
+        <button
+          id="downloadChartImageButton"
+          class="btn btn-dark btn-sm"
+          type="button"
+          title="Download the chart as an image."
+        >
+          <i class="bi bi-file-earmark-image"></i> Download Image
+        </button>
+        <span
+          id="chartToolsStatus"
+          class="chart-tools-status"
+          role="status"
+        ></span>
+      </div>
+      <div id="chartContainer">
+        <canvas id="myChart" class="chart">
+          <!-- Content created with Chart.js will be displayed here. -->
+        </canvas>
+      </div>
+    </main>
     <!-- Main script -->
     <script id="MainFunction" src="../../Dist/bundle.js"></script>
   </body>

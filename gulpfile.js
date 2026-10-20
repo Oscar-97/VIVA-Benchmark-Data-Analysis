@@ -19,12 +19,15 @@ task("release", async function () {
 	return src(
 		[
 			"Dist/*.{js,css,txt}",
+			"Dist/fonts/*",
 			"Docs/**/*",
 			"Src/CSS/*.{png,jpg}",
 			"Src/Pages/*.html",
 			"report.html",
 			"manifest.json",
-			"service-worker.js"
+			"service-worker.js",
+			"llms.txt",
+			"robots.txt"
 		],
 		{ base: ".", encoding: false }
 	)
@@ -40,7 +43,7 @@ task("release-web", async function () {
 	).pipe(replace(".html", ""));
 
 	const otherFiles = src(
-		["Dist/*.{js,css,txt}", "Docs/**/*", "Src/CSS/*.{png,jpg}"],
+		["Dist/*.{js,css,txt}", "Dist/fonts/*", "Docs/**/*", "Src/CSS/*.{png,jpg}", "llms.txt", "robots.txt"],
 		{ base: ".", encoding: false }
 	);
 

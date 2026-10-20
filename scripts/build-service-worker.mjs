@@ -31,6 +31,12 @@ function ListFilesToCache() {
     .filter((name) => /\.(js|css)$/.test(name))
     .sort()
     .map((name) => `Dist/${name}`);
+  const fonts = fs.existsSync(path.join(root, "Dist/fonts"))
+    ? fs
+        .readdirSync(path.join(root, "Dist/fonts"))
+        .sort()
+        .map((name) => `Dist/fonts/${name}`)
+    : [];
   const icons = fs
     .readdirSync(path.join(root, "Src/CSS"))
     .filter((name) => /\.png$/.test(name))
@@ -39,7 +45,13 @@ function ListFilesToCache() {
   const pages = PAGES.map((page) => page.output).sort((a, b) =>
     a === "report.html" ? -1 : b === "report.html" ? 1 : a.localeCompare(b),
   );
-  const files = ["manifest.json", ...pages, ...distribution, ...icons];
+  const files = [
+    "manifest.json",
+    ...pages,
+    ...distribution,
+    ...fonts,
+    ...icons,
+  ];
 
   for (const file of files) {
     if (!fs.existsSync(path.join(root, file))) {

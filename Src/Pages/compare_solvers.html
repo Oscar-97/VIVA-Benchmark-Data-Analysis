@@ -41,9 +41,7 @@
   </head>
 
   <body>
-    <a class="visually-hidden-focusable" href="#buttonContainer"
-      >Skip to content</a
-    >
+    <a class="visually-hidden-focusable" href="#main">Skip to content</a>
     <nav class="navbar sticky-top navbar-expand-viva bg-body-tertiary">
       <div class="container-fluid">
         <span class="navbar-brand">
@@ -255,248 +253,249 @@
         aria-label="Close"
       ></button>
     </div>
-    <div
-      id="buttonContainer"
-      class="d-flex flex-wrap justify-content-start gap-2"
-    >
-      <div class="col-auto">
-        <button
-          class="btn btn-success btn-sm"
-          type="submit"
-          id="compareSolversButton"
-          disabled="true"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Compare the selected solvers."
-        >
-          <i class="bi bi-grid"></i> Compare Solvers
-        </button>
-      </div>
-      <div class="col-auto">
-        <button
-          class="btn btn-primary btn-sm"
-          id="saveLocalStorageButton"
-          disabled="true"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Save currently loaded data to local storage."
-        >
-          <i class="bi bi-save"></i> Save Data
-        </button>
-      </div>
-      <div class="col-auto vertical-separator"></div>
-      <div class="col-auto">
-        <button
-          class="btn btn-dark btn-sm"
-          type="button"
-          id="downloadConfigurationButtonLayer"
-          disabled="true"
-        >
-          <a
-            id="downloadConfigurationButton"
+    <main id="main" tabindex="-1">
+      <div
+        id="buttonContainer"
+        class="d-flex flex-wrap justify-content-start gap-2"
+      >
+        <div class="col-auto">
+          <button
+            class="btn btn-success btn-sm"
+            type="submit"
+            id="compareSolversButton"
+            disabled="true"
             data-toggle="tooltip"
             data-placement="top"
-            title="Download the user configuration."
-            ><i class="bi bi-download"></i> Download Saved Data</a
+            title="Compare the selected solvers."
           >
-        </button>
-      </div>
-      <div class="col-auto">
-        <button
-          class="btn btn-dark btn-sm"
-          type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#configurationSettingsModal"
-          id="configurationSettingsButton"
-          disabled="true"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Customize the downloadable user configuration file."
-        >
-          <i class="bi bi-gear"></i> Download Data
-        </button>
-      </div>
-      <div class="col-auto vertical-separator"></div>
-      <div class="col-auto">
-        <button
-          class="btn btn-danger btn-sm"
-          type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#deleteDataModal"
-          id="deleteLocalStorageButton"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Delete currently saved data in local storage."
-        >
-          <i class="bi bi-trash"></i> Delete Data
-        </button>
-      </div>
-    </div>
-
-    <div
-      class="d-flex flex-wrap justify-content-start gap-2"
-      style="margin-left: 1rem; margin-top: 1rem"
-    >
-      <div class="col-auto">
-        <div class="input-group mb-1">
-          <div class="form-floating">
-            <select
-              class="form-control form-control-sm"
-              id="terminationTypeSelector"
-              aria-label="terminationType"
+            <i class="bi bi-grid"></i> Compare Solvers
+          </button>
+        </div>
+        <div class="col-auto">
+          <button
+            class="btn btn-primary btn-sm"
+            id="saveLocalStorageButton"
+            disabled="true"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Save currently loaded data to local storage."
+          >
+            <i class="bi bi-save"></i> Save Data
+          </button>
+        </div>
+        <div class="col-auto vertical-separator"></div>
+        <div class="col-auto">
+          <button
+            class="btn btn-dark btn-sm"
+            type="button"
+            id="downloadConfigurationButtonLayer"
+            disabled="true"
+          >
+            <a
+              id="downloadConfigurationButton"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Download the user configuration."
+              ><i class="bi bi-download"></i> Download Saved Data</a
             >
-              <option value="1">Normal Completion</option>
-              <option value="2">Iteration Interrupt</option>
-              <option value="3">Resource Interrupt</option>
-              <option value="4">Terminated By Solver</option>
-              <option value="5">Evaluation Interrupt</option>
-              <option value="6">Capability Problems</option>
-              <option value="7">Licensing Problems</option>
-              <option value="8">User Interrupt</option>
-              <option value="9">Error Setup Failure</option>
-              <option value="10">Error Solver Failure</option>
-              <option value="11">Error Internal Solver Failure</option>
-              <option value="12">Solve Processing Skipped</option>
-              <option value="13">Error System Failure</option>
-            </select>
-            <label for="terminationTypeSelector">Termination Status</label>
-          </div>
+          </button>
+        </div>
+        <div class="col-auto">
+          <button
+            class="btn btn-dark btn-sm"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#configurationSettingsModal"
+            id="configurationSettingsButton"
+            disabled="true"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Customize the downloadable user configuration file."
+          >
+            <i class="bi bi-gear"></i> Download Data
+          </button>
+        </div>
+        <div class="col-auto vertical-separator"></div>
+        <div class="col-auto">
+          <button
+            class="btn btn-danger btn-sm"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteDataModal"
+            id="deleteLocalStorageButton"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Delete currently saved data in local storage."
+          >
+            <i class="bi bi-trash"></i> Delete Data
+          </button>
         </div>
       </div>
-      <div class="col-auto">
-        <div class="input-group mb-1">
-          <div class="form-floating">
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              placeholder="Enter a defaultTime."
-              aria-label="Input direct default time"
-              min="1"
-              id="defaultTimeDirectInput"
-            />
-            <label for="gapLimitDirectInput">defaultTime</label>
-          </div>
-          <span class="input-group-text" style="font-size: small">s</span>
-        </div>
-      </div>
-      <div class="col-auto">
-        <div class="input-group mb-1">
-          <div class="form-floating">
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              placeholder="Enter a primal gap"
-              aria-label="Input direct gap limit"
-              min="0"
-              step="0.01"
-              id="gapLimitDirectInput"
-            />
-            <label for="gapLimitDirectInput">gapLimit</label>
-          </div>
-          <span class="input-group-text" style="font-size: small">%</span>
-        </div>
-      </div>
-      <div class="col-auto">
-        <div class="input-group mb-1">
-          <div class="form-floating">
-            <select
-              class="form-control form-control-sm"
-              id="gapTypeSelector"
-              aria-label="gapType"
-            >
-              <option value="PrimalGap">Primal Gap</option>
-              <option value="DualGap">Dual Gap</option>
-              <option value="Gap_Solver">Solver Gap</option>
-            </select>
-            <label for="gapTypeSelector">Gap Type</label>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div
-      class="solver-options-row d-flex flex-wrap justify-content-start gap-2"
-      style="margin-left: 1rem; margin-top: 1rem"
-    >
-      <div class="col-auto">
-        <div class="input-group mb-1">
-          <div class="input-group mb-1" id="solverOptions">
-            <!-- Checkboxes will be added here dynamically -->
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <hr />
-    <div id="emptyState" class="empty-state">
-      <h2 class="h5">Load benchmark data to get started</h2>
-      <p>
-        Drop files anywhere on this page, or choose them with the file field in
-        the navigation bar and click Upload.
-      </p>
-      <ul class="list-unstyled mb-3">
-        <li><b>.trc</b> trace files, one for each solver</li>
-        <li><b>.csv</b> instance information (optional)</li>
-        <li><b>.solu</b> best known bounds (optional)</li>
-        <li><b>.json</b> a configuration that was saved earlier</li>
-      </ul>
-      <p class="mb-2">
-        The buttons above can be used after the data is loaded.
-      </p>
-      <button
-        id="emptyStateDemoButton"
-        class="btn btn-sm btn-primary"
-        type="button"
+      <div
+        class="d-flex flex-wrap justify-content-start gap-2"
+        style="margin-left: 1rem; margin-top: 1rem"
       >
-        <i class="bi bi-activity"></i> Try demo data
-      </button>
-    </div>
-    <div
-      id="loadStatus"
-      class="load-status text-center"
-      role="status"
-      aria-live="polite"
-    ></div>
-
-    <div id="comparisonTable">
-      <!-- Table with the comparison data. -->
-    </div>
-
-    <!-- Modal for solver comparison. -->
-    <div
-      class="modal fade"
-      id="solverComparisonModal"
-      tabindex="-1"
-      aria-labelledby="solverComparisonModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="solverComparisonModalLabel"></h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+        <div class="col-auto">
+          <div class="input-group mb-1">
+            <div class="form-floating">
+              <select
+                class="form-control form-control-sm"
+                id="terminationTypeSelector"
+                aria-label="terminationType"
+              >
+                <option value="1">Normal Completion</option>
+                <option value="2">Iteration Interrupt</option>
+                <option value="3">Resource Interrupt</option>
+                <option value="4">Terminated By Solver</option>
+                <option value="5">Evaluation Interrupt</option>
+                <option value="6">Capability Problems</option>
+                <option value="7">Licensing Problems</option>
+                <option value="8">User Interrupt</option>
+                <option value="9">Error Setup Failure</option>
+                <option value="10">Error Solver Failure</option>
+                <option value="11">Error Internal Solver Failure</option>
+                <option value="12">Solve Processing Skipped</option>
+                <option value="13">Error System Failure</option>
+              </select>
+              <label for="terminationTypeSelector">Termination Status</label>
+            </div>
           </div>
-          <div class="modal-body" id="solverComparisonModalBody">
-            <!-- Details will be inserted here. -->
+        </div>
+        <div class="col-auto">
+          <div class="input-group mb-1">
+            <div class="form-floating">
+              <input
+                type="number"
+                class="form-control form-control-sm"
+                placeholder="Enter a defaultTime."
+                aria-label="Input direct default time"
+                min="1"
+                id="defaultTimeDirectInput"
+              />
+              <label for="gapLimitDirectInput">defaultTime</label>
+            </div>
+            <span class="input-group-text" style="font-size: small">s</span>
           </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
+        </div>
+        <div class="col-auto">
+          <div class="input-group mb-1">
+            <div class="form-floating">
+              <input
+                type="number"
+                class="form-control form-control-sm"
+                placeholder="Enter a primal gap"
+                aria-label="Input direct gap limit"
+                min="0"
+                step="0.01"
+                id="gapLimitDirectInput"
+              />
+              <label for="gapLimitDirectInput">gapLimit</label>
+            </div>
+            <span class="input-group-text" style="font-size: small">%</span>
+          </div>
+        </div>
+        <div class="col-auto">
+          <div class="input-group mb-1">
+            <div class="form-floating">
+              <select
+                class="form-control form-control-sm"
+                id="gapTypeSelector"
+                aria-label="gapType"
+              >
+                <option value="PrimalGap">Primal Gap</option>
+                <option value="DualGap">Dual Gap</option>
+                <option value="Gap_Solver">Solver Gap</option>
+              </select>
+              <label for="gapTypeSelector">Gap Type</label>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
+      <div
+        class="solver-options-row d-flex flex-wrap justify-content-start gap-2"
+        style="margin-left: 1rem; margin-top: 1rem"
+      >
+        <div class="col-auto">
+          <div class="input-group mb-1">
+            <div class="input-group mb-1" id="solverOptions">
+              <!-- Checkboxes will be added here dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+      <div id="emptyState" class="empty-state">
+        <h2 class="h5">Load benchmark data to get started</h2>
+        <p>
+          Drop files anywhere on this page, or choose them with the file field
+          in the navigation bar and click Upload.
+        </p>
+        <ul class="list-unstyled mb-3">
+          <li><b>.trc</b> trace files, one for each solver</li>
+          <li><b>.csv</b> instance information (optional)</li>
+          <li><b>.solu</b> best known bounds (optional)</li>
+          <li><b>.json</b> a configuration that was saved earlier</li>
+        </ul>
+        <p class="mb-2">
+          The buttons above can be used after the data is loaded.
+        </p>
+        <button
+          id="emptyStateDemoButton"
+          class="btn btn-sm btn-primary"
+          type="button"
+        >
+          <i class="bi bi-activity"></i> Try demo data
+        </button>
+      </div>
+      <div
+        id="loadStatus"
+        class="load-status text-center"
+        role="status"
+        aria-live="polite"
+      ></div>
+
+      <div id="comparisonTable">
+        <!-- Table with the comparison data. -->
+      </div>
+
+      <!-- Modal for solver comparison. -->
+      <div
+        class="modal fade"
+        id="solverComparisonModal"
+        tabindex="-1"
+        aria-labelledby="solverComparisonModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="solverComparisonModalLabel"></h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body" id="solverComparisonModalBody">
+              <!-- Details will be inserted here. -->
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
     <!-- Main script -->
     <script id="MainFunction" src="../../Dist/bundle.js"></script>
   </body>

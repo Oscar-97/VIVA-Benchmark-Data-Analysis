@@ -129,11 +129,17 @@ test.describe("Data snapshots", () => {
 	});
 
 	test("The navigation of a plot page", async ({ page }) => {
-		// The last link shows the latest release, which comes from Github. Without the network it shows the
-		// fallback text, which is what the snapshot has, so the answer is not left to the network of the machine.
-		await page.route("https://api.github.com/**", (route) => route.abort());
+		// The last link shows the version of the application, which changes with every release, so the
+		// snapshot has the text that the page has without a version.
 		await page.goto(PageUrl("Src/Pages/solver_time.html"));
-		await expect(page.locator("#releaseVersionTagSpan i")).toBeAttached();
+		const releaseLink = page.locator("#releaseVersionTagSpan");
+		await expect(releaseLink).toHaveText(/^\s*v\d+\.\d+\.\d+/);
+		await releaseLink.evaluate((link) => {
+			link.replaceChildren(
+				Object.assign(document.createElement("i"), { className: "bi bi-git" }),
+				" Releases"
+			);
+		});
 
 		await expect(page.locator("nav").first()).toMatchAriaSnapshot({
 			name: "navigation.aria.yml"

@@ -1,6 +1,6 @@
 // @generated-start
 // This block is written by scripts/build-service-worker.mjs (npm run build). Do not edit it by hand.
-const CACHE_NAME = "VIVA-cache-1.2.0-df804fbce309";
+const CACHE_NAME = "VIVA-cache-1.2.0-2de48702fd43";
 const filesToCache = [
 	"/",
 	"manifest.json",
@@ -20,6 +20,7 @@ const filesToCache = [
 	"Dist/minlplib-dataset.js",
 	"Dist/miplib2010-dataset.js",
 	"Dist/miplib2017-dataset.js",
+	"Dist/fonts/bootstrap-icons.woff2",
 	"Src/CSS/icon_maskable.png",
 	"Src/CSS/tab_icon.png"
 ];

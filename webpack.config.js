@@ -1,5 +1,7 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
+const webpack = require('webpack');
+const { version } = require('./package.json');
 
 module.exports = {
   mode: "production",
@@ -41,11 +43,16 @@ module.exports = {
       },
       {
           test: /\.(woff|woff2|eot|ttf|otf)$/i,
-          type: "asset/inline",
+          type: "asset/resource",
+          generator: { filename: "fonts/[name][ext]" },
       }
     ],
   },
   plugins: [
+    // The version in package.json is shown in the navigation, see ReleaseVersionTag.ts.
+    new webpack.DefinePlugin({
+      __APP_VERSION__: JSON.stringify(version),
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',

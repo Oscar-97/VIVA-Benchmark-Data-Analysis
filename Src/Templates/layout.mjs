@@ -248,14 +248,16 @@ export function RenderPage(page) {
   ${RenderHead(page, prefixes)}
 
   <body>
-    <a class="visually-hidden-focusable" href="#buttonContainer">Skip to content</a>
+    <a class="visually-hidden-focusable" href="#main">Skip to content</a>
     ${navigation}
     ${alert}
+    <main id="main" tabindex="-1">
     <div id="buttonContainer" class="d-flex flex-wrap justify-content-start gap-2">
       ${page.buttons.map(RenderButton).join("\n")}
     </div>${controls}
     <hr />
-    ${emptyState}${gap}    ${RenderContent(page.content)}${gap}    <!-- Main script -->
+    ${emptyState}${gap}    ${RenderContent(page.content)}${gap}    </main>
+    <!-- Main script -->
     <script id="MainFunction" src="${prefixes.script}bundle.js"></script>
   </body>
 </html>
