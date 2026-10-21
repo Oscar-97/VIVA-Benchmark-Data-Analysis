@@ -346,8 +346,14 @@ function DisplayDetails(
 		(detail) => detail.comparison === comparisonType.toLowerCase()
 	);
 
-	if (elements.solverComparisonModalLabel)
-		elements.solverComparisonModalLabel.innerHTML = `<i class="bi bi-clock-history"></i> ${Captions.COMPARSION_MODAL_LABEL} ${comparisonType}`;
+	if (elements.solverComparisonModalLabel) {
+		const icon = document.createElement("i");
+		icon.className = "bi bi-clock-history";
+		elements.solverComparisonModalLabel.replaceChildren(
+			icon,
+			` ${Captions.COMPARISON_MODAL_LABEL} ${comparisonType}`
+		);
+	}
 	if (elements.solverComparisonModalBody) {
 		elements.solverComparisonModalBody.innerHTML = "";
 		const listGroup = document.createElement("ul");
@@ -356,7 +362,16 @@ function DisplayDetails(
 		filteredDetails.forEach((detail: ComparisonDetails) => {
 			const listItem = document.createElement("li");
 			listItem.className = "list-group-item";
-			listItem.innerHTML = `${detail.InputFileName}, <b>${detail.time1}</b> compared to <b>${detail.time2}</b>`;
+			const time1 = document.createElement("b");
+			time1.textContent = String(detail.time1);
+			const time2 = document.createElement("b");
+			time2.textContent = String(detail.time2);
+			listItem.append(
+				`${detail.InputFileName}, `,
+				time1,
+				" compared to ",
+				time2
+			);
 			listGroup.appendChild(listItem);
 		});
 

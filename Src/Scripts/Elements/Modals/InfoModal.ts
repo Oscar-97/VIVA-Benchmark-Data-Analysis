@@ -55,7 +55,7 @@ export function CreateFileFormatInformationModal(): void {
 		"See the documentation for more information regarding the application.";
 
 	const p4 = document.createElement("p");
-	p4.innerHTML = `The default time is a falllback value used if the SolverTime is not available. It is used in the performance profile chart and on the compare solvers page. The default value is ${Values.DEFAULT_TIME}.`;
+	p4.innerHTML = `The default time is a fallback value used if the SolverTime is not available. It is used in the performance profile chart and on the compare solvers page. The default value is ${Values.DEFAULT_TIME}.`;
 
 	const p5 = document.createElement("p");
 	p5.innerHTML = `The gap limit percentage is used to limit the selected instances. It is used in the performance profile chart and on the compare solvers page. The default value is ${Values.DEFAULT_GAP_LIMIT}%.`;

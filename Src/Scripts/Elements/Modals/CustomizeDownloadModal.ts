@@ -32,7 +32,8 @@ export function CreateConfigurationSettingsModal(): void {
 	modalBody.className = "modal-body";
 
 	const p1 = document.createElement("p");
-	p1.innerHTML = "Configure the <b>UserConfiguration.js</b> to be downloaded.";
+	p1.innerHTML =
+		"Configure the <b>UserConfiguration.json</b> to be downloaded.";
 
 	const iRequired = document.createElement("i");
 	iRequired.textContent = "Required";
