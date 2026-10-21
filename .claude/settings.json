@@ -8,9 +8,33 @@
       "Bash(git status)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(git show:*)",
+      "Bash(git push -u origin *)",
+      "Bash(npm run check:pages)",
+      "Bash(npm run check:sw)",
+      "Bash(npm run build:pages)",
+      "Bash(npm run test:coverage)",
+      "Bash(npm run test:ui)",
+      "Bash(gh pr create --draft *)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr list *)",
+      "Bash(gh pr checks *)",
+      "Bash(gh run list *)",
+      "Bash(gh run view *)",
       "Read(./Docs/**)"
     ],
     "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push * --force*)",
+      "Bash(git push origin main*)",
+      "Bash(git push origin HEAD:main*)",
+      "Bash(gh pr merge *)",
+      "Bash(gh pr ready *)",
+      "Bash(gh pr close *)",
+      "Bash(gh repo delete *)",
+      "Bash(gh api *)",
       "Read(./node_modules/**)",
       "Read(./Dist/**/*.map)",
       "Read(./package-lock.json)",
@@ -20,6 +44,17 @@
     ]
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/guard-push.js"
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
@@ -27,6 +62,10 @@
           {
             "type": "command",
             "command": "node .claude/hooks/lint-ts.js"
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/build-pages.js"
           }
         ]
       }
