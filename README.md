@@ -22,6 +22,12 @@ A browser app (PWA) for analyzing benchmark data of optimization solvers. Import
 
 The app also runs offline once it has been opened from a web server: a service worker caches the pages and scripts.
 
+The usage guide (buttons, supported file formats) is in [`Src/Docs/README.md`](Src/Docs/README.md), and the API documentation is published from `Docs/`.
+
+VIVA builds on the concept of [PAVER 2.0](https://github.com/coin-or/paver). The demo data comes from the [miplib2010 examples](https://github.com/coin-or/Paver/tree/master/examples/miplib2010); the `.solu` files of [MINLPLib](https://www.minlplib.org/minlplib.solu), [MIPLIB 2017](https://miplib.zib.de/downloads/miplib2017-v26.solu) and [MIPLIB 2010](https://miplib2010.zib.de/download/miplib2010_all.solu) can be loaded from the navigation menu.
+
+Built with TypeScript, Chart.js, DataTables, jQuery, mathjs, Webpack and Bootstrap.
+
 ## Requirements
 
 - Node.js `^20.19.0 || ^22.13.0 || >=24` and npm, to build and test.
