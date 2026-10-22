@@ -5,8 +5,7 @@
 	"categories": [
 		"utilities",
 		"development",
-		"education",
-		"mathematical optimization"
+		"education"
 	],
 	"description": "Application for comparison and visualization of benchmark results from mathematical optimization solvers.",
 	"screenshots": [
@@ -38,13 +37,7 @@
 		"window-controls-overlay",
 		"minimal-ui"
 	],
-	"related_applications": [
-		{
-			"platform": "windows",
-			"url": "https://github.com/coin-or/Paver"
-		}
-	],
-	"orientation": "landscape",
+	"orientation": "any",
 	"theme_color": "#FFFFFF",
 	"background_color": "#FFFFFF",
 	"shortcuts": [

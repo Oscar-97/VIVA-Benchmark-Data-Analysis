@@ -1,9 +1,9 @@
 node_modules
 Release
 /TestData/
-!/Test/TestData/
 TestScreenshots
 coverage
+Built
 Tests/downloads
 .vscode/settings.json
 
