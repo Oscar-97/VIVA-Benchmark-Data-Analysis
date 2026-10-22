@@ -1126,6 +1126,20 @@ describe("CompareSolvers", () => {
 
 		expect(comparisonSummary).toEqual(expectedSummary);
 	});
+
+	it("should compare against the first result of a file when the second solver has several", () => {
+		const summary = CompareSolvers("A", "B", {
+			A: [{ InputFileName: "File1", time: 10 }],
+			B: [
+				{ InputFileName: "File1", time: 20 },
+				{ InputFileName: "File1", time: 5 }
+			]
+		});
+
+		expect(summary.better).toBe(1);
+		expect(summary.details).toHaveLength(1);
+		expect(summary.details[0]?.time2).toBe(20);
+	});
 });
 
 describe("GetPageKind", () => {
