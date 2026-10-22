@@ -433,7 +433,7 @@ function ExceedsBound(a: number, b: number): boolean {
  * The termination statuses that make a result fail.
  */
 const FAILED_TERMINATION_STATUSES = [
-	"Capability Problem",
+	"Capability Problems",
 	"Unknown Error",
 	"User Interrupt",
 	"Error"

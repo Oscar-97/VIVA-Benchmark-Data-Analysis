@@ -339,7 +339,7 @@ describe("SetFailValueAndReason", () => {
 		]);
 	});
 
-	it.each(["Capability Problem", "Unknown Error", "User Interrupt", "Error"])(
+	it.each(["Capability Problems", "Unknown Error", "User Interrupt", "Error"])(
 		"should fail for the termination status %s",
 		(status) => {
 			expect(SetFailValueAndReason(status, "min", 1, 1, 1, 1)).toEqual([
