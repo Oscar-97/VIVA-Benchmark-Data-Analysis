@@ -1,0 +1,127 @@
+<nav class="navbar sticky-top navbar-expand-viva bg-body-tertiary">
+      <div class="container-fluid">
+        <span class="navbar-brand">
+          <img
+            src="{{css}}tab_icon.png"
+            width="30"
+            height="30"
+            class="d-inline-block align-top"
+            alt="VIVA logo"
+          />
+          <b>VIVA</b></span
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            {{navItems}}
+            <li class="nav-item">
+              <div class="input-group" id="uploadFileGroup">
+                <input
+                  type="file"
+                  class="form-control"
+                  id="fileInput"
+                  aria-label="Upload"
+                  value=""
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Select and upload a trace or JSON file."
+                  multiple
+                />
+                <button
+                  class="btn btn-outline-primary"
+                  type="button"
+                  id="importDataButton"
+                  disabled="true"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Upload the selected file for processing."
+                >
+                  <i class="bi bi-upload"></i> Upload
+                </button>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="input-group" id="librarySelectorGroup">
+                <span class="input-group-text">Library</span>
+                <select
+                  class="form-select"
+                  id="librarySelector"
+                  aria-label="Select library"
+                >
+                  <option value="none" selected>None</option>
+                  <option value="MINLPLib">MINLPLib</option>
+                  <option value="MIPLIB_2017">MIPLIB 2017</option>
+                  <option value="MIPLIB_2010">MIPLIB 2010</option>
+                </select>
+              </div>
+            </li>
+          </ul>
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{{docs}}index.html" target="_blank"
+                ><i class="bi bi-journal-code"></i> Docs</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis"
+                target="_blank"
+                ><i class="bi bi-github"></i> GitHub</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues/new"
+                target="_blank"
+                ><i class="bi bi-plus-square"></i> New Issue</a
+              >
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link"
+                aria-label="Help"
+                data-bs-toggle="modal"
+                data-bs-target="#fileFormatInformationModal"
+                name="Help"
+              >
+                <i class="bi bi-question-circle-fill"></i> Help
+              </button>
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link"
+                id="themeToggleButton"
+                type="button"
+                aria-label="Switch to dark theme"
+                aria-pressed="false"
+                name="Theme"
+              >
+                <i class="bi bi-moon-stars"></i>
+              </button>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/releases"
+                target="_blank"
+                id="releaseVersionTagSpan"
+                >Releases</a
+              >
+            </li>
+{{navExtra}}
+          </ul>
+        </div>
+      </div>
+    </nav>

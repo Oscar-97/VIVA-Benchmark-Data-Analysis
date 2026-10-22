@@ -1,5 +1,7 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
+const webpack = require('webpack');
+const { version } = require('./package.json');
 
 module.exports = {
   mode: "production",
@@ -8,6 +10,8 @@ module.exports = {
     filename: "bundle.js",
     chunkFilename: "[name].js",
     path: __dirname + "/Dist",
+    // Dist is committed, so remove what an earlier build left behind (renamed or removed chunks).
+    clean: true,
   },
   target: 'web',
   devtool: "source-map",
@@ -27,16 +31,28 @@ module.exports = {
         use: [
           // MiniCssExtractPlugin.loader to extract CSS into a separate file.
           MiniCssExtractPlugin.loader,
-          'css-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              // bootstrap-icons lists a woff2 and a woff font. Browsers use the first format that they
+              // support (woff2, since 2016), so the woff copy, 235 KB inlined, is left out.
+              url: { filter: (url) => !/\.woff(\?|#|$)/.test(url) },
+            },
+          },
         ],
       },
       {
           test: /\.(woff|woff2|eot|ttf|otf)$/i,
-          type: "asset/inline",
+          type: "asset/resource",
+          generator: { filename: "fonts/[name][ext]" },
       }
     ],
   },
   plugins: [
+    // The version in package.json is shown in the navigation, see ReleaseVersionTag.ts.
+    new webpack.DefinePlugin({
+      __APP_VERSION__: JSON.stringify(version),
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',

@@ -38,6 +38,23 @@ function ExtractHeaders(unprocessedData: string[]): string[] {
 }
 
 /**
+ * Formats the value of a cell by its header: the objective values are written in exponential format
+ * and the solver time is rounded to two decimals. Other values are kept, also when they are missing.
+ */
+function FormatCell(
+	header: string,
+	value: string | undefined
+): string | undefined {
+	if (header === "ObjectiveValue" || header === "ObjectiveValueEstimate") {
+		return Number(value).toExponential(6);
+	}
+	if (header === "SolverTime") {
+		return (Math.round(Number(value) * 100) / 100).toString();
+	}
+	return value;
+}
+
+/**
  * This function processes an array of raw data lines, using header names to create objects. If the line contains an asterisk (*), it is skipped.
  *
  * If the header is "ObjectiveValue" or "ObjectiveValueEstimate", it will be set to exponential format.
@@ -53,13 +70,14 @@ function ProcessLines(
 	startIdx: number
 ): object[] {
 	const traceData = [];
-	const previousRow = {};
-	for (let i = Math.max(startIdx, 0); i < unprocessedData.length; i++) {
-		if (unprocessedData[i].startsWith("*")) continue;
+	const previousRow: { [key: string]: string } = {};
+	for (const line of unprocessedData.slice(Math.max(startIdx, 0))) {
+		if (line.startsWith("*")) continue;
 
-		const currentLine = unprocessedData[i].split(",");
-		const fileName = currentLine[0];
-		const solverName = currentLine[2];
+		const currentLine = line.split(",");
+		// split always returns at least one element, a short line has no third one
+		const fileName = currentLine[0] ?? "";
+		const solverName = currentLine[2] ?? "";
 
 		if (
 			previousRow["fileName"] === fileName &&
@@ -77,22 +95,10 @@ function ProcessLines(
 				return cell.trim() !== "";
 			})
 		) {
-			const obj = {};
-			for (let j = 0; j < headers.length; j++) {
-				let value = currentLine[j];
-
-				if (
-					headers[j] === "ObjectiveValue" ||
-					headers[j] === "ObjectiveValueEstimate"
-				) {
-					value = Number(value).toExponential(6);
-				}
-
-				if (headers[j] === "SolverTime") {
-					value = (Math.round(Number(value) * 100) / 100).toString();
-				}
-
-				obj[headers[j]] = value;
+			// A row with fewer cells than headers keeps the missing cells undefined.
+			const obj: { [key: string]: string | undefined } = {};
+			for (const [j, header] of headers.entries()) {
+				obj[header] = FormatCell(header, currentLine[j]);
 			}
 			traceData.push(obj);
 		}
@@ -125,17 +131,17 @@ function ProcessLines(
  * // ];
  * ```
  */
-export function ExtractTraceData(unprocessedData: string[]): object[] {
-	const firstLine = unprocessedData[0].split(",");
-	let traceData: TraceData[] = [];
-	if (firstLine[0].startsWith("*")) {
+export function ExtractTraceData(unprocessedData: string[]): TraceData[] {
+	const firstLine = unprocessedData[0];
+	if (firstLine === undefined) {
+		return [];
+	}
+	if (firstLine.startsWith("*")) {
 		const headers = ExtractHeaders(unprocessedData);
 		const startIdx = unprocessedData.findIndex((line) => {
 			return !line.startsWith("*");
 		});
-		traceData = ProcessLines(headers, unprocessedData, startIdx);
-	} else if (!firstLine[0].startsWith("*")) {
-		traceData = ProcessLines(DEFAULT_HEADERS, unprocessedData, 0);
+		return ProcessLines(headers, unprocessedData, startIdx) as TraceData[];
 	}
-	return traceData;
+	return ProcessLines(DEFAULT_HEADERS, unprocessedData, 0) as TraceData[];
 }

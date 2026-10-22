@@ -1,13 +1,4 @@
-import {
-	comparisonTableDiv,
-	dataTable,
-	instanceAttributesTableDiv,
-	solveAttributesTableDiv,
-	solverComparisonModal,
-	solverComparisonModalBody,
-	solverComparisonModalLabel,
-	statisticsTableDiv
-} from "../Elements/Elements";
+import { elements } from "../Elements/Elements";
 import { TraceHeaderMap } from "../Constants/TraceHeaders";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "bootstrap/js/dist/modal";
@@ -79,7 +70,7 @@ export function TraceTableData(traceData: TraceData[]): void {
 	/**
 	 * Div that contains the data table.
 	 */
-	const dataTableDiv = dataTable;
+	const dataTableDiv = elements.dataTable;
 	dataTableDiv.innerHTML = "";
 
 	const dataTableHeaders = document.createElement("thead");
@@ -89,7 +80,8 @@ export function TraceTableData(traceData: TraceData[]): void {
 	 * Thead created from the categories.
 	 */
 	const headerRow = document.createElement("tr");
-	const sortedKeys = SortKeysByEnum(traceData[0]);
+	const [firstRow] = traceData;
+	const sortedKeys = firstRow ? SortKeysByEnum(firstRow) : [];
 
 	for (const key of sortedKeys) {
 		const th = document.createElement("th");
@@ -107,7 +99,7 @@ export function TraceTableData(traceData: TraceData[]): void {
 		const resultRow = document.createElement("tr");
 		const sortedKeys = SortKeysByEnum(obj);
 		for (const key of sortedKeys) {
-			const value = obj[key];
+			const value = obj[key as keyof TraceData];
 			const td = document.createElement("td");
 			if (value !== null && value !== undefined && !Number.isNaN(value)) {
 				td.textContent = value.toString();
@@ -153,7 +145,7 @@ export function StatisticsTable(
 	},
 	title: string
 ): void {
-	statisticsTableDiv.innerHTML = "";
+	elements.statisticsTableDiv.innerHTML = "";
 	const statisticsTable = document.createElement("table");
 	statisticsTable.id = "statisticsTable_inner";
 	statisticsTable.classList.add(
@@ -193,21 +185,19 @@ export function StatisticsTable(
 	 * Create value table rows.
 	 */
 	const tableBody = statisticsTable.createTBody();
-	const dataKeys = Object.keys(solverTimeStats);
-	dataKeys.forEach((dataKey) => {
+	Object.entries(solverTimeStats).forEach(([dataKey, statistics]) => {
 		const row = tableBody.insertRow();
 		const nameCell = row.insertCell();
 		nameCell.textContent = dataKey;
 		nameCell.style.fontWeight = "bold";
 
-		const dataValues = Object.values(solverTimeStats[dataKey]);
-		dataValues.forEach((dataValue) => {
+		Object.values(statistics).forEach((dataValue) => {
 			const cell = row.insertCell();
 			cell.textContent = dataValue.toString();
 		});
 	});
 
-	statisticsTableDiv.appendChild(statisticsTable);
+	elements.statisticsTableDiv.appendChild(statisticsTable);
 }
 
 /**
@@ -230,9 +220,9 @@ export function ComparisonSummaryTable(
 	solver1Name: string,
 	solver2Name: string
 ): void {
-	if (!comparisonTableDiv) return;
+	if (!elements.comparisonTableDiv) return;
 
-	comparisonTableDiv.innerHTML = "";
+	elements.comparisonTableDiv.innerHTML = "";
 
 	const comparisonTable: HTMLTableElement = document.createElement("table");
 	comparisonTable.classList.add(
@@ -264,7 +254,8 @@ export function ComparisonSummaryTable(
 		const row: HTMLTableRowElement = document.createElement("tr");
 		row.appendChild(CreateCell(comparison));
 
-		let value1: number, value2: number;
+		let value1: number = 0,
+			value2: number = 0;
 		switch (comparison) {
 			case "Better":
 				value1 = comparisonSummary.better;
@@ -290,7 +281,7 @@ export function ComparisonSummaryTable(
 		tableBody.appendChild(row);
 	});
 
-	comparisonTableDiv.appendChild(comparisonTable);
+	elements.comparisonTableDiv.appendChild(comparisonTable);
 }
 
 /**
@@ -347,29 +338,47 @@ function CreateClickableCell(
  * @remarks
  * The modal is added to the 'solverComparisonModal' HTML div.
  */
-function DisplayDetails(comparisonType: string, details): void {
+function DisplayDetails(
+	comparisonType: string,
+	details: ComparisonDetails[]
+): void {
 	const filteredDetails = details.filter(
 		(detail) => detail.comparison === comparisonType.toLowerCase()
 	);
 
-	if (solverComparisonModalLabel)
-		solverComparisonModalLabel.innerHTML = `<i class="bi bi-clock-history"></i> ${Captions.COMPARSION_MODAL_LABEL} ${comparisonType}`;
-	if (solverComparisonModalBody) {
-		solverComparisonModalBody.innerHTML = "";
+	if (elements.solverComparisonModalLabel) {
+		const icon = document.createElement("i");
+		icon.className = "bi bi-clock-history";
+		elements.solverComparisonModalLabel.replaceChildren(
+			icon,
+			` ${Captions.COMPARISON_MODAL_LABEL} ${comparisonType}`
+		);
+	}
+	if (elements.solverComparisonModalBody) {
+		elements.solverComparisonModalBody.innerHTML = "";
 		const listGroup = document.createElement("ul");
 		listGroup.className = "list-group";
 
 		filteredDetails.forEach((detail: ComparisonDetails) => {
 			const listItem = document.createElement("li");
 			listItem.className = "list-group-item";
-			listItem.innerHTML = `${detail.InputFileName}, <b>${detail.time1}</b> compared to <b>${detail.time2}</b>`;
+			const time1 = document.createElement("b");
+			time1.textContent = String(detail.time1);
+			const time2 = document.createElement("b");
+			time2.textContent = String(detail.time2);
+			listItem.append(
+				`${detail.InputFileName}, `,
+				time1,
+				" compared to ",
+				time2
+			);
 			listGroup.appendChild(listItem);
 		});
 
-		solverComparisonModalBody.appendChild(listGroup);
+		elements.solverComparisonModalBody.appendChild(listGroup);
 	}
 
-	const modal = new Modal(solverComparisonModal, {
+	const modal = new Modal(elements.solverComparisonModal, {
 		keyboard: true
 	});
 	modal.show();
@@ -381,7 +390,7 @@ function DisplayDetails(comparisonType: string, details): void {
  * @param {object[]} traceData - Array of objects containing the result data.
  */
 export function InstanceAttributesTable(traceData: TraceData[]): void {
-	instanceAttributesTableDiv.innerHTML = "";
+	elements.instanceAttributesTableDiv.innerHTML = "";
 	const instanceAttributesTable = document.createElement("table");
 	instanceAttributesTable.id = "instanceAttributesTable_inner";
 	instanceAttributesTable.classList.add(
@@ -433,7 +442,7 @@ export function InstanceAttributesTable(traceData: TraceData[]): void {
 		});
 	});
 
-	instanceAttributesTableDiv.appendChild(instanceAttributesTable);
+	elements.instanceAttributesTableDiv.appendChild(instanceAttributesTable);
 }
 
 /**
@@ -441,7 +450,7 @@ export function InstanceAttributesTable(traceData: TraceData[]): void {
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 export function SolveAttributesTable(traceData: TraceData[]): void {
-	solveAttributesTableDiv.innerHTML = "";
+	elements.solveAttributesTableDiv.innerHTML = "";
 	const solveAttributesTable = document.createElement("table");
 	solveAttributesTable.id = "solveAttributesTable_inner";
 	solveAttributesTable.classList.add(
@@ -507,5 +516,5 @@ export function SolveAttributesTable(traceData: TraceData[]): void {
 		});
 	});
 
-	solveAttributesTableDiv.appendChild(solveAttributesTable);
+	elements.solveAttributesTableDiv.appendChild(solveAttributesTable);
 }

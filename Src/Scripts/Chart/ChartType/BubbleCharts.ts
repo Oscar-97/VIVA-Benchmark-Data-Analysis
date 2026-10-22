@@ -1,26 +1,46 @@
 import { TraceData } from "../../Interfaces/Interfaces";
-import { CreateChart } from "../CreateChart";
+import {
+	ChartScaleOptions,
+	ChartZoomOptions,
+	CreateChart
+} from "../CreateChart";
+
+/**
+ * A solver and its instances, as the data set of a bubble chart.
+ */
+interface BubbleDataset {
+	label: string;
+	data: {
+		x: number | undefined;
+		y: number | undefined;
+		r: number;
+		solverTime: number;
+	}[];
+	clip: number;
+}
 
 /**
  * This function prepares and plots the solution times of the solvers based on the number of variables and equations.
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 export function PlotSolutionTimes(traceData: TraceData[]): object[] {
-	const data = traceData.reduce((acc, obj) => {
-		const bubbleSize = Math.round((obj.SolverTime / 100) * 100) / 100;
-		if (!acc[obj.SolverName]) {
-			acc[obj.SolverName] = {
-				label: obj.SolverName,
+	const data = traceData.reduce((acc: Record<string, BubbleDataset>, obj) => {
+		const solverTime = obj.SolverTime ?? 0;
+		const bubbleSize = Math.round((solverTime / 100) * 100) / 100;
+		const solverName = obj.SolverName as string;
+		if (!acc[solverName]) {
+			acc[solverName] = {
+				label: solverName,
 				data: [],
 				clip: 1
 			};
 		}
 
-		acc[obj.SolverName].data.push({
+		acc[solverName].data.push({
 			x: obj.NumberOfVariables,
 			y: obj.NumberOfEquations,
 			r: bubbleSize,
-			solverTime: obj.SolverTime
+			solverTime: solverTime
 		});
 
 		return acc;
@@ -28,7 +48,7 @@ export function PlotSolutionTimes(traceData: TraceData[]): object[] {
 
 	const chartData = Object.values(data);
 
-	const scaleOptions = {
+	const scaleOptions: ChartScaleOptions = {
 		x: {
 			title: {
 				display: true,
@@ -43,11 +63,10 @@ export function PlotSolutionTimes(traceData: TraceData[]): object[] {
 		}
 	};
 
-	const zoomOptions = {
+	const zoomOptions: ChartZoomOptions = {
 		pan: {
 			enabled: true,
-			mode: "xy",
-			modiferKey: "ctrl"
+			mode: "xy"
 		},
 		zoom: {
 			wheel: {
@@ -63,11 +82,11 @@ export function PlotSolutionTimes(traceData: TraceData[]): object[] {
 	CreateChart(
 		"bubble",
 		chartData,
-		null,
+		[],
 		"Solution time",
 		scaleOptions,
 		zoomOptions,
-		null,
+		undefined,
 		"The radius of the bubble is obtained by dividing the SolverTime by 100 for easier scaling."
 	);
 	return chartData as object[];

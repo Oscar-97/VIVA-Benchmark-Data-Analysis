@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { loaderContainer } from "./Elements";
+import { elements } from "./Elements";
 
 /**
  * This function creates and displays a loading animation.
@@ -13,9 +13,9 @@ import { loaderContainer } from "./Elements";
 export function TableLoadingAnimation(): void {
 	const loader = document.createElement("div") as HTMLDivElement;
 	loader.className = "loader";
-	loaderContainer.innerHTML = "";
-	loaderContainer.appendChild(loader);
-	loaderContainer.style.display = "flex";
+	elements.loaderContainer.innerHTML = "";
+	elements.loaderContainer.appendChild(loader);
+	elements.loaderContainer.style.display = "flex";
 }
 
 /**

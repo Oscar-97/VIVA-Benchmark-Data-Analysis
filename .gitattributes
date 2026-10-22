@@ -1,0 +1,4 @@
+Tests/E2E/__snapshots__/**/*.txt text eol=lf
+Tests/E2E/__snapshots__/**/*.json text eol=lf
+Tests/E2E/__snapshots__/**/*.yml text eol=lf
+Tests/E2E/__snapshots__/**/*.png binary

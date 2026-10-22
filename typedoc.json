@@ -1,11 +1,12 @@
 {
-  "entryPoints": ["Src/Scripts/*"],
+  "entryPoints": ["Src/Scripts"],
   "entryPointStrategy": "expand",
+  "exclude": ["**/*.d.ts", "**/Datasets/**"],
   "out": "Docs",
   "cleanOutputDir": false,
   "categorizeByGroup": true,
   "name": "System Documentation",
-  "readme": "Docs/README.md",
+  "readme": "Src/Docs/README.md",
   "plugin": ["typedoc-material-theme"],
   "themeColor": "#cb9820",
 }

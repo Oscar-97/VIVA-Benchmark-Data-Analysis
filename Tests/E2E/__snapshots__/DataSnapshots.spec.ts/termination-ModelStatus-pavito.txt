@@ -1,0 +1,4 @@
+{"label":"Error Unknown","data":[1]}
+{"label":"Infeasible - No Solution","data":[9]}
+{"label":"Integer Solution","data":[308]}
+{"label":"Unbounded - No Solution","data":[14]}

@@ -1,10 +1,10 @@
-import * as math from "mathjs";
 import {
 	ComparisonSummary,
 	StatisticsColumns,
 	TraceData
 } from "../../Interfaces/Interfaces";
 import { Values } from "../../Constants/Values";
+import { SummarizeValues } from "../Statistics";
 
 /**
  * This function calculates a direction, based on an input parameter 'direction'.
@@ -255,12 +255,18 @@ export function SetSolverStatus(solverStatus: number | string): string {
 export function CompareSolvers(
 	solver1: string,
 	solver2: string,
-	solverTimes: object
+	solverTimes: { [key: string]: { InputFileName: string; time: number }[] }
 ): ComparisonSummary {
-	const results1 = solverTimes[solver1];
-	const results2 = solverTimes[solver2];
+	// A solver that has no times has nothing to compare.
+	const results1 = solverTimes[solver1] ?? [];
+	const results2 = solverTimes[solver2] ?? [];
 
-	const comparisonSummary = { better: 0, worse: 0, equal: 0, details: [] };
+	const comparisonSummary: ComparisonSummary = {
+		better: 0,
+		worse: 0,
+		equal: 0,
+		details: []
+	};
 
 	results1.forEach((result1: { InputFileName: string; time: number }) => {
 		const result2 = results2.find(
@@ -304,12 +310,13 @@ export function CompareSolvers(
  * @param traceData - The array of objects to extract unique objects from.
  * @returns An array of unique objects based on the "InputFileName" property.
  */
-export function ExtractUniqueProblems(traceData: TraceData[]): object[] {
-	const unique: object = {};
+export function ExtractUniqueProblems(traceData: TraceData[]): TraceData[] {
+	const unique: Record<string, TraceData> = {};
 	traceData.forEach((item) => {
-		if (!unique[item["InputFileName"]]) {
-			unique[item["InputFileName"]] = {
-				InputFileName: item["InputFileName"],
+		const fileName = item["InputFileName"] as string;
+		if (!unique[fileName]) {
+			unique[fileName] = {
+				InputFileName: fileName,
 				Direction: item["Direction"],
 				NumberOfEquations: item["NumberOfEquations"],
 				NumberOfVariables: item["NumberOfVariables"],
@@ -336,47 +343,21 @@ export function CalculateInstanceAttributes(data: object[]): {
 	const results: {
 		[key: string]: StatisticsColumns;
 	} = {};
-	const keys = Object.keys(data[0]).filter((key) => key !== "InputFileName");
+	const [firstItem] = data;
+	if (firstItem === undefined) {
+		return results;
+	}
+	const keys = Object.keys(firstItem).filter((key) => key !== "InputFileName");
 
 	keys.forEach((key) => {
 		const values: number[] = data
-			.map((item) => Number(item[key]))
+			.map((item) => Number((item as Record<string, unknown>)[key]))
 			.filter((value) => !isNaN(value));
 
 		if (values.length > 0) {
-			const avgValue = math.format(math.mean(values), { precision: 7 });
-			const minValue = math.format(math.min(values), { precision: 7 });
-			const maxValue = math.format(math.max(values), { precision: 7 });
-			const stdValue = math.format(math.std(values), { precision: 7 });
-			const p10Value = Number(
-				math.format(math.quantileSeq(values, 0.1), { precision: 7 })
-			);
-			const p25Value = Number(
-				math.format(math.quantileSeq(values, 0.25), { precision: 7 })
-			);
-			const p50Value = Number(
-				math.format(math.quantileSeq(values, 0.5), { precision: 7 })
-			);
-			const p75Value = Number(
-				math.format(math.quantileSeq(values, 0.75), { precision: 7 })
-			);
-			const p90Value = Number(
-				math.format(math.quantileSeq(values, 0.9), { precision: 7 })
-			);
-
-			const countValue = values.length;
-
 			results[key] = {
-				countValue,
-				avgValue: Number(avgValue),
-				minValue: Number(minValue),
-				maxValue: Number(maxValue),
-				stdValue: Number(stdValue),
-				p10Value: Number(p10Value),
-				p25Value: Number(p25Value),
-				p50Value: Number(p50Value),
-				p75Value: Number(p75Value),
-				p90Value: Number(p90Value)
+				countValue: values.length,
+				...SummarizeValues(values)
 			};
 		}
 	});
@@ -402,31 +383,13 @@ export function CalculateSolveAttributes(
 
 	specificKeys.forEach((key) => {
 		const values: number[] = data
-			.map((item) => parseFloat(item[key]))
+			.map((item) => parseFloat(String((item as Record<string, unknown>)[key])))
 			.filter((value) => !isNaN(value));
 
 		if (values.length > 0) {
 			results[key] = {
 				countValue: values.length,
-				avgValue: Number(math.format(math.mean(values), { precision: 7 })),
-				minValue: Number(math.format(math.min(values), { precision: 7 })),
-				maxValue: Number(math.format(math.max(values), { precision: 7 })),
-				stdValue: Number(math.format(math.std(values), { precision: 7 })),
-				p10Value: Number(
-					math.format(math.quantileSeq(values, 0.1), { precision: 7 })
-				),
-				p25Value: Number(
-					math.format(math.quantileSeq(values, 0.25), { precision: 7 })
-				),
-				p50Value: Number(
-					math.format(math.quantileSeq(values, 0.5), { precision: 7 })
-				),
-				p75Value: Number(
-					math.format(math.quantileSeq(values, 0.75), { precision: 7 })
-				),
-				p90Value: Number(
-					math.format(math.quantileSeq(values, 0.9), { precision: 7 })
-				)
+				...SummarizeValues(values)
 			};
 		}
 	});
@@ -435,22 +398,16 @@ export function CalculateSolveAttributes(
 }
 
 /**
- * This function sets the fail value and reason based on the termination status and other parameters.
- * @param terminationStatus
- * @param direction
- * @param primalBoundSolver
- * @param dualBoundSolver
- * @param primalBoundProblem
- * @param dualBoundProblem
- * @returns
+ * Checks if the value is minus or plus infinity.
  */
-export function SetFailValueAndReason(
-	terminationStatus: string,
-	direction: string,
-	primalBoundSolver: number | string,
-	dualBoundSolver: number | string,
-	dualBoundProblem: number | string
-): [boolean, string] {
+function IsInfinite(value: number | string): boolean {
+	return value == Infinity || value == -Infinity;
+}
+
+/**
+ * Checks if `a` is larger than `b` by more than both the absolute and the relative tolerance.
+ */
+function ExceedsBound(a: number, b: number): boolean {
 	function IsRelativeDifference(a: number, b: number, tol: number): boolean {
 		let relDiff: number;
 		if (Math.abs(a) === Infinity || Math.abs(b) === Infinity) {
@@ -461,92 +418,102 @@ export function SetFailValueAndReason(
 		return relDiff > tol;
 	}
 
+	return (
+		a - b > Values.ABSOLUTE_TOLERANCE &&
+		IsRelativeDifference(a, b, Values.RELATIVE_TOLERANCE)
+	);
+}
+
+/**
+ * The termination statuses that make a result fail.
+ */
+// TODO: Check which termination statuses are considered as failures for this "Failed" condition.
+const FAILED_TERMINATION_STATUSES = [
+	"Capability Problem",
+	"Unknown Error",
+	"User Interrupt",
+	"Error"
+];
+
+/**
+ * Checks if a bound of the solver contradicts the best known bound of the problem, which is the
+ * dual bound for a primal bound of the solver and the primal bound for a dual bound of the solver.
+ *
+ * A solver cannot have a primal bound that is better than the best known dual bound, nor a
+ * dual bound that is better than the best known primal bound: for a minimization problem
+ * the primal bound of the solver cannot be below the dual bound that is known, and the dual bound
+ * of the solver cannot be above the primal bound that is known; for a maximization problem it is
+ * the other way around. A bound that is infinite is not checked.
+ */
+function ContradictsKnownBound(
+	solverBound: number | string,
+	knownBound: number | string,
+	isMinimization: boolean,
+	solverBoundIsPrimal: boolean
+): boolean {
+	if (IsInfinite(solverBound) || IsInfinite(knownBound)) {
+		return false;
+	}
+	const solver = Number(solverBound);
+	const known = Number(knownBound);
+	return solverBoundIsPrimal !== isMinimization
+		? ExceedsBound(solver, known)
+		: ExceedsBound(known, solver);
+}
+
+/**
+ * This function sets the fail value and reason based on the termination status and other parameters.
+ *
+ * The bounds of the solver are checked against the best known bounds of the problem:
+ * a solver cannot have a primal bound that is better than the best known dual bound,
+ * nor a dual bound that is better than the best known primal bound.
+ *
+ * @param terminationStatus - The termination status of the solver.
+ * @param direction - The direction of the problem, "min" or "max".
+ * @param primalBoundSolver - The primal bound of the solver.
+ * @param dualBoundSolver - The dual bound of the solver.
+ * @param primalBoundProblem - The best known primal bound of the problem.
+ * @param dualBoundProblem - The best known dual bound of the problem.
+ * @returns Whether the result failed, and the reason.
+ */
+export function SetFailValueAndReason(
+	terminationStatus: string,
+	direction: string,
+	primalBoundSolver: number | string,
+	dualBoundSolver: number | string,
+	primalBoundProblem: number | string,
+	dualBoundProblem: number | string
+): [boolean, string] {
 	if (!terminationStatus) {
 		return [true, "No data"];
 	}
 
-	// TODO: Check which termination statuses are considered as failures for this "Failed" condition.
-	if (
-		terminationStatus === "Capability Problem" ||
-		terminationStatus === "Unknown Error" ||
-		terminationStatus === "User Interrupt" ||
-		terminationStatus === "Error"
-	) {
+	if (FAILED_TERMINATION_STATUSES.includes(terminationStatus)) {
 		return [true, `Termstatus is ${terminationStatus}`];
 	}
 
-	// Compare primal bounds with know dual bounds.
+	const isMinimization = direction === "min";
+
 	if (
-		primalBoundSolver != Infinity &&
-		primalBoundSolver != -Infinity &&
-		dualBoundProblem != Infinity &&
-		dualBoundProblem != -Infinity
+		ContradictsKnownBound(
+			primalBoundSolver,
+			dualBoundProblem,
+			isMinimization,
+			true
+		)
 	) {
-		let abserr: boolean, relerr: boolean;
-		if (direction === "min") {
-			abserr =
-				Number(dualBoundProblem) - Number(primalBoundSolver) >
-				Values.ABSOLUTE_TOLERANCE;
-		} else {
-			abserr =
-				Number(primalBoundSolver) - Number(dualBoundProblem) >
-				Values.ABSOLUTE_TOLERANCE;
-		}
-
-		if (direction === "min") {
-			relerr = IsRelativeDifference(
-				Number(dualBoundProblem),
-				Number(primalBoundSolver),
-				Values.RELATIVE_TOLERANCE
-			);
-		} else {
-			relerr = IsRelativeDifference(
-				Number(primalBoundSolver),
-				Number(dualBoundProblem),
-				Values.RELATIVE_TOLERANCE
-			);
-		}
-
-		if (abserr && relerr) {
-			return [true, "Primal bound contradicts best known dual bound"];
-		}
+		return [true, "Primal bound contradicts best known dual bound"];
 	}
 
-	// Compare dual bounds with know primal bounds.
 	if (
-		dualBoundSolver != Infinity &&
-		dualBoundSolver != -Infinity &&
-		dualBoundProblem != Infinity &&
-		dualBoundProblem != -Infinity
+		ContradictsKnownBound(
+			dualBoundSolver,
+			primalBoundProblem,
+			isMinimization,
+			false
+		)
 	) {
-		let abserr: boolean, relerr: boolean;
-		if (direction === "min") {
-			abserr =
-				Number(dualBoundSolver) - Number(dualBoundProblem) >
-				Values.ABSOLUTE_TOLERANCE;
-		} else {
-			abserr =
-				Number(dualBoundProblem) - Number(dualBoundSolver) >
-				Values.ABSOLUTE_TOLERANCE;
-		}
-
-		if (direction === "min") {
-			relerr = IsRelativeDifference(
-				Number(primalBoundSolver),
-				Number(dualBoundProblem),
-				Values.RELATIVE_TOLERANCE
-			);
-		} else {
-			relerr = IsRelativeDifference(
-				Number(primalBoundSolver),
-				Number(dualBoundProblem),
-				Values.RELATIVE_TOLERANCE
-			);
-		}
-
-		if (abserr && relerr) {
-			return [true, "Dual bound contradicts best known primal bound"];
-		}
+		return [true, "Dual bound contradicts best known primal bound"];
 	}
 
 	// If none of the above conditions are met, return false and set it as Normal Completion.

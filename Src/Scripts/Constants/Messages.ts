@@ -5,7 +5,7 @@ export enum InfoMessages {
 	DEMO_MODE_MSG = "Using demo mode!",
 	FOUND_STORED_CONFIG = "Found stored configuration!",
 	LOADED_FILES = "Benchmarks loaded with following files: \n",
-	INSTANCE_INFO_LOADED = "Instance information succesfully loaded!",
+	INSTANCE_INFO_LOADED = "Instance information successfully loaded!",
 	SCREEN_SIZE_NOTICE = "For optimal viewing and functionality, it is recommend to access VIVA via a desktop to get the best user experience."
 }
 
@@ -14,10 +14,11 @@ export enum InfoMessages {
  */
 export enum ErrorMessages {
 	SELECT_SOLVER_AMOUNT = "Please select exactly two solvers to compare.",
-	WRONG_EXTENSIONS = "No .trc, .json or .solu files found.",
+	WRONG_EXTENSIONS = "No .trc, .json, .solu or .csv files found.",
 	NEITHER_EXTENSIONS = "At least one .trc or .json file required.",
 	BOTH_EXTENSIONS = "Cannot upload both .trc and .json files simultaneously.",
 	INVALID_EXTENSION = "Invalid file extension. Only .trc, .json, .solu, and .csv allowed.",
+	INVALID_JSON = "The file is not valid JSON.",
 	INVALID_DATA_STRUCTURE = "Invalid data structure in uploaded JSON."
 }
 
@@ -28,7 +29,7 @@ export enum TableMessages {
 	TABLE_SUCCESS_HEADER = "VIVA: Datatable ready!",
 	TABLE_SUCCESS = "Datatable has been successfully generated and is ready for use.",
 	TABLE_NO_ROWS = "No rows selected for filtering.",
-	TABLE_CLEARING = "Clearing table and reinitializing application in 5 seconds."
+	TABLE_CLEARED = "Table cleared."
 }
 
 /**
@@ -58,7 +59,7 @@ export enum UserConfigurationMessages {
  */
 export enum Captions {
 	COMPARISON_TABLE_CAPTION = "Direct comparison on how many instances the solver time was better, worse or equal.",
-	COMPARSION_MODAL_LABEL = "Instances were solver times were:",
+	COMPARISON_MODAL_LABEL = "Instances where the solver times were:",
 	INSTANCE_ATTRIBUTES_TABLE_CAPTION = "Statistics on the instance attributes.",
 	SOLVE_ATTRIBUTES_TABLE_CAPTION = "Statistics on the solve attributes (all solver runs)."
 }

@@ -1,0 +1,4 @@
+{"label":"Error Unknown","data":[1]}
+{"label":"Infeasible","data":[2]}
+{"label":"Integer Solution","data":[327]}
+{"label":"Intermediate Infeasible","data":[5]}

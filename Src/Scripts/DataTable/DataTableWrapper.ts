@@ -1,4 +1,5 @@
 import $ from "jquery";
+import type { Config, Api } from "datatables.net";
 import "datatables.net-bs5";
 import "datatables.net-fixedcolumns-bs5";
 import "datatables.net-searchpanes-bs5";
@@ -9,21 +10,25 @@ import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-buttons/js/buttons.html5.mjs";
 import "datatables.net-buttons/js/buttons.print.mjs";
 import "datatables.net-datetime";
+import "datatables.net-responsive-bs5";
 
 import {
 	InstanceAttributesTable,
 	SolveAttributesTable,
 	TraceTableData
 } from "./DataTableBase";
-import {
-	dataTableGenerated,
-	dataTableGeneratedWrapper
-} from "../Elements/Elements";
+import { elements } from "../Elements/Elements";
 import { ElementStateDisplayedTable } from "../Elements/Events/ElementStatus";
 import { DEFAULT_VISIBLE_HEADERS } from "../Constants/TraceHeaders";
 import { ShowPWANotification } from "../PWA/PWA-utils";
 import { TableMessages } from "../Constants/Messages";
 import { TraceData } from "../Interfaces/Interfaces";
+import { HideTableHint, ShowTableHint } from "./TableHint";
+
+/**
+ * The number of rows on a page, until the user chooses another number.
+ */
+const DEFAULT_PAGE_LENGTH = 10;
 
 /**
  * This function displays the trace data in a dynamically generated HTML table using the DataTables library for improved user interaction.
@@ -92,14 +97,15 @@ function DataTablesConfiguration(): void {
 	const table = $("#dataTableGenerated").DataTable({
 		destroy: true,
 		stateSave: true,
-		// @ts-expect-error Add proper types.
 		searchPanes: {
 			layout: "auto"
 		},
-		dom:
-			"<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'f>>" +
-			"<'row'<'col-sm-12'tr>>" +
-			"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 mt-2'p>>",
+		layout: {
+			topStart: "buttons",
+			topEnd: "search",
+			bottomStart: "info",
+			bottomEnd: "paging"
+		},
 		pagingType: "numbers",
 		lengthChange: true,
 		lengthMenu: [
@@ -134,10 +140,14 @@ function DataTablesConfiguration(): void {
 			}
 		],
 		language: {
+			searchPlaceholder: "Search all columns",
+			emptyTable: "There are no rows to show.",
+			zeroRecords:
+				"No rows match the search. Change or clear the search to see rows.",
 			searchBuilder: {
 				button: "<i class='bi bi-search'></i> Advanced Search"
 			}
-		} as DataTables.LanguageSettings,
+		} as NonNullable<Config["language"]>,
 		buttons: [
 			{
 				extend: "collection",
@@ -146,7 +156,7 @@ function DataTablesConfiguration(): void {
 				buttons: [
 					{
 						extend: "pageLength",
-						text: function (dt: DataTables.Api): string {
+						text: function (dt: Api): string {
 							return (
 								"<i class='bi bi-list-columns-reverse'></i> Show " +
 								dt.page.len() +
@@ -158,7 +168,7 @@ function DataTablesConfiguration(): void {
 						extend: "colvis",
 						text: "<i class='bi bi-layout-three-columns'></i> Column Visibility",
 						columnText: function (
-							_dt: DataTables.Api,
+							_dt: Api,
 							idx: number,
 							title: string
 						): string {
@@ -176,8 +186,17 @@ function DataTablesConfiguration(): void {
 			{
 				text: "<i class='bi bi-filter-square'></i> Toggle Filters",
 				action: function (): void {
-					// @ts-expect-error Add proper types.
 					table.searchPanes.container().toggle();
+				},
+				className: "rounded btn-sm"
+			},
+			"spacer",
+			{
+				text: "<i class='bi bi-arrow-counterclockwise'></i> Reset View",
+				titleAttr:
+					"Clear the search, filters, sorting and selection, and show the default columns and rows.",
+				action: function (): void {
+					ResetTableView(table);
 				},
 				className: "rounded btn-sm"
 			},
@@ -209,25 +228,57 @@ function DataTablesConfiguration(): void {
 				.css("opacity", "0")
 				.css("visibility", "visible")
 				.animate({ opacity: 1 }, 500);
-			const columnNamesToShow = DEFAULT_VISIBLE_HEADERS;
-			this.api()
-				.columns()
-				.every(function () {
-					const columnName = this.header().textContent;
-					if (!columnNamesToShow.includes(columnName)) {
-						this.visible(false);
-					}
-				});
+			const api = this.api();
+			api.columns().every(function () {
+				const columnName = this.header().textContent;
+				if (!DEFAULT_VISIBLE_HEADERS.includes(columnName)) {
+					this.visible(false);
+				}
+			});
+			UpdateTableHint(api);
+			api.on("column-visibility.dt", () => {
+				UpdateTableHint(api);
+			});
 		}
 	});
 
-	$(".dataTables_length select").addClass("custom-select custom-select-sm");
-	// @ts-expect-error Remake in the future.
 	table.searchPanes.container().prependTo(table.table().container());
-	// @ts-expect-error Remake in the future.
 	table.searchPanes.resizePanes();
-	// @ts-expect-error Remake in the future.
 	table.searchPanes.container().toggle();
+}
+
+/**
+ * Shows how many of the columns of the table are shown.
+ */
+function UpdateTableHint(api: Api): void {
+	const total = api.columns().count();
+	const visible = api.columns(":visible").count();
+	ShowTableHint(visible, total);
+}
+
+/**
+ * Puts the table back as it is when it is first shown: no search, filters, selection or sorting,
+ * the default columns and the first page of the default number of rows. The saved state is replaced,
+ * so the table is also like this the next time it is shown.
+ */
+function ResetTableView(table: Api): void {
+	table.search("");
+	table.columns().search("");
+	table.searchPanes.clearSelections();
+	table.searchBuilder.rebuild({ criteria: [], logic: "AND" });
+	table.rows().deselect();
+	table.order([[0, "asc"]]);
+	table.page.len(DEFAULT_PAGE_LENGTH);
+	// Only the columns that differ are changed, and the table is laid out once after all of them.
+	table.columns().every(function () {
+		const wanted = DEFAULT_VISIBLE_HEADERS.includes(this.header().textContent);
+		if (this.visible() !== wanted) {
+			this.visible(wanted, false);
+		}
+	});
+	table.columns.adjust();
+	table.draw();
+	table.state.save();
 }
 
 /**
@@ -242,13 +293,14 @@ export function DestroyDataTable(): void {
 	const table = $("#dataTableGenerated").DataTable();
 	table.destroy();
 	table.state.clear();
+	HideTableHint();
 
-	if (dataTableGeneratedWrapper) {
-		dataTableGeneratedWrapper.remove();
+	if (elements.dataTableGeneratedWrapper) {
+		elements.dataTableGeneratedWrapper.remove();
 	}
 
-	if (dataTableGenerated) {
-		dataTableGenerated.remove();
+	if (elements.dataTableGenerated) {
+		elements.dataTableGenerated.remove();
 	}
 }
 

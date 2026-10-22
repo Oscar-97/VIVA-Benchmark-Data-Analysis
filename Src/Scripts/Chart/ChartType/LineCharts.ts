@@ -3,9 +3,13 @@ import {
 	ExtractAllSolverTimes,
 	ExtractAllSolverTimesGapType
 } from "../../DataProcessing/ChartsComputations/ComputeChartData";
-import { gapTypeSelector } from "../../Elements/Elements";
+import { elements } from "../../Elements/Elements";
 import { TraceData } from "../../Interfaces/Interfaces";
-import { CreateChart } from "../CreateChart";
+import {
+	ChartScaleOptions,
+	ChartZoomOptions,
+	CreateChart
+} from "../CreateChart";
 
 /**
  * This function prepares and plots all the solver times without any failed results.
@@ -34,7 +38,7 @@ export function PlotSolverTimes(
 		};
 	});
 
-	const scaleOptions = {
+	const scaleOptions: ChartScaleOptions = {
 		x: {
 			title: {
 				display: true,
@@ -49,11 +53,10 @@ export function PlotSolverTimes(
 		}
 	};
 
-	const zoomOptions = {
+	const zoomOptions: ChartZoomOptions = {
 		pan: {
 			enabled: true,
-			mode: "y",
-			modiferKey: "ctrl"
+			mode: "y"
 		},
 		zoom: {
 			wheel: {
@@ -91,7 +94,7 @@ export function PlotPerformanceProfile(
 	defaultTime?: number | undefined,
 	gapLimit?: number | undefined
 ): { data: { x: number; y: number }[]; label: string; showLine: boolean }[] {
-	const selectedGapType = gapTypeSelector.value;
+	const selectedGapType = elements.gapTypeSelector.value;
 
 	let solverTimes = ExtractAllSolverTimesGapType(
 		traceData,
@@ -143,14 +146,9 @@ export function PlotPerformanceProfile(
 					};
 				});
 
-			if (
-				cumulativeCounts.length > 0 &&
-				cumulativeCounts[cumulativeCounts.length - 1].y < 1
-			) {
-				cumulativeCounts.push({
-					x: cumulativeCounts[cumulativeCounts.length - 1].x,
-					y: 1
-				});
+			const last = cumulativeCounts.at(-1);
+			if (last && last.y < 1) {
+				cumulativeCounts.push({ x: last.x, y: 1 });
 			}
 		}
 
@@ -168,16 +166,15 @@ export function PlotPerformanceProfile(
 	);
 
 	const chartData = data.map((dataset) => {
-		if (dataset.data[dataset.data.length - 1].x < maxX) {
-			dataset.data.push({
-				x: maxX,
-				y: dataset.data[dataset.data.length - 1].y
-			});
+		// Extend the line of the data set to the end of the chart.
+		const last = dataset.data.at(-1);
+		if (last && last.x < maxX) {
+			dataset.data.push({ x: maxX, y: last.y });
 		}
 		return dataset;
 	});
 
-	const scaleOptions = {
+	const scaleOptions: ChartScaleOptions = {
 		x: {
 			title: {
 				display: true,
@@ -192,8 +189,8 @@ export function PlotPerformanceProfile(
 				performanceProfile === "Relative"
 					? Math.min(maxX, 10)
 					: defaultTime
-					? Number(defaultTime) + 10
-					: Values.DEFAULT_TIME + 10,
+						? Number(defaultTime) + 10
+						: Values.DEFAULT_TIME + 10,
 			ticks: {
 				stepSize: performanceProfile === "Relative" ? 0.5 : 50
 			}
@@ -211,11 +208,10 @@ export function PlotPerformanceProfile(
 		}
 	};
 
-	const zoomOptions = {
+	const zoomOptions: ChartZoomOptions = {
 		pan: {
 			enabled: true,
-			mode: "xy",
-			modiferKey: "ctrl"
+			mode: "xy"
 		},
 		zoom: {
 			wheel: {
@@ -234,11 +230,11 @@ export function PlotPerformanceProfile(
 	CreateChart(
 		"line",
 		chartData,
-		null,
+		[],
 		`${performanceProfile} performance profile`,
 		scaleOptions,
 		zoomOptions,
-		null,
+		undefined,
 		`${selectedGapType} <= ${
 			gapLimit || Values.DEFAULT_GAP_LIMIT
 		}% and not failed.`
@@ -249,31 +245,31 @@ export function PlotPerformanceProfile(
 /**
  * This function gets the relative times of the solver times.
  */
-export function GetRelativeTimes(data: object): object {
+export function GetRelativeTimes(
+	data: Record<string, { time: number; InputFileName: string }[]>
+): Record<string, { time: number; InputFileName: string }[]> {
 	const bestSolverTimes: { [key: string]: number } = {};
-	Object.keys(data).forEach((solver) => {
+	Object.entries(data).forEach(([solver, entries]) => {
 		if (solver !== "Virtual Best Solver" && solver !== "Virtual Worst Solver") {
-			data[solver].forEach((entry) => {
+			entries.forEach((entry) => {
 				const fileName = entry.InputFileName;
-				if (
-					!bestSolverTimes[fileName] ||
-					entry.SolverTime < bestSolverTimes[fileName]
-				) {
-					bestSolverTimes[fileName] = entry.SolverTime;
+				const best = bestSolverTimes[fileName];
+				if (best === undefined || entry.time < best) {
+					bestSolverTimes[fileName] = entry.time;
 				}
 			});
 		}
 	});
 
-	const result: { [key: string]: any[] } = {};
+	const result: Record<string, { time: number; InputFileName: string }[]> = {};
 
-	Object.keys(data).forEach((solver) => {
-		result[solver] = data[solver].map((entry) => {
-			const bestTime = bestSolverTimes[entry.InputFileName] || 1;
+	Object.entries(data).forEach(([solver, entries]) => {
+		result[solver] = entries.map((entry) => {
+			const bestTime = bestSolverTimes[entry.InputFileName] ?? 1;
 
 			return {
 				...entry,
-				SolverTime: bestTime > 0 ? entry.SolverTime / bestTime : 1
+				time: bestTime > 0 ? entry.time / bestTime : 1
 			};
 		});
 	});

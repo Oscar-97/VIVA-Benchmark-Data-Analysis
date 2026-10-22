@@ -5,11 +5,9 @@ import {
 	DisplayWarningNotification,
 	DisplayErrorNotification
 } from "../Elements/Events/DisplayAlertNotification";
-import {
-	downloadConfigurationButton,
-	downloadCustomConfigurationButton
-} from "../Elements/Elements";
-import { UserData } from "../Interfaces/Interfaces";
+import { elements } from "../Elements/Elements";
+import { StoredConfiguration, UserData } from "../Interfaces/Interfaces";
+import { Values } from "../Constants/Values";
 
 /**
  * This object is used to store the user configuration.
@@ -47,7 +45,7 @@ export function CreateUserConfiguration(
 	try {
 		localStorage.setItem(Keys.USER_CONFIGURATION, JSON.stringify(userData));
 	} catch (error) {
-		switch (error.name) {
+		switch ((error as { name: string }).name) {
 			case "QuotaExceededError":
 				DisplayErrorNotification(UserConfigurationMessages.QUOTA_EXCEEDED);
 				break;
@@ -58,7 +56,7 @@ export function CreateUserConfiguration(
 				DisplayErrorNotification(UserConfigurationMessages.INVALID_ACCESS);
 				break;
 			default:
-				DisplayErrorNotification("Error occured: " + error);
+				DisplayErrorNotification("An error occurred: " + error);
 				break;
 		}
 	}
@@ -66,46 +64,68 @@ export function CreateUserConfiguration(
 }
 
 /**
+ * Notifies the user that the stored configuration could not be read.
+ * A missing configuration is only reported once per session, and not at all when `notifyMissing` is false.
+ */
+function NotifyConfigurationReadError(
+	error: unknown,
+	notifyMissing: boolean
+): void {
+	switch ((error as { message: string }).message) {
+		case "SecurityError":
+			DisplayErrorNotification(UserConfigurationMessages.SECURITY_ERROR);
+			break;
+		case UserConfigurationMessages.NO_STORED_CONFIG:
+			if (!notifyMissing || sessionStorage.getItem(Keys.ALERTED_STORAGE)) {
+				console.info(UserConfigurationMessages.PREVIOUSLY_VISITED);
+			} else {
+				DisplayWarningNotification(UserConfigurationMessages.NO_STORED_CONFIG);
+				sessionStorage.setItem(Keys.ALERTED_STORAGE, "true");
+			}
+			break;
+		default:
+			DisplayErrorNotification(String(error));
+			break;
+	}
+}
+
+/**
  * This function retrieves the user configuration from the browser's local storage.
  * The user is notified if no saved configuration was found and the flag is stored to the session storage.
  *
- * @throws This function may throw an error if it fails to parse the user configuration from the local storage.
- *
- * @returns An array that includes the raw data, data file type, default time, and gap limit.
+ * @param notifyMissing - Whether a missing configuration is reported. A visitor who has not saved anything yet
+ * has nothing to report on arriving at the page, so the start of the application passes false.
+
+ * @returns The raw data, data file type, default time and gap limit,
+ * or undefined if there is no stored configuration with data in it.
  */
-export function GetUserConfiguration(): [string[], string, number, number] {
+export function GetUserConfiguration(
+	notifyMissing = true
+): StoredConfiguration | undefined {
 	let userConfig: UserData;
 	try {
-		userConfig = JSON.parse(localStorage.getItem("UserConfiguration"));
-	} catch (error) {
-		switch (error.message) {
-			case "SecurityError":
-				DisplayErrorNotification(UserConfigurationMessages.SECURITY_ERROR);
-				break;
-			case UserConfigurationMessages.NO_STORED_CONFIG:
-				if (sessionStorage.getItem(Keys.ALERTED_STORAGE)) {
-					console.info(UserConfigurationMessages.PREVIOUSLY_VISITED);
-				} else {
-					DisplayWarningNotification(
-						UserConfigurationMessages.NO_STORED_CONFIG
-					);
-					sessionStorage.setItem(Keys.ALERTED_STORAGE, "true");
-				}
-				break;
-			default:
-				DisplayErrorNotification(error);
-				break;
+		const userConfigString = localStorage.getItem(Keys.USER_CONFIGURATION);
+		if (!userConfigString) {
+			throw new Error(UserConfigurationMessages.NO_STORED_CONFIG);
 		}
+		userConfig = JSON.parse(userConfigString);
+	} catch (error) {
+		NotifyConfigurationReadError(error, notifyMissing);
+		return undefined;
 	}
-	const unprocessedData = [];
-	userConfig.dataSet.forEach((value) => {
-		unprocessedData.push(value);
-	});
 
-	const dataFileType = userConfig.dataFileType;
-	const defaultTime = userConfig.defaultTime;
-	const gapLimit = userConfig.gapLimit;
-	return [unprocessedData, dataFileType, defaultTime, gapLimit];
+	if (!Array.isArray(userConfig?.dataSet) || userConfig.dataSet.length === 0) {
+		return undefined;
+	}
+
+	return {
+		dataSet: userConfig.dataSet.map((value) => {
+			return typeof value === "string" ? value : JSON.stringify(value);
+		}),
+		dataFileType: userConfig.dataFileType,
+		defaultTime: userConfig.defaultTime ?? Values.DEFAULT_TIME,
+		gapLimit: userConfig.gapLimit ?? Values.DEFAULT_GAP_LIMIT
+	};
 }
 
 /**
@@ -116,12 +136,12 @@ export function DeleteUserConfiguration(): void {
 		localStorage.removeItem(Keys.USER_CONFIGURATION);
 		localStorage.removeItem(Keys.DEMO_DATA);
 	} catch (error) {
-		switch (error.name) {
+		switch ((error as { name: string }).name) {
 			case "SecurityError":
 				DisplayErrorNotification(UserConfigurationMessages.SECURITY_ERROR);
 				break;
 			default:
-				DisplayErrorNotification("Error occured: " + error);
+				DisplayErrorNotification("An error occurred: " + error);
 				break;
 		}
 	}
@@ -137,13 +157,15 @@ export function DeleteUserConfiguration(): void {
  * which should be a reference to an HTML anchor (`<a>`) element used to trigger the file download.
  */
 export function DownloadUserConfiguration(): void {
-	const userConfig = JSON.parse(localStorage.getItem(Keys.USER_CONFIGURATION));
+	const userConfigString = localStorage?.getItem(Keys.USER_CONFIGURATION);
+	const userConfig = userConfigString ? JSON.parse(userConfigString) : null;
 	if (userConfig) {
 		const downloadAbleFile = JSON.stringify(userConfig);
 		const blob = new Blob([downloadAbleFile], { type: "application/json" });
 
-		downloadConfigurationButton.href = window.URL.createObjectURL(blob);
-		downloadConfigurationButton.download = "UserConfiguration.json";
+		elements.downloadConfigurationButton.href =
+			window.URL.createObjectURL(blob);
+		elements.downloadConfigurationButton.download = "UserConfiguration.json";
 	} else {
 		DisplayErrorNotification(UserConfigurationMessages.NO_STORED_CONFIG);
 	}
@@ -175,6 +197,10 @@ export function DownloadCustomizedUserConfiguration(
 	const downloadAbleFile = JSON.stringify(userData);
 	const blob = new Blob([downloadAbleFile], { type: "application/json" });
 
-	downloadCustomConfigurationButton.href = window.URL.createObjectURL(blob);
-	downloadCustomConfigurationButton.download = "UserConfiguration.json";
+	if (elements.downloadCustomConfigurationButton) {
+		elements.downloadCustomConfigurationButton.href =
+			window.URL.createObjectURL(blob);
+		elements.downloadCustomConfigurationButton.download =
+			"UserConfiguration.json";
+	}
 }

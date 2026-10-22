@@ -1,89 +1,112 @@
-const CACHE_NAME = "VIVA-cache";
-
-/**
- * Files to cache.
- */
+// @generated-start
+// This block is written by scripts/build-service-worker.mjs (npm run build). Do not edit it by hand.
+const CACHE_NAME = "VIVA-cache-1.2.0-dc51add4f69c";
 const filesToCache = [
 	"/",
 	"manifest.json",
 	"report.html",
-	"Dist/bundle.js",
-	"Dist/demodata.js",
-	"Dist/minlplib-dataset.js",
-	"Dist/miplib2017-dataset.js",
-	"Dist/miplib2010-dataset.js",
-	"Dist/main.css",
-	"Src/CSS/tab_icon.png",
-	"Src/CSS/icon_maskable.png",
-	"Src/Pages/performance_profile.html",
-	"Src/Pages/solver_time_all.html",
 	"Src/Pages/compare_solvers.html",
 	"Src/Pages/number_of_iterations.html",
 	"Src/Pages/number_of_nodes.html",
+	"Src/Pages/performance_profile.html",
+	"Src/Pages/solution_quality.html",
+	"Src/Pages/solution_time.html",
+	"Src/Pages/solver_time_all.html",
 	"Src/Pages/solver_time.html",
 	"Src/Pages/termination_status.html",
-	"Src/Pages/solution_quality.html",
-	"Src/Pages/solution_time.html"
+	"Dist/bundle.js",
+	"Dist/demodata.js",
+	"Dist/main.css",
+	"Dist/minlplib-dataset.js",
+	"Dist/miplib2010-dataset.js",
+	"Dist/miplib2017-dataset.js",
+	"Dist/fonts/bootstrap-icons.woff2",
+	"Src/CSS/icon_maskable.png",
+	"Src/CSS/tab_icon.png"
 ];
+// @generated-end
 
 /**
  * The 'install' event is fired when the service worker is installed.
- * This is an ideal time to pre-cache static assets that make up the application shell,
- * so that the web app is immediately functional even when offline.
+ * The files of the application shell are cached, so that the web app works offline.
+ * The files are requested past the HTTP cache, so the cache of this version never holds files of an older one.
+ * When a file cannot be cached the installation fails, and the previous service worker and its cache stay in use.
  */
 self.addEventListener("install", function (event) {
 	event.waitUntil(
 		caches
 			.open(CACHE_NAME)
 			.then(function (cache) {
-				console.log("Opened cache.");
-				return cache.addAll(filesToCache);
+				return cache.addAll(
+					filesToCache.map(function (file) {
+						return new Request(file, { cache: "reload" });
+					})
+				);
 			})
-			.catch(function (error) {
-				console.error("Failed to open cache: ", error);
+			.then(function () {
+				return self.skipWaiting();
 			})
 	);
 });
 
 /**
  * The 'fetch' event is triggered for every network request made by the browser.
- * In this event, we're handling the request by trying to fetch from the network first.
- * If that fails (which it will when the app is offline), we return the offline fallback page.
+ * Requests of the application itself are answered from the cache when the file is there, otherwise from the network.
+ * A navigation that cannot be answered falls back to the report page, so the application opens offline.
+ * Requests to other origins and requests that are not GET are left to the browser.
  */
 self.addEventListener("fetch", function (event) {
+	const request = event.request;
+	if (
+		request.method !== "GET" ||
+		new URL(request.url).origin !== self.location.origin
+	) {
+		return;
+	}
+	const isNavigation = request.mode === "navigate";
+
 	event.respondWith(
-		caches.match(event.request).then(function (response) {
-			if (response) {
-				console.log("Found in cache:", event.request.url);
-				return response;
-			}
-			console.log("Not in cache, fetching:", event.request.url);
-			return fetch(event.request).catch(function (error) {
-				console.error("Failed fetch request:", error);
-				return new Response("Offline", { status: 503, statusText: "Offline" });
-			});
+		caches.open(CACHE_NAME).then(function (cache) {
+			return cache
+				.match(request, { ignoreSearch: isNavigation })
+				.then(function (response) {
+					if (response) {
+						return response;
+					}
+					return fetch(request).catch(function (error) {
+						console.error("Failed fetch request:", error);
+						const offline = new Response("Offline", {
+							status: 503,
+							statusText: "Offline"
+						});
+						if (!isNavigation) {
+							return offline;
+						}
+						return cache.match("report.html").then(function (fallback) {
+							return fallback || offline;
+						});
+					});
+				});
 		})
 	);
 });
 
 /**
  * The 'activate' event is fired when the service worker starts up.
- * It's a great opportunity to clean up old caches and ensure that only the current cache is used.
+ * The caches of other versions are deleted, and the open pages are taken over,
+ * so that they use the new version at once.
  */
 self.addEventListener("activate", (event) => {
-	console.log("Activating new service worker...");
-	const cacheAllowlist = [CACHE_NAME];
-
 	event.waitUntil(
-		caches.keys().then((cacheNames) => {
-			return Promise.all(
-				cacheNames.map((cacheName) => {
-					if (cacheAllowlist.indexOf(cacheName) === -1) {
-						console.log("Deleting out of date cache:", cacheName);
-						return caches.delete(cacheName);
-					}
-				})
-			);
-		})
+		caches
+			.keys()
+			.then((cacheNames) =>
+				Promise.all(
+					cacheNames
+						.filter((cacheName) => cacheName !== CACHE_NAME)
+						.map((cacheName) => caches.delete(cacheName))
+				)
+			)
+			.then(() => self.clients.claim())
 	);
 });

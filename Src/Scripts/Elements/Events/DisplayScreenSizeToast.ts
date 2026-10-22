@@ -8,8 +8,11 @@ function CheckScreenSize(): void {
 		window.innerWidth < 992 &&
 		!sessionStorage.getItem(Keys.ALERTED_SCREEN_SIZE)
 	) {
-		document.getElementById("desktopToast").classList.remove("hide");
-		document.getElementById("desktopToast").classList.add("show");
+		const desktopToast = document.getElementById("desktopToast");
+		if (desktopToast) {
+			desktopToast.classList.remove("hide");
+			desktopToast.classList.add("show");
+		}
 		sessionStorage.setItem(Keys.ALERTED_SCREEN_SIZE, "true");
 	}
 }

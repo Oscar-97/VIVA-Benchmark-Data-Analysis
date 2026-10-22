@@ -1,4 +1,7 @@
-import { ExtractStatusMessages } from "../../DataProcessing/ChartsComputations/ComputeChartData";
+import {
+	ExtractStatusMessages,
+	GetStatusKeys
+} from "../../DataProcessing/ChartsComputations/ComputeChartData";
 import { TraceData } from "../../Interfaces/Interfaces";
 import { CreateChart } from "../CreateChart";
 
@@ -15,17 +18,15 @@ export function PlotTerminationRelation(
 ): { label: string; data: number[] }[] {
 	const data = ExtractStatusMessages(traceData, statusType);
 	const solverNames = data.map((obj) => {
-		return obj["SolverName"];
+		return obj["SolverName"] as string;
 	});
-	const statusKeys = Object.keys(data[0]).filter((key) => {
-		return key !== "SolverName";
-	});
+	const statusKeys = GetStatusKeys(data);
 
 	const chartData = statusKeys.map((key) => {
 		return {
 			label: key,
 			data: data.map((obj) => {
-				return obj[key] || 0;
+				return Number(obj[key]) || 0;
 			})
 		};
 	});

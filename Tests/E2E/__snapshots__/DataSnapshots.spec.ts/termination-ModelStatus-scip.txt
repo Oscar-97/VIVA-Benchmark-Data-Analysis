@@ -1,0 +1,4 @@
+{"label":"Infeasible - No Solution","data":[5]}
+{"label":"Integer Solution","data":[191]}
+{"label":"No Solution Returned","data":[3]}
+{"label":"Optimal","data":[136]}

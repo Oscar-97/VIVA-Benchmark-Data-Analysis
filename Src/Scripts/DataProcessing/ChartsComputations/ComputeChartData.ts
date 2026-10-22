@@ -1,11 +1,12 @@
-import * as math from "mathjs";
 import { Values } from "../../Constants/Values";
-import { StatisticsColumns, TraceData } from "../../Interfaces/Interfaces";
-import { ComputeVirtualTimesTraceData } from "../ResultComputations/ComputeVirtualSolvers";
+import { SummarizeValues } from "../Statistics";
 import {
-	defaultTimeDirectInput,
-	gapLimitDirectInput
-} from "../../Elements/Elements";
+	StatisticsColumns,
+	StatusCount,
+	TraceData
+} from "../../Interfaces/Interfaces";
+import { ComputeVirtualTimesTraceData } from "../ResultComputations/ComputeVirtualSolvers";
+import { elements } from "../../Elements/Elements";
 
 /**
  * This function extracts the values of the specified category for each solver from the results data,
@@ -46,15 +47,18 @@ export function ComputeStatisticalMeasures(
 		category !== "NumberOfIterations" &&
 		category !== "SolverTime"
 	) {
-		data = data.filter((obj) => isFinite(Number(obj[category])));
+		data = data.filter((obj) =>
+			isFinite(Number(obj[category as keyof TraceData]))
+		);
 	}
-	const categoryValues = data.reduce((acc, curr) => {
-		const parsedValue = Number(curr[category]);
+	const categoryValues = data.reduce((acc: Record<string, number[]>, curr) => {
+		const parsedValue = Number(curr[category as keyof TraceData]);
 		if (!isNaN(parsedValue)) {
-			if (!acc[curr["SolverName"]]) {
-				acc[curr["SolverName"]] = [];
+			const solverName = curr["SolverName"] as string;
+			if (!acc[solverName]) {
+				acc[solverName] = [];
 			}
-			acc[curr["SolverName"]].push(parsedValue);
+			acc[solverName].push(parsedValue);
 		}
 		return acc;
 	}, {});
@@ -63,43 +67,8 @@ export function ComputeStatisticalMeasures(
 		[SolverName: string]: StatisticsColumns;
 	} = {};
 
-	for (const solverName in categoryValues) {
-		if (Object.prototype.hasOwnProperty.call(categoryValues, solverName)) {
-			const values = categoryValues[solverName];
-			const avgValue = Number(math.format(math.mean(values), { precision: 7 }));
-			const minValue = Number(math.format(math.min(values), { precision: 7 }));
-			const maxValue = Number(math.format(math.max(values), { precision: 7 }));
-			const stdValue = Number(math.format(math.std(values), { precision: 7 }));
-			const sumValue = Number(math.format(math.sum(values), { precision: 7 }));
-			const p10Value = Number(
-				math.format(math.quantileSeq(values, 0.1), { precision: 7 })
-			);
-			const p25Value = Number(
-				math.format(math.quantileSeq(values, 0.25), { precision: 7 })
-			);
-			const p50Value = Number(
-				math.format(math.quantileSeq(values, 0.5), { precision: 7 })
-			);
-			const p75Value = Number(
-				math.format(math.quantileSeq(values, 0.75), { precision: 7 })
-			);
-			const p90Value = Number(
-				math.format(math.quantileSeq(values, 0.9), { precision: 7 })
-			);
-
-			solverCategoryStats[solverName] = {
-				avgValue: avgValue,
-				minValue: minValue,
-				maxValue: maxValue,
-				stdValue: stdValue,
-				sumValue: sumValue,
-				p10Value: p10Value,
-				p25Value: p25Value,
-				p50Value: p50Value,
-				p75Value: p75Value,
-				p90Value: p90Value
-			};
-		}
+	for (const [solverName, values] of Object.entries(categoryValues)) {
+		solverCategoryStats[solverName] = SummarizeValues(values, { sum: true });
 	}
 	return solverCategoryStats;
 }
@@ -108,41 +77,46 @@ export function ComputeStatisticalMeasures(
  * This function filters the data based on the filter type provided.
  * @param filterType
  */
-// eslint-disable-next-line complexity
+
 function FilterByType(
 	filterType: string,
 	categoryValues: TraceData[]
 ): TraceData[] {
 	switch (filterType) {
 		case "no_fail_by_all_solver":
-			return (categoryValues = categoryValues.filter(
+			return categoryValues.filter(
 				(obj) => obj["SolverStatus"] === "Normal Completion"
-			));
+			);
 		case "time_greater_than_10_by_at_least_one_solver_and_no_fail":
-			return (categoryValues = categoryValues.filter(
+			return categoryValues.filter(
 				(obj) =>
-					obj["SolverTime"] <= 10 && obj["SolverStatus"] === "Normal Completion"
-			));
+					(obj["SolverTime"] ?? 0) <= 10 &&
+					obj["SolverStatus"] === "Normal Completion"
+			);
 		case "solver_primal_gap_less_than_or_equal_to_1_percent_and_no_fail":
-			return (categoryValues = categoryValues.filter(
+			return categoryValues.filter(
 				(obj) =>
-					obj["PrimalGap"] <= 1 && obj["SolverStatus"] === "Normal Completion"
-			));
+					(obj["PrimalGap"] ?? 0) <= 1 &&
+					obj["SolverStatus"] === "Normal Completion"
+			);
 		case "solver_primal_gap_less_than_or_equal_to_10_percent_and_no_fail":
-			return (categoryValues = categoryValues.filter(
+			return categoryValues.filter(
 				(obj) =>
-					obj["PrimalGap"] <= 10 && obj["SolverStatus"] === "Normal Completion"
-			));
+					(obj["PrimalGap"] ?? 0) <= 10 &&
+					obj["SolverStatus"] === "Normal Completion"
+			);
 		case "solver_dual_gap_less_than_or_equal_to_1_percent_and_not_failed":
-			return (categoryValues = categoryValues.filter(
+			return categoryValues.filter(
 				(obj) =>
-					obj["DualGap"] <= 1 && obj["SolverStatus"] === "Normal Completion"
-			));
+					(obj["DualGap"] ?? 0) <= 1 &&
+					obj["SolverStatus"] === "Normal Completion"
+			);
 		case "solver_dual_gap_less_than_or_equal_to_10_percent_and_not_failed":
-			return (categoryValues = categoryValues.filter(
+			return categoryValues.filter(
 				(obj) =>
-					obj["DualGap"] <= 10 && obj["SolverStatus"] === "Normal Completion"
-			));
+					(obj["DualGap"] ?? 0) <= 10 &&
+					obj["SolverStatus"] === "Normal Completion"
+			);
 		default:
 			return categoryValues;
 	}
@@ -158,20 +132,20 @@ function FilterByType(
 export function ExtractStatusMessages(
 	traceData: TraceData[],
 	statusType: string
-): string[] {
-	const result = [];
-	const nameErrorMap = new Map();
+): StatusCount[] {
+	const result: StatusCount[] = [];
+	const nameErrorMap = new Map<string | undefined, StatusCount>();
 
 	traceData.forEach((obj) => {
 		const existingEntry = nameErrorMap.get(obj["SolverName"]);
+		const status = obj[statusType as keyof TraceData] as string;
 
 		if (existingEntry) {
-			existingEntry[obj[statusType]] =
-				(existingEntry[obj[statusType]] || 0) + 1;
+			existingEntry[status] = ((existingEntry[status] as number) || 0) + 1;
 		} else {
-			const newEntry = {
+			const newEntry: StatusCount = {
 				SolverName: obj["SolverName"],
-				[obj[statusType]]: 1
+				[status]: 1
 			};
 			nameErrorMap.set(obj["SolverName"], newEntry);
 			result.push(newEntry);
@@ -181,26 +155,44 @@ export function ExtractStatusMessages(
 }
 
 /**
- * This function extracts the number of failed instances per solver from the results data.
- * @param {TraceData[]} traceData - Array of objects containing the result data.
- * @returns {string[]} - An object with solver names as keys. Each solver contains a counter of the failed instances.
+ * Gets the status messages that occur for at least one of the solvers, in the order in which they are first found.
+ * A chart needs all of them: a status that only a later solver has would otherwise not be shown.
+ *
+ * @param counts - The status counts per solver, see ExtractStatusMessages.
  */
-export function ExtractFailedCount(traceData: TraceData[]): string[] {
-	const result = [];
-	const nameErrorMap = new Map();
+export function GetStatusKeys(counts: StatusCount[]): string[] {
+	const keys = new Set<string>();
+	for (const count of counts) {
+		for (const key of Object.keys(count)) {
+			if (key !== "SolverName") {
+				keys.add(key);
+			}
+		}
+	}
+	return [...keys];
+}
+
+/**
+ * This function extracts the number of failed instances per solver from the results data.
+ * Every solver is in the result, with 0 if none of its instances failed.
+ * @param {TraceData[]} traceData - Array of objects containing the result data.
+ * @returns {StatusCount[]} - One entry per solver, with the solver name and the counter of its failed instances.
+ */
+export function ExtractFailedCount(traceData: TraceData[]): StatusCount[] {
+	const result: StatusCount[] = [];
+	const nameErrorMap = new Map<string | undefined, StatusCount>();
 
 	traceData.forEach((obj) => {
-		const existingEntry = nameErrorMap.get(obj["SolverName"]);
+		let entry = nameErrorMap.get(obj["SolverName"]);
+		if (!entry) {
+			entry = { SolverName: obj["SolverName"], Failed: 0 };
+			nameErrorMap.set(obj["SolverName"], entry);
+			result.push(entry);
+		}
 
-		if (existingEntry) {
-			existingEntry["Failed"] = (existingEntry["Failed"] || 0) + 1;
-		} else {
-			const newEntry = {
-				SolverName: obj["SolverName"],
-				Failed: 1
-			};
-			nameErrorMap.set(obj["SolverName"], newEntry);
-			result.push(newEntry);
+		// Fail is a boolean, or the text "true" once the data has been stored and read again.
+		if (String(obj["Fail"]) === "true") {
+			entry["Failed"] = ((entry["Failed"] as number) || 0) + 1;
 		}
 	});
 	return result;
@@ -219,20 +211,26 @@ export function ExtractFailedCount(traceData: TraceData[]): string[] {
  * contains 'time' and 'InputFileName' property of the corresponding solver. If the time value is 'NA' or is not a number,
  * the instance is not added to the final result.
  */
-export function ExtractAllSolverTimes(traceData: TraceData[]): object {
+export function ExtractAllSolverTimes(traceData: TraceData[]): {
+	[key: string]: { time: number; InputFileName: string }[];
+} {
 	const result = traceData.reduce(
 		(
 			acc: { [key: string]: { time: number; InputFileName: string }[] },
-			obj: object
+			obj: TraceData
 		): { [key: string]: { time: number; InputFileName: string }[] } => {
-			if (!acc[obj["SolverName"]]) {
-				acc[obj["SolverName"]] = [];
+			const solverName = obj["SolverName"] as string;
+			if (!acc[solverName]) {
+				acc[solverName] = [];
 			}
-			if (obj["SolverTime"] !== "NA") {
+			if (
+				obj["SolverTime"] !== undefined &&
+				(obj["SolverTime"] as unknown) !== "NA"
+			) {
 				const time = Number(obj["SolverTime"]);
 				if (!isNaN(time)) {
-					const inputFileName = obj["InputFileName"];
-					acc[obj["SolverName"]].push({ time, InputFileName: inputFileName });
+					const inputFileName = obj["InputFileName"] as string;
+					acc[solverName].push({ time, InputFileName: inputFileName });
 				}
 			}
 			return acc;
@@ -259,21 +257,21 @@ export function ExtractAllSolverTimesGapType(
 	defaultTime?: number | undefined,
 	gapLimit?: number | undefined,
 	terminationStatusSelector?: string
-): object {
+): { [key: string]: { time: number; InputFileName: string }[] } {
 	let defaultTimeFallback: number;
 	let gapLimitToCompare: number;
-	let terminationStatus: string;
+	let terminationStatus: string | undefined;
 
 	if (!gapLimit || gapLimit < 0) {
 		gapLimitToCompare = 0.01;
-		gapLimitDirectInput.value = "0.01";
+		elements.gapLimitDirectInput.value = "0.01";
 	} else {
 		gapLimitToCompare = gapLimit;
 	}
 
 	if (!defaultTime || defaultTime < 0) {
 		defaultTimeFallback = Values.DEFAULT_TIME;
-		defaultTimeDirectInput.value = Values.DEFAULT_TIME.toString();
+		elements.defaultTimeDirectInput.value = Values.DEFAULT_TIME.toString();
 	} else {
 		defaultTimeFallback = defaultTime;
 	}
@@ -281,20 +279,20 @@ export function ExtractAllSolverTimesGapType(
 	if (!terminationStatusSelector) {
 		terminationStatus = undefined;
 	} else {
-		const statusMap: { [key: number]: string } = {
-			1: "Normal Completion",
-			2: "Iteration Interrupt",
-			3: "Resource Interrupt",
-			4: "Terminated By Solver",
-			5: "Evaluation Interrupt",
-			6: "Capability Problems",
-			7: "Licensing Problems",
-			8: "User Interrupt",
-			9: "Error Setup Failure",
-			10: "Error Solver Failure",
-			11: "Error Internal Solver Failure",
-			12: "Solve Processing Skipped",
-			13: "Error System Failure"
+		const statusMap: { [key: string]: string } = {
+			"1": "Normal Completion",
+			"2": "Iteration Interrupt",
+			"3": "Resource Interrupt",
+			"4": "Terminated By Solver",
+			"5": "Evaluation Interrupt",
+			"6": "Capability Problems",
+			"7": "Licensing Problems",
+			"8": "User Interrupt",
+			"9": "Error Setup Failure",
+			"10": "Error Solver Failure",
+			"11": "Error Internal Solver Failure",
+			"12": "Solve Processing Skipped",
+			"13": "Error System Failure"
 		};
 		terminationStatus = statusMap[terminationStatusSelector];
 	}
@@ -307,33 +305,36 @@ export function ExtractAllSolverTimesGapType(
 	const filteredData = combinedData.reduce(
 		(
 			acc: { [key: string]: { time: number; InputFileName: string }[] },
-			obj: object
+			obj: TraceData
 		): { [key: string]: { time: number; InputFileName: string }[] } => {
-			if (!acc[obj["SolverName"]]) {
-				acc[obj["SolverName"]] = [];
+			const solverName = obj["SolverName"] as string;
+			if (!acc[solverName]) {
+				acc[solverName] = [];
 			}
-			if (!isNaN(obj["SolverTime"])) {
+			if (obj["SolverTime"] !== undefined && !isNaN(obj["SolverTime"])) {
 				if (
-					obj[selectedGapType] <= gapLimitToCompare &&
+					(obj[selectedGapType as keyof TraceData] as number) <=
+						gapLimitToCompare &&
 					obj["SolverStatus"] === terminationStatus
 				) {
-					acc[obj["SolverName"]].push({
+					acc[solverName].push({
 						time: Number(obj["SolverTime"]),
-						InputFileName: obj["InputFileName"]
+						InputFileName: obj["InputFileName"] as string
 					});
 				} else if (
-					obj[selectedGapType] <= gapLimitToCompare &&
+					(obj[selectedGapType as keyof TraceData] as number) <=
+						gapLimitToCompare &&
 					terminationStatus === undefined
 				) {
-					acc[obj["SolverName"]].push({
+					acc[solverName].push({
 						time: Number(obj["SolverTime"]),
-						InputFileName: obj["InputFileName"]
+						InputFileName: obj["InputFileName"] as string
 					});
 				}
 			} else {
-				acc[obj["SolverName"]].push({
+				acc[solverName].push({
 					time: defaultTimeFallback,
-					InputFileName: obj["InputFileName"]
+					InputFileName: obj["InputFileName"] as string
 				});
 			}
 			return acc;

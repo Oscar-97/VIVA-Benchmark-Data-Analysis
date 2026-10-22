@@ -1,0 +1,35 @@
+name: Update screenshots
+
+# The screenshots of Tests/E2E/Visual.spec.ts are compared on Linux only, as text and lines are drawn
+# differently on other operating systems. Run this workflow on a branch to make them, or to update them after
+# a change of the pages or the charts, and look at the images in the commit that it adds to the branch.
+on: workflow_dispatch
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    name: Make the screenshots
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:visual:update
+      - name: Commit the screenshots
+        run: |
+          git add Tests/E2E/__snapshots__/Visual.spec.ts
+          if git diff --cached --quiet; then
+            echo "The screenshots are up to date."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "test: update the screenshots"
+            git push
+          fi

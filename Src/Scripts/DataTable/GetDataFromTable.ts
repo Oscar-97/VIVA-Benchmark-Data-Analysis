@@ -23,10 +23,13 @@ export function GetSelectedRows(): object[] {
 	const traceData = Array.from(
 		document.querySelectorAll(".row-selected-problems")
 	).map((row) => {
-		return Array.from(row.querySelectorAll("td")).reduce((obj, cell, j) => {
-			obj[headers[j]] = cell.textContent;
-			return obj;
-		}, {});
+		return Array.from(row.querySelectorAll("td")).reduce(
+			(obj: Record<string, string>, cell, j) => {
+				obj[headers[j] ?? ""] = cell.textContent ?? "";
+				return obj;
+			},
+			{} as Record<string, string>
+		);
 	});
 
 	return traceData;
@@ -38,30 +41,37 @@ export function GetSelectedRows(): object[] {
  * and the values correspond to the cell data in the corresponding row.
  */
 export function GetFilteredRows(): TraceData[] {
-	function RemapObjectProperties(objects): TraceData[] {
+	function RemapObjectProperties(
+		objects: Record<string, unknown>[]
+	): TraceData[] {
 		return objects.map((obj) => {
-			const remappedObj = {};
+			const remappedObj: Record<string, unknown> = {};
 			for (const key in obj) {
-				const newKey = ReversedTraceHeaderMap[key] || key;
+				const newKey =
+					key in ReversedTraceHeaderMap
+						? ReversedTraceHeaderMap[key as keyof typeof ReversedTraceHeaderMap]
+						: key;
 				remappedObj[newKey] = obj[key];
 			}
-			return remappedObj;
+			return remappedObj as TraceData;
 		});
 	}
 
 	const table = $("#dataTableGenerated").DataTable();
 	const data = table.rows({ search: "applied" }).data().toArray();
-	const headers = table
+	const headers: string[] = table
 		.columns()
 		.header()
-		// @ts-expect-error 'toArray' does not exist on type 'HTMLElement'
 		.toArray()
-		.map((header) => $(header).text());
+		.map((header: HTMLElement) => $(header).text());
 	const objects = data.map((row) => {
-		return headers.reduce((obj, header, index) => {
-			obj[header] = row[index];
-			return obj;
-		}, {});
+		return headers.reduce(
+			(obj: Record<string, unknown>, header, index) => {
+				obj[header] = row[index];
+				return obj;
+			},
+			{} as Record<string, unknown>
+		);
 	});
 
 	return RemapObjectProperties(objects);

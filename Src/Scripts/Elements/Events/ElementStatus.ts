@@ -1,23 +1,5 @@
 import { PageTitles } from "../../Constants/PageTitles";
-import {
-	fileInput,
-	librarySelector,
-	importDataButton,
-	viewTableButton,
-	showSelectedRowsButton,
-	saveLocalStorageButton,
-	downloadConfigurationButtonLayer,
-	configurationSettingsButton,
-	deleteLocalStorageButton,
-	clearDataTableButton,
-	viewPlotsButton,
-	downloadChartDataButtonLayer,
-	loaderContainer,
-	dataTable,
-	defaultTimeDirectInput,
-	gapLimitDirectInput,
-	compareSolversButton
-} from "../Elements";
+import { elements } from "../Elements";
 
 /**
  * This function resets the status of several elements to their initial state when the user first arrives at,
@@ -33,19 +15,19 @@ import {
  * 4. Disable various interactive buttons.
  */
 export function ElementStatesTablePage(): void {
-	loaderContainer.innerHTML = "";
-	dataTable.style.visibility = "hidden";
-	fileInput.value = "";
-	librarySelector.value = "none";
-	librarySelector.disabled = true;
-	importDataButton.disabled = true;
-	viewTableButton.disabled = true;
-	showSelectedRowsButton.disabled = true;
-	saveLocalStorageButton.disabled = true;
-	downloadConfigurationButtonLayer.disabled = true;
-	configurationSettingsButton.disabled = true;
-	deleteLocalStorageButton.disabled = true;
-	clearDataTableButton.disabled = true;
+	elements.loaderContainer.innerHTML = "";
+	elements.dataTable.style.visibility = "hidden";
+	elements.fileInput.value = "";
+	elements.librarySelector.value = "none";
+	elements.librarySelector.disabled = true;
+	elements.importDataButton.disabled = true;
+	elements.viewTableButton.disabled = true;
+	elements.showSelectedRowsButton.disabled = true;
+	elements.saveLocalStorageButton.disabled = true;
+	elements.downloadConfigurationButtonLayer.disabled = true;
+	elements.configurationSettingsButton.disabled = true;
+	elements.deleteLocalStorageButton.disabled = true;
+	elements.clearDataTableButton.disabled = true;
 }
 
 /**
@@ -59,18 +41,18 @@ export function ElementStatesTablePage(): void {
  * 3. Disable various interactive buttons.
  */
 export function ElementStatesPlotPage(): void {
-	fileInput.value = "";
-	librarySelector.value = "none";
-	librarySelector.disabled = true;
-	viewPlotsButton.disabled = true;
-	saveLocalStorageButton.disabled = true;
-	downloadConfigurationButtonLayer.disabled = true;
-	configurationSettingsButton.disabled = true;
-	downloadChartDataButtonLayer.disabled = true;
-	deleteLocalStorageButton.disabled = true;
+	elements.fileInput.value = "";
+	elements.librarySelector.value = "none";
+	elements.librarySelector.disabled = true;
+	elements.viewPlotsButton.disabled = true;
+	elements.saveLocalStorageButton.disabled = true;
+	elements.downloadConfigurationButtonLayer.disabled = true;
+	elements.configurationSettingsButton.disabled = true;
+	elements.downloadChartDataButtonLayer.disabled = true;
+	elements.deleteLocalStorageButton.disabled = true;
 	if (document.title === PageTitles.PERFORMANCE_PROFILE) {
-		defaultTimeDirectInput.value = "";
-		gapLimitDirectInput.value = "";
+		elements.defaultTimeDirectInput.value = "";
+		elements.gapLimitDirectInput.value = "";
 	}
 }
 
@@ -85,14 +67,14 @@ export function ElementStatesPlotPage(): void {
  * 3. Disable various interactive buttons.
  */
 export function ElementStatesCompareSolversPage(): void {
-	fileInput.value = "";
-	librarySelector.value = "none";
-	librarySelector.disabled = true;
-	compareSolversButton.disabled = true;
-	saveLocalStorageButton.disabled = true;
-	downloadConfigurationButtonLayer.disabled = true;
-	configurationSettingsButton.disabled = true;
-	deleteLocalStorageButton.disabled = true;
+	elements.fileInput.value = "";
+	elements.librarySelector.value = "none";
+	elements.librarySelector.disabled = true;
+	elements.compareSolversButton.disabled = true;
+	elements.saveLocalStorageButton.disabled = true;
+	elements.downloadConfigurationButtonLayer.disabled = true;
+	elements.configurationSettingsButton.disabled = true;
+	elements.deleteLocalStorageButton.disabled = true;
 }
 
 /**
@@ -103,11 +85,11 @@ export function ElementStatesCompareSolversPage(): void {
  * delete local storage, clear table).
  */
 export function ElementStateDisplayedTable(): void {
-	showSelectedRowsButton.disabled = false;
-	saveLocalStorageButton.disabled = false;
-	downloadConfigurationButtonLayer.disabled = false;
-	deleteLocalStorageButton.disabled = false;
-	clearDataTableButton.disabled = false;
+	elements.showSelectedRowsButton.disabled = false;
+	elements.saveLocalStorageButton.disabled = false;
+	elements.downloadConfigurationButtonLayer.disabled = false;
+	elements.deleteLocalStorageButton.disabled = false;
+	elements.clearDataTableButton.disabled = false;
 }
 
 /**
@@ -118,10 +100,10 @@ export function ElementStateDisplayedTable(): void {
  * download chart, delete local storage).
  */
 export function ElementStateDisplayedChart(): void {
-	saveLocalStorageButton.disabled = false;
-	downloadConfigurationButtonLayer.disabled = false;
-	downloadChartDataButtonLayer.disabled = false;
-	deleteLocalStorageButton.disabled = false;
+	elements.saveLocalStorageButton.disabled = false;
+	elements.downloadConfigurationButtonLayer.disabled = false;
+	elements.downloadChartDataButtonLayer.disabled = false;
+	elements.deleteLocalStorageButton.disabled = false;
 }
 
 /**
@@ -132,7 +114,7 @@ export function ElementStateDisplayedChart(): void {
  * download configuration, delete local storage).
  */
 export function ElementStateDisplayedComparisonTable(): void {
-	saveLocalStorageButton.disabled = false;
-	downloadConfigurationButtonLayer.disabled = false;
-	deleteLocalStorageButton.disabled = false;
+	elements.saveLocalStorageButton.disabled = false;
+	elements.downloadConfigurationButtonLayer.disabled = false;
+	elements.deleteLocalStorageButton.disabled = false;
 }

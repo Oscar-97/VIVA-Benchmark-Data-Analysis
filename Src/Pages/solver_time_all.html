@@ -4,7 +4,23 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ffffff" />
+    <!-- Theme, set before the first paint -->
+    <script>
+      (function () {
+        var theme = null;
+        try {
+          theme = localStorage.getItem("theme");
+        } catch (e) {}
+        if (theme !== "light" && theme !== "dark") {
+          theme = window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
+        document.documentElement.setAttribute("data-bs-theme", theme);
+      })();
+    </script>
     <meta
       name="description"
       content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers."
@@ -12,12 +28,21 @@
     <!-- Title and icon -->
     <title id="ReportTitle">Solver Time per Solver</title>
     <link rel="icon" href="../CSS/tab_icon.png" />
-    <!-- Styling-->
+    <!-- Styling -->
     <link href="../../Dist/main.css" rel="stylesheet" />
+    <!-- The content is shown by a script, without one it is shown at once -->
+    <noscript>
+      <style>
+        body > :not(nav, hr) {
+          opacity: 1;
+        }
+      </style>
+    </noscript>
   </head>
 
   <body>
-    <nav class="navbar sticky-top navbar-expand-xxl navbar-light bg-light">
+    <a class="visually-hidden-focusable" href="#main">Skip to content</a>
+    <nav class="navbar sticky-top navbar-expand-viva bg-body-tertiary">
       <div class="container-fluid">
         <span class="navbar-brand">
           <img
@@ -43,13 +68,14 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="../../report.html"
+              <a class="nav-link" href="../../report.html"
                 ><i class="bi bi-file-spreadsheet"></i> Table</a
               >
             </li>
             <li class="nav-item dropdown">
               <a
                 class="nav-link dropdown-toggle active"
+                id="navbarDropdownMenuLink"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
@@ -63,7 +89,7 @@
                   <a
                     class="dropdown-item"
                     href="../Pages/performance_profile.html"
-                    ><i class="bi bi-graph-up-arrow"> </i>Performance Profile</a
+                    ><i class="bi bi-graph-up-arrow"></i> Performance Profile</a
                   >
                 </li>
                 <li>
@@ -73,8 +99,8 @@
                   >
                 </li>
                 <li>
-                  <a class="dropdown-item" href="../Pages/solver_time.html">
-                    <i class="bi bi-graph-up"></i> Solver Time per Instance</a
+                  <a class="dropdown-item" href="../Pages/solver_time.html"
+                    ><i class="bi bi-graph-up"></i> Solver Time per Instance</a
                   >
                 </li>
                 <hr />
@@ -113,10 +139,7 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a
-                class="nav-link"
-                aria-current="page"
-                href="../Pages/compare_solvers.html"
+              <a class="nav-link" href="../Pages/compare_solvers.html"
                 ><i class="bi bi-view-stacked"></i> Compare Solvers</a
               >
             </li>
@@ -126,7 +149,6 @@
                   type="file"
                   class="form-control"
                   id="fileInput"
-                  aria-describedby="inputGroupFileAddon04"
                   aria-label="Upload"
                   value=""
                   data-toggle="tooltip"
@@ -197,12 +219,25 @@
               </button>
             </li>
             <li class="nav-item">
+              <button
+                class="nav-link"
+                id="themeToggleButton"
+                type="button"
+                aria-label="Switch to dark theme"
+                aria-pressed="false"
+                name="Theme"
+              >
+                <i class="bi bi-moon-stars"></i>
+              </button>
+            </li>
+            <li class="nav-item">
               <a
                 class="nav-link"
                 href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/releases"
                 target="_blank"
                 id="releaseVersionTagSpan"
-              ></a>
+                >Releases</a
+              >
             </li>
           </ul>
         </div>
@@ -218,159 +253,231 @@
         aria-label="Close"
       ></button>
     </div>
-    <div
-      id="buttonContainer"
-      class="d-flex flex-wrap justify-content-start gap-2"
-    >
-      <div class="col-auto">
-        <button
-          class="btn btn-success btn-sm"
-          type="submit"
-          id="viewPlotsButton"
-          disabled="true"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="View Solver Time per Solver."
-        >
-          <i class="bi bi-diagram-2"></i> View Solver Time per Solver
-        </button>
-      </div>
-      <div class="col-auto">
-        <button
-          class="btn btn-primary btn-sm"
-          id="saveLocalStorageButton"
-          disabled="true"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Save currently loaded data to local storage."
-        >
-          <i class="bi bi-save"></i> Save Data
-        </button>
-      </div>
-      <div class="col-auto vertical-separator"></div>
-      <div class="col-auto">
-        <button
-          class="btn btn-dark btn-sm"
-          type="button"
-          id="downloadConfigurationButtonLayer"
-          disabled="true"
-        >
-          <a
-            id="downloadConfigurationButton"
+    <main id="main" tabindex="-1">
+      <div
+        id="buttonContainer"
+        class="d-flex flex-wrap justify-content-start gap-2"
+      >
+        <div class="col-auto">
+          <button
+            class="btn btn-success btn-sm"
+            type="submit"
+            id="viewPlotsButton"
+            disabled="true"
             data-toggle="tooltip"
             data-placement="top"
-            title="Download the user configuration."
-            ><i class="bi bi-download"></i> Download Saved Data</a
+            title="View Solver Time per Solver."
           >
-        </button>
-      </div>
-      <div class="col-auto">
-        <button
-          class="btn btn-dark btn-sm"
-          type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#configurationSettingsModal"
-          id="configurationSettingsButton"
-          disabled="true"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Customize the downloadable user configuration file."
-        >
-          <i class="bi bi-gear"></i> Download Data
-        </button>
-      </div>
-      <div class="col-auto">
-        <button
-          class="btn btn-dark btn-sm"
-          type="button"
-          id="downloadChartDataButtonLayer"
-          disabled="true"
-        >
-          <a
-            id="downloadChartDataButton"
+            <i class="bi bi-diagram-2"></i> View Solver Time per Solver
+          </button>
+        </div>
+        <div class="col-auto">
+          <button
+            class="btn btn-primary btn-sm"
+            id="saveLocalStorageButton"
+            disabled="true"
             data-toggle="tooltip"
             data-placement="top"
-            title="Download the chart data."
-            ><i class="bi bi-file-earmark-arrow-down"></i> Download Chart
-            Data</a
+            title="Save currently loaded data to local storage."
           >
-        </button>
-      </div>
-      <div class="col-auto vertical-separator"></div>
-      <div class="col-auto">
-        <button
-          class="btn btn-danger btn-sm"
-          type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#deleteDataModal"
-          id="deleteLocalStorageButton"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Delete currently saved data in local storage."
-        >
-          <i class="bi bi-trash"></i> Delete Data
-        </button>
-      </div>
-    </div>
-    <div
-      class="d-flex flex-wrap justify-content-start gap-2"
-      style="margin-left: 1rem; margin-top: 1rem"
-    >
-      <div class="col-auto">
-        <div class="input-group mb-1">
-          <div class="form-floating">
-            <select
-              class="form-control form-control-sm"
-              id="filterTypeSelector"
-              aria-label="filterType"
+            <i class="bi bi-save"></i> Save Data
+          </button>
+        </div>
+        <div class="col-auto vertical-separator"></div>
+        <div class="col-auto">
+          <button
+            class="btn btn-dark btn-sm"
+            type="button"
+            id="downloadConfigurationButtonLayer"
+            disabled="true"
+          >
+            <a
+              id="downloadConfigurationButton"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Download the user configuration."
+              ><i class="bi bi-download"></i> Download Saved Data</a
             >
-              <option value="None">None</option>
-              <option value="no_fail_by_all_solver">
-                No fail for all solvers (Normal Completion only)
-              </option>
-              <option
-                value="time_less_than_10_by_at_least_one_solver_and_no_fail"
+          </button>
+        </div>
+        <div class="col-auto">
+          <button
+            class="btn btn-dark btn-sm"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#configurationSettingsModal"
+            id="configurationSettingsButton"
+            disabled="true"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Customize the downloadable user configuration file."
+          >
+            <i class="bi bi-gear"></i> Download Data
+          </button>
+        </div>
+        <div class="col-auto">
+          <button
+            class="btn btn-dark btn-sm"
+            type="button"
+            id="downloadChartDataButtonLayer"
+            disabled="true"
+          >
+            <a
+              id="downloadChartDataButton"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Download the chart data."
+              ><i class="bi bi-file-earmark-arrow-down"></i> Download Chart
+              Data</a
+            >
+          </button>
+        </div>
+        <div class="col-auto vertical-separator"></div>
+        <div class="col-auto">
+          <button
+            class="btn btn-danger btn-sm"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteDataModal"
+            id="deleteLocalStorageButton"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Delete currently saved data in local storage."
+          >
+            <i class="bi bi-trash"></i> Delete Data
+          </button>
+        </div>
+      </div>
+
+      <div
+        class="d-flex flex-wrap justify-content-start gap-2"
+        style="margin-left: 1rem; margin-top: 1rem"
+      >
+        <div class="col-auto">
+          <div class="input-group mb-1">
+            <div class="form-floating">
+              <select
+                class="form-control form-control-sm"
+                id="filterTypeSelector"
+                aria-label="filterType"
               >
-                Time &lt;= 10.0 and no fail for all solvers
-              </option>
-              <option
-                value="solver_primal_gap_less_than_or_equal_to_1_percent_and_no_fail"
-              >
-                SolverPrimalGap[%] &lt;= 1.0% and no fail for all solvers
-              </option>
-              <option
-                value="solver_primal_gap_less_than_or_equal_to_10_percent_and_no_fail"
-              >
-                SolverPrimalGap[%] &lt;= 10.0% and no fail for all solvers
-              </option>
-              <option
-                value="solver_dual_gap_less_than_or_equal_to_1_percent_and_not_failed"
-              >
-                SolverDualGap[%] &lt;= 1.0% and no fail for all solvers
-              </option>
-              <option
-                value="solver_dual_gap_less_than_or_equal_to_10_percent_and_not_failed"
-              >
-                SolverDualGap[%] &lt;= 10.0% and no fail for all solvers
-              </option>
-            </select>
-            <label for="filterTypeSelector">Filter type</label>
+                <option value="None">None</option>
+                <option value="no_fail_by_all_solver">
+                  No fail for all solvers (Normal Completion only)
+                </option>
+                <option
+                  value="time_less_than_10_by_at_least_one_solver_and_no_fail"
+                >
+                  Time &lt;= 10.0 and no fail for all solvers
+                </option>
+                <option
+                  value="solver_primal_gap_less_than_or_equal_to_1_percent_and_no_fail"
+                >
+                  SolverPrimalGap[%] &lt;= 1.0% and no fail for all solvers
+                </option>
+                <option
+                  value="solver_primal_gap_less_than_or_equal_to_10_percent_and_no_fail"
+                >
+                  SolverPrimalGap[%] &lt;= 10.0% and no fail for all solvers
+                </option>
+                <option
+                  value="solver_dual_gap_less_than_or_equal_to_1_percent_and_not_failed"
+                >
+                  SolverDualGap[%] &lt;= 1.0% and no fail for all solvers
+                </option>
+                <option
+                  value="solver_dual_gap_less_than_or_equal_to_10_percent_and_not_failed"
+                >
+                  SolverDualGap[%] &lt;= 10.0% and no fail for all solvers
+                </option>
+              </select>
+              <label for="filterTypeSelector">Filter type</label>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <hr />
 
-    <div id="chartContainer">
-      <canvas id="myChart" class="chart">
-        <!-- Content created with Chart.js will be displayed here. -->
-      </canvas>
-    </div>
+      <hr />
+      <div id="emptyState" class="empty-state">
+        <h2 class="h5">Load benchmark data to get started</h2>
+        <p>
+          Drop files anywhere on this page, or choose them with the file field
+          in the navigation bar and click Upload.
+        </p>
+        <ul class="list-unstyled mb-3">
+          <li><b>.trc</b> trace files, one for each solver</li>
+          <li><b>.csv</b> instance information (optional)</li>
+          <li><b>.solu</b> best known bounds (optional)</li>
+          <li><b>.json</b> a configuration that was saved earlier</li>
+        </ul>
+        <p class="mb-2">
+          The buttons above can be used after the data is loaded.
+        </p>
+        <button
+          id="emptyStateDemoButton"
+          class="btn btn-sm btn-primary"
+          type="button"
+        >
+          <i class="bi bi-activity"></i> Try demo data
+        </button>
+      </div>
+      <div
+        id="loadStatus"
+        class="load-status text-center"
+        role="status"
+        aria-live="polite"
+      ></div>
 
-    <div id="statisticsTable">
-      <!-- Statistics table element will be created here. -->
-    </div>
+      <div id="chartTools" class="chart-tools" hidden>
+        <button
+          id="resetZoomButton"
+          class="btn btn-dark btn-sm"
+          type="button"
+          title="Show the whole chart again."
+          disabled
+        >
+          <i class="bi bi-zoom-out"></i> Reset Zoom
+        </button>
+        <button
+          id="showAllSeriesButton"
+          class="btn btn-dark btn-sm"
+          type="button"
+          title="Show all data sets of the chart."
+        >
+          <i class="bi bi-eye"></i> Show All
+        </button>
+        <button
+          id="hideAllSeriesButton"
+          class="btn btn-dark btn-sm"
+          type="button"
+          title="Hide all data sets of the chart, to show only the ones you pick in the legend."
+        >
+          <i class="bi bi-eye-slash"></i> Hide All
+        </button>
+        <button
+          id="downloadChartImageButton"
+          class="btn btn-dark btn-sm"
+          type="button"
+          title="Download the chart as an image."
+        >
+          <i class="bi bi-file-earmark-image"></i> Download Image
+        </button>
+        <span
+          id="chartToolsStatus"
+          class="chart-tools-status"
+          role="status"
+        ></span>
+      </div>
+      <div id="chartContainer">
+        <canvas id="myChart" class="chart">
+          <!-- Content created with Chart.js will be displayed here. -->
+        </canvas>
+      </div>
 
+      <div id="statisticsTable">
+        <!-- statistics table element will be created here. -->
+      </div>
+    </main>
     <!-- Main script -->
     <script id="MainFunction" src="../../Dist/bundle.js"></script>
   </body>

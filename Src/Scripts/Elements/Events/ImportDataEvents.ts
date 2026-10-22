@@ -1,16 +1,6 @@
-import {
-	librarySelector,
-	importDataButton,
-	showSelectedRowsButton,
-	viewTableButton,
-	viewPlotsButton,
-	deleteLocalStorageButton,
-	saveLocalStorageButton,
-	dataTableGeneratedWrapper,
-	dataTableGenerated,
-	compareSolversButton,
-	demoDataSelector
-} from "../Elements";
+import { elements } from "../Elements";
+import { SetEmptyStateVisible } from "../EmptyState";
+import { ClearLoadStatus } from "../LoadStatus";
 import { DisplayAlertNotification } from "./DisplayAlertNotification";
 import { Keys } from "../../Constants/Keys";
 import { PageTitles } from "../../Constants/PageTitles";
@@ -35,7 +25,9 @@ export function ImportDataEvents(
 	fileExtensionType?: string,
 	demoModeName?: string
 ): void {
-	librarySelector.disabled = true;
+	elements.librarySelector.disabled = true;
+	SetEmptyStateVisible(false);
+	ClearLoadStatus();
 	if (document.title === PageTitles.TABLE) {
 		TablePageElements(fileExtensionType, demoModeName);
 	} else if (document.title === PageTitles.COMPARE_SOLVERS) {
@@ -57,30 +49,30 @@ function TablePageElements(
 	demoModeName?: string
 ): void {
 	try {
-		if (dataTableGeneratedWrapper) {
-			dataTableGeneratedWrapper.remove();
+		if (elements.dataTableGeneratedWrapper) {
+			elements.dataTableGeneratedWrapper.remove();
 		}
 
-		if (dataTableGenerated) {
-			dataTableGenerated.remove();
+		if (elements.dataTableGenerated) {
+			elements.dataTableGenerated.remove();
 		}
 	} catch (err) {
 		console.error("Could not remove elements: ", err);
 	}
 
 	if (demoModeName === "demo1") {
-		demoDataSelector.value = "Demo_1";
+		elements.demoDataSelector.value = "Demo_1";
 	}
 
 	if (demoModeName === "demo2") {
-		demoDataSelector.value = "Demo_2";
+		elements.demoDataSelector.value = "Demo_2";
 	}
-	viewTableButton.disabled = false;
-	showSelectedRowsButton.disabled = true;
-	importDataButton.disabled = true;
-	showSelectedRowsButton.disabled = true;
+	elements.viewTableButton.disabled = false;
+	elements.showSelectedRowsButton.disabled = true;
+	elements.importDataButton.disabled = true;
+	elements.showSelectedRowsButton.disabled = true;
 	if (fileExtensionType === "json") {
-		deleteLocalStorageButton.disabled = false;
+		elements.deleteLocalStorageButton.disabled = false;
 	}
 }
 
@@ -88,24 +80,24 @@ function TablePageElements(
  * Manage the elements on the compare solvers page after data import.
  * @param fileExtensionType
  */
-function CompareSolversPageElements(fileExtensionType?): void {
-	compareSolversButton.disabled = false;
-	importDataButton.disabled = true;
-	saveLocalStorageButton.disabled = true;
+function CompareSolversPageElements(fileExtensionType?: string): void {
+	elements.compareSolversButton.disabled = false;
+	elements.importDataButton.disabled = true;
+	elements.saveLocalStorageButton.disabled = true;
 	if (fileExtensionType === "json") {
-		deleteLocalStorageButton.disabled = false;
+		elements.deleteLocalStorageButton.disabled = false;
 	}
 }
 
 /**
  *  Manage the elements on the plot pages after data import.
  */
-function PlotPagesElements(fileExtensionType): void {
-	viewPlotsButton.disabled = false;
-	importDataButton.disabled = true;
-	saveLocalStorageButton.disabled = true;
+function PlotPagesElements(fileExtensionType: string | undefined): void {
+	elements.viewPlotsButton.disabled = false;
+	elements.importDataButton.disabled = true;
+	elements.saveLocalStorageButton.disabled = true;
 	if (fileExtensionType === "json") {
-		deleteLocalStorageButton.disabled = false;
+		elements.deleteLocalStorageButton.disabled = false;
 	}
 }
 
@@ -114,7 +106,10 @@ function PlotPagesElements(fileExtensionType): void {
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  */
 export function FillSolverSelectorList(traceData: TraceData[]): void {
-	document.getElementById("solverSelector").innerHTML = "";
+	const solverSelector = document.getElementById("solverSelector");
+	if (solverSelector) {
+		solverSelector.innerHTML = "";
+	}
 	let isSelectedSet = false;
 
 	const uniqueSolvers = traceData
@@ -125,16 +120,21 @@ export function FillSolverSelectorList(traceData: TraceData[]): void {
 			return self.indexOf(solverName) === index;
 		});
 
-	uniqueSolvers.forEach((solver: string) => {
-		const option = document.createElement("option");
-		option.value = solver;
-		option.textContent = solver;
+	uniqueSolvers
+		.filter((solver): solver is string => solver !== undefined)
+		.forEach((solver: string) => {
+			const option = document.createElement("option");
+			option.value = solver;
+			option.textContent = solver;
 
-		if (!isSelectedSet) {
-			option.selected = true;
-			isSelectedSet = true;
-		}
+			if (!isSelectedSet) {
+				option.selected = true;
+				isSelectedSet = true;
+			}
 
-		document.getElementById("solverSelector").appendChild(option);
-	});
+			const solverSelectorElement = document.getElementById("solverSelector");
+			if (solverSelectorElement) {
+				solverSelectorElement.appendChild(option);
+			}
+		});
 }

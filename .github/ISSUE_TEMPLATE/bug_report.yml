@@ -1,0 +1,69 @@
+name: Bug report
+description: Something in VIVA does not work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the problem. Add screenshots or console errors if you have them.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open report.html
+        2. Load ...
+        3. Click ...
+    validations:
+      required: true
+  - type: dropdown
+    id: page
+    attributes:
+      label: Page
+      options:
+        - Report (table)
+        - Performance profile
+        - Solver time
+        - Solver time (all solvers)
+        - Number of nodes
+        - Number of iterations
+        - Termination status
+        - Solution quality
+        - Solution time
+        - Compare solvers
+        - Other / whole app
+    validations:
+      required: true
+  - type: dropdown
+    id: data-source
+    attributes:
+      label: Data source
+      options:
+        - Own trace files
+        - Demo data
+        - MIPLIB 2010
+        - MIPLIB 2017
+        - MINLPLib
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser and version, operating system, app version (see package.json), and whether you use the web app or a release package.
+    validations:
+      required: true
+  - type: textarea
+    id: files
+    attributes:
+      label: Sample files
+      description: Attach the trace file(s) that trigger the problem, if they can be shared (zip them if needed).

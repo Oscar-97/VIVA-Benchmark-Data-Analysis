@@ -14,15 +14,18 @@ import { TraceData } from "../Interfaces/Interfaces";
  */
 export function ConvertToTraceFile(traceData: TraceData[]): string[] {
 	const exportData: string[] = [];
+	const [firstObject] = traceData;
+	if (firstObject === undefined) {
+		return exportData;
+	}
 	/**
 	 * Create headers line based on existing keys, then add the rest of the objects.
 	 */
-	const keys = Object.keys(traceData[0]);
+	const keys = Object.keys(firstObject);
 	const headerString = "* " + keys.join(",");
 	exportData.push(headerString);
 
-	for (let i = 0; i < traceData.length; i++) {
-		const currentObject = traceData[i];
+	for (const currentObject of traceData) {
 		const currentString = Object.values(currentObject).join(",");
 		exportData.push(currentString);
 	}

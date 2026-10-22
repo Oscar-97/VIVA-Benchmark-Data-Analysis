@@ -1,401 +1,462 @@
 /**
- * `fileInput` is a reference to the HTMLInputElement with the ID "fileInput".
- * @type {HTMLInputElement}
+ * Looks up an element by its id.
+ *
+ * @param id - The id of the element.
+ * @returns The element, or null if the page does not have it.
  */
-export const fileInput: HTMLInputElement = document.getElementById(
-	"fileInput"
-) as HTMLInputElement;
+export function FindElement<T extends HTMLElement>(id: string): T | null {
+	return document.getElementById(id) as T | null;
+}
 
 /**
- * `librarySelector` is a reference to the HTMLSelectElement with the ID "librarySelector".
- * @type {HTMLSelectElement}
+ * Gets an element by its id.
+ *
+ * @param id - The id of the element.
+ * @throws Error if the page does not have the element.
  */
-export const librarySelector: HTMLSelectElement = document.getElementById(
-	"librarySelector"
-) as HTMLSelectElement;
+function GetElement<T extends HTMLElement>(id: string): T {
+	const element = FindElement<T>(id);
+	if (!element) {
+		throw new Error(`The element #${id} was not found on this page.`);
+	}
+	return element;
+}
 
 /**
- * `importDataButton` is a reference to the HTMLButtonElement with the ID "importDataButton".
- * @type {HTMLButtonElement}
+ * The elements of the pages.
+ *
+ * They are looked up when they are used, not when the module is imported. This way the elements that
+ * are created later (like the modals and the tables) can be found as well. An element that is
+ * missing on the page fails with an error that names it, except for the ones that are typed as possibly null,
+ * which are only present on some pages.
  */
-export const importDataButton: HTMLButtonElement = document.getElementById(
-	"importDataButton"
-) as HTMLButtonElement;
+export const elements = {
+	/**
+	 * `emptyState` is a reference to the HTMLDivElement with the ID "emptyState".
+	 * @type {HTMLDivElement}
+	 */
+	get emptyState(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("emptyState");
+	},
 
-/**
- * `alertNotification` is a reference to the HTMLDivElement with the ID "alertNotification".
- * @type {HTMLDivElement}
- */
-export const alertNotification: HTMLDivElement = document.getElementById(
-	"alertNotification"
-) as HTMLDivElement;
+	/**
+	 * `emptyStateDemoButton` is a reference to the HTMLButtonElement with the ID "emptyStateDemoButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get emptyStateDemoButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("emptyStateDemoButton");
+	},
 
-/**
- * `alertIcon` is a reference to the HTMLElement with the id "alertIcon".
- * @type {HTMLElement}
- */
-export const alertIcon: HTMLElement = document.getElementById(
-	"alertIcon"
-) as HTMLElement;
+	/**
+	 * `loadStatus` is a reference to the HTMLDivElement with the ID "loadStatus".
+	 * @type {HTMLDivElement}
+	 */
+	get loadStatus(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("loadStatus");
+	},
 
-/**
- * `alertMessage` is a reference to the HTMLSpanElement with the ID "alertMessage".
- * @type {HTMLSpanElement}
- */
-export const alertMessage: HTMLSpanElement = document.getElementById(
-	"alertMessage"
-) as HTMLSpanElement;
+	/**
+	 * `fileInput` is a reference to the HTMLInputElement with the ID "fileInput".
+	 * @type {HTMLInputElement}
+	 */
+	get fileInput(): HTMLInputElement {
+		return GetElement<HTMLInputElement>("fileInput");
+	},
 
-/**
- * `closeAlertButton` is a reference to the HTMLButtonElement with the ID "closeAlertButton".'
- * @type {HTMLButtonElement}
- */
-export const closeAlertButton: HTMLButtonElement = document.getElementById(
-	"closeAlertButton"
-) as HTMLButtonElement;
+	/**
+	 * `librarySelector` is a reference to the HTMLSelectElement with the ID "librarySelector".
+	 * @type {HTMLSelectElement}
+	 */
+	get librarySelector(): HTMLSelectElement {
+		return GetElement<HTMLSelectElement>("librarySelector");
+	},
 
-/**
- * `viewTableButton` is a reference to the HTMLButtonElement with the ID "viewTableButton".
- * @type {HTMLButtonElement}
- */
-export const viewTableButton: HTMLButtonElement = document.getElementById(
-	"viewTableButton"
-) as HTMLButtonElement;
+	/**
+	 * `importDataButton` is a reference to the HTMLButtonElement with the ID "importDataButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get importDataButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("importDataButton");
+	},
 
-/**
- * `showSelectedRowsButton` is a reference to the HTMLButtonElement with the ID "showSelectedRowsButton".
- * @type {HTMLButtonElement}
- */
-export const showSelectedRowsButton: HTMLButtonElement =
-	document.getElementById("showSelectedRowsButton") as HTMLButtonElement;
+	/**
+	 * `alertNotification` is a reference to the HTMLDivElement with the ID "alertNotification".
+	 * @type {HTMLDivElement}
+	 */
+	get alertNotification(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("alertNotification");
+	},
 
-/**
- * `saveLocalStorageButton` is a reference to the HTMLButtonElement with the ID "saveLocalStorageButton".
- * @type {HTMLButtonElement}
- */
-export const saveLocalStorageButton: HTMLButtonElement =
-	document.getElementById("saveLocalStorageButton") as HTMLButtonElement;
+	/**
+	 * `alertIcon` is a reference to the HTMLElement with the id "alertIcon".
+	 * @type {HTMLElement}
+	 */
+	get alertIcon(): HTMLElement {
+		return GetElement<HTMLElement>("alertIcon");
+	},
 
-/**
- * `downloadConfigurationButton` is a reference to the HTMLAnchorElement with the ID "downloadConfigurationButton".
- * @type {HTMLAnchorElement}
- */
-export const downloadConfigurationButton: HTMLAnchorElement =
-	document.getElementById("downloadConfigurationButton") as HTMLAnchorElement;
+	/**
+	 * `alertMessage` is a reference to the HTMLSpanElement with the ID "alertMessage".
+	 * @type {HTMLSpanElement}
+	 */
+	get alertMessage(): HTMLSpanElement {
+		return GetElement<HTMLSpanElement>("alertMessage");
+	},
 
-/**
- * `downloadConfigurationButtonLayer` is a reference to the HTMLButtonElement with the ID "downloadConfigurationButtonLayer".
- * @type {HTMLButtonElement}
- */
-export const downloadConfigurationButtonLayer: HTMLButtonElement =
-	document.getElementById(
-		"downloadConfigurationButtonLayer"
-	) as HTMLButtonElement;
+	/**
+	 * `closeAlertButton` is a reference to the HTMLButtonElement with the ID "closeAlertButton".'
+	 * @type {HTMLButtonElement}
+	 */
+	get closeAlertButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("closeAlertButton");
+	},
 
-/**
- * `configurationSettingsButton` is a reference to the HTMLButtonElement with the ID "configurationSettingsButton".
- * @type {HTMLButtonElement}
- */
-export const configurationSettingsButton: HTMLButtonElement =
-	document.getElementById("configurationSettingsButton") as HTMLButtonElement;
+	/**
+	 * `viewTableButton` is a reference to the HTMLButtonElement with the ID "viewTableButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get viewTableButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("viewTableButton");
+	},
 
-/**
- * `downloadCustomConfigurationButton` is a reference to the HTMLButtonElement with the ID "downloadCustomConfigurationButton".
- * @type {HTMLAnchorElement}
- */
-export let downloadCustomConfigurationButton: HTMLAnchorElement | null = null;
-document.addEventListener("DOMContentLoaded", () => {
-	downloadCustomConfigurationButton = document.getElementById(
-		"downloadCustomConfigurationButton"
-	) as HTMLAnchorElement | null;
-});
+	/**
+	 * `showSelectedRowsButton` is a reference to the HTMLButtonElement with the ID "showSelectedRowsButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get showSelectedRowsButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("showSelectedRowsButton");
+	},
 
-/**
- * `downloadCustomConfigurationButtonLayer` is a reference to the HTMLButtonElement with the ID "downloadCustomConfigurationButtonLayer".
- * @type {HTMLButtonElement}
- */
-export const downloadCustomConfigurationButtonLayer: HTMLButtonElement =
-	document.getElementById(
-		"downloadCustomConfigurationButton"
-	) as HTMLButtonElement;
+	/**
+	 * `saveLocalStorageButton` is a reference to the HTMLButtonElement with the ID "saveLocalStorageButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get saveLocalStorageButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("saveLocalStorageButton");
+	},
 
-/**
- * `deleteLocalStorageButton` is a reference to the HTMLButtonElement with the ID "deleteLocalStorageButton".
- * @type {HTMLButtonElement}
- */
-export const deleteLocalStorageButton: HTMLButtonElement =
-	document.getElementById("deleteLocalStorageButton") as HTMLButtonElement;
+	/**
+	 * `downloadConfigurationButton` is a reference to the HTMLAnchorElement with the ID "downloadConfigurationButton".
+	 * @type {HTMLAnchorElement}
+	 */
+	get downloadConfigurationButton(): HTMLAnchorElement {
+		return GetElement<HTMLAnchorElement>("downloadConfigurationButton");
+	},
 
-/**
- * `deleteDataModal` is a reference to the HTMLDivElement with the ID "deleteDataModal".
- */
-export const deleteDataModal: HTMLDivElement = document.getElementById(
-	"deleteDataModal"
-) as HTMLDivElement;
+	/**
+	 * `downloadConfigurationButtonLayer` is a reference to the HTMLButtonElement with the ID "downloadConfigurationButtonLayer".
+	 * @type {HTMLButtonElement}
+	 */
+	get downloadConfigurationButtonLayer(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("downloadConfigurationButtonLayer");
+	},
 
-/**
- * `deleteButtonInModal` is a reference to the HTMLButtonElement with the ID "deleteButtonInModal".
- */
-export const deleteButtonInModal: HTMLButtonElement = document.getElementById(
-	"deleteButtonInModal"
-) as HTMLButtonElement;
+	/**
+	 * `configurationSettingsButton` is a reference to the HTMLButtonElement with the ID "configurationSettingsButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get configurationSettingsButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("configurationSettingsButton");
+	},
 
-/**
- * `clearDataTableModal` is a reference to the HTMLDivElement with the ID "clearDataTableModal".
- */
-export const clearDataTableModal: HTMLDivElement = document.getElementById(
-	"clearDataTableModal"
-) as HTMLDivElement;
+	/**
+	 * `downloadCustomConfigurationButton` is a reference to the HTMLAnchorElement with the ID "downloadCustomConfigurationButton".
+	 * @type {HTMLAnchorElement}
+	 */
+	get downloadCustomConfigurationButton(): HTMLAnchorElement | null {
+		return FindElement<HTMLAnchorElement>("downloadCustomConfigurationButton");
+	},
 
-/**
- * `clearTableButtonInModal` is a reference to the HTMLButtonElement with the ID "clearTableButtonInModal".
- */
-export const clearTableButtonInModal: HTMLButtonElement =
-	document.getElementById("clearTableButtonInModal") as HTMLButtonElement;
+	/**
+	 * `downloadCustomConfigurationButtonLayer` is a reference to the HTMLButtonElement with the ID "downloadCustomConfigurationButtonLayer".
+	 * @type {HTMLButtonElement}
+	 */
+	get downloadCustomConfigurationButtonLayer(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>(
+			"downloadCustomConfigurationButtonLayer"
+		);
+	},
 
-/**
- * `clearDataTableButton` is a reference to the HTMLButtonElement with the ID "clearDataTableButton".
- * @type {HTMLButtonElement}
- */
-export const clearDataTableButton: HTMLButtonElement = document.getElementById(
-	"clearTableButton"
-) as HTMLButtonElement;
+	/**
+	 * `deleteLocalStorageButton` is a reference to the HTMLButtonElement with the ID "deleteLocalStorageButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get deleteLocalStorageButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("deleteLocalStorageButton");
+	},
 
-/**
- * `loaderContainer` is a reference to the HTMLDivElement with the ID "loaderContainer".
- * @type {HTMLDivElement}
- */
-export const loaderContainer: HTMLDivElement = document.getElementById(
-	"loaderContainer"
-) as HTMLDivElement;
+	/**
+	 * `deleteDataModal` is a reference to the HTMLDivElement with the ID "deleteDataModal".
+	 */
+	get deleteDataModal(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("deleteDataModal");
+	},
 
-/**
- * `dataTable` is a reference to the HTMLDivElement with the ID "dataTable".
- * @type {HTMLDivElement}
- */
-export const dataTable: HTMLDivElement = document.getElementById(
-	"dataTable"
-) as HTMLDivElement;
+	/**
+	 * `deleteButtonInModal` is a reference to the HTMLButtonElement with the ID "deleteButtonInModal".
+	 */
+	get deleteButtonInModal(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("deleteButtonInModal");
+	},
 
-/**
- * `dataTableGenerated` is a reference to the HTMLTableElement with the ID "dataTableGenerated".
- * @type {HTMLTableElement}
- */
-export const dataTableGenerated = document.getElementById("dataTableGenerated");
+	/**
+	 * `clearDataTableModal` is a reference to the HTMLDivElement with the ID "clearDataTableModal".
+	 */
+	get clearDataTableModal(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("clearDataTableModal");
+	},
 
-/**
- * `dataTableGeneratedWrapper` is a reference to the HTMLDivElement with the ID "dataTableGenerated_wrapper".
- * @type {HTMLDivElement}
- */
-export const dataTableGeneratedWrapper = document.getElementById(
-	"dataTableGenerated_wrapper"
-);
+	/**
+	 * `clearTableButtonInModal` is a reference to the HTMLButtonElement with the ID "clearTableButtonInModal".
+	 */
+	get clearTableButtonInModal(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("clearTableButtonInModal");
+	},
 
-/**
- * `statisticsTableDiv` is a reference to the HTMLDivElement with the ID "statisticsTable".
- * @type {HTMLDivElement}
- */
-export const statisticsTableDiv: HTMLDivElement = document.getElementById(
-	"statisticsTable"
-) as HTMLDivElement;
+	/**
+	 * `clearDataTableButton` is a reference to the HTMLButtonElement with the ID "clearDataTableButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get clearDataTableButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("clearTableButton");
+	},
 
-/**
- * `instanceAttributesTableDiv` is a reference to the HTMLDivElement with the ID "instanceAttributesTable".
- * @type {HTMLDivElement}
- */
-export const instanceAttributesTableDiv: HTMLDivElement =
-	document.getElementById("instanceAttributesTable") as HTMLDivElement;
+	/**
+	 * `loaderContainer` is a reference to the HTMLDivElement with the ID "loaderContainer".
+	 * @type {HTMLDivElement}
+	 */
+	get loaderContainer(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("loaderContainer");
+	},
 
-/**
- * `solveAttributesTableDiv` is a reference to the HTMLDivElement with the ID "solveAttributesTable".
- * @type {HTMLDivElement}
- */
-export const solveAttributesTableDiv: HTMLDivElement = document.getElementById(
-	"solveAttributesTable"
-) as HTMLDivElement;
+	/**
+	 * `dataTable` is a reference to the HTMLDivElement with the ID "dataTable".
+	 * @type {HTMLDivElement}
+	 */
+	get dataTable(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("dataTable");
+	},
 
-/**
- * `comparisonTableDiv` is a reference to the HTMLDivElement with the ID "comparisonTable".
- * @type {HTMLDivElement}
- */
-export const comparisonTableDiv: HTMLDivElement = document.getElementById(
-	"comparisonTable"
-) as HTMLDivElement;
+	/**
+	 * `dataTableGenerated` is a reference to the HTMLTableElement with the ID "dataTableGenerated".
+	 * @type {HTMLTableElement}
+	 */
+	get dataTableGenerated(): HTMLElement | null {
+		return FindElement<HTMLElement>("dataTableGenerated");
+	},
 
-/**
- * `chartCanvas` is a reference to the HTMLCanvasElement with the UD "myChart".
- * @type {HTMLCanvasElement}
- */
-export const chartCanvas: HTMLCanvasElement = document.getElementById(
-	"myChart"
-) as HTMLCanvasElement;
+	/**
+	 * `dataTableGeneratedWrapper` is a reference to the HTMLDivElement with the ID "dataTableGenerated_wrapper".
+	 * @type {HTMLDivElement}
+	 */
+	get dataTableGeneratedWrapper(): HTMLElement | null {
+		return FindElement<HTMLElement>("dataTableGenerated_wrapper");
+	},
 
-/**
- * `viewPlotsButton` is a reference to the HTMLButtonElement with the ID "viewPlotsButton".
- * @type {HTMLButtonElement}
- */
-export const viewPlotsButton: HTMLButtonElement = document.getElementById(
-	"viewPlotsButton"
-) as HTMLButtonElement;
+	/**
+	 * `statisticsTableDiv` is a reference to the HTMLDivElement with the ID "statisticsTable".
+	 * @type {HTMLDivElement}
+	 */
+	get statisticsTableDiv(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("statisticsTable");
+	},
 
-/**
- * `compareSolversButton` is a reference to the HTMLButtonElement with the ID "compareSolversButton".
- * @type {HTMLButtonElement}
- */
-export const compareSolversButton: HTMLButtonElement = document.getElementById(
-	"compareSolversButton"
-) as HTMLButtonElement;
+	/**
+	 * `instanceAttributesTableDiv` is a reference to the HTMLDivElement with the ID "instanceAttributesTable".
+	 * @type {HTMLDivElement}
+	 */
+	get instanceAttributesTableDiv(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("instanceAttributesTable");
+	},
 
-/**
- * `downloadChartDataButton` is a reference to the HTMLAnchorElement with the ID "downloadChartDataButton".
- * @type {HTMLAnchorElement}
- */
-export const downloadChartDataButton: HTMLAnchorElement =
-	document.getElementById("downloadChartDataButton") as HTMLAnchorElement;
+	/**
+	 * `solveAttributesTableDiv` is a reference to the HTMLDivElement with the ID "solveAttributesTable".
+	 * @type {HTMLDivElement}
+	 */
+	get solveAttributesTableDiv(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("solveAttributesTable");
+	},
 
-/**
- * `downloadChartDataButtonLayer` is a reference to the HTMLButtonElement with the ID "downloadChartDataButtonLayer".
- * @type {HTMLButtonElement}
- */
-export const downloadChartDataButtonLayer: HTMLButtonElement =
-	document.getElementById("downloadChartDataButtonLayer") as HTMLButtonElement;
+	/**
+	 * `comparisonTableDiv` is a reference to the HTMLDivElement with the ID "comparisonTable".
+	 * @type {HTMLDivElement}
+	 */
+	get comparisonTableDiv(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("comparisonTable");
+	},
 
-/**
- * `demoModeButton` is a reference to the HTMLButtonElement with the ID "demoModeButton".
- * @type {HTMLButtonElement}
- */
-export const demoDataButton: HTMLButtonElement = document.getElementById(
-	"demoModeButton"
-) as HTMLButtonElement;
+	/**
+	 * `chartCanvas` is a reference to the HTMLCanvasElement with the UD "myChart".
+	 * @type {HTMLCanvasElement}
+	 */
+	get chartCanvas(): HTMLCanvasElement {
+		return GetElement<HTMLCanvasElement>("myChart");
+	},
 
-/**
- * `demoDataSelector` is a reference to the HTMLSelectElement with the ID "demoDataSelector".
- * @type {HTMLSelectElement}
- */
-export const demoDataSelector: HTMLSelectElement = document.getElementById(
-	"demoDataSelector"
-) as HTMLSelectElement;
+	/**
+	 * `viewPlotsButton` is a reference to the HTMLButtonElement with the ID "viewPlotsButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get viewPlotsButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("viewPlotsButton");
+	},
 
-/**
- * `releaseVersionTag` is a reference to the HTMLSpanElement with the ID "releaseVersionTagSpan".
- * @type {HTMLSpanElement}
- */
-export const releaseVersionTag: HTMLSpanElement = document.getElementById(
-	"releaseVersionTagSpan"
-) as HTMLSpanElement;
+	/**
+	 * `compareSolversButton` is a reference to the HTMLButtonElement with the ID "compareSolversButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get compareSolversButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("compareSolversButton");
+	},
 
-/**
- * `solverSelector` is a reference to the HTMLSelectElement with the ID "solverSelector".
- * @type {HTMLSelectElement}
- */
-export let solverSelector: HTMLSelectElement | null = null;
-document.addEventListener("DOMContentLoaded", () => {
-	solverSelector = document.getElementById(
-		"solverSelector"
-	) as HTMLSelectElement | null;
-});
+	/**
+	 * `downloadChartDataButton` is a reference to the HTMLAnchorElement with the ID "downloadChartDataButton".
+	 * @type {HTMLAnchorElement}
+	 */
+	get downloadChartDataButton(): HTMLAnchorElement {
+		return GetElement<HTMLAnchorElement>("downloadChartDataButton");
+	},
 
-/**
- * `performanceProfileSelector` is a reference to the HTMLSelectElement with the ID "performanceProfileSelector".
- */
-export const performanceProfileSelector: HTMLSelectElement =
-	document.getElementById("performanceProfileSelector") as HTMLSelectElement;
+	/**
+	 * `downloadChartDataButtonLayer` is a reference to the HTMLButtonElement with the ID "downloadChartDataButtonLayer".
+	 * @type {HTMLButtonElement}
+	 */
+	get downloadChartDataButtonLayer(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("downloadChartDataButtonLayer");
+	},
 
-/**
- * `defaultTimeInput` is a reference the HTMLInputElement with the ID "defaultTimeInput".
- */
-export let defaultTimeInput: HTMLInputElement | null = null;
-document.addEventListener("DOMContentLoaded", () => {
-	defaultTimeInput = document.getElementById(
-		"defaultTimeInput"
-	) as HTMLInputElement | null;
-});
+	/**
+	 * `demoModeButton` is a reference to the HTMLButtonElement with the ID "demoModeButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get demoDataButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("demoModeButton");
+	},
 
-/**
- * `gapLimitInput` is a reference the HTMLInputElement with the ID "gapLimitInput".
- */
-export let gapLimitInput: HTMLInputElement | null = null;
-document.addEventListener("DOMContentLoaded", () => {
-	gapLimitInput = document.getElementById(
-		"gapLimitInput"
-	) as HTMLInputElement | null;
-});
+	/**
+	 * `demoDataSelector` is a reference to the HTMLSelectElement with the ID "demoDataSelector".
+	 * @type {HTMLSelectElement}
+	 */
+	get demoDataSelector(): HTMLSelectElement {
+		return GetElement<HTMLSelectElement>("demoDataSelector");
+	},
 
-/**
- * `defaultTimeDirectInput` is a reference the HTMLInputElement with the ID "defaultTimeDirectInput".
- */
-export const defaultTimeDirectInput: HTMLInputElement = document.getElementById(
-	"defaultTimeDirectInput"
-) as HTMLInputElement;
+	/**
+	 * `releaseVersionTag` is a reference to the HTMLSpanElement with the ID "releaseVersionTagSpan".
+	 * @type {HTMLSpanElement}
+	 */
+	get releaseVersionTag(): HTMLSpanElement {
+		return GetElement<HTMLSpanElement>("releaseVersionTagSpan");
+	},
 
-/**
- * `gapLimitDirectInput` is a reference the HTMLInputElement with the ID "gapLimitDirectInput".
- */
-export const gapLimitDirectInput: HTMLInputElement = document.getElementById(
-	"gapLimitDirectInput"
-) as HTMLInputElement;
+	/**
+	 * `solverSelector` is a reference to the HTMLSelectElement with the ID "solverSelector".
+	 * @type {HTMLSelectElement}
+	 */
+	get solverSelector(): HTMLSelectElement | null {
+		return FindElement<HTMLSelectElement>("solverSelector");
+	},
 
-/**
- * `gapTypeSelector` is a reference to the HTMLSelectElement with the ID "gapTypeSelector".
- * @type {HTMLSelectElement}
- */
-export const gapTypeSelector: HTMLSelectElement = document.getElementById(
-	"gapTypeSelector"
-) as HTMLSelectElement;
+	/**
+	 * `performanceProfileSelector` is a reference to the HTMLSelectElement with the ID "performanceProfileSelector".
+	 */
+	get performanceProfileSelector(): HTMLSelectElement {
+		return GetElement<HTMLSelectElement>("performanceProfileSelector");
+	},
 
-/**
- * `terminationTypeSelector` is a reference to the HTMLSelectElement with the ID "terminationTypeSelector".
- * @type {HTMLSelectElement}
- */
-export const terminationTypeSelector: HTMLSelectElement =
-	document.getElementById("terminationTypeSelector") as HTMLSelectElement;
+	/**
+	 * `defaultTimeInput` is a reference the HTMLInputElement with the ID "defaultTimeInput".
+	 */
+	get defaultTimeInput(): HTMLInputElement | null {
+		return FindElement<HTMLInputElement>("defaultTimeInput");
+	},
 
-/**
- * `categorySelector` is a reference to the HTMLSelectElement with the ID "categorySelector".
- */
-export const categorySelector: HTMLSelectElement = document.getElementById(
-	"categorySelector"
-) as HTMLSelectElement;
+	/**
+	 * `gapLimitInput` is a reference the HTMLInputElement with the ID "gapLimitInput".
+	 */
+	get gapLimitInput(): HTMLInputElement | null {
+		return FindElement<HTMLInputElement>("gapLimitInput");
+	},
 
-/**
- * `filterTypeSelector` is a reference to the HTMLSelectElement with the ID "filterTypeSelector".
- */
-export const filterTypeSelector: HTMLSelectElement = document.getElementById(
-	"filterTypeSelector"
-) as HTMLSelectElement;
+	/**
+	 * `defaultTimeDirectInput` is a reference the HTMLInputElement with the ID "defaultTimeDirectInput".
+	 */
+	get defaultTimeDirectInput(): HTMLInputElement {
+		return GetElement<HTMLInputElement>("defaultTimeDirectInput");
+	},
 
-/**
- * `statusSelector` is a reference to the HTMLSelectElement with the ID "statusSelector".
- */
-export const statusSelector: HTMLSelectElement = document.getElementById(
-	"statusSelector"
-) as HTMLSelectElement;
+	/**
+	 * `gapLimitDirectInput` is a reference the HTMLInputElement with the ID "gapLimitDirectInput".
+	 */
+	get gapLimitDirectInput(): HTMLInputElement {
+		return GetElement<HTMLInputElement>("gapLimitDirectInput");
+	},
 
-/**
- * `chartTypeSelector` is a reference to the HTMLSelectElement with the ID "chartTypeSelector".
- */
-export const chartTypeSelector: HTMLSelectElement = document.getElementById(
-	"chartTypeSelector"
-) as HTMLSelectElement;
+	/**
+	 * `gapTypeSelector` is a reference to the HTMLSelectElement with the ID "gapTypeSelector".
+	 * @type {HTMLSelectElement}
+	 */
+	get gapTypeSelector(): HTMLSelectElement {
+		return GetElement<HTMLSelectElement>("gapTypeSelector");
+	},
 
-/**
- * 'solverComparisonModal' is a reference to the HTMLDivElement with the ID "solverComparisonModal".
- * @type {HTMLDivElement}
- */
-export const solverComparisonModal: HTMLDivElement = document.getElementById(
-	"solverComparisonModal"
-) as HTMLDivElement;
+	/**
+	 * `terminationTypeSelector` is a reference to the HTMLSelectElement with the ID "terminationTypeSelector".
+	 * @type {HTMLSelectElement}
+	 */
+	get terminationTypeSelector(): HTMLSelectElement {
+		return GetElement<HTMLSelectElement>("terminationTypeSelector");
+	},
 
-/**
- * 'solverComparisonModalLabel' is a reference to the HTMLHeadingElement with the ID "solverComparisonModalLabel".
- * @type {HTMLHeadingElement}
- */
-export const solverComparisonModalLabel: HTMLHeadingElement =
-	document.getElementById("solverComparisonModalLabel") as HTMLHeadingElement;
+	/**
+	 * `categorySelector` is a reference to the HTMLSelectElement with the ID "categorySelector".
+	 */
+	get categorySelector(): HTMLSelectElement {
+		return GetElement<HTMLSelectElement>("categorySelector");
+	},
 
-/**
- * 'solverComparisonModalBody' is a reference to the HTMLDivElement with the ID "solverComparisonModalBody".
- * @type {HTMLDivElement}
- */
-export const solverComparisonModalBody: HTMLDivElement =
-	document.getElementById("solverComparisonModalBody") as HTMLDivElement;
+	/**
+	 * `filterTypeSelector` is a reference to the HTMLSelectElement with the ID "filterTypeSelector".
+	 */
+	get filterTypeSelector(): HTMLSelectElement {
+		return GetElement<HTMLSelectElement>("filterTypeSelector");
+	},
+
+	/**
+	 * `statusSelector` is a reference to the HTMLSelectElement with the ID "statusSelector".
+	 */
+	get statusSelector(): HTMLSelectElement {
+		return GetElement<HTMLSelectElement>("statusSelector");
+	},
+
+	/**
+	 * `chartTypeSelector` is a reference to the HTMLSelectElement with the ID "chartTypeSelector".
+	 */
+	get chartTypeSelector(): HTMLSelectElement {
+		return GetElement<HTMLSelectElement>("chartTypeSelector");
+	},
+
+	/**
+	 * 'solverComparisonModal' is a reference to the HTMLDivElement with the ID "solverComparisonModal".
+	 * @type {HTMLDivElement}
+	 */
+	get solverComparisonModal(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("solverComparisonModal");
+	},
+
+	/**
+	 * 'solverComparisonModalLabel' is a reference to the HTMLHeadingElement with the ID "solverComparisonModalLabel".
+	 * @type {HTMLHeadingElement}
+	 */
+	get solverComparisonModalLabel(): HTMLHeadingElement {
+		return GetElement<HTMLHeadingElement>("solverComparisonModalLabel");
+	},
+
+	/**
+	 * 'solverComparisonModalBody' is a reference to the HTMLDivElement with the ID "solverComparisonModalBody".
+	 * @type {HTMLDivElement}
+	 */
+	get solverComparisonModalBody(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("solverComparisonModalBody");
+	}
+};
