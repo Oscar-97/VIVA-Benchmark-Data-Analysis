@@ -32,7 +32,7 @@ jobs:
       - run: npm run check:sw
       # The same tests as test:functions, with coverage; the thresholds are in package.json.
       - run: npm run test:coverage
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: coverage
@@ -64,7 +64,7 @@ jobs:
         if: hashFiles('Tests/E2E/__snapshots__/Visual.spec.ts/*') != ''
         run: npm run test:visual
       # The report has the traces of the tests that were retried, and the screenshots of the ones that failed.
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-report
