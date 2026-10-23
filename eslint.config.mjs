@@ -14,7 +14,6 @@ export default tseslint.config(
 			"TestData/",
 			"TestData*.txt/",
 			"node_modules/",
-			"VIVA/",
 			"report.html",
 			"Src/Pages/",
 			".claude/",

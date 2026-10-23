@@ -112,13 +112,9 @@ export function FillSolverSelectorList(traceData: TraceData[]): void {
 	}
 	let isSelectedSet = false;
 
-	const uniqueSolvers = traceData
-		.map((solver) => {
-			return solver["SolverName"];
-		})
-		.filter((solverName, index, self) => {
-			return self.indexOf(solverName) === index;
-		});
+	const uniqueSolvers = [
+		...new Set(traceData.map((solver) => solver["SolverName"]))
+	];
 
 	uniqueSolvers
 		.filter((solver): solver is string => solver !== undefined)

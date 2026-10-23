@@ -257,12 +257,14 @@ function VerifyConfigurationProperties(
 		RejectConfigurationFile(fileName, ErrorMessages.INVALID_DATA_STRUCTURE);
 		return;
 	}
+	const { dataSet, dataFileType } = parsedData;
 	if (
-		parsedData.hasOwnProperty.call(parsedData, "dataSet") &&
-		parsedData.hasOwnProperty.call(parsedData, "dataFileType")
+		Array.isArray(dataSet) &&
+		dataSet.every((entry) => typeof entry === "string") &&
+		typeof dataFileType === "string"
 	) {
-		userData.dataSet = parsedData.dataSet;
-		userData.dataFileType = parsedData.dataFileType;
+		userData.dataSet = dataSet;
+		userData.dataFileType = dataFileType;
 
 		if (parsedData.hasOwnProperty.call(parsedData, "defaultTime")) {
 			userData.defaultTime = parsedData.defaultTime

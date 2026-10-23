@@ -21,7 +21,7 @@ Browser app (PWA) for analyzing optimization-solver benchmark data. TypeScript (
 - `Src/Templates/` – the source of the HTML pages: `pages.mjs` (the pages and their buttons), `layout.mjs`, `partials/` (navigation, alert, button catalog) and `fragments/` (page-specific controls and bodies). `scripts/build-pages.mjs` renders them and formats the result with Prettier
 - `report.html` (the entry page, used by the manifest, the service worker and the UI tests) and `Src/Pages/*.html` – **generated** from `Src/Templates`, but committed, so the app still opens from the file system. Edit the templates and run `npm run build:pages`, never the pages
 - `Src/CSS` – styles
-- `Tests/` – unit tests (jest, in Node; the chart builders are tested with `CreateChart` mocked), `Tests/E2E/*.spec.ts` (Playwright browser tests, with `Helpers.ts`; wait on conditions, never `waitForTimeout`; `A11y.spec.ts` lists the accessibility rules that the pages still break), `TestHelpers.ts` and `TestData/`
+- `Tests/` – unit tests (jest, in Node; the chart builders are tested with `CreateChart` mocked), `Tests/E2E/*.spec.ts` (Playwright browser tests, with `Helpers.ts`; wait on conditions, never `waitForTimeout`; `A11y.spec.ts` runs axe (WCAG 2 A and AA) on every page and allows no violations), `TestHelpers.ts` and `TestData/`
 - `.github/workflows/ci.yml` – CI: lint, types, generated files, unit tests, `npm audit --omit=dev`, then build and browser tests
 - `Dist/`, `Docs/`, `Release/` – generated output
 

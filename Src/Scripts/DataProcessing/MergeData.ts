@@ -23,37 +23,39 @@ export function MergeData(
 	);
 	data.forEach((obj) => Object.keys(obj).forEach((key) => allProps.add(key)));
 
+	// The first entry of data that matches by InputFileName or by name is the one that is merged.
+	const indexByInputFileName = new Map<unknown, number>();
+	const indexByName = new Map<unknown, number>();
+	data.forEach((dataObj, index) => {
+		if (
+			dataObj["InputFileName"] &&
+			!indexByInputFileName.has(dataObj["InputFileName"])
+		) {
+			indexByInputFileName.set(dataObj["InputFileName"], index);
+		}
+		if (dataObj["name"] && !indexByName.has(dataObj["name"])) {
+			indexByName.set(dataObj["name"], index);
+		}
+	});
+
 	for (const traceDataObj of traceData) {
-		let isMatchFound = false;
-		for (const dataObj of data) {
-			if (
-				(dataObj["InputFileName"] &&
-					traceDataObj["InputFileName"] === dataObj["InputFileName"]) ||
-				(dataObj["name"] && traceDataObj["InputFileName"] === dataObj["name"])
-			) {
-				const mergedObj: Record<string, unknown> = {
-					...traceDataObj,
-					...dataObj
-				};
-				allProps.forEach((prop) => {
-					if (mergedObj[prop] === undefined) {
-						mergedObj[prop] = null;
-					}
-				});
-				mergedData.push(mergedObj as TraceData);
-				isMatchFound = true;
-				break;
+		const matchIndexes = [
+			indexByInputFileName.get(traceDataObj["InputFileName"]),
+			indexByName.get(traceDataObj["InputFileName"])
+		].filter((index): index is number => index !== undefined);
+		const dataObj =
+			matchIndexes.length > 0 ? data[Math.min(...matchIndexes)] : undefined;
+
+		const mergedObj: Record<string, unknown> =
+			dataObj === undefined
+				? { ...traceDataObj }
+				: { ...traceDataObj, ...dataObj };
+		allProps.forEach((prop) => {
+			if (mergedObj[prop] === undefined) {
+				mergedObj[prop] = null;
 			}
-		}
-		if (!isMatchFound) {
-			const objWithAllProps: Record<string, unknown> = { ...traceDataObj };
-			allProps.forEach((prop) => {
-				if (objWithAllProps[prop] === undefined) {
-					objWithAllProps[prop] = null;
-				}
-			});
-			mergedData.push(objWithAllProps as TraceData);
-		}
+		});
+		mergedData.push(mergedObj as TraceData);
 	}
 	return mergedData;
 }

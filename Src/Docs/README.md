@@ -23,6 +23,8 @@ Demo-data is attained from [miplib2010 examples](https://github.com/coin-or/Pave
 This project is developed using:
 - TypeScript
 - DataTables.js
+- jQuery
+- mathjs
 - Chart.js
 - Webpack
 - Bootstrap & Bootstrap Icons

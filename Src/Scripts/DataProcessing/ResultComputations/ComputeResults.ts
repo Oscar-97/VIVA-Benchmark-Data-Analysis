@@ -268,11 +268,16 @@ export function CompareSolvers(
 		details: []
 	};
 
+	// The first result of a file is the one that counts.
+	const resultsByFile = new Map<string, { time: number }>();
+	for (const result of results2) {
+		if (!resultsByFile.has(result.InputFileName)) {
+			resultsByFile.set(result.InputFileName, result);
+		}
+	}
+
 	results1.forEach((result1: { InputFileName: string; time: number }) => {
-		const result2 = results2.find(
-			(r: { InputFileName: string }) =>
-				r.InputFileName === result1.InputFileName
-		);
+		const result2 = resultsByFile.get(result1.InputFileName);
 		if (result2) {
 			if (result1.time < result2.time) {
 				comparisonSummary.better++;
@@ -427,9 +432,8 @@ function ExceedsBound(a: number, b: number): boolean {
 /**
  * The termination statuses that make a result fail.
  */
-// TODO: Check which termination statuses are considered as failures for this "Failed" condition.
 const FAILED_TERMINATION_STATUSES = [
-	"Capability Problem",
+	"Capability Problems",
 	"Unknown Error",
 	"User Interrupt",
 	"Error"

@@ -85,7 +85,6 @@ export function GetInstanceInformation(
  * ```
  */
 
-// eslint-disable-next-line complexity
 export function GetBestKnownBounds(
 	unprocessedSolutionData: string[]
 ): object[] {
@@ -103,42 +102,21 @@ export function GetBestKnownBounds(
 			// All three groups take part in a match, the last two can be empty.
 			const [, keyword = "", fileName = "", value = ""] = match;
 			obj["InputFileName"] = fileName;
+			const exponential = Number(value).toExponential(6);
 			switch (keyword) {
 				case "inf":
-					try {
-						obj["PrimalBoundProblem"] = Infinity;
-						obj["DualBoundProblem"] = Infinity;
-					} catch (err) {
-						console.error(err);
-						obj["PrimalBoundProblem"] = NaN;
-						obj["DualBoundProblem"] = NaN;
-					}
+					obj["PrimalBoundProblem"] = Infinity;
+					obj["DualBoundProblem"] = Infinity;
 					break;
 				case "best":
-					try {
-						obj["PrimalBoundProblem"] = Number(value).toExponential(6);
-					} catch (err) {
-						console.error(err);
-						obj["PrimalBoundProblem"] = NaN;
-					}
+					obj["PrimalBoundProblem"] = exponential;
 					break;
 				case "bestdual":
-					try {
-						obj["DualBoundProblem"] = Number(value).toExponential(6);
-					} catch (err) {
-						console.error(err);
-						obj["DualBoundProblem"] = NaN;
-					}
+					obj["DualBoundProblem"] = exponential;
 					break;
 				case "opt":
-					try {
-						obj["PrimalBoundProblem"] = Number(value).toExponential(6);
-						obj["DualBoundProblem"] = Number(value).toExponential(6);
-					} catch (err) {
-						console.error(err);
-						obj["PrimalBoundProblem"] = NaN;
-						obj["DualBoundProblem"] = NaN;
-					}
+					obj["PrimalBoundProblem"] = exponential;
+					obj["DualBoundProblem"] = exponential;
 					break;
 				default:
 					break;

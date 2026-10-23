@@ -9,6 +9,10 @@
 - [Performance profile](https://viva-app.xyz/Src/Pages/performance_profile): performance profile plot
 - [Solution quality](https://viva-app.xyz/Src/Pages/solution_quality): solution quality plot
 - [Solution time](https://viva-app.xyz/Src/Pages/solution_time): solution time plot
+- [Solver time per instance](https://viva-app.xyz/Src/Pages/solver_time): solver time per instance plot
+- [Solver time per solver](https://viva-app.xyz/Src/Pages/solver_time_all): solver time per solver plot
+- [Number of nodes](https://viva-app.xyz/Src/Pages/number_of_nodes): number of nodes plot
+- [Number of iterations](https://viva-app.xyz/Src/Pages/number_of_iterations): number of iterations plot
 - [Termination status](https://viva-app.xyz/Src/Pages/termination_status): termination status plot
 
 ## Documentation and source

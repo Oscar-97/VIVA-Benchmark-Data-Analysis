@@ -92,18 +92,22 @@ describe("ReadData", () => {
 		expect(importDataButton.disabled).toBe(true);
 	});
 
-	it.each(["null", "[]", '{"dataSet": []}'])(
-		"should reject the JSON %s as a configuration",
-		async (content) => {
-			await Read(new File([content], "other.json"));
+	it.each([
+		"null",
+		"[]",
+		'{"dataSet": []}',
+		'{"dataSet": "x", "dataFileType": "trc"}',
+		'{"dataSet": [1, 2], "dataFileType": "trc"}',
+		'{"dataSet": ["x"], "dataFileType": 5}'
+	])("should reject the JSON %s as a configuration", async (content) => {
+		await Read(new File([content], "other.json"));
 
-			expect(DisplayErrorNotification).toHaveBeenCalledWith(
-				`other.json: ${ErrorMessages.INVALID_DATA_STRUCTURE}`
-			);
-			expect(stored.has(Keys.USER_CONFIGURATION)).toBe(false);
-			expect(importDataButton.disabled).toBe(true);
-		}
-	);
+		expect(DisplayErrorNotification).toHaveBeenCalledWith(
+			`other.json: ${ErrorMessages.INVALID_DATA_STRUCTURE}`
+		);
+		expect(stored.has(Keys.USER_CONFIGURATION)).toBe(false);
+		expect(importDataButton.disabled).toBe(true);
+	});
 
 	it("should name the file that cannot be read, and keep the import closed", async () => {
 		const unreadable = new File(["a"], "gone.trc");

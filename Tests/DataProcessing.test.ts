@@ -81,6 +81,19 @@ describe("MergeData", () => {
 		expect(merged).toEqual(traceData);
 	});
 
+	it("should merge the first matching entry, whether it matches by InputFileName or by name", () => {
+		const data = [
+			{ name: "alan", PrimalBoundProblem: 1 },
+			{ InputFileName: "alan", PrimalBoundProblem: 2 },
+			{ InputFileName: "ex1223", PrimalBoundProblem: 3 },
+			{ InputFileName: "ex1223", PrimalBoundProblem: 4 }
+		];
+		const merged = MergeData(traceData, data);
+
+		expect(merged[0]).toMatchObject({ PrimalBoundProblem: 1 });
+		expect(merged[1]).toMatchObject({ PrimalBoundProblem: 3 });
+	});
+
 	it("should not modify its input", () => {
 		const copy = JSON.parse(JSON.stringify(traceData));
 		MergeData(traceData, [{ InputFileName: "alan", name: "alan" }]);
@@ -326,7 +339,7 @@ describe("SetFailValueAndReason", () => {
 		]);
 	});
 
-	it.each(["Capability Problem", "Unknown Error", "User Interrupt", "Error"])(
+	it.each(["Capability Problems", "Unknown Error", "User Interrupt", "Error"])(
 		"should fail for the termination status %s",
 		(status) => {
 			expect(SetFailValueAndReason(status, "min", 1, 1, 1, 1)).toEqual([

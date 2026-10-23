@@ -70,25 +70,10 @@ function ProcessLines(
 	startIdx: number
 ): object[] {
 	const traceData = [];
-	const previousRow: { [key: string]: string } = {};
 	for (const line of unprocessedData.slice(Math.max(startIdx, 0))) {
 		if (line.startsWith("*")) continue;
 
 		const currentLine = line.split(",");
-		// split always returns at least one element, a short line has no third one
-		const fileName = currentLine[0] ?? "";
-		const solverName = currentLine[2] ?? "";
-
-		if (
-			previousRow["fileName"] === fileName &&
-			previousRow["solverName"] === solverName
-		) {
-			previousRow["fileName"] = "";
-			previousRow["solverName"] = "solverName";
-			continue;
-		}
-		previousRow[fileName] = fileName;
-		previousRow[solverName] = solverName;
 
 		if (
 			currentLine.some((cell) => {
