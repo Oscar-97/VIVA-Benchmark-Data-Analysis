@@ -84,7 +84,7 @@
 		"mathjs": "^15.2.0",
 		"merge-stream": "^2.0.0",
 		"mini-css-extract-plugin": "^2.10.2",
-		"pre-commit": "^1.2.2",
+		"pre-commit": "^2.0.0",
 		"prettier": "^3.9.10",
 		"source-map-loader": "^5.0.0",
 		"ts-jest": "^29.4.9",
