@@ -93,14 +93,14 @@
 		"typedoc-material-theme": "^1.4.1",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.72.0",
-		"webpack": ">=5.112.0",
+		"webpack": ">=5.112.2",
 		"webpack-cli": "^7.0.2",
 		"webpack-dev-server": "^5.2.3"
 	},
 	"dependencies": {
 		"bootstrap": "^5.3.8",
 		"bootstrap-icons": "^1.13.2",
-		"chart.js": "^4.5.1",
+		"chart.js": "^4.6.1",
 		"chartjs-plugin-annotation": "^3.1.0",
 		"chartjs-plugin-zoom": "^2.2.0",
 		"datatables.net-bs5": "^3.1.4",
