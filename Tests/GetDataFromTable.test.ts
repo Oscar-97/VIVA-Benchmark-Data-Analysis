@@ -3,11 +3,13 @@ const fakeTable = {
 	columns: jest.fn()
 };
 
+jest.mock("datatables.net-bs5", () => ({
+	__esModule: true,
+	default: jest.fn(() => fakeTable)
+}));
+
 jest.mock("jquery", () => {
 	const jquery = (target: unknown): unknown => {
-		if (typeof target === "string") {
-			return { DataTable: (): typeof fakeTable => fakeTable };
-		}
 		return { text: (): string => (target as { text: string }).text };
 	};
 	return { __esModule: true, default: jquery };
