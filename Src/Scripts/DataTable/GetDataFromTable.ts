@@ -1,4 +1,5 @@
 import $ from "jquery";
+import DataTable from "datatables.net-bs5";
 import { ReversedTraceHeaderMap } from "../Constants/TraceHeaders";
 import { TraceData } from "../Interfaces/Interfaces";
 
@@ -57,7 +58,7 @@ export function GetFilteredRows(): TraceData[] {
 		});
 	}
 
-	const table = $("#dataTableGenerated").DataTable();
+	const table = new DataTable("#dataTableGenerated");
 	const data = table.rows({ search: "applied" }).data().toArray();
 	const headers: string[] = table
 		.columns()

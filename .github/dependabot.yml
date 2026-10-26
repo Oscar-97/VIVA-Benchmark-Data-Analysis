@@ -5,6 +5,10 @@ updates:
     schedule:
       interval: weekly
     groups:
+      # The extensions need the same major version of the DataTables core, so they are updated together.
+      datatables:
+        patterns:
+          - "datatables.net*"
       minor-and-patch:
         update-types: [minor, patch]
     commit-message:

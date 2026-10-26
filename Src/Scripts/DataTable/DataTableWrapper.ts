@@ -1,8 +1,8 @@
 import $ from "jquery";
 import type { Config, Api } from "datatables.net";
-import "datatables.net-bs5";
+import DataTable from "datatables.net-bs5";
 import "datatables.net-fixedcolumns-bs5";
-import "datatables.net-searchpanes-bs5";
+import "datatables.net-searchpanes";
 import "datatables.net-select-bs5";
 import "datatables.net-searchbuilder-bs5";
 import "datatables.net-buttons-bs5";
@@ -24,6 +24,34 @@ import { ShowPWANotification } from "../PWA/PWA-utils";
 import { TableMessages } from "../Constants/Messages";
 import { TraceData } from "../Interfaces/Interfaces";
 import { HideTableHint, ShowTableHint } from "./TableHint";
+
+/*
+ * The Bootstrap 5 styling of the search panes. datatables.net-searchpanes-bs5 3.0.0 does this itself, but its
+ * module uses `util` without importing it and fails in the browser, so the same classes are set here.
+ * Its stylesheet is still used (Main.ts). Remove this when a fixed version of the package is released.
+ */
+DataTable.util.object.assignDeep(DataTable.SearchPane.classes, {
+	buttonGroup: "btn-group",
+	disabledButton: "disabled",
+	narrow: "col",
+	pane: { container: "table" },
+	paneButton: "btn btn-subtle",
+	pill: "badge rounded-pill bg-secondary",
+	search: "form-control search",
+	table: "table table-sm table-borderless",
+	topRow: "dtsp-topRow"
+});
+DataTable.util.object.assignDeep(DataTable.SearchPanes.classes, {
+	clearAll: "dtsp-clearAll btn btn-subtle",
+	collapseAll: "dtsp-collapseAll btn btn-subtle",
+	container: "dtsp-searchPanes",
+	disabledButton: "disabled",
+	panes: "dtsp-panes dtsp-panesContainer",
+	search: DataTable.SearchPane.classes.search,
+	showAll: "dtsp-showAll btn btn-subtle",
+	title: "dtsp-title",
+	titleRow: "dtsp-titleRow"
+});
 
 /**
  * The number of rows on a page, until the user chooses another number.
@@ -94,7 +122,7 @@ export function DisplayDataTable(traceData: TraceData[]): void {
  */
 
 function DataTablesConfiguration(): void {
-	const table = $("#dataTableGenerated").DataTable({
+	const table = new DataTable("#dataTableGenerated", {
 		destroy: true,
 		stateSave: true,
 		searchPanes: {
@@ -108,10 +136,7 @@ function DataTablesConfiguration(): void {
 		},
 		pagingType: "numbers",
 		lengthChange: true,
-		lengthMenu: [
-			[10, 25, 50, 100, -1],
-			[10, 25, 50, 100, "All"]
-		],
+		lengthMenu: [10, 25, 50, 100, { label: "All", value: -1 }],
 		select: {
 			style: "os",
 			blurable: true,
@@ -186,7 +211,7 @@ function DataTablesConfiguration(): void {
 			{
 				text: "<i class='bi bi-filter-square'></i> Toggle Filters",
 				action: function (): void {
-					table.searchPanes.container().toggle();
+					ToggleSearchPanes(table);
 				},
 				className: "rounded btn-sm"
 			},
@@ -221,7 +246,7 @@ function DataTablesConfiguration(): void {
 				]
 			}
 		],
-		initComplete: function () {
+		initComplete: function (): void {
 			$("#loaderContainer").css("display", "none");
 			$("#loaderContainer").hide();
 			$("#dataTable")
@@ -244,7 +269,17 @@ function DataTablesConfiguration(): void {
 
 	table.searchPanes.container().prependTo(table.table().container());
 	table.searchPanes.resizePanes();
-	table.searchPanes.container().toggle();
+	ToggleSearchPanes(table);
+}
+
+/**
+ * Shows the search panes when they are hidden and hides them when they are shown.
+ */
+function ToggleSearchPanes(table: Api): void {
+	const container = table.searchPanes.container().get(0);
+	if (container instanceof HTMLElement) {
+		container.style.display = container.style.display === "none" ? "" : "none";
+	}
 }
 
 /**
@@ -290,7 +325,7 @@ function ResetTableView(table: Api): void {
  * Then it removes the wrapper of the DataTable, and finally removes the DataTable itself from the DOM.
  */
 export function DestroyDataTable(): void {
-	const table = $("#dataTableGenerated").DataTable();
+	const table = new DataTable("#dataTableGenerated");
 	table.destroy();
 	table.state.clear();
 	HideTableHint();
@@ -309,7 +344,7 @@ export function DestroyDataTable(): void {
  * @param tableSelector ID of the table to apply the wrapper on.
  */
 export function DataTablesConfigurationStats(tableSelector: string): void {
-	$(tableSelector).DataTable({
+	new DataTable(tableSelector, {
 		destroy: true,
 		searching: false,
 		paging: false,
