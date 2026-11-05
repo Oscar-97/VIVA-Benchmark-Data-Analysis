@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, Page } from "@playwright/test";
 import {
 	CollectPageErrors,
 	ExpectNotification,
@@ -60,6 +60,80 @@ test.describe("Navigation", () => {
 		await expect(
 			page.locator("#dataMenu .dropdown-menu .dropdown-item")
 		).toHaveCount(4);
+	});
+
+	test.describe("The Help menu fits on the screen", () => {
+		/**
+		 * The position of the Help menu on the page, and of the theme button that follows it.
+		 */
+		async function Boxes(page: Page): Promise<{
+			menu: { left: number; right: number; bottom: number };
+			theme: { top: number };
+			width: number;
+		}> {
+			return page.evaluate(() => {
+				const menu = document
+					.getElementById("helpMenu")
+					?.getBoundingClientRect();
+				const theme = document
+					.getElementById("themeToggleButton")
+					?.getBoundingClientRect();
+				if (!menu || !theme) {
+					throw new Error("The Help menu is missing.");
+				}
+				return {
+					menu: { left: menu.left, right: menu.right, bottom: menu.bottom },
+					theme: { top: theme.top },
+					width: document.documentElement.clientWidth
+				};
+			});
+		}
+
+		test("On a wide screen it opens on hover and ends at the right edge of the page", async ({
+			page
+		}) => {
+			await page.setViewportSize({ width: 1480, height: 770 });
+			await page.goto(PageUrl("report.html"));
+
+			await page.locator("#helpMenuButton").hover();
+			await expect(page.locator("#fileFormatsHelpItem")).toBeVisible();
+
+			const { menu, width } = await Boxes(page);
+			expect(menu.left).toBeGreaterThanOrEqual(0);
+			expect(menu.right).toBeLessThanOrEqual(width);
+		});
+
+		test("On a wide screen it also opens on a click", async ({ page }) => {
+			await page.setViewportSize({ width: 1480, height: 770 });
+			await page.goto(PageUrl("report.html"));
+
+			await page.locator("#helpMenuButton").click();
+			await expect(page.locator("#demoMinlpMenuItem")).toBeVisible();
+
+			const { menu, width } = await Boxes(page);
+			expect(menu.left).toBeGreaterThanOrEqual(0);
+			expect(menu.right).toBeLessThanOrEqual(width);
+		});
+
+		for (const width of [390, 675, 1000]) {
+			test(`With the collapsed navigation bar (${width}px) it opens below its item and moves the next item down`, async ({
+				page
+			}) => {
+				await page.setViewportSize({ width, height: 780 });
+				await page.goto(PageUrl("report.html"));
+				await page.locator(".navbar-toggler").click();
+
+				const before = (await Boxes(page)).theme.top;
+				await page.locator("#helpMenuButton").click();
+				await expect(page.locator("#demoMinlpMenuItem")).toBeVisible();
+
+				const { menu, theme, width: pageWidth } = await Boxes(page);
+				expect(menu.left).toBeGreaterThanOrEqual(0);
+				expect(menu.right).toBeLessThanOrEqual(pageWidth);
+				expect(theme.top).toBeGreaterThanOrEqual(menu.bottom);
+				expect(theme.top).toBeGreaterThan(before);
+			});
+		}
 	});
 
 	test("The navigation marks the current page as a link", async ({ page }) => {
