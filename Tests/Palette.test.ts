@@ -35,6 +35,7 @@ interface Plain {
 	borderColor?: unknown;
 	backgroundColor?: unknown;
 	borderDash?: unknown;
+	pointStyle?: unknown;
 }
 
 describe("ApplyPalette", () => {
@@ -44,7 +45,9 @@ describe("ApplyPalette", () => {
 		expect(colored).toEqual({
 			label: "scip",
 			borderColor: "#eb6834",
-			backgroundColor: "#eb683480"
+			backgroundColor: "#eb683480",
+			pointStyle: "triangle",
+			borderDash: [8, 4]
 		});
 	});
 
@@ -74,23 +77,64 @@ describe("ApplyPalette", () => {
 		expect(dataset).toEqual({ label: "shot" });
 	});
 
-	it("should tell the lines apart when the colors are used again", () => {
-		const first = ApplyPalette<Plain>({}, 0, "line", "light");
-		const ninth = ApplyPalette<Plain>({}, 8, "line", "light");
-		const seventeenth = ApplyPalette<Plain>({}, 16, "line", "light");
-
-		expect(first.borderDash).toBeUndefined();
-		expect(ninth.borderColor).toBe(first.borderColor);
-		expect(ninth.borderDash).toEqual([8, 4]);
-		expect(seventeenth.borderDash).toEqual([2, 3]);
+	it("should dash the lines by their place: solid, long dashes, short dashes", () => {
+		expect(
+			ApplyPalette<Plain>({}, 0, "line", "light").borderDash
+		).toBeUndefined();
+		expect(ApplyPalette<Plain>({}, 1, "line", "light").borderDash).toEqual([
+			8, 4
+		]);
+		expect(ApplyPalette<Plain>({}, 2, "line", "light").borderDash).toEqual([
+			2, 3
+		]);
+		expect(
+			ApplyPalette<Plain>({}, 3, "radar", "light").borderDash
+		).toBeUndefined();
 	});
 
-	it("should not dash bars or bubbles", () => {
-		expect(
-			ApplyPalette<Plain>({}, 8, "bar", "light").borderDash
-		).toBeUndefined();
-		expect(
-			ApplyPalette<Plain>({}, 8, "bubble", "light").borderDash
-		).toBeUndefined();
+	it("should give the points a shape by the place of the data set", () => {
+		const styles = Array.from(
+			{ length: 5 },
+			(_, index) => ApplyPalette<Plain>({}, index, "line", "light").pointStyle
+		);
+
+		expect(styles).toEqual(["circle", "triangle", "rect", "rectRot", "star"]);
+		expect(ApplyPalette<Plain>({}, 5, "line", "light").pointStyle).toBe(
+			"circle"
+		);
+		expect(ApplyPalette<Plain>({}, 2, "bubble", "dark").pointStyle).toBe(
+			"rect"
+		);
+		expect(ApplyPalette<Plain>({}, 1, "radar", "dark").pointStyle).toBe(
+			"triangle"
+		);
+	});
+
+	it("should tell the data sets apart without the color for the first 120 of them", () => {
+		const looks = new Set<string>();
+		for (let index = 0; index < 120; index++) {
+			const set = ApplyPalette<Plain>({}, index, "line", "light");
+			looks.add(
+				[set.borderColor, set.pointStyle, JSON.stringify(set.borderDash)].join(
+					"|"
+				)
+			);
+		}
+
+		expect(looks.size).toBe(120);
+	});
+
+	it("should give neither a dash nor a point style to bars", () => {
+		const bar = ApplyPalette<Plain>({}, 8, "bar", "light");
+
+		expect(bar.borderDash).toBeUndefined();
+		expect(bar.pointStyle).toBeUndefined();
+	});
+
+	it("should give a bubble a shape, but no dash", () => {
+		const bubble = ApplyPalette<Plain>({}, 8, "bubble", "light");
+
+		expect(bubble.borderDash).toBeUndefined();
+		expect(bubble.pointStyle).toBeDefined();
 	});
 });

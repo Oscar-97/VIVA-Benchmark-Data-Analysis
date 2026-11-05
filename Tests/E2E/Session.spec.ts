@@ -21,7 +21,11 @@ test.describe("Data of the session", () => {
 		await ImportFiles(page, [TestFile("shotALL.trc")]);
 		await ViewTable(page);
 		await expect(page.locator(INDICATOR)).toBeVisible();
-		await expect(page.locator(INDICATOR)).toContainText("1 solver");
+		await expect(page.locator(INDICATOR)).toContainText("Session data");
+		await expect(page.locator("#sessionIndicatorLabel")).toHaveAttribute(
+			"title",
+			/^1 solver · \d+ instances/
+		);
 
 		await page.goto(PageUrl("Src/Pages/performance_profile.html"));
 		await ExpectNotification(page, "Restored the data of this session.");
@@ -75,6 +79,9 @@ test.describe("Data of the session", () => {
 		await page.goto(PageUrl("Src/Pages/solver_time.html"));
 		await expect(page.locator("#emptyState")).toBeHidden();
 		await page.reload();
-		await expect(page.locator(INDICATOR)).toContainText("1 solver");
+		await expect(page.locator("#sessionIndicatorLabel")).toHaveAttribute(
+			"title",
+			/^1 solver/
+		);
 	});
 });

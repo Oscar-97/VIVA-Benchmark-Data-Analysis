@@ -43,7 +43,7 @@ test.describe("Chart tools", () => {
 		await expect(canvas).toHaveAttribute("role", "img");
 		await expect(canvas).toHaveAttribute(
 			"aria-label",
-			/^Solver time per Instance\. Data sets: .*shot/
+			/^Line chart: Solver time per Instance\. .*Data sets: .*shot/
 		);
 	});
 

@@ -27,6 +27,8 @@ import { ShowPWANotification } from "../PWA/PWA-utils";
 import { ChartMessages } from "../Constants/Messages";
 import { GetCurrentTheme, THEME_CHANGE_EVENT } from "../Theme";
 import { AnyChart, UpdateChartTools, WireChartTools } from "./ChartTools";
+import { ConnectChartTable } from "./ChartTable";
+import { DescribeChart } from "./ChartDescription";
 import { ApplyPalette } from "./Palette";
 let myChart: AnyChart | null = null;
 
@@ -150,7 +152,16 @@ function DrawChart(chart: ChartArguments, keepView = false): void {
 
 	ApplyChartTheme();
 	const theme = GetCurrentTheme();
-	LabelCanvas(DescribeChart(title, data));
+	LabelCanvas(
+		DescribeChart(
+			type,
+			title,
+			data.flatMap((dataset) =>
+				typeof dataset.label === "string" ? [dataset.label] : []
+			),
+			scaleOptions
+		)
+	);
 
 	myChart = new Chart(elements.chartCanvas, {
 		type: type,
@@ -228,6 +239,18 @@ function ConnectTools(chart: AnyChart, view: ChartView | null): void {
 		() => lastChart?.title ?? ""
 	);
 	UpdateChartTools(chart);
+	ConnectChartTable(() =>
+		lastChart
+			? {
+					data: lastChart.data,
+					labels:
+						typeof lastChart.label === "string"
+							? [lastChart.label]
+							: lastChart.label,
+					title: lastChart.title
+				}
+			: null
+	);
 }
 
 /**
@@ -282,22 +305,6 @@ function WithToolUpdates(
 			onPanComplete: ({ chart }) => UpdateChartTools(chart as AnyChart)
 		}
 	};
-}
-
-/**
- * A text for a screen reader: a chart on a canvas has no content of its own.
- */
-function DescribeChart(title: string, data: ChartDatasets): string {
-	const labels = data
-		.map((dataset) => dataset.label)
-		.filter((label): label is string => typeof label === "string");
-	const MAX_LABELS = 12;
-	const listed = labels.slice(0, MAX_LABELS).join(", ");
-	const more =
-		labels.length > MAX_LABELS
-			? `, and ${labels.length - MAX_LABELS} more`
-			: "";
-	return labels.length > 0 ? `${title}. Data sets: ${listed}${more}.` : title;
 }
 
 /**

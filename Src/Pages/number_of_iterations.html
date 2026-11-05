@@ -172,10 +172,12 @@
               </div>
             </li>
             <li class="nav-item" id="sessionIndicator" hidden>
-              <div class="navbar-text d-flex align-items-center gap-2">
+              <div
+                class="navbar-text d-flex align-items-center gap-2 ms-2 text-nowrap"
+              >
                 <span id="sessionIndicatorLabel"></span>
                 <button
-                  class="btn btn-outline-secondary btn-sm"
+                  class="btn btn-secondary btn-sm"
                   type="button"
                   id="clearSessionDataButton"
                   title="Forget the data of this session. Data that is saved in the browser is kept."
@@ -504,6 +506,16 @@
           <i class="bi bi-eye-slash"></i> Hide All
         </button>
         <button
+          id="chartTableToggleButton"
+          class="btn btn-dark btn-sm"
+          type="button"
+          aria-expanded="false"
+          aria-controls="chartDataTableContainer"
+          title="Show the values of the chart as a table."
+        >
+          <i class="bi bi-table"></i> Show as table
+        </button>
+        <button
           id="downloadChartImageButton"
           class="btn btn-dark btn-sm"
           type="button"
@@ -522,6 +534,14 @@
           <!-- Content created with Chart.js will be displayed here. -->
         </canvas>
       </div>
+      <div
+        id="chartDataTableContainer"
+        class="chart-data-table"
+        role="region"
+        aria-label="Data of the chart"
+        tabindex="0"
+        hidden
+      ></div>
 
       <div id="statisticsTable">
         <!-- statistics table element will be created here. -->
