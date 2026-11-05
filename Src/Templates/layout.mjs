@@ -116,13 +116,11 @@ const PLOT_PAGES = new Set(
 );
 
 /**
- * A link of the navigation bar. The link to the page that is shown is not a link but is marked as active.
+ * A link of the navigation bar. The link to the page that is shown is marked as active and as the current page.
  */
 function RenderNavLink(label, href, isActive) {
-  const content = `<li class="nav-item">`;
-  return isActive
-    ? `${content}<span class="nav-link active" aria-current="page">${label}</span></li>`
-    : `${content}<a class="nav-link" href="${href}">${label}</a></li>`;
+  const state = isActive ? ' active" aria-current="page' : "";
+  return `<li class="nav-item"><a class="nav-link${state}" href="${href}">${label}</a></li>`;
 }
 
 function RenderNavItems(activePage, prefixes) {
@@ -130,9 +128,9 @@ function RenderNavItems(activePage, prefixes) {
     if (entry === "separator") {
       return "<hr />";
     }
-    return entry.page === activePage
-      ? `<li><span class="dropdown-item active">${entry.label}</span></li>`
-      : `<li><a class="dropdown-item" href="${prefixes.pages}${entry.page}.html">${entry.label}</a></li>`;
+    const state =
+      entry.page === activePage ? ' active" aria-current="page' : "";
+    return `<li><a class="dropdown-item${state}" href="${prefixes.pages}${entry.page}.html">${entry.label}</a></li>`;
   }).join("");
 
   return [
@@ -142,7 +140,7 @@ function RenderNavItems(activePage, prefixes) {
       activePage === "report",
     ),
     `<li class="nav-item dropdown"><a class="nav-link dropdown-toggle${
-      PLOT_PAGES.has(activePage) ? " active" : ""
+      PLOT_PAGES.has(activePage) ? ' active" aria-current="true' : ""
     }" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-bar-chart-steps"></i> Plots</a><ul class="dropdown-menu mb-2" aria-labelledby="navbarDropdownMenuLink">${menuItems}</ul></li>`,
     RenderNavLink(
       '<i class="bi bi-view-stacked"></i> Compare Solvers',

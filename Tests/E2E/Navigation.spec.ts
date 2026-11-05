@@ -24,4 +24,30 @@ test.describe("Navigation", () => {
 		await expect(page).toHaveTitle("Results Table – VIVA");
 		expect(errors).toEqual([]);
 	});
+
+	test("The navigation marks the current page as a link", async ({ page }) => {
+		await page.goto(PageUrl("report.html"));
+		const current = page.locator('nav a[aria-current="page"]');
+		await expect(current).toHaveCount(1);
+		await expect(current).toContainText("Table");
+		await expect(current).toHaveAttribute("href", /.+/);
+
+		for (const { name, title } of PLOT_PAGES) {
+			await page.goto(PageUrl(`Src/Pages/${name}.html`));
+			await expect(current).toHaveCount(1);
+			await expect(current).toHaveText(new RegExp(title.replace(/ /g, "\\s+")));
+			await expect(page.locator("#navbarDropdownMenuLink")).toHaveAttribute(
+				"aria-current",
+				"true"
+			);
+		}
+
+		await page.goto(PageUrl("Src/Pages/compare_solvers.html"));
+		await expect(current).toHaveCount(1);
+		await expect(current).toContainText("Compare Solvers");
+		await expect(page.locator("#navbarDropdownMenuLink")).not.toHaveAttribute(
+			"aria-current",
+			/.*/
+		);
+	});
 });
