@@ -1,5 +1,12 @@
 import { test, expect } from "@playwright/test";
-import { CollectPageErrors, PageUrl, PLOT_PAGES } from "./Helpers";
+import {
+	CollectPageErrors,
+	ExpectNotification,
+	ImportFiles,
+	PageUrl,
+	PLOT_PAGES,
+	TestFile
+} from "./Helpers";
 
 const PLOT_MENU = "xpath=/html/body/nav/div/div/ul[1]/li[2]";
 
@@ -31,6 +38,8 @@ test.describe("Navigation", () => {
 			page.locator("#buttonContainer > #saveLocalStorageButton")
 		).toHaveCount(0);
 
+		await ImportFiles(page, [TestFile("shotALL.trc")]);
+		await ExpectNotification(page, "Benchmarks loaded with following files");
 		await page.locator("#dataMenuButton").click();
 		const items = page.locator("#dataMenu .dropdown-menu .dropdown-item");
 		await expect(items).toHaveText([
@@ -45,6 +54,8 @@ test.describe("Navigation", () => {
 		);
 
 		await page.goto(PageUrl("Src/Pages/solver_time.html"));
+		await ImportFiles(page, [TestFile("shotALL.trc")]);
+		await ExpectNotification(page, "Benchmarks loaded with following files");
 		await page.locator("#dataMenuButton").click();
 		await expect(
 			page.locator("#dataMenu .dropdown-menu .dropdown-item")

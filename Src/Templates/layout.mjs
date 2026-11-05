@@ -74,7 +74,7 @@ function RenderDataMenu(items) {
         : RenderButton(item),
     )
     .join("\n");
-  return `<div class="col-auto dropdown" id="dataMenu">
+  return `<div class="col-auto dropdown" id="dataMenu" hidden>
         <button class="btn btn-dark btn-sm dropdown-toggle" type="button" id="dataMenuButton" data-bs-toggle="dropdown" aria-expanded="false" title="Save, export and remove the data."><i class="bi bi-database"></i> Data</button>
         <ul class="dropdown-menu" aria-labelledby="dataMenuButton">${entries}</ul>
       </div>`;
@@ -267,7 +267,7 @@ export function RenderPage(page) {
     ${navigation}
     ${alert}
     <main id="main" tabindex="-1">
-    <div id="buttonContainer" class="d-flex flex-wrap justify-content-start gap-2">
+    <div id="buttonContainer" class="d-flex flex-wrap justify-content-start gap-2" title="Load data first.">
       ${page.buttons
         .map((button) =>
           button.menu ? RenderDataMenu(button.menu) : RenderButton(button),

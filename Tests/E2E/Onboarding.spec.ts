@@ -87,11 +87,21 @@ test.describe("Empty state", () => {
 			const emptyState = page.locator("#emptyState");
 			await expect(emptyState).toBeVisible();
 			await expect(emptyState).toContainText("Load benchmark data");
+			await expect(page.locator("#dataMenu")).toBeHidden();
+			await expect(page.locator("#buttonContainer")).toHaveAttribute(
+				"title",
+				"Load data first."
+			);
 
 			await ImportFiles(page, [TestFile("shotALL.trc")]);
 
 			await ExpectNotification(page, "Benchmarks loaded with following files");
 			await expect(emptyState).toBeHidden();
+			await expect(page.locator("#dataMenu")).toBeVisible();
+			await expect(page.locator("#buttonContainer")).not.toHaveAttribute(
+				"title",
+				/.*/
+			);
 		});
 	}
 
