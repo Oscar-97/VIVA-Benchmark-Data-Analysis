@@ -40,6 +40,31 @@ export const elements = {
 	},
 
 	/**
+	 * `sessionIndicator` is a reference to the HTMLLIElement with the ID "sessionIndicator", which tells that
+	 * the data of this session is kept for the other pages.
+	 * @type {HTMLLIElement}
+	 */
+	get sessionIndicator(): HTMLLIElement {
+		return GetElement<HTMLLIElement>("sessionIndicator");
+	},
+
+	/**
+	 * `sessionIndicatorLabel` is a reference to the HTMLSpanElement with the ID "sessionIndicatorLabel".
+	 * @type {HTMLSpanElement}
+	 */
+	get sessionIndicatorLabel(): HTMLSpanElement {
+		return GetElement<HTMLSpanElement>("sessionIndicatorLabel");
+	},
+
+	/**
+	 * `clearSessionDataButton` is a reference to the HTMLButtonElement with the ID "clearSessionDataButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get clearSessionDataButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("clearSessionDataButton");
+	},
+
+	/**
 	 * `buttonContainer` is a reference to the HTMLDivElement with the ID "buttonContainer", which holds the buttons of the page.
 	 * @type {HTMLDivElement}
 	 */

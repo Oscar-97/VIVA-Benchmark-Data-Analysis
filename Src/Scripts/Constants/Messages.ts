@@ -4,6 +4,7 @@
 export enum InfoMessages {
 	DEMO_MODE_MSG = "Using demo mode!",
 	FOUND_STORED_CONFIG = "Found stored configuration!",
+	RESTORED_SESSION_DATA = "Restored the data of this session.",
 	LOADED_FILES = "Benchmarks loaded with following files: \n",
 	INSTANCE_INFO_LOADED = "Instance information successfully loaded!",
 	SCREEN_SIZE_NOTICE = "For optimal viewing and functionality, it is recommend to access VIVA via a desktop to get the best user experience."

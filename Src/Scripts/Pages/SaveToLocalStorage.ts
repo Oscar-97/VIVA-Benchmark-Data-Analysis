@@ -1,6 +1,7 @@
 import { state } from "../App/AppState";
 import { Listen } from "../App/PageListeners";
 import { elements } from "../Elements/Elements";
+import { ForgetSessionData } from "../Elements/SessionIndicator";
 import { Keys } from "../Constants/Keys";
 import { CreateUserConfiguration } from "../UserConfiguration/UserConfiguration";
 
@@ -16,6 +17,8 @@ export function RegisterSaveToLocalStorage(getRawData: () => string[]): void {
 			state.dataFileType = "json";
 		}
 		CreateUserConfiguration(getRawData(), state.dataFileType);
+		// The saved data is what is shown on the other pages from now on.
+		ForgetSessionData();
 		elements.deleteLocalStorageButton.disabled = false;
 		elements.downloadConfigurationButtonLayer.disabled = false;
 		sessionStorage.setItem(Keys.ALERTED_STORAGE, "true");

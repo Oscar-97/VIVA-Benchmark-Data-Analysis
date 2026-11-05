@@ -94,9 +94,11 @@ test.describe("Modals", () => {
 		const modal = page.locator("#deleteDataModal");
 		await expect(modal).toBeVisible();
 
-		await modal.getByRole("button", { name: "Cancel" }).click();
-
-		await expect(modal).toBeHidden();
+		// Bootstrap ignores a close while the modal is still fading in, so the click is repeated until the modal has closed.
+		await expect(async () => {
+			await modal.getByRole("button", { name: "Cancel" }).click();
+			await expect(modal).toBeHidden({ timeout: 1000 });
+		}).toPass();
 		expect(
 			await page.evaluate(() => localStorage.getItem("UserConfiguration"))
 		).not.toBeNull();
@@ -109,8 +111,11 @@ test.describe("Modals", () => {
 		const modal = page.locator("#clearDataTableModal");
 		await expect(modal).toBeVisible();
 
-		await modal.getByRole("button", { name: "Cancel" }).click();
-		await expect(modal).toBeHidden();
+		// Bootstrap ignores a close while the modal is still fading in, so the click is repeated until the modal has closed.
+		await expect(async () => {
+			await modal.getByRole("button", { name: "Cancel" }).click();
+			await expect(modal).toBeHidden({ timeout: 1000 });
+		}).toPass();
 		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible();
 
 		await ClickDataMenuItem(page, "#clearTableButton");

@@ -9,6 +9,7 @@ import {
 	DescribeFiles,
 	ShowLoadStatus
 } from "../Elements/LoadStatus";
+import { ForgetSessionData } from "../Elements/SessionIndicator";
 import { ImportDataEvents } from "../Elements/Events/ImportDataEvents";
 import { RequestPWANotificationPermission } from "../PWA/PWA-utils";
 import { state } from "./AppState";
@@ -67,6 +68,10 @@ export function RegisterGlobalListeners(): void {
 	 */
 	elements.importDataButton.addEventListener("click", () => {
 		sessionStorage.removeItem(Keys.SAVED_STORAGE_NOTIFICATION);
+		if (state.dataFileType === "json") {
+			// A configuration file is stored in the browser, it replaces the data of the session.
+			ForgetSessionData();
+		}
 		const fileNames = elements.fileInput.files
 			? Array.from(elements.fileInput.files)
 					.map((file) => {
@@ -77,6 +82,14 @@ export function RegisterGlobalListeners(): void {
 		ImportDataEvents(InfoMessages.LOADED_FILES.concat(fileNames));
 		ManageData();
 		RequestPWANotificationPermission();
+	});
+
+	/**
+	 * Forgets the data of the session, and shows what is left: the data saved in the browser, or the empty page.
+	 */
+	elements.clearSessionDataButton.addEventListener("click", () => {
+		ForgetSessionData();
+		location.reload();
 	});
 
 	/**

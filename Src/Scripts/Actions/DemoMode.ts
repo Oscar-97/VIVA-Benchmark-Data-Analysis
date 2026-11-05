@@ -1,4 +1,5 @@
 import { Keys } from "../Constants/Keys";
+import { ClearSessionData } from "../UserConfiguration/SessionData";
 import { GetPageName } from "../App/CurrentPage";
 import { PageTitles } from "../Constants/PageTitles";
 import { elements } from "../Elements/Elements";
@@ -57,6 +58,7 @@ export async function ActivateDemoMode(demo?: string): Promise<void> {
 		);
 		localStorage.setItem(Keys.DEMO_DATA, "demo2");
 	}
+	ClearSessionData();
 	location.reload();
 }
 
