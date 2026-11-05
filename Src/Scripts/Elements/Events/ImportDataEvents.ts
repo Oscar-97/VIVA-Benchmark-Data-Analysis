@@ -3,6 +3,7 @@ import { SetEmptyStateVisible } from "../EmptyState";
 import { ClearLoadStatus } from "../LoadStatus";
 import { DisplayAlertNotification } from "./DisplayAlertNotification";
 import { Keys } from "../../Constants/Keys";
+import { GetPageName } from "../../App/CurrentPage";
 import { PageTitles } from "../../Constants/PageTitles";
 import { TraceData } from "../../Interfaces/Interfaces";
 
@@ -28,9 +29,9 @@ export function ImportDataEvents(
 	elements.librarySelector.disabled = true;
 	SetEmptyStateVisible(false);
 	ClearLoadStatus();
-	if (document.title === PageTitles.TABLE) {
+	if (GetPageName() === PageTitles.TABLE) {
 		TablePageElements(fileExtensionType, demoModeName);
-	} else if (document.title === PageTitles.COMPARE_SOLVERS) {
+	} else if (GetPageName() === PageTitles.COMPARE_SOLVERS) {
 		CompareSolversPageElements(fileExtensionType);
 	} else {
 		PlotPagesElements(fileExtensionType);

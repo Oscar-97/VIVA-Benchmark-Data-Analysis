@@ -9,19 +9,19 @@ test.describe("Navigation", () => {
 	}) => {
 		const errors = CollectPageErrors(page);
 		await page.goto(PageUrl("report.html"));
-		await expect(page).toHaveTitle("Report");
+		await expect(page).toHaveTitle("Results Table – VIVA");
 
 		for (const [index, { title }] of PLOT_PAGES.entries()) {
 			await page.click(`${PLOT_MENU}/a`);
 			await page.click(`${PLOT_MENU}/ul/li[${index + 1}]/a`);
-			await expect(page).toHaveTitle(title);
+			await expect(page).toHaveTitle(`${title} – VIVA`);
 		}
 
 		await page.click("xpath=/html/body/nav/div/div/ul[1]/li[3]/a");
-		await expect(page).toHaveTitle("Compare Solvers");
+		await expect(page).toHaveTitle("Compare Solvers – VIVA");
 
 		await page.click("xpath=/html/body/nav/div/div/ul[1]/li[1]/a");
-		await expect(page).toHaveTitle("Report");
+		await expect(page).toHaveTitle("Results Table – VIVA");
 		expect(errors).toEqual([]);
 	});
 });

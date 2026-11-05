@@ -3,19 +3,41 @@ import {
 	ResetAppState,
 	state
 } from "../Src/Scripts/App/AppState";
-import { GetPageKind, PageKind } from "../Src/Scripts/App/CurrentPage";
+import {
+	GetPageKind,
+	GetPageName,
+	PageKind
+} from "../Src/Scripts/App/CurrentPage";
 import { Listen, ResetPageListeners } from "../Src/Scripts/App/PageListeners";
 import { PageTitles } from "../Src/Scripts/Constants/PageTitles";
 
 describe("GetPageKind", () => {
+	it("ignores the application name suffix of the title", () => {
+		expect(GetPageName("Results Table – VIVA")).toBe("Results Table");
+		expect(GetPageKind("Results Table – VIVA")).toBe(PageKind.TABLE);
+		expect(GetPageName("Compare Solvers")).toBe("Compare Solvers");
+	});
+
 	it("should recognize the table page", () => {
 		expect(GetPageKind(PageTitles.TABLE)).toBe(PageKind.TABLE);
+	});
+
+	it("ignores the application name suffix of the title", () => {
+		expect(GetPageName("Results Table – VIVA")).toBe("Results Table");
+		expect(GetPageKind("Results Table – VIVA")).toBe(PageKind.TABLE);
+		expect(GetPageName("Compare Solvers")).toBe("Compare Solvers");
 	});
 
 	it("should recognize the compare solvers page", () => {
 		expect(GetPageKind(PageTitles.COMPARE_SOLVERS)).toBe(
 			PageKind.COMPARE_SOLVERS
 		);
+	});
+
+	it("ignores the application name suffix of the title", () => {
+		expect(GetPageName("Results Table – VIVA")).toBe("Results Table");
+		expect(GetPageKind("Results Table – VIVA")).toBe(PageKind.TABLE);
+		expect(GetPageName("Compare Solvers")).toBe("Compare Solvers");
 	});
 
 	it("should treat every other page as a plot page", () => {
@@ -26,6 +48,12 @@ describe("GetPageKind", () => {
 });
 
 describe("ResetAppState", () => {
+	it("ignores the application name suffix of the title", () => {
+		expect(GetPageName("Results Table – VIVA")).toBe("Results Table");
+		expect(GetPageKind("Results Table – VIVA")).toBe(PageKind.TABLE);
+		expect(GetPageName("Compare Solvers")).toBe("Compare Solvers");
+	});
+
 	it("should reset all values of the shared state", () => {
 		state.dataFileType = "trc";
 		state.defaultTime = 10;
@@ -48,6 +76,12 @@ describe("ResetAppState", () => {
 		});
 	});
 
+	it("ignores the application name suffix of the title", () => {
+		expect(GetPageName("Results Table – VIVA")).toBe("Results Table");
+		expect(GetPageKind("Results Table – VIVA")).toBe(PageKind.TABLE);
+		expect(GetPageName("Compare Solvers")).toBe("Compare Solvers");
+	});
+
 	it("should keep the same state object so imported references stay valid", () => {
 		const reference = state;
 		ResetAppState();
@@ -60,12 +94,24 @@ describe("Page listeners", () => {
 		return new EventTarget() as HTMLElement;
 	}
 
+	it("ignores the application name suffix of the title", () => {
+		expect(GetPageName("Results Table – VIVA")).toBe("Results Table");
+		expect(GetPageKind("Results Table – VIVA")).toBe(PageKind.TABLE);
+		expect(GetPageName("Compare Solvers")).toBe("Compare Solvers");
+	});
+
 	it("should call a registered listener", () => {
 		const target = CreateTarget();
 		const handler = jest.fn();
 		Listen(target, "click", handler);
 		target.dispatchEvent(new Event("click"));
 		expect(handler).toHaveBeenCalledTimes(1);
+	});
+
+	it("ignores the application name suffix of the title", () => {
+		expect(GetPageName("Results Table – VIVA")).toBe("Results Table");
+		expect(GetPageKind("Results Table – VIVA")).toBe(PageKind.TABLE);
+		expect(GetPageName("Compare Solvers")).toBe("Compare Solvers");
 	});
 
 	it("should remove all registered listeners when reset", () => {
@@ -84,6 +130,12 @@ describe("Page listeners", () => {
 		expect(otherHandler).not.toHaveBeenCalled();
 	});
 
+	it("ignores the application name suffix of the title", () => {
+		expect(GetPageName("Results Table – VIVA")).toBe("Results Table");
+		expect(GetPageKind("Results Table – VIVA")).toBe(PageKind.TABLE);
+		expect(GetPageName("Compare Solvers")).toBe("Compare Solvers");
+	});
+
 	it("should keep working for listeners registered after a reset", () => {
 		const target = CreateTarget();
 		const handler = jest.fn();
@@ -93,12 +145,24 @@ describe("Page listeners", () => {
 		expect(handler).toHaveBeenCalledTimes(1);
 	});
 
+	it("ignores the application name suffix of the title", () => {
+		expect(GetPageName("Results Table – VIVA")).toBe("Results Table");
+		expect(GetPageKind("Results Table – VIVA")).toBe(PageKind.TABLE);
+		expect(GetPageName("Compare Solvers")).toBe("Compare Solvers");
+	});
+
 	it("should ignore elements that do not exist", () => {
 		expect(() => Listen(null, "click", jest.fn())).not.toThrow();
 	});
 });
 
 describe("ApplyStoredConfiguration", () => {
+	it("ignores the application name suffix of the title", () => {
+		expect(GetPageName("Results Table – VIVA")).toBe("Results Table");
+		expect(GetPageKind("Results Table – VIVA")).toBe(PageKind.TABLE);
+		expect(GetPageName("Compare Solvers")).toBe("Compare Solvers");
+	});
+
 	it("should copy a stored configuration to the state", () => {
 		ResetAppState();
 		ApplyStoredConfiguration({

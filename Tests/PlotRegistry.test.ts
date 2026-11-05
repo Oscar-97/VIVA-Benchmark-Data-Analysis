@@ -92,7 +92,7 @@ describe("GetPlotFunction", () => {
 	});
 
 	it("has none for a page without a chart", () => {
-		expect(GetPlotFunction("Report")).toBeUndefined();
+		expect(GetPlotFunction(PageTitles.TABLE)).toBeUndefined();
 		expect(GetPlotFunction("")).toBeUndefined();
 	});
 

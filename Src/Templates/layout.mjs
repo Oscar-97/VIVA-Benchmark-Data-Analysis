@@ -185,7 +185,7 @@ function RenderHead(page, prefixes) {
       content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers."
     />${manifest}
     <!-- Title and icon -->
-    <title id="ReportTitle">${page.title}</title>
+    <title id="ReportTitle">${page.title} – VIVA</title>
     <link rel="icon" href="${prefixes.css}tab_icon.png" />
     <!-- Styling -->
     <link href="${prefixes.dist}main.css" rel="stylesheet" />

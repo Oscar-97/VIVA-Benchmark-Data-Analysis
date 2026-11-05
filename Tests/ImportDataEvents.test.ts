@@ -119,7 +119,7 @@ describe("ImportDataEvents", () => {
 	});
 
 	it("should show the alert notification unless a saved storage notification is set", () => {
-		title = PageTitles.TABLE;
+		title = `${PageTitles.TABLE} – VIVA`;
 		ImportDataEvents("Loaded");
 		expect(DisplayAlertNotification).toHaveBeenCalledWith("Loaded");
 
@@ -131,7 +131,7 @@ describe("ImportDataEvents", () => {
 
 	describe("on the table page", () => {
 		beforeEach(() => {
-			title = PageTitles.TABLE;
+			title = `${PageTitles.TABLE} – VIVA`;
 		});
 
 		it("should remove the old table and open the table button", () => {
