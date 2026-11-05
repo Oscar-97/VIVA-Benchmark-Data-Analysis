@@ -40,6 +40,22 @@ export const elements = {
 	},
 
 	/**
+	 * `buttonContainer` is a reference to the HTMLDivElement with the ID "buttonContainer", which holds the buttons of the page.
+	 * @type {HTMLDivElement}
+	 */
+	get buttonContainer(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("buttonContainer");
+	},
+
+	/**
+	 * `dataMenu` is a reference to the HTMLDivElement with the ID "dataMenu", which holds the menu of the data actions.
+	 * @type {HTMLDivElement}
+	 */
+	get dataMenu(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("dataMenu");
+	},
+
+	/**
 	 * `emptyStateDemoButton` is a reference to the HTMLButtonElement with the ID "emptyStateDemoButton".
 	 * @type {HTMLButtonElement}
 	 */

@@ -270,10 +270,11 @@
       <div
         id="buttonContainer"
         class="d-flex flex-wrap justify-content-start gap-2"
+        title="Load data first."
       >
         <div class="col-auto">
           <button
-            class="btn btn-success btn-sm"
+            class="btn btn-primary btn-sm"
             type="submit"
             id="viewPlotsButton"
             disabled="true"
@@ -301,7 +302,7 @@
             >
           </button>
         </div>
-        <div class="col-auto dropdown" id="dataMenu">
+        <div class="col-auto dropdown" id="dataMenu" hidden>
           <button
             class="btn btn-dark btn-sm dropdown-toggle"
             type="button"
@@ -430,9 +431,6 @@
           <li><b>.solu</b> best known bounds (optional)</li>
           <li><b>.json</b> a configuration that was saved earlier</li>
         </ul>
-        <p class="mb-2">
-          The buttons above can be used after the data is loaded.
-        </p>
         <button
           id="emptyStateDemoButton"
           class="btn btn-sm btn-primary"
