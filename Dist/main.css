@@ -2780,6 +2780,30 @@ body > :not(nav, hr) {
 	}
 }
 
+/* The Help menu is at the right edge of the navigation bar. With the navigation bar expanded the menu opens
+   on hover, which Bootstrap does not position, so the menu is aligned to the right edge of its item here.
+   With the navigation bar collapsed the menu opens below its item and moves the items under it down. */
+@media (min-width: 1470px) {
+	#navbarNav #helpMenu {
+		right: 0;
+		left: auto;
+	}
+}
+
+@media (max-width: 1469px) {
+	#navbarNav #helpMenu {
+		position: static;
+		display: none;
+		max-height: none;
+		opacity: 1;
+		overflow: visible;
+	}
+
+	#navbarNav #helpMenu.show {
+		display: block;
+	}
+}
+
 @keyframes spinner {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
