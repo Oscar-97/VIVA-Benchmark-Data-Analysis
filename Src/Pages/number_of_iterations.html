@@ -523,6 +523,29 @@
         >
           <i class="bi bi-file-earmark-image"></i> Download Image
         </button>
+        <label class="visually-hidden" for="chartImageResolution"
+          >Size of the image</label
+        >
+        <select
+          id="chartImageResolution"
+          class="form-select form-select-sm w-auto"
+          title="The size of the downloaded image. A larger image is drawn again at a higher resolution, for print."
+        >
+          <option value="1" selected>Standard size (1×)</option>
+          <option value="2">Print size (2×)</option>
+          <option value="3">Large (3×)</option>
+        </select>
+        <label class="visually-hidden" for="chartImageBackground"
+          >Background of the image</label
+        >
+        <select
+          id="chartImageBackground"
+          class="form-select form-select-sm w-auto"
+          title="The background of the downloaded image."
+        >
+          <option value="page" selected>Page background</option>
+          <option value="transparent">Transparent background</option>
+        </select>
         <span
           id="chartToolsStatus"
           class="chart-tools-status"

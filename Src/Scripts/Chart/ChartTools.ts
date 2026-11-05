@@ -17,6 +17,8 @@ function FindTools(): {
 	showAll: HTMLButtonElement | null;
 	hideAll: HTMLButtonElement | null;
 	download: HTMLButtonElement | null;
+	resolution: HTMLSelectElement | null;
+	background: HTMLSelectElement | null;
 	status: HTMLElement | null;
 } | null {
 	const tools = FindElement<HTMLElement>("chartTools");
@@ -29,6 +31,8 @@ function FindTools(): {
 		showAll: FindElement<HTMLButtonElement>("showAllSeriesButton"),
 		hideAll: FindElement<HTMLButtonElement>("hideAllSeriesButton"),
 		download: FindElement<HTMLButtonElement>("downloadChartImageButton"),
+		resolution: FindElement<HTMLSelectElement>("chartImageResolution"),
+		background: FindElement<HTMLSelectElement>("chartImageBackground"),
 		status: FindElement<HTMLElement>("chartToolsStatus")
 	};
 }
@@ -117,38 +121,139 @@ export function SetAllDatasetsVisible(chart: AnyChart, visible: boolean): void {
 }
 
 /**
- * A name for the image of a chart, made from its title: letters, digits and dashes.
+ * The date as year, month and day, for example "2026-10-29", in the time zone of the user.
  */
-export function ChartFileName(title: string): string {
-	const slug = title
-		.toLowerCase()
-		.replace(/[^a-z0-9]+/g, "-")
-		.replace(/^-+|-+$/g, "");
-	return `viva-${slug || "chart"}.png`;
+function FormatDate(date: Date): string {
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const day = String(date.getDate()).padStart(2, "0");
+	return `${date.getFullYear()}-${month}-${day}`;
 }
 
 /**
- * Downloads the chart as a PNG image. The canvas is transparent, so the image is drawn on the background of
- * the page, or the dark text of the light theme would be unreadable on the dark background of an image viewer.
+ * A name for the image of a chart, made from its title and the date: letters, digits and underscores,
+ * for example "viva_performance_profile_2026-10-29.png".
+ *
+ * @param title - The title of the chart.
+ * @param date - The date in the name. By default today.
  */
-export function DownloadChartImage(chart: AnyChart, title: string): void {
-	const source = chart.canvas;
+export function ChartFileName(title: string, date: Date = new Date()): string {
+	const slug = title
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, "_")
+		.replace(/^_+|_+$/g, "");
+	return `viva_${slug || "chart"}_${FormatDate(date)}.png`;
+}
+
+/**
+ * What the user chose for the image: how many times the size on the screen, and the background.
+ */
+export interface ImageOptions {
+	scale: number;
+	background: "page" | "transparent";
+}
+
+/**
+ * The longest side of an image in pixels. A browser cannot make a canvas that is much larger.
+ */
+export const MAX_IMAGE_SIDE = 16384;
+
+/**
+ * The pixel ratio to draw the chart at for an image: the one of the screen times the scale, but not so large that
+ * the image is longer than the most that a canvas can have.
+ *
+ * @param scale - How many times the size on the screen.
+ * @param screenRatio - The pixel ratio that the chart is drawn at now.
+ * @param width - The width of the chart in CSS pixels.
+ * @param height - The height of the chart in CSS pixels.
+ */
+export function ImagePixelRatio(
+	scale: number,
+	screenRatio: number,
+	width: number,
+	height: number
+): number {
+	const longest = Math.max(width, height, 1);
+	return Math.min(screenRatio * Math.max(scale, 1), MAX_IMAGE_SIDE / longest);
+}
+
+/**
+ * Reads what the user chose for the image from the selectors of the tools.
+ */
+function ReadImageOptions(found: {
+	resolution: HTMLSelectElement | null;
+	background: HTMLSelectElement | null;
+}): ImageOptions {
+	const scale = Number(found.resolution?.value);
+	return {
+		scale: Number.isFinite(scale) && scale >= 1 ? scale : 1,
+		background:
+			found.background?.value === "transparent" ? "transparent" : "page"
+	};
+}
+
+/**
+ * Copies the canvas of the chart to a canvas of its own, on the background of the page unless the user wants a
+ * transparent one. The canvas of the chart is transparent, so on a dark background of an image viewer the dark text
+ * of the light theme would be unreadable.
+ */
+function CopyCanvas(
+	source: HTMLCanvasElement,
+	background: ImageOptions["background"]
+): HTMLCanvasElement | null {
 	const canvas = document.createElement("canvas");
 	canvas.width = source.width;
 	canvas.height = source.height;
 	const context = canvas.getContext("2d");
 	if (!context) {
-		return;
+		return null;
 	}
-	const background = getComputedStyle(document.documentElement)
-		.getPropertyValue("--bs-body-bg")
-		.trim();
-	context.fillStyle =
-		background || (GetCurrentTheme() === "dark" ? "#212529" : "#ffffff");
-	context.fillRect(0, 0, canvas.width, canvas.height);
+	if (background === "page") {
+		const color = getComputedStyle(document.documentElement)
+			.getPropertyValue("--bs-body-bg")
+			.trim();
+		context.fillStyle =
+			color || (GetCurrentTheme() === "dark" ? "#212529" : "#ffffff");
+		context.fillRect(0, 0, canvas.width, canvas.height);
+	}
 	context.drawImage(source, 0, 0);
+	return canvas;
+}
 
-	canvas.toBlob((blob) => {
+/**
+ * Downloads the chart as a PNG image. For a larger image the chart is drawn again at a higher pixel ratio, so
+ * the lines and the text are sharp and not enlarged, and then drawn as before.
+ *
+ * @param chart - The chart that is shown.
+ * @param title - The title of the chart, for the name of the file.
+ * @param options - The size and the background of the image.
+ */
+export function DownloadChartImage(
+	chart: AnyChart,
+	title: string,
+	options: ImageOptions = { scale: 1, background: "page" }
+): void {
+	const screenRatio = chart.currentDevicePixelRatio;
+	const ratio = ImagePixelRatio(
+		options.scale,
+		screenRatio,
+		chart.width,
+		chart.height
+	);
+	const isLarger = ratio !== screenRatio;
+	if (isLarger) {
+		chart.options.devicePixelRatio = ratio;
+		chart.resize();
+	}
+	let canvas: HTMLCanvasElement | null;
+	try {
+		canvas = CopyCanvas(chart.canvas, options.background);
+	} finally {
+		if (isLarger) {
+			chart.options.devicePixelRatio = screenRatio;
+			chart.resize();
+		}
+	}
+	canvas?.toBlob((blob) => {
 		if (!blob) {
 			return;
 		}
@@ -196,6 +301,6 @@ export function WireChartTools(
 	});
 	found.download?.addEventListener("click", () => {
 		const chart = getChart();
-		if (chart) DownloadChartImage(chart, getTitle());
+		if (chart) DownloadChartImage(chart, getTitle(), ReadImageOptions(found));
 	});
 }
