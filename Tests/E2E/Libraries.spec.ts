@@ -77,6 +77,21 @@ test.describe("Problem libraries", () => {
 		});
 	}
 
+	test("The table is shown after the upload, with a summary of the data", async ({
+		page
+	}) => {
+		const errors = CollectPageErrors(page);
+		await page.goto(PageUrl("report.html"));
+
+		await ImportFiles(page, [TestFile("library_test.trc")], "MINLPLib");
+
+		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible();
+		await expect(page.locator("#loadStatus")).toContainText(
+			/\d+ solvers? · \d+ instances? · bounds: MINLPLib/
+		);
+		expect(errors).toEqual([]);
+	});
+
 	test("An uploaded .solu file is shown as the source of the bounds", async ({
 		page
 	}) => {

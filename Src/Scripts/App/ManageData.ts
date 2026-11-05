@@ -1,6 +1,8 @@
 import { ExtractTraceData } from "../DataProcessing/FilterData";
 import { ProcessData } from "../DataProcessing/ProcessTraceData";
 import { elements } from "../Elements/Elements";
+import { DescribeTraceData, ShowLoadStatus } from "../Elements/LoadStatus";
+import { Values } from "../Constants/Values";
 import { TraceData } from "../Interfaces/Interfaces";
 import { HandleCommonButtons } from "../Pages/CommonButtons";
 import { HandleCompareSolversPage } from "../Pages/CompareSolversPage";
@@ -10,6 +12,26 @@ import { GetUserConfiguration } from "../UserConfiguration/UserConfiguration";
 import { ApplyStoredConfiguration, state } from "./AppState";
 import { GetPageKind, PageKind } from "./CurrentPage";
 import { ResetPageListeners } from "./PageListeners";
+
+/**
+ * Tells what was loaded, and for a large data set that the view button shows it.
+ */
+function ShowLoadSummary(traceData: TraceData[], isLarge: boolean): void {
+	if (traceData.length === 0) {
+		return;
+	}
+	const bounds =
+		state.dataFileType === "trc"
+			? (elements.librarySelector.selectedOptions[0]?.text ?? "None")
+			: undefined;
+	const summary = DescribeTraceData(traceData, bounds);
+	ShowLoadStatus(
+		isLarge
+			? `${summary}. The data set is large, use the view button to show it.`
+			: summary,
+		false
+	);
+}
 
 /**
  * Manage the benchmark results data.
@@ -52,6 +74,14 @@ export async function ManageData(): Promise<void> {
 	}
 
 	/**
+	 * Tell what was loaded. Large data sets are not shown at once, the view button shows them.
+	 */
+	const isLarge =
+		state.dataFileType === "trc" &&
+		traceData.length > Values.AUTO_RENDER_ROW_LIMIT;
+	ShowLoadSummary(traceData, isLarge);
+
+	/**
 	 * Remove the listeners of earlier data, so only the ones for this data run.
 	 */
 	ResetPageListeners();
@@ -67,7 +97,7 @@ export async function ManageData(): Promise<void> {
 	switch (GetPageKind()) {
 		case PageKind.TABLE:
 			HandleReportPage(traceData);
-			if (state.dataFileType === "json") {
+			if (!isLarge) {
 				elements.viewTableButton.click();
 			}
 			break;
@@ -76,7 +106,7 @@ export async function ManageData(): Promise<void> {
 			break;
 		case PageKind.PLOT:
 			HandlePlotPages(traceData);
-			if (state.dataFileType === "json") {
+			if (!isLarge) {
 				elements.viewPlotsButton.click();
 			}
 			break;

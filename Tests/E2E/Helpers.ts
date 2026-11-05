@@ -121,10 +121,15 @@ export async function ExpectNotification(
 }
 
 /**
- * Opens the table of the imported data.
+ * Waits for the table of the imported data. The table is shown when the data is loaded, so the button
+ * is only used when it is still enabled, for example for a large data set.
  */
 export async function ViewTable(page: Page): Promise<void> {
-	await page.locator("#viewTableButton").click();
+	const button = page.locator("#viewTableButton");
+	if (await button.isEnabled()) {
+		// The application can show the table, and disable the button, just after this check.
+		await button.click({ timeout: 2000 }).catch(() => undefined);
+	}
 	await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible({
 		timeout: 60_000
 	});

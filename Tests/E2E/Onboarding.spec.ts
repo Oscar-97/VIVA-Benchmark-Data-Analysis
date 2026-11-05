@@ -6,7 +6,8 @@ import {
 	PageUrl,
 	PLOT_PAGES,
 	TestFile,
-	ClickDataMenuItem
+	ClickDataMenuItem,
+	ViewTable
 } from "./Helpers";
 
 const PAGES = [
@@ -110,7 +111,7 @@ test.describe("Empty state", () => {
 	}) => {
 		await page.goto(PageUrl("report.html"));
 		await ImportFiles(page, [TestFile("shotALL.trc")]);
-		await page.locator("#viewTableButton").click();
+		await ViewTable(page);
 		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible();
 
 		await ClickDataMenuItem(page, "#clearTableButton");
@@ -200,7 +201,7 @@ test.describe("Demo data and saved data", () => {
 	async function SaveOwnData(page: Page): Promise<void> {
 		await page.goto(PageUrl("report.html"));
 		await ImportFiles(page, [TestFile("shotALL.trc")]);
-		await page.locator("#viewTableButton").click();
+		await ViewTable(page);
 		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible();
 		await ClickDataMenuItem(page, "#saveLocalStorageButton");
 		await page.reload();

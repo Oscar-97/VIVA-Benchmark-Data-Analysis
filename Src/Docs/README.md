@@ -51,7 +51,7 @@ The application can be run without a live server since Webpack is responsible fo
    - A single `UserConfiguration.json` (which can be created from this application).
 4. Optionally, select a problem library to use (MIPLIB or MINLPLib).
 5. Click "Upload".
-6. Use the "View All Results" or "View Plot" buttons to get a table or plot with the benchmark results, depending on the currently active page.
+6. The table or plot with the benchmark results is shown when the files are loaded, depending on the currently active page. Use the "View Table" or "Update plot" button to show it again after changing the settings. Very large data sets are not shown at once, use the button for them.
 7. Available plots include:
    - Performance Profile (Absolute and relative)
    - Solver Time per Solver

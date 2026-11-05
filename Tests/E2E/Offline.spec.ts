@@ -144,7 +144,6 @@ test.describe("Offline use", () => {
 		});
 		await page.reload();
 		await ImportFiles(page, [TestFile("library_test.trc")], "MINLPLib");
-		await expect(page.locator("#viewTableButton")).toBeEnabled();
 		await ViewTable(page);
 	});
 });

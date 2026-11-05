@@ -37,6 +37,16 @@ async function ShowChart(
 }
 
 test.describe("Pages with data", () => {
+	test("The chart is drawn after the upload, without the view button", async ({
+		page
+	}) => {
+		await page.goto(PageUrl("Src/Pages/performance_profile.html"));
+		await ImportFiles(page, THREE_TRACES);
+
+		await expect.poll(() => IsChartDrawn(page)).toBe(true);
+		await expect(page.locator("#viewPlotsButton")).toContainText("Update plot");
+	});
+
 	for (const { name, statistics } of PLOT_PAGES) {
 		test(`${name} draws a chart without errors`, async ({ page }) => {
 			const errors = await OpenWithData(page, `Src/Pages/${name}.html`);
