@@ -120,14 +120,33 @@ test.describe("Empty state", () => {
 		await expect(page.locator("#emptyState")).toBeVisible();
 	});
 
-	for (const file of ["report.html", "Src/Pages/solver_time.html"]) {
-		test(`The demo button of ${file} loads demo data`, async ({ page }) => {
+	for (const file of PAGES) {
+		for (const [button, demo] of [
+			["#emptyStateDemoButton", "demo1"],
+			["#emptyStateDemoMinlpButton", "demo2"]
+		] as const) {
+			test(`${button} of ${file} loads the demo data`, async ({ page }) => {
+				await page.goto(PageUrl(file));
+
+				await page.locator(button).click();
+
+				await ExpectNotification(page, "Using demo mode!");
+				await expect(page.locator("#emptyState")).toBeHidden();
+				expect(
+					await page.evaluate(() => localStorage.getItem("DemoData"))
+				).toBe(demo);
+			});
+		}
+	}
+
+	for (const file of PAGES) {
+		test(`The demo item of the navigation bar is on ${file}`, async ({
+			page
+		}) => {
 			await page.goto(PageUrl(file));
 
-			await page.locator("#emptyStateDemoButton").click();
-
-			await ExpectNotification(page, "Using demo mode!");
-			await expect(page.locator("#emptyState")).toBeHidden();
+			await expect(page.locator("#demoModeButton")).toBeVisible();
+			await expect(page.locator("#demoDataSelector")).toBeVisible();
 		});
 	}
 });
