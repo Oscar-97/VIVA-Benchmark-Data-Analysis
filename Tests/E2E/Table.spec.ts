@@ -7,7 +7,8 @@ import {
 	PageUrl,
 	TestFile,
 	ViewTable,
-	ClickDataMenuItem
+	ClickDataMenuItem,
+	ClickHelpMenuItem
 } from "./Helpers";
 
 const SHOT_LOADED = "Benchmarks loaded with following files: shotALL.trc";
@@ -59,15 +60,17 @@ test.describe("Table page", () => {
 		}).toPass();
 	}
 
-	for (const demo of ["Demo_1", "Demo_2"]) {
+	for (const [demo, item] of [
+		["Demo_1", "#demoMipMenuItem"],
+		["Demo_2", "#demoMinlpMenuItem"]
+	] as const) {
 		test(`Demo mode: ${demo}`, async ({ page }) => {
-			await page.selectOption("#demoDataSelector", demo);
-			await page.click("#demoModeButton");
+			await ClickHelpMenuItem(page, item);
 			await ExpectNotification(page, "Using demo mode!");
 			await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible({
 				timeout: 60_000
 			});
-			await expect(page.locator("#demoDataSelector")).toBeDisabled();
+			await expect(page.locator(item)).toBeDisabled();
 
 			await DeleteConfiguration(page);
 

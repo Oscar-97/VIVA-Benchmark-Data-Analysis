@@ -9,7 +9,8 @@ import {
 	PLOT_PAGES,
 	TestFile,
 	ViewTable,
-	ClickDataMenuItem
+	ClickDataMenuItem,
+	ClickHelpMenuItem
 } from "./Helpers";
 
 const PAGES = [
@@ -72,7 +73,7 @@ test.describe("Modals", () => {
 	test("The help modal explains the file formats, and closes", async ({
 		page
 	}) => {
-		await page.locator('button[name="Help"]').click();
+		await ClickHelpMenuItem(page, "#fileFormatsHelpItem");
 
 		const modal = page.locator("#fileFormatInformationModal");
 		await expect(modal).toBeVisible();

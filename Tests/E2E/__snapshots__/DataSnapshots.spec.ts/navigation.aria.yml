@@ -23,18 +23,6 @@
         - option "Uploaded .solu file" [disabled]
   - list:
     - listitem:
-      - link " Docs":
-        - /url: ../../Docs/index.html
-    - listitem:
-      - link " GitHub":
-        - /url: https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis
-    - listitem:
-      - link " New Issue":
-        - /url: https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues/new
-    - listitem:
-      - button "Help":  Help
+      - button " Help"
     - listitem:
       - button "Switch to dark theme": 
-    - listitem:
-      - link " Releases":
-        - /url: https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/releases

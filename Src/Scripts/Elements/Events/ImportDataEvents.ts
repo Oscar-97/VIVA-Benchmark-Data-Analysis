@@ -23,14 +23,13 @@ import { TraceData } from "../../Interfaces/Interfaces";
  */
 export function ImportDataEvents(
 	message: string,
-	fileExtensionType?: string,
-	demoModeName?: string
+	fileExtensionType?: string
 ): void {
 	elements.librarySelector.disabled = true;
 	SetEmptyStateVisible(false);
 	ClearLoadStatus();
 	if (GetPageName() === PageTitles.TABLE) {
-		TablePageElements(fileExtensionType, demoModeName);
+		TablePageElements(fileExtensionType);
 	} else if (GetPageName() === PageTitles.COMPARE_SOLVERS) {
 		CompareSolversPageElements(fileExtensionType);
 	} else {
@@ -45,10 +44,7 @@ export function ImportDataEvents(
 /**
  * Manage the elements on the table page after data import.
  */
-function TablePageElements(
-	fileExtensionType?: string,
-	demoModeName?: string
-): void {
+function TablePageElements(fileExtensionType?: string): void {
 	try {
 		if (elements.dataTableGeneratedWrapper) {
 			elements.dataTableGeneratedWrapper.remove();
@@ -61,13 +57,6 @@ function TablePageElements(
 		console.error("Could not remove elements: ", err);
 	}
 
-	if (demoModeName === "demo1") {
-		elements.demoDataSelector.value = "Demo_1";
-	}
-
-	if (demoModeName === "demo2") {
-		elements.demoDataSelector.value = "Demo_2";
-	}
 	elements.viewTableButton.disabled = false;
 	elements.showSelectedRowsButton.disabled = true;
 	elements.importDataButton.disabled = true;

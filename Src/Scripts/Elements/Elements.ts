@@ -402,19 +402,19 @@ export const elements = {
 	},
 
 	/**
-	 * `demoModeButton` is a reference to the HTMLButtonElement with the ID "demoModeButton".
+	 * `demoMipMenuItem` is a reference to the HTMLButtonElement with the ID "demoMipMenuItem", in the Help menu.
 	 * @type {HTMLButtonElement}
 	 */
-	get demoDataButton(): HTMLButtonElement {
-		return GetElement<HTMLButtonElement>("demoModeButton");
+	get demoMipMenuItem(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("demoMipMenuItem");
 	},
 
 	/**
-	 * `demoDataSelector` is a reference to the HTMLSelectElement with the ID "demoDataSelector".
-	 * @type {HTMLSelectElement}
+	 * `demoMinlpMenuItem` is a reference to the HTMLButtonElement with the ID "demoMinlpMenuItem", in the Help menu.
+	 * @type {HTMLButtonElement}
 	 */
-	get demoDataSelector(): HTMLSelectElement {
-		return GetElement<HTMLSelectElement>("demoDataSelector");
+	get demoMinlpMenuItem(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("demoMinlpMenuItem");
 	},
 
 	/**

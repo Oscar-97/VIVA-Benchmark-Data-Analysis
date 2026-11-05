@@ -101,20 +101,17 @@ export function RegisterGlobalListeners(): void {
 	});
 
 	/**
-	 * Adds an event listener to the "Demo-Mode" button that loads the demo data set that is selected
-	 * and saves it to local storage. The button is on every page.
+	 * The demo data sets are offered by the explanation for an empty page and by the Help menu, on every page.
+	 * They load the data set and save it to local storage.
 	 */
-	elements.demoDataButton.addEventListener("click", () => {
-		RequestDemoMode();
-	});
-
-	/**
-	 * The explanation for an empty page offers both demo data sets, on every page.
-	 */
-	elements.emptyStateDemoButton.addEventListener("click", () => {
-		RequestDemoMode("Demo_1");
-	});
-	elements.emptyStateDemoMinlpButton.addEventListener("click", () => {
-		RequestDemoMode("Demo_2");
-	});
+	for (const [button, demo] of [
+		[elements.emptyStateDemoButton, "Demo_1"],
+		[elements.emptyStateDemoMinlpButton, "Demo_2"],
+		[elements.demoMipMenuItem, "Demo_1"],
+		[elements.demoMinlpMenuItem, "Demo_2"]
+	] as const) {
+		button.addEventListener("click", () => {
+			RequestDemoMode(demo);
+		});
+	}
 }
