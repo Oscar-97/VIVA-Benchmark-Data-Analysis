@@ -49,7 +49,10 @@ export function HandleCommonButtons(
 	 * Delete stored data in local storage when confirming in the "Remove saved data" modal.
 	 */
 	Listen(document.getElementById("deleteButtonInModal"), "click", () => {
-		DeleteUserConfiguration();
+		DeleteUserConfiguration(() => {
+			elements.deleteLocalStorageButton.disabled = false;
+			elements.downloadConfigurationButtonLayer.disabled = false;
+		});
 		elements.deleteLocalStorageButton.disabled = true;
 		elements.downloadConfigurationButtonLayer.disabled = true;
 	});

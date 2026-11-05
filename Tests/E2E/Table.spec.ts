@@ -123,6 +123,30 @@ test.describe("Table page", () => {
 		await ExpectNotification(page, "Deleted configuration.");
 	});
 
+	test("Removing the saved data can be undone", async ({ page }) => {
+		await ImportAndView(page, ["shotALL.trc"], SHOT_LOADED);
+		await ClickDataMenuItem(page, "#saveLocalStorageButton");
+		await page.reload();
+		await ExpectNotification(page, "Found stored configuration!");
+
+		await DeleteConfiguration(page);
+		await ExpectNotification(page, "Deleted configuration.");
+		await expect(page.locator("#deleteLocalStorageButton")).toBeDisabled();
+
+		await page.locator("#alertActionButton").click();
+		await ExpectNotification(page, "Restored the saved data.");
+		await expect(page.locator("#alertActionButton")).toBeHidden();
+		await expect(page.locator("#deleteLocalStorageButton")).toBeEnabled();
+		await expect(
+			page.locator("#downloadConfigurationButtonLayer")
+		).toBeEnabled();
+
+		// The data is stored again, so it is loaded after a reload.
+		await page.reload();
+		await expect(page.locator("#deleteLocalStorageButton")).toBeEnabled();
+		await expect(page.locator("#dataTableGenerated")).toBeVisible();
+	});
+
 	test("Loading wrong file format", async ({ page }) => {
 		await page.setInputFiles('input[type="file"]', TestFile("error.png"));
 		const message =

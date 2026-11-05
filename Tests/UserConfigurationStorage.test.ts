@@ -128,6 +128,30 @@ describe("DeleteUserConfiguration", () => {
 		expect(localStorage.getItem(Keys.USER_CONFIGURATION)).toBeNull();
 		expect(localStorage.getItem(Keys.DEMO_DATA)).toBeNull();
 		expect(DisplayWarningNotification).toHaveBeenCalledWith(
+			UserConfigurationMessages.DELETED_CONFIG,
+			expect.objectContaining({ label: "Undo" })
+		);
+	});
+
+	it("puts the data back when the removal is undone", () => {
+		const onRestore = jest.fn();
+		localStorage.setItem(Keys.USER_CONFIGURATION, '{"a":1}');
+		DeleteUserConfiguration(onRestore);
+		const action = jest.mocked(DisplayWarningNotification).mock.calls[0]?.[1];
+
+		action?.onClick();
+
+		expect(localStorage.getItem(Keys.USER_CONFIGURATION)).toBe('{"a":1}');
+		expect(localStorage.getItem(Keys.DEMO_DATA)).toBeNull();
+		expect(onRestore).toHaveBeenCalledTimes(1);
+		expect(DisplayAlertNotification).toHaveBeenCalledWith(
+			UserConfigurationMessages.RESTORED_CONFIG
+		);
+	});
+
+	it("offers no undo when nothing was saved", () => {
+		DeleteUserConfiguration();
+		expect(DisplayWarningNotification).toHaveBeenCalledWith(
 			UserConfigurationMessages.DELETED_CONFIG
 		);
 	});

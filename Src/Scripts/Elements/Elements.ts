@@ -104,6 +104,15 @@ export const elements = {
 	},
 
 	/**
+	 * `alertActionButton` is a reference to the HTMLButtonElement with the ID "alertActionButton".
+	 * It is shown in the notification when the notification offers an action, like undoing the removal of data.
+	 * @type {HTMLButtonElement}
+	 */
+	get alertActionButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("alertActionButton");
+	},
+
+	/**
 	 * `closeAlertButton` is a reference to the HTMLButtonElement with the ID "closeAlertButton".'
 	 * @type {HTMLButtonElement}
 	 */

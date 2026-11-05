@@ -51,7 +51,8 @@ export enum UserConfigurationMessages {
 	STORE_SUCCESS = "Saved configuration!",
 	NO_STORED_CONFIG = "No saved data configuration found!",
 	PREVIOUSLY_VISITED = "User has previously visited this page in this session/tab.",
-	DELETED_CONFIG = "Deleted configuration."
+	DELETED_CONFIG = "Deleted configuration.",
+	RESTORED_CONFIG = "Restored the saved data."
 }
 
 /**
