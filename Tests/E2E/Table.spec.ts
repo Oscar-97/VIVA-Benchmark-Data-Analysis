@@ -45,7 +45,18 @@ test.describe("Table page", () => {
 	 */
 	async function DeleteConfiguration(page: Page): Promise<void> {
 		await ClickDataMenuItem(page, "#deleteLocalStorageButton");
+		const modal = page.locator("#deleteDataModal");
 		await page.locator("#deleteButtonInModal").click();
+		// Bootstrap ignores a close while the modal is still fading in, although the data is deleted. Cancel
+		// closes the modal again until it has closed, and does not delete a second time.
+		await expect(async () => {
+			if (await modal.isVisible()) {
+				await modal
+					.getByRole("button", { name: "Cancel" })
+					.click({ timeout: 1000 });
+			}
+			await expect(modal).toBeHidden({ timeout: 1000 });
+		}).toPass();
 	}
 
 	for (const demo of ["Demo_1", "Demo_2"]) {

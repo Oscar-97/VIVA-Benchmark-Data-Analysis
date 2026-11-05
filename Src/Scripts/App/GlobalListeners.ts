@@ -14,7 +14,6 @@ import { ShowFileList } from "../Elements/FileList";
 import { ImportDataEvents } from "../Elements/Events/ImportDataEvents";
 import { RequestPWANotificationPermission } from "../PWA/PWA-utils";
 import { state } from "./AppState";
-import { GetPageKind, PageKind } from "./CurrentPage";
 import { ManageData } from "./ManageData";
 
 /**
@@ -102,18 +101,20 @@ export function RegisterGlobalListeners(): void {
 	});
 
 	/**
-	 * Adds an event listener to the "Demo-Mode" button that loads a demo data set and savet it to local storage.
+	 * Adds an event listener to the "Demo-Mode" button that loads the demo data set that is selected
+	 * and saves it to local storage. The button is on every page.
 	 */
-	if (GetPageKind() === PageKind.TABLE) {
-		elements.demoDataButton.addEventListener("click", () => {
-			RequestDemoMode();
-		});
-	}
+	elements.demoDataButton.addEventListener("click", () => {
+		RequestDemoMode();
+	});
 
 	/**
-	 * The explanation for an empty page offers the first demo data set, on every page.
+	 * The explanation for an empty page offers both demo data sets, on every page.
 	 */
 	elements.emptyStateDemoButton.addEventListener("click", () => {
 		RequestDemoMode("Demo_1");
+	});
+	elements.emptyStateDemoMinlpButton.addEventListener("click", () => {
+		RequestDemoMode("Demo_2");
 	});
 }

@@ -98,7 +98,16 @@ export const elements = {
 	},
 
 	/**
+	 * `emptyStateDemoMinlpButton` is a reference to the HTMLButtonElement with the ID "emptyStateDemoMinlpButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get emptyStateDemoMinlpButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("emptyStateDemoMinlpButton");
+	},
+
+	/**
 	 * `emptyStateDemoButton` is a reference to the HTMLButtonElement with the ID "emptyStateDemoButton".
+	 * It loads the MIP demo data.
 	 * @type {HTMLButtonElement}
 	 */
 	get emptyStateDemoButton(): HTMLButtonElement {
