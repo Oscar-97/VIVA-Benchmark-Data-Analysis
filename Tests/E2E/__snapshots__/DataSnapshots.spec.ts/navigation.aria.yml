@@ -14,12 +14,13 @@
       - button "Upload"
       - button " Upload" [disabled]
     - listitem:
-      - text: Library
-      - combobox "Select library" [disabled]:
+      - text: Best-known bounds
+      - combobox "Best-known bounds" [disabled]:
         - option "None" [selected]
         - option "MINLPLib"
         - option /MIPLIB \d+/
         - option /MIPLIB \d+/
+        - option "Uploaded .solu file" [disabled]
   - list:
     - listitem:
       - link " Docs":
@@ -33,7 +34,7 @@
     - listitem:
       - button "Help":  Help
     - listitem:
-      - button "Switch to dark theme"
+      - button "Switch to dark theme": 
     - listitem:
       - link " Releases":
         - /url: https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/releases
