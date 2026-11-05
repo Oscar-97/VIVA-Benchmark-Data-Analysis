@@ -25,6 +25,32 @@ test.describe("Navigation", () => {
 		expect(errors).toEqual([]);
 	});
 
+	test("The data actions are grouped in the Data menu", async ({ page }) => {
+		await page.goto(PageUrl("report.html"));
+		await expect(
+			page.locator("#buttonContainer > #saveLocalStorageButton")
+		).toHaveCount(0);
+
+		await page.locator("#dataMenuButton").click();
+		const items = page.locator("#dataMenu .dropdown-menu .dropdown-item");
+		await expect(items).toHaveText([
+			/Save to browser/,
+			/Export configuration\s+\(\.json\)/,
+			/Export with options/,
+			/Remove saved data/,
+			/Clear table view/
+		]);
+		await expect(page.locator("#deleteLocalStorageButton")).toHaveClass(
+			/text-danger/
+		);
+
+		await page.goto(PageUrl("Src/Pages/solver_time.html"));
+		await page.locator("#dataMenuButton").click();
+		await expect(
+			page.locator("#dataMenu .dropdown-menu .dropdown-item")
+		).toHaveCount(4);
+	});
+
 	test("The navigation marks the current page as a link", async ({ page }) => {
 		await page.goto(PageUrl("report.html"));
 		const current = page.locator('nav a[aria-current="page"]');

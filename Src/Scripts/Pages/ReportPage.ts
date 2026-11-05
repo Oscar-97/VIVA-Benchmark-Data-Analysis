@@ -50,7 +50,7 @@ export function HandleReportPage(traceData: TraceData[]): void {
 	});
 
 	/**
-	 * Save to local storage when clicking on the "Save Data" button.
+	 * Save to local storage when clicking on the "Save to browser" menu item.
 	 * If the results have been filtered or if they have been selected,
 	 * it remaps the object properties based on `ReversedTraceHeaderMap` before saving the data.
 	 */
@@ -59,7 +59,7 @@ export function HandleReportPage(traceData: TraceData[]): void {
 	});
 
 	/**
-	 * Destroy the data table and reinitializes the program when confirming in the "Clear Data Table" modal.
+	 * Destroy the data table and reinitializes the program when confirming in the "Clear table view" modal.
 	 */
 	Listen(document.getElementById("clearTableButtonInModal"), "click", () => {
 		DestroyDataTable();

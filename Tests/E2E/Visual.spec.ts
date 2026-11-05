@@ -6,7 +6,8 @@ import {
 	PageUrl,
 	PLOT_PAGES,
 	TestFile,
-	ViewTable
+	ViewTable,
+	ClickDataMenuItem
 } from "./Helpers";
 
 /**
@@ -73,8 +74,8 @@ test.describe("Screenshots", () => {
 	test("The modal that asks to delete the data", async ({ page }) => {
 		await OpenWithData(page, "report.html");
 		await ViewTable(page);
-		await page.locator("#saveLocalStorageButton").click();
-		await page.locator("#deleteLocalStorageButton").click();
+		await ClickDataMenuItem(page, "#saveLocalStorageButton");
+		await ClickDataMenuItem(page, "#deleteLocalStorageButton");
 
 		const modal = page.locator("#deleteDataModal .modal-content");
 		await expect(modal).toBeVisible();

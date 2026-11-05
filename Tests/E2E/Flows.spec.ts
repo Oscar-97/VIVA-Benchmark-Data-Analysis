@@ -8,7 +8,8 @@ import {
 	PageUrl,
 	PLOT_PAGES,
 	TestFile,
-	ViewTable
+	ViewTable,
+	ClickDataMenuItem
 } from "./Helpers";
 
 const PAGES = [
@@ -88,8 +89,8 @@ test.describe("Modals", () => {
 	test("Cancelling the delete modal keeps the stored data", async ({
 		page
 	}) => {
-		await page.locator("#saveLocalStorageButton").click();
-		await page.locator("#deleteLocalStorageButton").click();
+		await ClickDataMenuItem(page, "#saveLocalStorageButton");
+		await ClickDataMenuItem(page, "#deleteLocalStorageButton");
 		const modal = page.locator("#deleteDataModal");
 		await expect(modal).toBeVisible();
 
@@ -104,7 +105,7 @@ test.describe("Modals", () => {
 	test("Clearing the table asks first, and removes the table", async ({
 		page
 	}) => {
-		await page.locator("#clearTableButton").click();
+		await ClickDataMenuItem(page, "#clearTableButton");
 		const modal = page.locator("#clearDataTableModal");
 		await expect(modal).toBeVisible();
 
@@ -112,7 +113,7 @@ test.describe("Modals", () => {
 		await expect(modal).toBeHidden();
 		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible();
 
-		await page.locator("#clearTableButton").click();
+		await ClickDataMenuItem(page, "#clearTableButton");
 		await page.locator("#clearTableButtonInModal").click();
 
 		await expect(page.locator("#dataTableGenerated_wrapper")).toHaveCount(0);
@@ -131,8 +132,9 @@ test.describe("Saved data", () => {
 		const firstRows = await page
 			.locator("#dataTableGenerated tbody tr")
 			.allInnerTexts();
-		await page.locator("#saveLocalStorageButton").click();
+		await ClickDataMenuItem(page, "#saveLocalStorageButton");
 
+		await page.locator("#dataMenuButton").click();
 		const [download] = await Promise.all([
 			page.waitForEvent("download"),
 			page.locator("#downloadConfigurationButton").click()
@@ -168,7 +170,7 @@ test.describe("Customized download", () => {
 		await ExpectNotification(page, "Benchmarks loaded with following files");
 		await ViewTable(page);
 
-		await page.locator("#configurationSettingsButton").click();
+		await ClickDataMenuItem(page, "#configurationSettingsButton");
 		await page.locator("#solverSelector").selectOption("scip");
 		await page.locator("#defaultTimeInput").fill("500");
 		await page.locator("#gapLimitInput").fill("0.5");

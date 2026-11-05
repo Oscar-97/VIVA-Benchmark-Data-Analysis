@@ -25,7 +25,7 @@ export function HandlePlotPages(traceData: TraceData[]): void {
 	}
 
 	/**
-	 * Save to local storage when clicking on the "Save Data" button.
+	 * Save to local storage when clicking on the "Save to browser" menu item.
 	 */
 	RegisterSaveToLocalStorage(() => {
 		return ConvertToTraceFile(traceData);

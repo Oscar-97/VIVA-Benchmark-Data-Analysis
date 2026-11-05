@@ -3,8 +3,25 @@
 //
 // Run `npm run build:pages` after changing this file, the partials or the fragments.
 
-const SAVE_TITLE = "Save currently loaded data to local storage.";
-const DELETE_TITLE = "Delete currently saved data in local storage.";
+const SAVE_TITLE = "Save the loaded data in the local storage of this browser.";
+const DELETE_TITLE =
+  "Remove the data saved in the local storage of this browser.";
+
+/**
+ * The data menu of a page, with the actions that save, export and remove the data.
+ */
+function DataMenu(save, remove, extra = []) {
+  return {
+    menu: [
+      ["save", { title: save }],
+      "download-saved",
+      "configure",
+      "separator",
+      ["delete", { title: remove }],
+      ...extra,
+    ],
+  };
+}
 
 /**
  * The buttons of a plot page, with the button that shows the plot.
@@ -12,13 +29,8 @@ const DELETE_TITLE = "Delete currently saved data in local storage.";
 function PlotButtons(title, label) {
   return [
     ["view-plots", { title, label }],
-    ["save", { title: SAVE_TITLE }],
-    "separator",
-    "download-saved",
-    "configure",
     "download-chart-data",
-    "separator",
-    ["delete", { title: DELETE_TITLE }],
+    DataMenu(SAVE_TITLE, DELETE_TITLE),
   ];
 }
 
@@ -44,16 +56,11 @@ export const PAGES = [
     buttons: [
       "view-table",
       "show-selected",
-      ["save", { title: "Save current table configuration to local storage." }],
-      "separator",
-      "download-saved",
-      "configure",
-      "separator",
-      [
-        "delete",
-        { title: "Delete current table configuration from local storage." },
-      ],
-      "clear-table",
+      DataMenu(
+        "Save the current table configuration in the local storage of this browser.",
+        "Remove the table configuration saved in the local storage of this browser.",
+        ["clear-table"],
+      ),
     ],
     content: { fragment: "report-body" },
   },
@@ -107,15 +114,7 @@ export const PAGES = [
     title: "Compare Solvers",
     output: "Src/Pages/compare_solvers.html",
     location: "pages",
-    buttons: [
-      "compare-solvers",
-      ["save", { title: SAVE_TITLE }],
-      "separator",
-      "download-saved",
-      "configure",
-      "separator",
-      ["delete", { title: DELETE_TITLE }],
-    ],
+    buttons: ["compare-solvers", DataMenu(SAVE_TITLE, DELETE_TITLE)],
     controls: "compare-solvers-controls",
     content: { fragment: "compare-solvers-body" },
   },

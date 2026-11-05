@@ -5,7 +5,8 @@ import {
 	ImportFiles,
 	PageUrl,
 	PLOT_PAGES,
-	TestFile
+	TestFile,
+	ClickDataMenuItem
 } from "./Helpers";
 
 const PAGES = [
@@ -102,7 +103,7 @@ test.describe("Empty state", () => {
 		await page.locator("#viewTableButton").click();
 		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible();
 
-		await page.locator("#clearTableButton").click();
+		await ClickDataMenuItem(page, "#clearTableButton");
 		await page.locator("#clearTableButtonInModal").click();
 
 		await expect(page.locator("#emptyState")).toBeVisible();
@@ -191,7 +192,7 @@ test.describe("Demo data and saved data", () => {
 		await ImportFiles(page, [TestFile("shotALL.trc")]);
 		await page.locator("#viewTableButton").click();
 		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible();
-		await page.locator("#saveLocalStorageButton").click();
+		await ClickDataMenuItem(page, "#saveLocalStorageButton");
 		await page.reload();
 		await ExpectNotification(page, "Found stored configuration!");
 	}

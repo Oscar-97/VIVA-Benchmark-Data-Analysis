@@ -57,56 +57,51 @@
       </div>
 
 <!-- @button save -->
-      <div class="col-auto">
+      <li>
         <button
-          class="btn btn-primary btn-sm"
+          class="dropdown-item"
+          type="button"
           id="saveLocalStorageButton"
           disabled="true"
-          data-toggle="tooltip"
-          data-placement="top"
           title="{{title}}"
         >
-          <i class="bi bi-save"></i> Save Data
+          <i class="bi bi-save"></i> Save to browser
         </button>
-      </div>
+      </li>
 
 <!-- @button separator -->
       <div class="col-auto vertical-separator"></div>
 
 <!-- @button download-saved -->
-      <div class="col-auto">
+      <li>
         <button
-          class="btn btn-dark btn-sm"
+          class="dropdown-item"
           type="button"
           id="downloadConfigurationButtonLayer"
           disabled="true"
         >
           <a
             id="downloadConfigurationButton"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Download the user configuration."
-            ><i class="bi bi-download"></i> Download Saved Data</a
+            title="Download the saved data as a configuration file (UserConfiguration.json)."
+            ><i class="bi bi-download"></i> Export configuration (.json)</a
           >
         </button>
-      </div>
+      </li>
 
 <!-- @button configure -->
-      <div class="col-auto">
+      <li>
         <button
-          class="btn btn-dark btn-sm"
+          class="dropdown-item"
           type="button"
           data-bs-toggle="modal"
           data-bs-target="#configurationSettingsModal"
           id="configurationSettingsButton"
           disabled="true"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Customize the downloadable user configuration file."
+          title="Choose the solvers, time limit and gap limit of the exported configuration file."
         >
-          <i class="bi bi-gear"></i> Download Data
+          <i class="bi bi-gear"></i> Export with options…
         </button>
-      </div>
+      </li>
 
 <!-- @button download-chart-data -->
       <div class="col-auto">
@@ -128,33 +123,29 @@
       </div>
 
 <!-- @button delete -->
-      <div class="col-auto">
+      <li>
         <button
-          class="btn btn-danger btn-sm"
+          class="dropdown-item text-danger"
           type="button"
           data-bs-toggle="modal"
           data-bs-target="#deleteDataModal"
           id="deleteLocalStorageButton"
-          data-toggle="tooltip"
-          data-placement="top"
           title="{{title}}"
         >
-          <i class="bi bi-trash"></i> Delete Data
+          <i class="bi bi-trash"></i> Remove saved data
         </button>
-      </div>
+      </li>
 
 <!-- @button clear-table -->
-      <div class="col-auto">
+      <li>
         <button
-          class="btn btn-danger btn-sm"
+          class="dropdown-item text-danger"
           type="button"
           data-bs-toggle="modal"
           data-bs-target="#clearDataTableModal"
           id="clearTableButton"
-          data-toggle="tooltip"
-          data-placement="top"
-          title="Clear current table and refresh table page."
+          title="Clear the table and reload the page."
         >
-          <i class="bi bi-x-circle-fill"></i> Clear Data Table
+          <i class="bi bi-x-circle-fill"></i> Clear table view
         </button>
-      </div>
+      </li>

@@ -49,7 +49,7 @@ export function ClearDataTableModal(): void {
 	const clearButtonIcon = document.createElement("i");
 	clearButtonIcon.className = "bi bi-trash";
 	clearButton.appendChild(clearButtonIcon);
-	clearButton.appendChild(document.createTextNode(" Clear Data Table"));
+	clearButton.appendChild(document.createTextNode(" Clear table view"));
 
 	// Append elements to create the modal structure
 	modalHeader.appendChild(modalTitle);

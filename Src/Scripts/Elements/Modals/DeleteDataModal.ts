@@ -49,7 +49,7 @@ export function CreateDeleteDataModal(): void {
 	const deleteButtonIcon = document.createElement("i");
 	deleteButtonIcon.className = "bi bi-trash";
 	deleteButton.appendChild(deleteButtonIcon);
-	deleteButton.appendChild(document.createTextNode(" Delete Data"));
+	deleteButton.appendChild(document.createTextNode(" Remove saved data"));
 
 	// Append elements to create the modal structure
 	modalHeader.appendChild(modalTitle);
