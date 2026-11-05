@@ -81,6 +81,23 @@ export const elements = {
 	},
 
 	/**
+	 * `emptyStateChooseButton` is a reference to the HTMLButtonElement with the ID "emptyStateChooseButton".
+	 * It opens the dialog for choosing the files to load.
+	 * @type {HTMLButtonElement}
+	 */
+	get emptyStateChooseButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("emptyStateChooseButton");
+	},
+
+	/**
+	 * `selectedFiles` is a reference to the HTMLDivElement with the ID "selectedFiles", which lists the chosen files.
+	 * @type {HTMLDivElement}
+	 */
+	get selectedFiles(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("selectedFiles");
+	},
+
+	/**
 	 * `emptyStateDemoButton` is a reference to the HTMLButtonElement with the ID "emptyStateDemoButton".
 	 * @type {HTMLButtonElement}
 	 */

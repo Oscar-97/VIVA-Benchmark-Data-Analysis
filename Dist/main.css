@@ -3076,6 +3076,17 @@ tr.odd.bg-primary.row-selected-problems th.dtfc-fixed-left.sorting_1 {
 	border-radius: var(--bs-border-radius-lg);
 }
 
+.selected-files {
+	max-width: 30rem;
+	margin-left: auto;
+	margin-right: auto;
+	overflow-wrap: anywhere;
+}
+
+.selected-file {
+	padding: 0.15rem 0;
+}
+
 .load-status {
 	margin: 0.5rem 1rem;
 	min-height: 1.5rem;
