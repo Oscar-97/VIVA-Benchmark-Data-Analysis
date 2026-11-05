@@ -129,13 +129,45 @@ export function GetUserConfiguration(
 }
 
 /**
- * This function deletes the user configuration from the browser's local storage.
+ * This function puts the removed user configuration back into the browser's local storage.
+ *
+ * @param removed - The keys and values that were removed.
+ * @param onRestore - Called when the data is back.
  */
-export function DeleteUserConfiguration(): void {
+function RestoreUserConfiguration(
+	removed: [string, string][],
+	onRestore?: () => void
+): void {
 	try {
-		localStorage.removeItem(Keys.USER_CONFIGURATION);
-		localStorage.removeItem(Keys.DEMO_DATA);
+		for (const [key, value] of removed) {
+			localStorage.setItem(key, value);
+		}
 	} catch (error) {
+		DisplayErrorNotification("An error occurred: " + error);
+		return;
+	}
+	onRestore?.();
+	DisplayAlertNotification(UserConfigurationMessages.RESTORED_CONFIG);
+}
+
+/**
+ * This function deletes the user configuration from the browser's local storage.
+ * The notification offers to undo the removal.
+ *
+ * @param onRestore - Called when the removal is undone.
+ */
+export function DeleteUserConfiguration(onRestore?: () => void): void {
+	const removed: [string, string][] = [];
+	try {
+		for (const key of [Keys.USER_CONFIGURATION, Keys.DEMO_DATA]) {
+			const value = localStorage.getItem(key);
+			if (value !== null) {
+				removed.push([key, value]);
+			}
+			localStorage.removeItem(key);
+		}
+	} catch (error) {
+		removed.length = 0;
 		switch ((error as { name: string }).name) {
 			case "SecurityError":
 				DisplayErrorNotification(UserConfigurationMessages.SECURITY_ERROR);
@@ -145,7 +177,14 @@ export function DeleteUserConfiguration(): void {
 				break;
 		}
 	}
-	DisplayWarningNotification(UserConfigurationMessages.DELETED_CONFIG);
+	if (removed.length === 0) {
+		DisplayWarningNotification(UserConfigurationMessages.DELETED_CONFIG);
+		return;
+	}
+	DisplayWarningNotification(UserConfigurationMessages.DELETED_CONFIG, {
+		label: "Undo",
+		onClick: () => RestoreUserConfiguration(removed, onRestore)
+	});
 }
 
 /**

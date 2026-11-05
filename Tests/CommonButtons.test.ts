@@ -118,6 +118,17 @@ describe("HandleCommonButtons", () => {
 		expect(fakeElements.downloadConfigurationButtonLayer.disabled).toBe(true);
 	});
 
+	it("should enable the buttons again when the removal is undone", () => {
+		HandleCommonButtons(traceData, []);
+		Click(deleteButtonInModal);
+		const onRestore = jest.mocked(DeleteUserConfiguration).mock.calls[0]?.[0];
+
+		onRestore?.();
+
+		expect(fakeElements.deleteLocalStorageButton.disabled).toBe(false);
+		expect(fakeElements.downloadConfigurationButtonLayer.disabled).toBe(false);
+	});
+
 	describe("the customized download", () => {
 		it("should only export the selected solvers", () => {
 			const selected: string[] = ["BARON"];
