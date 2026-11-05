@@ -1,6 +1,6 @@
 const fileInput: { files: File[] } = { files: [] };
 const importDataButton = { disabled: false };
-const librarySelector = { disabled: true };
+const librarySelector = { disabled: true, value: "none" };
 
 jest.mock("../Src/Scripts/Elements/Elements", () => ({
 	elements: {
@@ -58,6 +58,7 @@ describe("ReadData", () => {
 		stored = UseStorage();
 		importDataButton.disabled = false;
 		librarySelector.disabled = true;
+		librarySelector.value = "none";
 	});
 
 	afterEach(() => {
@@ -69,6 +70,25 @@ describe("ReadData", () => {
 
 		expect(result.UnprocessedData).toEqual(["a", "b"]);
 		expect(importDataButton.disabled).toBe(false);
+		expect(librarySelector.disabled).toBe(false);
+	});
+
+	it("should show an uploaded .solu file as the source of the bounds", async () => {
+		await Read(
+			new File(["a"], "run.trc"),
+			new File(["=opt= x 1"], "bounds.solu")
+		);
+
+		expect(librarySelector.value).toBe("solu");
+		expect(librarySelector.disabled).toBe(true);
+	});
+
+	it("should open the selector again when the .solu file is gone", async () => {
+		librarySelector.value = "solu";
+
+		await Read(new File(["a"], "run.trc"));
+
+		expect(librarySelector.value).toBe("none");
 		expect(librarySelector.disabled).toBe(false);
 	});
 

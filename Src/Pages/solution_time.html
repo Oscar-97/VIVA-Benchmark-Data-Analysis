@@ -174,17 +174,20 @@
               </div>
             </li>
             <li class="nav-item">
-              <div class="input-group" id="librarySelectorGroup">
-                <span class="input-group-text">Library</span>
-                <select
-                  class="form-select"
-                  id="librarySelector"
-                  aria-label="Select library"
+              <div
+                class="input-group"
+                id="librarySelectorGroup"
+                title="Best-known bounds are used to compute primal and dual gaps. An uploaded .solu file is used instead of a library."
+              >
+                <label class="input-group-text" for="librarySelector"
+                  >Best-known bounds</label
                 >
+                <select class="form-select" id="librarySelector">
                   <option value="none" selected>None</option>
                   <option value="MINLPLib">MINLPLib</option>
                   <option value="MIPLIB_2017">MIPLIB 2017</option>
                   <option value="MIPLIB_2010">MIPLIB 2010</option>
+                  <option value="solu" disabled>Uploaded .solu file</option>
                 </select>
               </div>
             </li>
