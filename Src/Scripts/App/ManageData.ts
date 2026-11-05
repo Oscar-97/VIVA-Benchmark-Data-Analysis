@@ -3,7 +3,13 @@ import { ProcessData } from "../DataProcessing/ProcessTraceData";
 import { elements } from "../Elements/Elements";
 import { DescribeTraceData, ShowLoadStatus } from "../Elements/LoadStatus";
 import { Values } from "../Constants/Values";
-import { TraceData } from "../Interfaces/Interfaces";
+import { ConvertToTraceFile } from "../DataProcessing/CreateData";
+import { ShowSessionIndicator } from "../Elements/SessionIndicator";
+import {
+	GetSessionData,
+	StoreSessionData
+} from "../UserConfiguration/SessionData";
+import { StoredConfiguration, TraceData } from "../Interfaces/Interfaces";
 import { HandleCommonButtons } from "../Pages/CommonButtons";
 import { HandleCompareSolversPage } from "../Pages/CompareSolversPage";
 import { HandlePlotPages } from "../Pages/PlotPages";
@@ -14,11 +20,18 @@ import { GetPageKind, PageKind } from "./CurrentPage";
 import { ResetPageListeners } from "./PageListeners";
 
 /**
+ * Gets the configuration to show: the data of this session, or else the data saved in the browser.
+ */
+function GetCurrentConfiguration(): StoredConfiguration | undefined {
+	return GetSessionData() ?? GetUserConfiguration();
+}
+
+/**
  * Tells what was loaded, and for a large data set that the view button shows it.
  */
-function ShowLoadSummary(traceData: TraceData[], isLarge: boolean): void {
+function ShowLoadSummary(traceData: TraceData[], isLarge: boolean): string {
 	if (traceData.length === 0) {
-		return;
+		return "";
 	}
 	const bounds =
 		state.dataFileType === "trc"
@@ -31,6 +44,26 @@ function ShowLoadSummary(traceData: TraceData[], isLarge: boolean): void {
 			: summary,
 		false
 	);
+	return summary;
+}
+
+/**
+ * Keeps the data that was just uploaded for the other pages of the application in this tab.
+ * Saved data is in the browser already.
+ */
+function KeepForOtherPages(traceData: TraceData[], label: string): void {
+	if (state.dataFileType !== "trc" || traceData.length === 0) {
+		return;
+	}
+	const isKept = StoreSessionData(
+		ConvertToTraceFile(traceData),
+		label,
+		state.defaultTime,
+		state.gapLimit
+	);
+	if (isKept) {
+		ShowSessionIndicator(label);
+	}
 }
 
 /**
@@ -52,7 +85,7 @@ export async function ManageData(): Promise<void> {
 	 * and updates the unprocessedData and dataFileType variables.
 	 */
 	if (state.dataFileType === "json") {
-		const config = GetUserConfiguration();
+		const config = GetCurrentConfiguration();
 		if (!config) {
 			return;
 		}
@@ -79,7 +112,7 @@ export async function ManageData(): Promise<void> {
 	const isLarge =
 		state.dataFileType === "trc" &&
 		traceData.length > Values.AUTO_RENDER_ROW_LIMIT;
-	ShowLoadSummary(traceData, isLarge);
+	KeepForOtherPages(traceData, ShowLoadSummary(traceData, isLarge));
 
 	/**
 	 * Remove the listeners of earlier data, so only the ones for this data run.

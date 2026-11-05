@@ -217,8 +217,11 @@ test.describe("Demo data and saved data", () => {
 
 		const modal = page.locator("#replaceDataModal");
 		await expect(modal).toBeVisible();
-		await modal.getByRole("button", { name: "Cancel" }).click();
-		await expect(modal).toBeHidden();
+		// Bootstrap ignores a close while the modal is still fading in, so the click is repeated until the modal has closed.
+		await expect(async () => {
+			await modal.getByRole("button", { name: "Cancel" }).click();
+			await expect(modal).toBeHidden({ timeout: 1000 });
+		}).toPass();
 
 		expect(
 			await page.evaluate(() => [

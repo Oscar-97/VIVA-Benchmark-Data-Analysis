@@ -45,6 +45,9 @@ jest.mock("../Src/Scripts/Chart/ChartType/RadarCharts", () => ({
 jest.mock("../Src/Scripts/UserConfiguration/UserConfiguration", () => ({
 	CreateUserConfiguration: jest.fn()
 }));
+jest.mock("../Src/Scripts/Elements/SessionIndicator", () => ({
+	ForgetSessionData: jest.fn()
+}));
 
 import { state } from "../Src/Scripts/App/AppState";
 import {
@@ -57,6 +60,7 @@ import { PlotTerminationRelation } from "../Src/Scripts/Chart/ChartType/RadarCha
 import { PageTitles } from "../Src/Scripts/Constants/PageTitles";
 import { Keys } from "../Src/Scripts/Constants/Keys";
 import { GetPlotFunction } from "../Src/Scripts/Pages/PlotRegistry";
+import { ForgetSessionData } from "../Src/Scripts/Elements/SessionIndicator";
 import { RegisterSaveToLocalStorage } from "../Src/Scripts/Pages/SaveToLocalStorage";
 import { CreateUserConfiguration } from "../Src/Scripts/UserConfiguration/UserConfiguration";
 import { TraceData } from "../Src/Scripts/Interfaces/Interfaces";
@@ -250,6 +254,7 @@ describe("RegisterSaveToLocalStorage", () => {
 		Click();
 
 		expect(CreateUserConfiguration).toHaveBeenCalledWith(["a", "b"], "json");
+		expect(ForgetSessionData).toHaveBeenCalledTimes(1);
 		expect(selectors.deleteLocalStorageButton.disabled).toBe(false);
 		expect(selectors.downloadConfigurationButtonLayer.disabled).toBe(false);
 		expect(session.get(Keys.ALERTED_STORAGE)).toBe("true");

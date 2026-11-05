@@ -7,5 +7,6 @@ export enum Keys {
 	SAVED_STORAGE_NOTIFICATION = "savedStorageNotification",
 	ALERTED_STORAGE = "alertedStorage",
 	ALERTED_SCREEN_SIZE = "alertedScreenSize",
-	THEME = "theme"
+	THEME = "theme",
+	SESSION_DATA = "sessionData"
 }

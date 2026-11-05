@@ -1,3 +1,4 @@
+import { ForgetSessionData } from "../Elements/SessionIndicator";
 import { RestartProgram } from "../App/Lifecycle";
 import { Listen } from "../App/PageListeners";
 import { ConvertToTraceFile } from "../DataProcessing/CreateData";
@@ -63,6 +64,7 @@ export function HandleReportPage(traceData: TraceData[]): void {
 	 */
 	Listen(document.getElementById("clearTableButtonInModal"), "click", () => {
 		DestroyDataTable();
+		ForgetSessionData();
 		RestartProgram();
 		DisplayAlertNotification(TableMessages.TABLE_CLEARED);
 	});

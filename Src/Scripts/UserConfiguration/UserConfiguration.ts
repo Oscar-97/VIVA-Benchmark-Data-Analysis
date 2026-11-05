@@ -7,7 +7,7 @@ import {
 } from "../Elements/Events/DisplayAlertNotification";
 import { elements } from "../Elements/Elements";
 import { StoredConfiguration, UserData } from "../Interfaces/Interfaces";
-import { Values } from "../Constants/Values";
+import { ToStoredConfiguration } from "./StoredConfiguration";
 
 /**
  * This object is used to store the user configuration.
@@ -114,18 +114,7 @@ export function GetUserConfiguration(
 		return undefined;
 	}
 
-	if (!Array.isArray(userConfig?.dataSet) || userConfig.dataSet.length === 0) {
-		return undefined;
-	}
-
-	return {
-		dataSet: userConfig.dataSet.map((value) => {
-			return typeof value === "string" ? value : JSON.stringify(value);
-		}),
-		dataFileType: userConfig.dataFileType,
-		defaultTime: userConfig.defaultTime ?? Values.DEFAULT_TIME,
-		gapLimit: userConfig.gapLimit ?? Values.DEFAULT_GAP_LIMIT
-	};
+	return ToStoredConfiguration(userConfig);
 }
 
 /**
