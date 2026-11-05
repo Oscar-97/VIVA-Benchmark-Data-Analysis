@@ -10,6 +10,7 @@ import {
 	ShowLoadStatus
 } from "../Elements/LoadStatus";
 import { ForgetSessionData } from "../Elements/SessionIndicator";
+import { ShowFileList } from "../Elements/FileList";
 import { ImportDataEvents } from "../Elements/Events/ImportDataEvents";
 import { RequestPWANotificationPermission } from "../PWA/PWA-utils";
 import { state } from "./AppState";
@@ -31,8 +32,9 @@ export function RegisterGlobalListeners(): void {
 	 */
 	elements.fileInput.addEventListener("change", () => {
 		ClearLoadStatus();
-		state.dataFileType = GetDataFileType();
 		const files = Array.from(elements.fileInput.files ?? []);
+		ShowFileList(files);
+		state.dataFileType = GetDataFileType();
 		ShowLoadStatus(`Reading ${DescribeFiles(files)}`, true);
 		ReadData(
 			state.unprocessedData,
@@ -57,6 +59,13 @@ export function RegisterGlobalListeners(): void {
 					error instanceof Error ? error.message : String(error)
 				);
 			});
+	});
+
+	/**
+	 * The explanation for an empty page opens the dialog for choosing files.
+	 */
+	elements.emptyStateChooseButton.addEventListener("click", () => {
+		elements.fileInput.click();
 	});
 
 	/**
