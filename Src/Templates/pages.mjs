@@ -24,23 +24,24 @@ function DataMenu(save, remove, extra = []) {
 }
 
 /**
- * The buttons of a plot page, with the button that shows the plot.
+ * The buttons of a plot page, with the button that shows the plot. The plot is shown after the data is loaded,
+ * so the button updates it, after a change of the settings.
  */
-function PlotButtons(title, label) {
+function PlotButtons(title) {
   return [
-    ["view-plots", { title, label }],
+    ["view-plots", { title, label: "Update plot" }],
     "download-chart-data",
     DataMenu(SAVE_TITLE, DELETE_TITLE),
   ];
 }
 
-function PlotPage(name, title, view, extra = {}) {
+function PlotPage(name, title, viewTitle, extra = {}) {
   return {
     name,
     title,
     output: `Src/Pages/${name}.html`,
     location: "pages",
-    buttons: PlotButtons(view.title, view.label),
+    buttons: PlotButtons(viewTitle),
     content: { statistics: true },
     ...extra,
   };
@@ -67,48 +68,34 @@ export const PAGES = [
   PlotPage(
     "performance_profile",
     "Performance Profile",
-    { title: "View performance profile.", label: "View Performance Profile" },
+    "View performance profile.",
     { controls: "performance-profile-controls" },
   ),
   PlotPage(
     "solver_time_all",
     "Solver Time per Solver",
-    {
-      title: "View Solver Time per Solver.",
-      label: "View Solver Time per Solver",
-    },
+    "View Solver Time per Solver.",
     { controls: "solver-time-all-controls" },
   ),
-  PlotPage("solver_time", "Solver Time per Instance", {
-    title: "View the solver times.",
-    label: "View Solver Time",
-  }),
-  PlotPage("number_of_nodes", "Number of Nodes", {
-    title: "View number of nodes.",
-    label: "View Number of Nodes",
-  }),
-  PlotPage("number_of_iterations", "Number of Iterations", {
-    title: "View number of iterations.",
-    label: "View Number of Iterations",
-  }),
+  PlotPage("solver_time", "Solver Time per Instance", "View the solver times."),
+  PlotPage("number_of_nodes", "Number of Nodes", "View number of nodes."),
+  PlotPage(
+    "number_of_iterations",
+    "Number of Iterations",
+    "View number of iterations.",
+  ),
   PlotPage(
     "termination_status",
     "Termination Status",
-    { title: "View termination status.", label: "View Termination Status" },
+    "View termination status.",
     { controls: "termination-status-controls" },
   ),
-  PlotPage(
-    "solution_quality",
-    "Solution Quality",
-    { title: "View solution quality.", label: "View Solution Quality" },
-    { controls: "solution-quality-controls" },
-  ),
-  PlotPage(
-    "solution_time",
-    "Solution Time",
-    { title: "View solution time.", label: "View Solution Time" },
-    { content: { statistics: false } },
-  ),
+  PlotPage("solution_quality", "Solution Quality", "View solution quality.", {
+    controls: "solution-quality-controls",
+  }),
+  PlotPage("solution_time", "Solution Time", "View solution time.", {
+    content: { statistics: false },
+  }),
   {
     name: "compare_solvers",
     title: "Compare Solvers",
