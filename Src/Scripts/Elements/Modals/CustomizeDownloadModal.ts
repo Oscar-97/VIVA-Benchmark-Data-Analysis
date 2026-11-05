@@ -122,7 +122,8 @@ export function CreateConfigurationSettingsModal(): void {
 		"title",
 		"Download a customized user configuration."
 	);
-	downloadButton.innerHTML = '<i class="bi bi-download"></i> Download Data';
+	downloadButton.innerHTML =
+		'<i class="bi bi-download"></i> Export configuration';
 
 	downloadButtonLayer.appendChild(downloadButton);
 

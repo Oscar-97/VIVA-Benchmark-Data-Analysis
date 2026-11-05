@@ -5,7 +5,7 @@ import { Keys } from "../Constants/Keys";
 import { CreateUserConfiguration } from "../UserConfiguration/UserConfiguration";
 
 /**
- * Save to local storage when clicking on the "Save Data" button.
+ * Save to local storage when clicking on the "Save to browser" menu item.
  * A freshly loaded .trc file is stored as json, as the stored data is converted to a trace file.
  *
  * @param {() => string[]} getRawData - Returns the raw data that should be stored when the button is clicked.

@@ -63,6 +63,23 @@ const buttons = Object.fromEntries(
     }, []),
 );
 
+/**
+ * The data actions of a page, grouped in a menu. A "separator" entry becomes a divider.
+ */
+function RenderDataMenu(items) {
+  const entries = items
+    .map((item) =>
+      item === "separator"
+        ? '<li><hr class="dropdown-divider" /></li>'
+        : RenderButton(item),
+    )
+    .join("\n");
+  return `<div class="col-auto dropdown" id="dataMenu">
+        <button class="btn btn-dark btn-sm dropdown-toggle" type="button" id="dataMenuButton" data-bs-toggle="dropdown" aria-expanded="false" title="Save, export and remove the data."><i class="bi bi-database"></i> Data</button>
+        <ul class="dropdown-menu" aria-labelledby="dataMenuButton">${entries}</ul>
+      </div>`;
+}
+
 function RenderButton(button) {
   const [name, values] = Array.isArray(button) ? button : [button, {}];
   if (!(name in buttons)) {
@@ -251,7 +268,11 @@ export function RenderPage(page) {
     ${alert}
     <main id="main" tabindex="-1">
     <div id="buttonContainer" class="d-flex flex-wrap justify-content-start gap-2">
-      ${page.buttons.map(RenderButton).join("\n")}
+      ${page.buttons
+        .map((button) =>
+          button.menu ? RenderDataMenu(button.menu) : RenderButton(button),
+        )
+        .join("\n")}
     </div>${controls}
     <hr />
     ${emptyState}${gap}    ${RenderContent(page.content)}${gap}    </main>

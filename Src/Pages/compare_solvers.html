@@ -277,64 +277,71 @@
             <i class="bi bi-grid"></i> Compare Solvers
           </button>
         </div>
-        <div class="col-auto">
+        <div class="col-auto dropdown" id="dataMenu">
           <button
-            class="btn btn-primary btn-sm"
-            id="saveLocalStorageButton"
-            disabled="true"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Save currently loaded data to local storage."
-          >
-            <i class="bi bi-save"></i> Save Data
-          </button>
-        </div>
-        <div class="col-auto vertical-separator"></div>
-        <div class="col-auto">
-          <button
-            class="btn btn-dark btn-sm"
+            class="btn btn-dark btn-sm dropdown-toggle"
             type="button"
-            id="downloadConfigurationButtonLayer"
-            disabled="true"
+            id="dataMenuButton"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            title="Save, export and remove the data."
           >
-            <a
-              id="downloadConfigurationButton"
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Download the user configuration."
-              ><i class="bi bi-download"></i> Download Saved Data</a
-            >
+            <i class="bi bi-database"></i> Data
           </button>
-        </div>
-        <div class="col-auto">
-          <button
-            class="btn btn-dark btn-sm"
-            type="button"
-            data-bs-toggle="modal"
-            data-bs-target="#configurationSettingsModal"
-            id="configurationSettingsButton"
-            disabled="true"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Customize the downloadable user configuration file."
-          >
-            <i class="bi bi-gear"></i> Download Data
-          </button>
-        </div>
-        <div class="col-auto vertical-separator"></div>
-        <div class="col-auto">
-          <button
-            class="btn btn-danger btn-sm"
-            type="button"
-            data-bs-toggle="modal"
-            data-bs-target="#deleteDataModal"
-            id="deleteLocalStorageButton"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Delete currently saved data in local storage."
-          >
-            <i class="bi bi-trash"></i> Delete Data
-          </button>
+          <ul class="dropdown-menu" aria-labelledby="dataMenuButton">
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                id="saveLocalStorageButton"
+                disabled="true"
+                title="Save the loaded data in the local storage of this browser."
+              >
+                <i class="bi bi-save"></i> Save to browser
+              </button>
+            </li>
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                id="downloadConfigurationButtonLayer"
+                disabled="true"
+              >
+                <a
+                  id="downloadConfigurationButton"
+                  title="Download the saved data as a configuration file (UserConfiguration.json)."
+                  ><i class="bi bi-download"></i> Export configuration
+                  (.json)</a
+                >
+              </button>
+            </li>
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#configurationSettingsModal"
+                id="configurationSettingsButton"
+                disabled="true"
+                title="Choose the solvers, time limit and gap limit of the exported configuration file."
+              >
+                <i class="bi bi-gear"></i> Export with options…
+              </button>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <button
+                class="dropdown-item text-danger"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteDataModal"
+                id="deleteLocalStorageButton"
+                title="Remove the data saved in the local storage of this browser."
+              >
+                <i class="bi bi-trash"></i> Remove saved data
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
 

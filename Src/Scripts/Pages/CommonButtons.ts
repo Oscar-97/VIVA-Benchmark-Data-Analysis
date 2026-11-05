@@ -46,7 +46,7 @@ export function HandleCommonButtons(
 	});
 
 	/**
-	 * Delete stored data in local storage when confirming in the "Delete Data" modal.
+	 * Delete stored data in local storage when confirming in the "Remove saved data" modal.
 	 */
 	Listen(document.getElementById("deleteButtonInModal"), "click", () => {
 		DeleteUserConfiguration();

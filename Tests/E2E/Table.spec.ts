@@ -6,7 +6,8 @@ import {
 	ImportFiles,
 	PageUrl,
 	TestFile,
-	ViewTable
+	ViewTable,
+	ClickDataMenuItem
 } from "./Helpers";
 
 const SHOT_LOADED = "Benchmarks loaded with following files: shotALL.trc";
@@ -43,7 +44,7 @@ test.describe("Table page", () => {
 	 * Deletes the stored configuration, through the modal that asks for it.
 	 */
 	async function DeleteConfiguration(page: Page): Promise<void> {
-		await page.locator("#deleteLocalStorageButton").click();
+		await ClickDataMenuItem(page, "#deleteLocalStorageButton");
 		await page.locator("#deleteButtonInModal").click();
 	}
 
@@ -109,7 +110,7 @@ test.describe("Table page", () => {
 
 	test("Save to, load from and remove local storage", async ({ page }) => {
 		await ImportAndView(page, ["shotALL.trc"], SHOT_LOADED);
-		await page.locator("#saveLocalStorageButton").click();
+		await ClickDataMenuItem(page, "#saveLocalStorageButton");
 		await page.reload();
 
 		await ExpectNotification(page, "Found stored configuration!");
@@ -161,6 +162,7 @@ test.describe("Table page", () => {
 	test("Button status after viewing a table", async ({ page }) => {
 		await ImportAndView(page, ["shotALL.trc"], SHOT_LOADED);
 
+		await page.locator("#dataMenuButton").click();
 		for (const selector of [
 			"#showSelectedRowsButton",
 			"#saveLocalStorageButton",
@@ -176,8 +178,9 @@ test.describe("Table page", () => {
 
 	test("Download data", async ({ page }) => {
 		await ImportAndView(page, ["shotALL.trc"], SHOT_LOADED);
-		await page.locator("#saveLocalStorageButton").click();
+		await ClickDataMenuItem(page, "#saveLocalStorageButton");
 
+		await page.locator("#dataMenuButton").click();
 		const [download] = await Promise.all([
 			page.waitForEvent("download"),
 			page.locator("#downloadConfigurationButton").click()
@@ -298,7 +301,7 @@ test.describe("Table page", () => {
 	test("Clearing the table is done at once, and says so", async ({ page }) => {
 		await ImportAndView(page, ["shotALL.trc"], SHOT_LOADED);
 
-		await page.locator("#clearTableButton").click();
+		await ClickDataMenuItem(page, "#clearTableButton");
 		await page.locator("#clearTableButtonInModal").click();
 
 		await ExpectNotification(page, "Table cleared.");

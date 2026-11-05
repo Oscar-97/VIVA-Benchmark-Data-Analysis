@@ -157,3 +157,17 @@ export async function ReadChartData(
 		return (await fetch(link.href)).json();
 	});
 }
+
+/**
+ * Opens the Data menu, if it is not open yet, and uses the action with the id, for example "#saveLocalStorageButton".
+ */
+export async function ClickDataMenuItem(
+	page: Page,
+	selector: string
+): Promise<void> {
+	const item = page.locator(selector);
+	if (!(await item.isVisible())) {
+		await page.locator("#dataMenuButton").click();
+	}
+	await item.click();
+}

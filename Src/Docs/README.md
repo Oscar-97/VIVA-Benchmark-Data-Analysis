@@ -65,15 +65,17 @@ The application can be run without a live server since Webpack is responsible fo
 
 ### 1.1 General Button Functionality
 
-- **Save Data**: Save the currently uploaded data to local storage. If filtering has been applied on the table page, then the currently visible table will be stored.
-- **Download Saved Data**: Download the user configuration (`UserConfiguration.json`).
-- **Download Data**: Customize the downloadable user configuration file.
-- **Delete Data**: Delete the data from local storage.
+The data actions are grouped in the **Data** menu:
+
+- **Save to browser**: Save the currently uploaded data to local storage. If filtering has been applied on the table page, then the currently visible table will be stored.
+- **Export configuration (.json)**: Download the user configuration (`UserConfiguration.json`).
+- **Export with options…**: Customize the downloadable user configuration file.
+- **Remove saved data**: Remove the data saved in local storage.
 
 ### 1.2 Table Page Button Functionality
 - **View Table**: View the table of the uploaded results.
 - **Show Selected Rows**: View rows that have been selected from the table.
-- **Clear Data Table**: Clear the current table.
+- **Clear table view** (in the **Data** menu): Clear the current table.
 - **Settings**:
   - **Show *n* rows**: The number of rows to show in the table.
   - **Column Visibility**: Select which columns to show or hide.
