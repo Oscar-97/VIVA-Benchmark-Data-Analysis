@@ -83,37 +83,91 @@
             </li>
           </ul>
           <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="{{docs}}index.html" target="_blank"
-                ><i class="bi bi-journal-code"></i> Docs</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis"
-                target="_blank"
-                ><i class="bi bi-github"></i> GitHub</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues/new"
-                target="_blank"
-                ><i class="bi bi-plus-square"></i> New Issue</a
-              >
-            </li>
-            <li class="nav-item">
+            <li class="nav-item dropdown">
               <button
-                class="nav-link"
-                aria-label="Help"
-                data-bs-toggle="modal"
-                data-bs-target="#fileFormatInformationModal"
-                name="Help"
+                class="nav-link dropdown-toggle"
+                id="helpMenuButton"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
                 <i class="bi bi-question-circle-fill"></i> Help
               </button>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="helpMenuButton"
+              >
+                <li>
+                  <button
+                    class="dropdown-item"
+                    id="fileFormatsHelpItem"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#fileFormatInformationModal"
+                  >
+                    <i class="bi bi-file-earmark-text"></i> File formats
+                  </button>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{{docs}}index.html"
+                    target="_blank"
+                    ><i class="bi bi-journal-code"></i> Documentation</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/releases"
+                    target="_blank"
+                    ><i class="bi bi-tags"></i> Releases
+                    <span
+                      id="releaseVersionTagSpan"
+                      class="text-body-secondary"
+                    ></span
+                  ></a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis"
+                    target="_blank"
+                    ><i class="bi bi-github"></i> GitHub</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues/new"
+                    target="_blank"
+                    ><i class="bi bi-plus-square"></i> Report an issue</a
+                  >
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><h6 class="dropdown-header">Demo data</h6></li>
+                <li>
+                  <button
+                    class="dropdown-item"
+                    id="demoMipMenuItem"
+                    type="button"
+                    title="Load the demo data of a mixed-integer program (MIP)."
+                  >
+                    <i class="bi bi-activity"></i> MIP demo data
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="dropdown-item"
+                    id="demoMinlpMenuItem"
+                    type="button"
+                    title="Load the demo data of a mixed-integer nonlinear program (MINLP)."
+                  >
+                    <i class="bi bi-activity"></i> MINLP demo data
+                  </button>
+                </li>
+              </ul>
             </li>
             <li class="nav-item">
               <button
@@ -127,16 +181,6 @@
                 <i class="bi bi-moon-stars"></i>
               </button>
             </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/releases"
-                target="_blank"
-                id="releaseVersionTagSpan"
-                >Releases</a
-              >
-            </li>
-{{navExtra}}
           </ul>
         </div>
       </div>

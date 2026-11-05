@@ -84,12 +84,8 @@ function RestoreStoredConfiguration(): void {
 			localStorage.getItem(Keys.DEMO_DATA) === "demo1" ||
 			localStorage.getItem(Keys.DEMO_DATA) === "demo2"
 		) {
-			ImportDataEvents(
-				InfoMessages.DEMO_MODE_MSG,
-				"json",
-				localStorage.getItem(Keys.DEMO_DATA) ?? undefined
-			);
-			NotifyDemoMode();
+			ImportDataEvents(InfoMessages.DEMO_MODE_MSG, "json");
+			NotifyDemoMode(localStorage.getItem(Keys.DEMO_DATA) ?? "");
 		} else {
 			ImportDataEvents(InfoMessages.FOUND_STORED_CONFIG, "json");
 		}

@@ -247,7 +247,6 @@ export function RenderPage(page) {
   const navigation = Fill(ReadTemplate("partials/nav.html"), {
     ...prefixes,
     navItems: RenderNavItems(page.name, prefixes),
-    navExtra: ReadTemplate("partials/nav-demo.html"),
   });
   const alert = ReadTemplate("partials/alert.html");
   const emptyState = ReadTemplate("partials/empty-state.html");

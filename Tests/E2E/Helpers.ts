@@ -176,3 +176,17 @@ export async function ClickDataMenuItem(
 	}
 	await item.click();
 }
+
+/**
+ * Opens the Help menu, if it is not open yet, and uses the item with the id, for example "#demoMipMenuItem".
+ */
+export async function ClickHelpMenuItem(
+	page: Page,
+	selector: string
+): Promise<void> {
+	const item = page.locator(selector);
+	if (!(await item.isVisible())) {
+		await page.locator("#helpMenuButton").click();
+	}
+	await item.click();
+}

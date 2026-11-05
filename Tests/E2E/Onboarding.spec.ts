@@ -7,6 +7,7 @@ import {
 	PLOT_PAGES,
 	TestFile,
 	ClickDataMenuItem,
+	ClickHelpMenuItem,
 	ViewTable
 } from "./Helpers";
 
@@ -140,13 +141,13 @@ test.describe("Empty state", () => {
 	}
 
 	for (const file of PAGES) {
-		test(`The demo item of the navigation bar is on ${file}`, async ({
-			page
-		}) => {
+		test(`The Help menu of ${file} offers the demo data`, async ({ page }) => {
 			await page.goto(PageUrl(file));
 
-			await expect(page.locator("#demoModeButton")).toBeVisible();
-			await expect(page.locator("#demoDataSelector")).toBeVisible();
+			await page.locator("#helpMenuButton").click();
+
+			await expect(page.locator("#demoMipMenuItem")).toBeVisible();
+			await expect(page.locator("#demoMinlpMenuItem")).toBeVisible();
 		});
 	}
 });
@@ -231,8 +232,8 @@ test.describe("Demo data and saved data", () => {
 		page
 	}) => {
 		await SaveOwnData(page);
-		// The explanation is hidden when data is restored, so the button of the navigation bar is used.
-		await page.locator("#demoModeButton").click();
+		// The explanation is hidden when data is restored, so the Help menu is used.
+		await ClickHelpMenuItem(page, "#demoMipMenuItem");
 
 		const modal = page.locator("#replaceDataModal");
 		await expect(modal).toBeVisible();
@@ -254,13 +255,13 @@ test.describe("Demo data and saved data", () => {
 		page
 	}) => {
 		await SaveOwnData(page);
-		await page.locator("#demoModeButton").click();
+		await ClickHelpMenuItem(page, "#demoMipMenuItem");
 
 		await page.locator("#replaceDataButtonInModal").click();
 
 		// The page loads again with the demo data. The notification is not shown in a session that has
 		// shown the one for the saved data, so the demo mode is recognized by the data and the disabled selector.
-		await expect(page.locator("#demoDataSelector")).toBeDisabled();
+		await expect(page.locator("#demoMipMenuItem")).toBeDisabled();
 		expect(
 			await page.evaluate(() => localStorage.getItem("DemoData"))
 		).not.toBeNull();

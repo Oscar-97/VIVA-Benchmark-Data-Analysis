@@ -2838,12 +2838,6 @@ body > :not(nav, hr) {
 	margin-right: 0.25rem;
 }
 
-#demoDataSelectorGroup {
-	flex-wrap: nowrap;
-	min-width: 160px;
-	max-width: 500px;
-}
-
 #librarySelectorGroup {
 	flex-wrap: nowrap;
 	min-width: 170px;

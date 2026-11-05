@@ -16,7 +16,6 @@ const fakeElements = {
 	compareSolversButton: Button(true),
 	saveLocalStorageButton: Button(false),
 	viewPlotsButton: Button(true),
-	demoDataSelector: { value: "" },
 	dataTableGeneratedWrapper: { remove } as { remove: () => void } | null,
 	dataTableGenerated: { remove } as { remove: () => void } | null
 };
@@ -64,7 +63,6 @@ function Reset(): void {
 	fakeElements.compareSolversButton.disabled = true;
 	fakeElements.saveLocalStorageButton.disabled = false;
 	fakeElements.viewPlotsButton.disabled = true;
-	fakeElements.demoDataSelector.value = "";
 	fakeElements.dataTableGeneratedWrapper = { remove };
 	fakeElements.dataTableGenerated = { remove };
 	remove.mockReset();
@@ -148,20 +146,6 @@ describe("ImportDataEvents", () => {
 			ImportDataEvents("Loaded", "json");
 
 			expect(fakeElements.deleteLocalStorageButton.disabled).toBe(false);
-		});
-
-		it("should select the demo data that was loaded", () => {
-			ImportDataEvents("Loaded", "trc", "demo1");
-			expect(fakeElements.demoDataSelector.value).toBe("Demo_1");
-
-			ImportDataEvents("Loaded", "trc", "demo2");
-			expect(fakeElements.demoDataSelector.value).toBe("Demo_2");
-		});
-
-		it("should leave the demo selector alone for other data", () => {
-			ImportDataEvents("Loaded", "trc");
-
-			expect(fakeElements.demoDataSelector.value).toBe("");
 		});
 
 		it("should work when there is no table to remove", () => {
