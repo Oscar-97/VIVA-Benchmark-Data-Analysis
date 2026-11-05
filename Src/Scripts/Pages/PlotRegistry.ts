@@ -12,6 +12,7 @@ import {
 import { PlotSolutionTimes } from "../Chart/ChartType/BubbleCharts";
 import { PlotTerminationRelation } from "../Chart/ChartType/RadarCharts";
 import { elements } from "../Elements/Elements";
+import { GetPageName } from "../App/CurrentPage";
 import { PageTitles } from "../Constants/PageTitles";
 import { TraceHeaderMap } from "../Constants/TraceHeaders";
 import { TraceData } from "../Interfaces/Interfaces";
@@ -146,5 +147,5 @@ const plotRegistry: Partial<Record<string, PlotFunction>> = {
 export function GetPlotFunction(
 	title: string = document.title
 ): PlotFunction | undefined {
-	return plotRegistry[title];
+	return plotRegistry[GetPageName(title)];
 }

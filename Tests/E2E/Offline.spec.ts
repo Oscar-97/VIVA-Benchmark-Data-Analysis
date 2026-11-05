@@ -128,7 +128,7 @@ test.describe("Offline use", () => {
 	test("The application works without a network connection, with demo data and a library", async () => {
 		GoOffline();
 		await page.reload();
-		expect(await page.title()).toBe("Report");
+		expect(await page.title()).toBe("Results Table – VIVA");
 
 		// The demo data is in a chunk of its own that has to come from the cache.
 		await page.selectOption("#demoDataSelector", "Demo_1");

@@ -37,7 +37,7 @@ function PlotPage(name, title, view, extra = {}) {
 export const PAGES = [
   {
     name: "report",
-    title: "Report",
+    title: "Results Table",
     output: "report.html",
     location: "root",
     manifest: true,

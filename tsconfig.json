@@ -15,7 +15,7 @@
     "noUnusedParameters": true,
     "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,
-    "types": ["jest"],
+    "types": ["jest", "node"],
     "removeComments": false
   },
   "include": ["./Src/**/*"],

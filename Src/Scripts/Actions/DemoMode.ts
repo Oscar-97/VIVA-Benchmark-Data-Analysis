@@ -1,4 +1,5 @@
 import { Keys } from "../Constants/Keys";
+import { GetPageName } from "../App/CurrentPage";
 import { PageTitles } from "../Constants/PageTitles";
 import { elements } from "../Elements/Elements";
 import { ConfirmReplaceData } from "../Elements/Modals/ReplaceDataModal";
@@ -60,7 +61,7 @@ export async function ActivateDemoMode(demo?: string): Promise<void> {
 }
 
 export function NotifyDemoMode(): void {
-	if (document.title === PageTitles.TABLE) {
+	if (GetPageName() === PageTitles.TABLE) {
 		elements.demoDataButton.classList.add("text-success");
 		elements.demoDataButton.disabled = true;
 		elements.demoDataSelector.disabled = true;
