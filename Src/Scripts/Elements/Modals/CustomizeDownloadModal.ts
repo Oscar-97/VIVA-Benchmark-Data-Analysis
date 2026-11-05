@@ -59,7 +59,7 @@ export function CreateConfigurationSettingsModal(): void {
 	iOptional1.textContent = "Optional";
 
 	const p2 = document.createElement("p");
-	p2.innerHTML = `Set the defaultTime to be used for all results with missing SolverTime or with a failed status. The default fallback value is 1000.
+	p2.innerHTML = `Set the time limit (<code>defaultTime</code> in the file) to be used for all results with missing SolverTime or with a failed status. The default fallback value is 1000.
                     <br /><b>NOTE!</b> Only takes effect on the performance profile chart and compare solvers page.`;
 
 	const defaultTimeDiv = document.createElement("div");
@@ -68,14 +68,14 @@ export function CreateConfigurationSettingsModal(): void {
 	const defaultTimeInput = document.createElement("input");
 	defaultTimeInput.type = "number";
 	defaultTimeInput.className = "form-control";
-	defaultTimeInput.placeholder = "Enter a defaultTime.";
-	defaultTimeInput.setAttribute("aria-label", "Input default time");
+	defaultTimeInput.placeholder = "Enter a time limit.";
+	defaultTimeInput.setAttribute("aria-label", "Time limit (s)");
 	defaultTimeInput.setAttribute("min", "1");
 	defaultTimeInput.id = "defaultTimeInput";
 
 	const defaultTimeLabel = document.createElement("label");
 	defaultTimeLabel.setAttribute("for", "defaultTimeInput");
-	defaultTimeLabel.textContent = "defaultTime";
+	defaultTimeLabel.textContent = "Time limit (s)";
 
 	defaultTimeDiv.appendChild(defaultTimeInput);
 	defaultTimeDiv.appendChild(defaultTimeLabel);
@@ -84,7 +84,7 @@ export function CreateConfigurationSettingsModal(): void {
 	iOptional2.textContent = "Optional";
 
 	const p3 = document.createElement("p");
-	p3.innerHTML = `Specify the gapLimit percentage to use for filtering results.
+	p3.innerHTML = `Specify the gap limit (<code>gapLimit</code> in the file) percentage to use for filtering results.
                     <br /><b>NOTE!</b> Only takes effect on the performance profile chart and compare solvers page.`;
 
 	const gapLimitDiv = document.createElement("div");
@@ -93,15 +93,15 @@ export function CreateConfigurationSettingsModal(): void {
 	const gapLimitInput = document.createElement("input");
 	gapLimitInput.type = "number";
 	gapLimitInput.className = "form-control";
-	gapLimitInput.placeholder = "Enter a gapLimit.";
-	gapLimitInput.setAttribute("aria-label", "Input gap limit");
+	gapLimitInput.placeholder = "Enter a gap limit.";
+	gapLimitInput.setAttribute("aria-label", "Gap limit (%)");
 	gapLimitInput.setAttribute("min", "0");
 	gapLimitInput.setAttribute("step", "0.01");
 	gapLimitInput.id = "gapLimitInput";
 
 	const gapLimitLabel = document.createElement("label");
 	gapLimitLabel.setAttribute("for", "gapLimitInput");
-	gapLimitLabel.textContent = "gapLimit";
+	gapLimitLabel.textContent = "Gap limit (%)";
 
 	gapLimitDiv.appendChild(gapLimitInput);
 	gapLimitDiv.appendChild(gapLimitLabel);

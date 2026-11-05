@@ -366,7 +366,7 @@
                 <option value="Absolute">Absolute Performance</option>
                 <option value="Relative">Relative Performance</option>
               </select>
-              <label for="performanceProfileSelector">Profile</label>
+              <label for="performanceProfileSelector">Profile type</label>
             </div>
           </div>
         </div>
@@ -376,12 +376,13 @@
               <input
                 type="number"
                 class="form-control form-control-sm"
-                placeholder="Enter a defaultTime."
-                aria-label="Input direct default time"
+                placeholder="Enter a time limit."
+                aria-label="Time limit (s)"
+                title="Runs exceeding this time are counted as unsolved."
                 min="1"
                 id="defaultTimeDirectInput"
               />
-              <label for="defaultTimeDirectInput">defaultTime</label>
+              <label for="defaultTimeDirectInput">Time limit (s)</label>
             </div>
             <span class="input-group-text" style="font-size: small">s</span>
           </div>
@@ -398,7 +399,7 @@
                 step="0.01"
                 id="gapLimitDirectInput"
               />
-              <label for="gapLimitDirectInput">gapLimit</label>
+              <label for="gapLimitDirectInput">Gap limit (%)</label>
             </div>
             <span class="input-group-text" style="font-size: small">%</span>
           </div>
@@ -415,7 +416,7 @@
                 <option value="DualGap">Dual Gap</option>
                 <option value="Gap_Solver">Solver Gap</option>
               </select>
-              <label for="gapTypeSelector">Gap Type</label>
+              <label for="gapTypeSelector">Gap type</label>
             </div>
           </div>
         </div>

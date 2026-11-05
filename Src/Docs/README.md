@@ -124,6 +124,9 @@ For further information, see https://gams.com/latest/docs/UG_SolverUsage.html#UG
 ### 2.2 .json
 The file should include `dataSet` and `dataFileType`, `defaultTime` and `gapLimit` are optional.
 
+- `defaultTime` is the **Time limit (s)** shown in the app: runs exceeding it are counted as unsolved.
+- `gapLimit` is the **Gap limit (%)**: an instance counts as solved when its gap is at or below it.
+
 ```json
 {
     "dataSet": [
