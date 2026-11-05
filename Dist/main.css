@@ -2794,6 +2794,8 @@ body > :not(nav, hr) {
 	#navbarNav #helpMenu {
 		position: static;
 		display: none;
+		/* As wide as the upload field and the library selector at most. */
+		max-width: 500px;
 		max-height: none;
 		opacity: 1;
 		overflow: visible;

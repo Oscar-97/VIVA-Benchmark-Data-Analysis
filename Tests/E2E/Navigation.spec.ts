@@ -130,6 +130,8 @@ test.describe("Navigation", () => {
 				const { menu, theme, width: pageWidth } = await Boxes(page);
 				expect(menu.left).toBeGreaterThanOrEqual(0);
 				expect(menu.right).toBeLessThanOrEqual(pageWidth);
+				// As wide as the upload field and the library selector at most.
+				expect(menu.right - menu.left).toBeLessThanOrEqual(500);
 				expect(theme.top).toBeGreaterThanOrEqual(menu.bottom);
 				expect(theme.top).toBeGreaterThan(before);
 			});
