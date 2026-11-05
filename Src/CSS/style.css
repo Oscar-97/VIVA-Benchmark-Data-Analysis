@@ -461,6 +461,13 @@ body.drop-active {
 	margin: 1rem 1rem 0;
 }
 
+/* The values of the chart as a table, below the chart. It scrolls, as a chart can have thousands of points. */
+.chart-data-table {
+	max-height: 24rem;
+	overflow: auto;
+	margin: 1rem;
+}
+
 .chart-tools-status {
 	color: var(--bs-secondary-color);
 	font-size: 0.875rem;

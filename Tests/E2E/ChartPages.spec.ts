@@ -36,6 +36,77 @@ async function ShowChart(
 	return ReadChartData(page);
 }
 
+test.describe("Chart for assistive technology", () => {
+	test("The chart is described, with its kind, axes and data sets", async ({
+		page
+	}) => {
+		const errors = await OpenWithData(
+			page,
+			"Src/Pages/performance_profile.html"
+		);
+		await expect.poll(() => IsChartDrawn(page)).toBe(true);
+
+		const canvas = page.locator("#myChart");
+		await expect(canvas).toHaveAttribute("role", "img");
+		await expect(canvas).toHaveAttribute(
+			"aria-label",
+			/^Line chart: .*performance profile\. X axis: .+\. Y axis: .+\. Data sets: .*shot.*\./
+		);
+		expect(errors).toEqual([]);
+	});
+
+	for (const { name } of PLOT_PAGES) {
+		test(`The values of the chart of ${name} are in a table`, async ({
+			page
+		}) => {
+			const errors = await OpenWithData(page, `Src/Pages/${name}.html`);
+			await expect.poll(() => IsChartDrawn(page)).toBe(true);
+			const toggle = page.locator("#chartTableToggleButton");
+			const container = page.locator("#chartDataTableContainer");
+			await expect(container).toBeHidden();
+			await expect(toggle).toHaveAttribute("aria-expanded", "false");
+
+			await toggle.click();
+
+			await expect(container).toBeVisible();
+			await expect(toggle).toHaveAttribute("aria-expanded", "true");
+			await expect(toggle).toContainText("Hide table");
+			await expect(container.locator("thead th").first()).toHaveText(
+				"Data set"
+			);
+			await expect(container.locator("tbody tr").first()).toBeVisible();
+			expect(await container.locator("tbody tr").count()).toBeGreaterThan(0);
+
+			await toggle.click();
+
+			await expect(container).toBeHidden();
+			await expect(toggle).toContainText("Show as table");
+			expect(errors).toEqual([]);
+		});
+	}
+
+	test("The table has a row for every data set of a bar chart, and follows a new chart", async ({
+		page
+	}) => {
+		await OpenWithData(page, "Src/Pages/termination_status.html");
+		await expect.poll(() => IsChartDrawn(page)).toBe(true);
+		await page.locator("#chartTableToggleButton").click();
+		const rows = page.locator("#chartDataTableContainer tbody tr");
+		await expect(rows.first()).toBeVisible();
+		const before = await page
+			.locator("#chartDataTableContainer caption")
+			.innerText();
+
+		await page.locator("#viewPlotsButton").click();
+
+		// The table stays open, and shows the data of the chart that was drawn again.
+		await expect(page.locator("#chartDataTableContainer")).toBeVisible();
+		await expect(page.locator("#chartDataTableContainer caption")).toHaveText(
+			before
+		);
+	});
+});
+
 test.describe("Pages with data", () => {
 	test("The chart is drawn after the upload, without the view button", async ({
 		page

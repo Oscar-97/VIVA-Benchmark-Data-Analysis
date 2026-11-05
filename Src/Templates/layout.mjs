@@ -230,7 +230,15 @@ function RenderContent(content) {
       <canvas id="myChart" class="chart">
         <!-- Content created with Chart.js will be displayed here. -->
       </canvas>
-    </div>`;
+    </div>
+    <div
+      id="chartDataTableContainer"
+      class="chart-data-table"
+      role="region"
+      aria-label="Data of the chart"
+      tabindex="0"
+      hidden
+    ></div>`;
   const statistics = `<div id="statisticsTable">
       <!-- statistics table element will be created here. -->
     </div>`;

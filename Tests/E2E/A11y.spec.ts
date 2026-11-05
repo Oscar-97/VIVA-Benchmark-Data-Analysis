@@ -1,6 +1,13 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect, Page } from "@playwright/test";
-import { PageUrl, PLOT_PAGES } from "./Helpers";
+import {
+	ExpectNotification,
+	ImportFiles,
+	IsChartDrawn,
+	PageUrl,
+	PLOT_PAGES,
+	TestFile
+} from "./Helpers";
 
 /**
  * The accessibility rules (WCAG 2 A and AA) that the pages are known to break. A page that breaks another rule
@@ -47,6 +54,25 @@ test.describe("Accessibility", () => {
 			expect(await BrokenRules(page)).toEqual([]);
 		});
 	}
+	for (const colorScheme of ["light", "dark"] as const) {
+		test(`A chart page with its data table open (${colorScheme} theme) breaks no other rule than the known ones`, async ({
+			browser
+		}) => {
+			const context = await browser.newContext({ colorScheme });
+			const page = await context.newPage();
+			await page.goto(PageUrl("Src/Pages/performance_profile.html"));
+			await ImportFiles(page, [TestFile("shotALL.trc")]);
+			await ExpectNotification(page, "Benchmarks loaded with following files");
+			await expect.poll(() => IsChartDrawn(page)).toBe(true);
+			await page.locator("#chartTableToggleButton").click();
+			await expect(page.locator("#chartDataTableContainer")).toBeVisible();
+
+			expect(await BrokenRules(page)).toEqual([]);
+
+			await context.close();
+		});
+	}
+
 	test("The empty page, in the dark theme, breaks no other rule than the known ones", async ({
 		browser
 	}) => {
