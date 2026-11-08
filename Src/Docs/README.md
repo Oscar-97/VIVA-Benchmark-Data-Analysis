@@ -163,6 +163,47 @@ The application writes this format when the data is saved to the browser, and wh
 }
 ```
 
+### 2.3 .csv
+
+An optional file with information about the instances, for example the instance data of MINLPLib. Its columns are added to the table next to the results.
+
+- The values of a line are separated by semicolons (`;`). The first line has the names of the columns, and every other line is one instance.
+- The column `name` (or `InputFileName`) holds the name of the instance. It has to be the same as the name of the instance in the `.trc` files, as it is what joins the two. A result whose instance is not in the file gets empty cells in the columns of the file.
+- All other columns are free. Each of them becomes a column of the table. The values are shown as text, and an empty cell stays empty. A line with fewer values than the header has empty cells for the missing ones.
+- The columns `primalbound` and `dualbound` (in lower case) are the best known bounds of the instance, and show in the table as `ProblemPrimalBound` and `ProblemDualBound`. The gaps of the results are calculated against them. Where an instance has no bound, the bound that the solver reports for the result is used instead. A bound from a `.solu` file (see 2.4) replaces the bound of this file.
+
+```csv
+name;application;nvars;ncons;primalbound;dualbound
+alan;Portfolio Optimization;8;7;2.925;2.925
+alkyl;Alkylation;14;7;-1.764999646;-1.765001273
+```
+
+A larger example is [instancedata.csv](https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/blob/main/Tests/TestData/instancedata.csv), which is the instance data of MINLPLib.
+
+### 2.4 .solu
+
+An optional file with the best known bounds of the instances, in the format of the `.solu` files of [MINLPLib](https://www.minlplib.org/), [MIPLIB 2017](https://miplib.zib.de/) and [MIPLIB 2010](https://miplib.zib.de/miplib2010.html). These libraries are also built into the application, see the selector **Best-known bounds** in the navigation bar. A `.solu` file that is uploaded is used instead of the library.
+
+- Every line gives one bound: a keyword between equal signs, the name of the instance and the value, separated by spaces or tabs.
+- The name of the instance has to be the same as the name of the instance in the `.trc` files.
+- The keyword says what the value is:
+  - `=best=`: the best known primal bound.
+  - `=bestdual=`: the best known dual bound.
+  - `=opt=`: the optimal value, which is both the primal and the dual bound.
+  - `=inf=`: the instance is infeasible, and both bounds are infinite.
+- An instance can have several lines, for example a `=best=` and a `=bestdual=` line. They are all used. When two lines give the same bound, the first one is used.
+- Lines with another keyword, and lines that are not in this form, are skipped.
+- The values show in the table with six decimals in exponential form, for example 116329.67 as `1.163297e+5`.
+
+```text
+=best=     4stufen                      116329.6706
+=bestdual= 4stufen                      109309.63
+=opt=      alan                         2.925
+=inf=      infeasible_example           0
+```
+
+Larger examples are [minlp.solu](https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/blob/main/Tests/TestData/minlp.solu) and [miplib.solu](https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/blob/main/Tests/TestData/miplib.solu).
+
 ## 3. Working with the Codebase
 
 ### 3.1 Prerequisites
