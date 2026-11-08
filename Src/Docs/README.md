@@ -124,27 +124,44 @@ UserComment
 For further information, see https://gams.com/latest/docs/UG_SolverUsage.html#UG_SolverUsage_TraceFile.
 
 ### 2.2 .json
-The file should include `dataSet` and `dataFileType`, `defaultTime` and `gapLimit` are optional.
+The file has these fields:
 
-- `defaultTime` is the **Time limit (s)** shown in the app: runs exceeding it are counted as unsolved.
-- `gapLimit` is the **Gap limit (%)**: an instance counts as solved when its gap is at or below it.
+- `version`: The version of the format, currently `2`. A file without it is of version 1, see below.
+- `dataSet`: The results, with a row for every solver run.
+- `dataFileType`: The kind of data, `"json"` for data that was saved by the application.
+- `defaultTime` (optional): The **Time limit (s)** shown in the app. Runs exceeding it are counted as unsolved.
+- `gapLimit` (optional): The **Gap limit (%)**. An instance counts as solved when its gap is at or below it.
+
+Every row of `dataSet` is an object. Its keys are the names of the columns of the trace file (see 2.1), and its values are numbers, `true` or `false` where the value is one, and else text. A column that a row does not have is empty. The columns of the first row come first, then the columns that the other rows add.
 
 ```json
 {
+    "version": 2,
     "dataSet": [
-        "alan,MINLP,knitro,CONOPT,CPLEX,43365.479,min,8,9,4,24,3,1,8,Error,2.925,2.925,0.142,0,0,18,#,2.925,2.925,2.925,2.925,0,0,0,0,0",
-        "ball_mk2_10,MINLP,knitro,CONOPT,CPLEX,43365.479,min,2,11,10,21,10,1,8,Error,0,2.22044604925031E-16,2.5,0,0,3070,#,0,2.22044604925031e-16,0,2.22044604925031e-16,0,0,0,0,0",
-        "ball_mk2_30,MINLP,knitro,CONOPT,CPLEX,43365.479,min,2,31,30,61,30,1,2,Error,0,-26.887733399442,900.034,0,0,42269,#,0,-26.887733399442,0,-26.887733399442,Infinity,Infinity,0,0,0",
-        "ball_mk3_10,MINLP,knitro,CONOPT,CPLEX,43365.489,min,2,11,10,21,10,1,13,Error,0,NA,NA,NA,NA,NA,#,0,-Infinity,0,-Infinity,Infinity,Infinity,0,NaN,NaN",
-        "ball_mk4_05,MINLP,knitro,CONOPT,CPLEX,43365.51,min,2,11,10,21,10,1,13,Error,0,NA,NA,NA,NA,NA,#,0,-Infinity,0,-Infinity,Infinity,Infinity,0,NaN,NaN",
+        { "InputFileName": "alan", "ModelType": "MINLP", "SolverName": "knitro", "Direction": "min", "SolverTime": 0.142, "Fail": false },
+        { "InputFileName": "ball_mk2_30", "ModelType": "MINLP", "SolverName": "knitro", "Direction": "min", "SolverTime": 900.034, "Fail": false },
+        { "InputFileName": "ball_mk3_10", "ModelType": "MINLP", "SolverName": "knitro", "Direction": "min", "SolverTime": 0.95, "Fail": true }
     ],
-    "dataFileType": "trc",
+    "dataFileType": "json",
     "defaultTime": 900,
     "gapLimit": 0.1
 }
 ```
 
-As for now, this structure has to be used for the dataSet. It will eventually be updated to a proper object.
+The application writes this format when the data is saved to the browser, and when the configuration is exported.
+
+**Version 1.** Earlier versions of the application wrote `dataSet` as a list of the lines of a trace file as text, without a `version`. Such a file is still read, and what is saved or exported from it is in the format above. A file with a version that is higher than the one that the application knows is not read, and the application says so.
+
+```json
+{
+    "dataSet": [
+        "* InputFileName,ModelType,SolverName,Direction,SolverTime,Fail",
+        "alan,MINLP,knitro,min,0.142,false",
+        "ball_mk2_30,MINLP,knitro,min,900.034,false"
+    ],
+    "dataFileType": "json"
+}
+```
 
 ## 3. Working with the Codebase
 

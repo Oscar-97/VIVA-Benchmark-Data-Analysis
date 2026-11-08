@@ -85,10 +85,33 @@ describe("GetUserConfiguration", () => {
 		});
 	});
 
-	it("should convert data that is not a string to a string", () => {
+	it("should read the rows of a configuration of version 2 as the lines of a trace file", () => {
+		Store({
+			version: 2,
+			dataSet: [
+				{ InputFileName: "alan", SolverName: "shot", SolverTime: 0.04 },
+				{ InputFileName: "ball", SolverName: "shot", SolverTime: 900.08 }
+			],
+			dataFileType: "json"
+		});
+
+		expect(GetUserConfiguration()?.dataSet).toEqual([
+			"* InputFileName,SolverName,SolverTime",
+			"alan,shot,0.04",
+			"ball,shot,900.08"
+		]);
+	});
+
+	it("should not read data that is a mix of lines and rows", () => {
 		Store({ dataSet: ["line", { a: 1 }], dataFileType: "json" });
 
-		expect(GetUserConfiguration()?.dataSet).toEqual(["line", '{"a":1}']);
+		expect(GetUserConfiguration()).toBeUndefined();
+	});
+
+	it("should not read a configuration of a version that is not known", () => {
+		Store({ version: 3, dataSet: [{ a: 1 }], dataFileType: "json" });
+
+		expect(GetUserConfiguration()).toBeUndefined();
 	});
 
 	it("should return undefined and warn once if nothing is stored", () => {

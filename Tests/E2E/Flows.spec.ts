@@ -188,27 +188,22 @@ test.describe("Customized download", () => {
 		const file = testInfo.outputPath(download.suggestedFilename());
 		await download.saveAs(file);
 		const configuration = JSON.parse(fs.readFileSync(file, "utf8")) as {
-			dataSet: string[];
+			version: number;
+			dataSet: { SolverName: string }[];
 			dataFileType: string;
 			defaultTime: number;
 			gapLimit: number;
 		};
 		expect(download.suggestedFilename()).toBe("UserConfiguration.json");
 		expect(configuration).toMatchObject({
+			version: 2,
 			dataFileType: "json",
 			defaultTime: 500,
 			gapLimit: 0.5
 		});
-		// Only the 335 instances of scip, and no line of the other solvers.
-		const solverLines = configuration.dataSet.filter((line) =>
-			line.includes("scip")
-		);
-		expect(solverLines.length).toBeGreaterThanOrEqual(335);
-		expect(configuration.dataSet.some((line) => line.includes("shot"))).toBe(
-			false
-		);
-		expect(configuration.dataSet.some((line) => line.includes("pavito"))).toBe(
-			false
-		);
+		// Only the 335 instances of scip, and no row of the other solvers.
+		const solvers = configuration.dataSet.map((row) => row.SolverName);
+		expect(solvers.filter((solver) => solver === "scip")).toHaveLength(335);
+		expect(solvers.every((solver) => solver === "scip")).toBe(true);
 	});
 });

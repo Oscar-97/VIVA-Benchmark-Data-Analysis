@@ -7,12 +7,18 @@ import {
 } from "../Elements/Events/DisplayAlertNotification";
 import { elements } from "../Elements/Elements";
 import { StoredConfiguration, UserData } from "../Interfaces/Interfaces";
+import {
+	CONFIGURATION_VERSION,
+	LinesToRows,
+	UpgradeConfiguration
+} from "./ConfigurationFormat";
 import { ToStoredConfiguration } from "./StoredConfiguration";
 
 /**
  * This object is used to store the user configuration.
  */
 export const userData: UserData = {
+	version: CONFIGURATION_VERSION,
 	dataSet: [],
 	dataFileType: "",
 	defaultTime: undefined,
@@ -22,7 +28,7 @@ export const userData: UserData = {
 /**
  * This function creates a user configuration and stores it in the browser's local storage.
  *
- * @param {string[]} dataSet - An array of strings representing raw data to be saved.
+ * @param {string[]} dataSet - The lines of a trace file, which are saved as rows with the names of the columns.
  * @param {string} dataFileType - A string representing the type of data file.
  * @param {number} defaultTime - Default time used in the the performance profile chart.
  * @param {number} gapLimit - Gap limit used in the the performance profile chart.
@@ -38,7 +44,8 @@ export function CreateUserConfiguration(
 	defaultTime?: number,
 	gapLimit?: number
 ): void {
-	userData.dataSet = dataSet;
+	userData.version = CONFIGURATION_VERSION;
+	userData.dataSet = LinesToRows(dataSet);
 	userData.dataFileType = dataFileType;
 	userData.defaultTime = defaultTime;
 	userData.gapLimit = gapLimit;
@@ -179,6 +186,7 @@ export function DeleteUserConfiguration(onRestore?: () => void): void {
 /**
  * This function downloads the user configuration saved in the local storage as a JSON file.
  * If there is no saved user configuration in the local storage, it will display an error notification.
+ * A configuration that was saved in an earlier format is downloaded in the current format.
  *
  * @remarks
  * The function assumes the existence of a previously defined `downloadConfigurationButton`
@@ -186,7 +194,9 @@ export function DeleteUserConfiguration(onRestore?: () => void): void {
  */
 export function DownloadUserConfiguration(): void {
 	const userConfigString = localStorage?.getItem(Keys.USER_CONFIGURATION);
-	const userConfig = userConfigString ? JSON.parse(userConfigString) : null;
+	const userConfig = userConfigString
+		? UpgradeConfiguration(JSON.parse(userConfigString))
+		: undefined;
 	if (userConfig) {
 		const downloadAbleFile = JSON.stringify(userConfig);
 		const blob = new Blob([downloadAbleFile], { type: "application/json" });
@@ -206,7 +216,7 @@ export function DownloadUserConfiguration(): void {
  * The function assumes the existence of a previously defined `downloadCustomConfigurationButton`
  * which should be a reference to an HTML anchor (`<a>`) element used to trigger the file download.
  *
- * @param {string[]} newRawData -  Array of strings, where each string is a comma-separated representation of a row of data.
+ * @param {string[]} newRawData - The lines of a trace file, which are saved as rows with the names of the columns.
  * @param {number} defaultTime - Default time that will be used on all results with missing SolverTime or with a failed status.
  *
  * @example
@@ -217,7 +227,8 @@ export function DownloadCustomizedUserConfiguration(
 	defaultTime: number,
 	gapLimit: number
 ): void {
-	userData.dataSet = newRawData;
+	userData.version = CONFIGURATION_VERSION;
+	userData.dataSet = LinesToRows(newRawData);
 	userData.dataFileType = "json";
 	userData.defaultTime = defaultTime;
 	userData.gapLimit = gapLimit;

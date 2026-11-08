@@ -1,5 +1,6 @@
 import { StoredConfiguration, UserData } from "../Interfaces/Interfaces";
 import { Values } from "../Constants/Values";
+import { IsSupportedVersion, ReadDataSet } from "./ConfigurationFormat";
 
 /**
  * Turns a parsed configuration into one with the defaults filled in.
@@ -9,14 +10,13 @@ import { Values } from "../Constants/Values";
 export function ToStoredConfiguration(
 	userConfig: UserData
 ): StoredConfiguration | undefined {
-	if (!Array.isArray(userConfig?.dataSet) || userConfig.dataSet.length === 0) {
+	const lines = ReadDataSet(userConfig?.dataSet);
+	if (!lines || lines.length === 0 || !IsSupportedVersion(userConfig.version)) {
 		return undefined;
 	}
 
 	return {
-		dataSet: userConfig.dataSet.map((value) => {
-			return typeof value === "string" ? value : JSON.stringify(value);
-		}),
+		dataSet: lines,
 		dataFileType: userConfig.dataFileType,
 		defaultTime: userConfig.defaultTime ?? Values.DEFAULT_TIME,
 		gapLimit: userConfig.gapLimit ?? Values.DEFAULT_GAP_LIMIT
