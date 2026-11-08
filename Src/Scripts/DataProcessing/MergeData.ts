@@ -9,7 +9,9 @@ import { TraceData, CategoriesObj } from "../Interfaces/Interfaces";
  *
  * @remarks
  * If an object in `traceData` has the same `InputFileName` or `name` as an object in `data`, the two objects are merged
- * into a single object with properties from both.
+ * into a single object with properties from both. Several objects of `data` can match, for example the lines of a
+ * .solu file that give the primal bound and the dual bound of an instance one by one. All of them are merged, and where
+ * two of them have the same property, the one that comes first in `data` is used.
  */
 export function MergeData(
 	traceData: TraceData[],
@@ -23,33 +25,33 @@ export function MergeData(
 	);
 	data.forEach((obj) => Object.keys(obj).forEach((key) => allProps.add(key)));
 
-	// The first entry of data that matches by InputFileName or by name is the one that is merged.
-	const indexByInputFileName = new Map<unknown, number>();
-	const indexByName = new Map<unknown, number>();
+	// The entries of data by InputFileName and by name, in the order of data.
+	const indexesByInputFileName = new Map<unknown, number[]>();
+	const indexesByName = new Map<unknown, number[]>();
+	function Add(
+		indexes: Map<unknown, number[]>,
+		key: unknown,
+		index: number
+	): void {
+		if (key) {
+			indexes.set(key, [...(indexes.get(key) ?? []), index]);
+		}
+	}
 	data.forEach((dataObj, index) => {
-		if (
-			dataObj["InputFileName"] &&
-			!indexByInputFileName.has(dataObj["InputFileName"])
-		) {
-			indexByInputFileName.set(dataObj["InputFileName"], index);
-		}
-		if (dataObj["name"] && !indexByName.has(dataObj["name"])) {
-			indexByName.set(dataObj["name"], index);
-		}
+		Add(indexesByInputFileName, dataObj["InputFileName"], index);
+		Add(indexesByName, dataObj["name"], index);
 	});
 
 	for (const traceDataObj of traceData) {
-		const matchIndexes = [
-			indexByInputFileName.get(traceDataObj["InputFileName"]),
-			indexByName.get(traceDataObj["InputFileName"])
-		].filter((index): index is number => index !== undefined);
-		const dataObj =
-			matchIndexes.length > 0 ? data[Math.min(...matchIndexes)] : undefined;
-
-		const mergedObj: Record<string, unknown> =
-			dataObj === undefined
-				? { ...traceDataObj }
-				: { ...traceDataObj, ...dataObj };
+		const matchIndexes = new Set([
+			...(indexesByInputFileName.get(traceDataObj["InputFileName"]) ?? []),
+			...(indexesByName.get(traceDataObj["InputFileName"]) ?? [])
+		]);
+		// The entry that comes first is merged last, so its properties are the ones that are kept.
+		const mergedObj: Record<string, unknown> = { ...traceDataObj };
+		for (const index of [...matchIndexes].sort((a, b) => b - a)) {
+			Object.assign(mergedObj, data[index]);
+		}
 		allProps.forEach((prop) => {
 			if (mergedObj[prop] === undefined) {
 				mergedObj[prop] = null;
