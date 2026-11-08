@@ -227,9 +227,107 @@ test.describe("Table page", () => {
 		expect(download.suggestedFilename()).toBe("UserConfiguration.json");
 		const downloaded = JSON.parse(
 			fs.readFileSync((await download.path()) ?? "", "utf8")
-		) as { dataSet: unknown[]; dataFileType: string };
+		) as {
+			version: number;
+			dataSet: Record<string, unknown>[];
+			dataFileType: string;
+		};
+		expect(downloaded.version).toBe(2);
 		expect(downloaded.dataFileType).toBe("json");
-		expect(downloaded.dataSet.length).toBeGreaterThan(0);
+		// A row has the names of the columns, and numbers where the value is one.
+		expect(downloaded.dataSet).toHaveLength(335);
+		expect(downloaded.dataSet[0]).toMatchObject({
+			InputFileName: "alan",
+			SolverName: "shot",
+			SolverTime: 0.04
+		});
+	});
+
+	test("A configuration that was saved in the old format is downloaded in the new one", async ({
+		page
+	}) => {
+		const old = JSON.parse(
+			fs.readFileSync(TestFile("UserConfiguration.json"), "utf8")
+		) as { dataSet: string[] };
+		expect(old.dataSet.every((line) => typeof line === "string")).toBe(true);
+		await page.evaluate(
+			(stored) => localStorage.setItem("UserConfiguration", stored),
+			JSON.stringify(old)
+		);
+		await page.reload();
+		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible({
+			timeout: 60_000
+		});
+
+		await page.locator("#dataMenuButton").click();
+		const [download] = await Promise.all([
+			page.waitForEvent("download"),
+			page.locator("#downloadConfigurationButton").click()
+		]);
+
+		const downloaded = JSON.parse(
+			fs.readFileSync((await download.path()) ?? "", "utf8")
+		) as { version: number; dataSet: Record<string, unknown>[] };
+		expect(downloaded.version).toBe(2);
+		// The five rows of the file, as rows with the names of the columns.
+		expect(downloaded.dataSet).toHaveLength(5);
+		expect(downloaded.dataSet[0]).toMatchObject({
+			InputFileName: "ball_mk3_20",
+			SolverName: "shot",
+			SolverTime: 900.04
+		});
+	});
+
+	test("A configuration file of the old format is stored in the new one, with its limits", async ({
+		page
+	}, testInfo) => {
+		const old = JSON.parse(
+			fs.readFileSync(TestFile("UserConfiguration.json"), "utf8")
+		) as object;
+		const file = testInfo.outputPath("Old.json");
+		fs.writeFileSync(
+			file,
+			JSON.stringify({ ...old, defaultTime: "900", gapLimit: 0.5 })
+		);
+
+		await ImportFiles(page, [file]);
+		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible({
+			timeout: 60_000
+		});
+
+		const stored = await page.evaluate(() =>
+			JSON.parse(localStorage.getItem("UserConfiguration") ?? "{}")
+		);
+		expect(stored).toMatchObject({
+			version: 2,
+			dataFileType: "json",
+			defaultTime: 900,
+			gapLimit: 0.5
+		});
+		expect(stored.dataSet).toHaveLength(5);
+	});
+
+	test("A configuration file of a newer version is not taken, and says so", async ({
+		page
+	}, testInfo) => {
+		const file = testInfo.outputPath("Newer.json");
+		fs.writeFileSync(
+			file,
+			JSON.stringify({ version: 3, dataSet: [{ A: 1 }], dataFileType: "json" })
+		);
+		errors.length = 0;
+
+		await page.setInputFiles('input[type="file"]', file);
+
+		await ExpectNotification(
+			page,
+			"Newer.json: This configuration was made by a newer version of VIVA"
+		);
+		await expect(page.locator("#importDataButton")).toBeDisabled();
+		expect(
+			await page.evaluate(() => localStorage.getItem("UserConfiguration"))
+		).toBeNull();
+		errors.length = 0;
 	});
 
 	test("Sort table and hide columns", async ({ page }) => {

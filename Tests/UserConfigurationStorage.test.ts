@@ -83,7 +83,8 @@ describe("CreateUserConfiguration", () => {
 		expect(
 			JSON.parse(localStorage.getItem(Keys.USER_CONFIGURATION) ?? "")
 		).toEqual({
-			dataSet: ["a", "b"],
+			version: 2,
+			dataSet: [{ InputFileName: "a" }, { InputFileName: "b" }],
 			dataFileType: "trc",
 			defaultTime: 1500,
 			gapLimit: 0.02
@@ -98,7 +99,11 @@ describe("CreateUserConfiguration", () => {
 		const stored = JSON.parse(
 			localStorage.getItem(Keys.USER_CONFIGURATION) ?? ""
 		);
-		expect(stored).toEqual({ dataSet: ["a"], dataFileType: "trc" });
+		expect(stored).toEqual({
+			version: 2,
+			dataSet: [{ InputFileName: "a" }],
+			dataFileType: "trc"
+		});
 	});
 
 	it.each([
@@ -192,7 +197,8 @@ describe("DownloadCustomizedUserConfiguration", () => {
 		expect(customDownloadButton.href).toBe("blob:test");
 		expect(customDownloadButton.download).toBe("UserConfiguration.json");
 		expect(userData).toMatchObject({
-			dataSet: ["x", "y"],
+			version: 2,
+			dataSet: [{ InputFileName: "x" }, { InputFileName: "y" }],
 			dataFileType: "json",
 			defaultTime: 900,
 			gapLimit: 0.5

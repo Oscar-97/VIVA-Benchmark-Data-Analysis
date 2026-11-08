@@ -20,7 +20,8 @@ export enum ErrorMessages {
 	BOTH_EXTENSIONS = "Cannot upload both .trc and .json files simultaneously.",
 	INVALID_EXTENSION = "Invalid file extension. Only .trc, .json, .solu, and .csv allowed.",
 	INVALID_JSON = "The file is not valid JSON.",
-	INVALID_DATA_STRUCTURE = "Invalid data structure in uploaded JSON."
+	INVALID_DATA_STRUCTURE = "Invalid data structure in uploaded JSON.",
+	UNSUPPORTED_VERSION = "This configuration was made by a newer version of VIVA and cannot be read."
 }
 
 /**
