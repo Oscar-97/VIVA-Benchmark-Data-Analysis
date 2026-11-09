@@ -17,7 +17,7 @@ import {
  * documentation, and check that the pages have them, so a renamed button cannot stay in the documentation.
  */
 const README = fs.readFileSync(
-	path.join(ROOT, "Src", "Docs", "README.md"),
+	path.join(ROOT, "Src", "Docs", "USER_GUIDE.md"),
 	"utf8"
 );
 
@@ -261,5 +261,31 @@ test.describe("The settings in the documentation are on the pages (1.5)", () => 
 				page.locator("label").filter({ hasText: TextOf(label) })
 			).not.toHaveCount(0);
 		}
+	});
+});
+
+test.describe("The documentation is linked", () => {
+	test("The Documentation item of the Help menu opens the User Guide", async ({
+		page
+	}) => {
+		await page.goto(PageUrl("report.html"));
+
+		const href = await page
+			.locator("#helpMenu a", { hasText: "Documentation" })
+			.getAttribute("href");
+
+		expect(href).toBe("./Docs/documents/USER_GUIDE.html");
+		expect(
+			fs.existsSync(path.join(ROOT, "Docs", "documents", "USER_GUIDE.html"))
+		).toBe(true);
+	});
+
+	test("The developer documentation links to the User Guide", () => {
+		const developer = fs.readFileSync(
+			path.join(ROOT, "Src", "Docs", "README.md"),
+			"utf8"
+		);
+
+		expect(developer).toContain("(./USER_GUIDE.md)");
 	});
 });

@@ -12,6 +12,7 @@ const docs = path.resolve(
 const GENERATED = [
   "assets",
   "classes",
+  "documents",
   "enums",
   "functions",
   "interfaces",
@@ -24,6 +25,11 @@ const GENERATED = [
 for (const name of GENERATED) {
   fs.rmSync(path.join(docs, name), { recursive: true, force: true });
 }
-for (const name of ["index.html", "modules.html", "landing_page.html"]) {
+for (const name of [
+  "index.html",
+  "modules.html",
+  "hierarchy.html",
+  "landing_page.html",
+]) {
   fs.rmSync(path.join(docs, name), { force: true });
 }

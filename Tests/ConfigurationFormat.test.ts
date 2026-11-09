@@ -218,7 +218,7 @@ describe("UpgradeConfiguration", () => {
 
 describe("the examples of the documentation", () => {
 	const readme = fs.readFileSync(
-		path.join(__dirname, "..", "Src", "Docs", "README.md"),
+		path.join(__dirname, "..", "Src", "Docs", "USER_GUIDE.md"),
 		"utf8"
 	);
 	const section = readme.slice(readme.indexOf("### 2.2 .json"));
