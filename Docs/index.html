@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>System Documentation</title><meta name="description" content="Documentation for System Documentation"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><style>
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>System Documentation</title><meta name="description" content="Documentation for System Documentation"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><script async src="assets/hierarchy.js" id="tsd-hierarchy-script"></script><style>
 @media (prefers-color-scheme: dark) {
   :root {
     --md-sys-color-primary: #f6be46;
@@ -173,11 +173,13 @@
 <img alt="Chart.js" src="https://img.shields.io/badge/chart.js-F5788D.svg?style=flat&logo=chart.js&logoColor=white"/>
 </p>
 <p>Building on the concept and implementation of <a href="https://github.com/coin-or/paver">PAVER 2.0</a>, the main goal of VIVA is to allow end users to interact with their own uploaded benchmark data from mathematical optimization problems and their solvers. The data is presented in a tabular format, with the added ability to visualize specific results through various plots, making it easier to understand and interpret the data.</p>
-<p>Demo-data is attained from <a href="https://github.com/coin-or/Paver/tree/master/examples/miplib2010">miplib2010 examples</a>. The <code>.solu</code> file data from the problem libraries <a href="https://www.minlplib.org/minlplib.solu">MINLPLib</a>, <a href="https://miplib.zib.de/downloads/miplib2017-v26.solu">MIPLIB 2017</a> and <a href="https://miplib2010.zib.de/download/miplib2010_all.solu">MIPLIB 2010</a> can be accessed directly through a dropdown option in the navigation menu.</p>
+<p>Demo-data is attained from <a href="https://github.com/coin-or/Paver/tree/master/examples/miplib2010">miplib2010 examples</a>. The <code>.solu</code> file data from the problem libraries <a href="https://www.minlplib.org/minlplib.solu">MINLPLib</a>, <a href="https://miplib.zib.de/downloads/miplib2017-v26.solu">MIPLIB 2017</a> and <a href="https://miplib2010.zib.de/download/miplib2010_all.solu">MIPLIB 2010</a> can be used directly with the <strong>Best-known bounds</strong> selector in the navigation bar.</p>
 <p>This project is developed using:</p>
 <ul>
 <li>TypeScript</li>
 <li>DataTables.js</li>
+<li>jQuery</li>
+<li>mathjs</li>
 <li>Chart.js</li>
 <li>Webpack</li>
 <li>Bootstrap &amp; Bootstrap Icons</li>
@@ -186,84 +188,24 @@
 <div style="text-align:left;">
   <img alt="Overview of the VIVA system" src="media/OverView_system_new.png" width="100%">
 </div>
-<h2 id="disclaimer" class="tsd-anchor-link">Disclaimer<a href="#disclaimer" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p><strong>Performance Note</strong>:  Performance slowdowns may occur when handling a large number of files or particularly large datasets, as this application operates entirely in the browser without relying on a backend server to parse and process the files.</p>
-<p><strong>Display Note</strong>: While mobile-sized screens are supported, the most optimal experience is achieved using a larger display. A light and a dark theme are available.</p>
-<p><strong>Development Note</strong>:  This project is still a work in progress, and therefore, bugs and unexpected behavior may occur.</p>
-<h2 id="1-instructions-for-using-the-application" class="tsd-anchor-link">1. Instructions for Using the Application<a href="#1-instructions-for-using-the-application" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<ol>
-<li>Download the release ZIP and extract the contents, or clone the repository, or visit the web version at <a href="https://viva-app.xyz/report">viva-app.xyz</a>.</li>
-<li>Open the file: <code>report.html</code> found in the root directory.</li>
-<li>Click &quot;Browse&quot; to upload results and select either:
+<h2 id="documentation" class="tsd-anchor-link">Documentation<a href="#documentation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <ul>
-<li>One or more result files in <code>.trc</code> format.</li>
-<li><code>.solu</code> (best known primal and dual bounds for each instance) and <code>.csv</code> (instance properties) files can be uploaded for additional information.</li>
-<li>A single <code>UserConfiguration.json</code> (which can be created from this application).</li>
+<li><strong><a href="documents/USER_GUIDE.html">User Guide</a></strong>: how to load the data, use the pages, and the supported file formats (<code>.trc</code>, <code>.json</code>, <code>.csv</code>, <code>.solu</code>). It is also the <strong>Documentation</strong> item in the <strong>Help</strong> menu of the application.</li>
+<li><strong>Developer documentation</strong> (this page and the API reference): how the code is organized and built.</li>
 </ul>
-</li>
-<li>Optionally, select a problem library to use (MIPLIB or MINLPLib).</li>
-<li>Click &quot;Upload&quot;.</li>
-<li>Use the &quot;View All Results&quot; or &quot;View Plot&quot; buttons to get a table or plot with the benchmark results, depending on the currently active page.</li>
-<li>Available plots include:
+<h2 id="project-layout" class="tsd-anchor-link">Project Layout<a href="#project-layout" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <ul>
-<li>Performance Profile (Absolute and relative)</li>
-<li>Solver Time per Solver</li>
-<li>Solver Time per Instance</li>
-<li>Number of Nodes</li>
-<li>Number of Iterations</li>
-<li>Termination Status</li>
-<li>Solution Quality</li>
-<li>Solution Time</li>
+<li><code>Src/Scripts/Main.ts</code>: the entry point. It imports the styles and starts the application.</li>
+<li><code>Src/Scripts/App/</code>: the startup, the state shared by the pages, and which page is open.</li>
+<li><code>Src/Scripts/Pages/</code>: the handlers of each page. The plot pages are registered in <code>PlotRegistry</code>.</li>
+<li><code>Src/Scripts/</code>: also <code>Actions</code>, <code>Chart</code>, <code>Constants</code>, <code>DataProcessing</code>, <code>DataTable</code>, <code>Elements</code>, <code>Interfaces</code>, <code>PWA</code> and <code>UserConfiguration</code>.</li>
+<li><code>Src/Templates/</code>: the source of the HTML pages (<code>pages.mjs</code>, <code>layout.mjs</code>, <code>partials/</code>, <code>fragments/</code>).</li>
+<li><code>report.html</code> and <code>Src/Pages/*.html</code>: <strong>generated</strong> from the templates, but committed, so the application opens from the file system. Change the templates and run <code>npm run build:pages</code>.</li>
+<li><code>Tests/</code>: the unit tests (Jest) and the browser tests (<code>Tests/E2E</code>, Playwright).</li>
+<li><code>Dist/</code>, <code>Docs/</code> and <code>Release/</code>: generated output.</li>
 </ul>
-</li>
-<li>Compare a pair of solvers via the &quot;Compare Solvers&quot; page. Direct comparison on how many instances the solver time was better, worse, or equal.</li>
-</ol>
-<h3 id="11-general-button-functionality" class="tsd-anchor-link">1.1 General Button Functionality<a href="#11-general-button-functionality" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<ul>
-<li><strong>Save Data</strong>: Save the currently uploaded data to local storage. If filtering has been applied on the table page, then the currently visible table will be stored.</li>
-<li><strong>Download Saved Data</strong>: Download the user configuration (<code>UserConfiguration.json</code>).</li>
-<li><strong>Download Data</strong>: Customize the downloadable user configuration file.</li>
-<li><strong>Delete Data</strong>: Delete the data from local storage.</li>
-</ul>
-<h3 id="12-table-page-button-functionality" class="tsd-anchor-link">1.2 Table Page Button Functionality<a href="#12-table-page-button-functionality" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<ul>
-<li><strong>View Table</strong>: View the table of the uploaded results.</li>
-<li><strong>Show Selected Rows</strong>: View rows that have been selected from the table.</li>
-<li><strong>Clear Data Table</strong>: Clear the current table.</li>
-<li><strong>Settings</strong>:
-<ul>
-<li><strong>Show <em>n</em> rows</strong>: The number of rows to show in the table.</li>
-<li><strong>Column Visibility</strong>: Select which columns to show or hide.</li>
-</ul>
-</li>
-<li><strong>Advanced Search</strong>: Create custom search queries.</li>
-<li><strong>Toggle Filters</strong>: Show filters for each column.</li>
-<li><strong>Export</strong>: Export the table as a CSV, copy table content to clipboard, or view it in the browser's print option.</li>
-</ul>
-<h3 id="13-plot-pages-buttons-functionality" class="tsd-anchor-link">1.3 Plot Pages Buttons Functionality<a href="#13-plot-pages-buttons-functionality" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<ul>
-<li><strong>View X</strong>: View the page-specific plot.</li>
-<li><strong>Download Chart Data</strong>: Download the chart data.</li>
-</ul>
-<h3 id="14-compare-solvers-page-buttons-functionality" class="tsd-anchor-link">1.4 Compare Solvers Page Buttons Functionality<a href="#14-compare-solvers-page-buttons-functionality" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<ul>
-<li><strong>Compare Solvers</strong>: Show the comparison table between two solvers.</li>
-</ul>
-<h2 id="2-supported-formats" class="tsd-anchor-link">2. Supported Formats<a href="#2-supported-formats" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<h3 id="21-trc" class="tsd-anchor-link">2.1 .trc<a href="#21-trc" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>The following header structure and order should be used in conjunction with .trc files, if no header is provided in the result files:</p>
-<pre><code><span class="hl-0">InputFileName</span><br/><span class="hl-0">ModelType</span><br/><span class="hl-0">SolverName</span><br/><span class="hl-1">NLP</span><br/><span class="hl-1">MIP</span><br/><span class="hl-0">JulianDate</span><br/><span class="hl-0">Direction</span><br/><span class="hl-0">NumberOfEquations</span><br/><span class="hl-0">NumberOfVariables</span><br/><span class="hl-0">NumberOfDiscreteVariables</span><br/><span class="hl-0">NumberOfNonZeros</span><br/><span class="hl-0">NumberOfNonlinearNonZeros</span><br/><span class="hl-0">OptionFile</span><br/><span class="hl-0">ModelStatus</span><br/><span class="hl-0">TermStatus</span><br/><span class="hl-0">ObjectiveValue</span><br/><span class="hl-0">ObjectiveValueEstimate</span><br/><span class="hl-0">SolverTime</span><br/><span class="hl-0">NumberOfIterations</span><br/><span class="hl-0">NumberOfDomainViolations</span><br/><span class="hl-0">NumberOfNodes</span><br/><span class="hl-0">UserComment</span>
-</code><button>Copy</button></pre>
-
-<p>For further information, see <a href="https://gams.com/latest/docs/UG_SolverUsage.html#UG_SolverUsage_TraceFile">https://gams.com/latest/docs/UG_SolverUsage.html#UG_SolverUsage_TraceFile</a>.</p>
-<h3 id="22-json" class="tsd-anchor-link">2.2 .json<a href="#22-json" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>The file should include <code>dataSet</code> and <code>dataFileType</code>, <code>defaultTime</code> and <code>gapLimit</code> are optional.</p>
-<pre><code class="json"><span class="hl-2">{</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;dataSet&quot;</span><span class="hl-2">: [</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;alan,MINLP,knitro,CONOPT,CPLEX,43365.479,min,8,9,4,24,3,1,8,Error,2.925,2.925,0.142,0,0,18,#,2.925,2.925,2.925,2.925,0,0,0,0,0&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk2_10,MINLP,knitro,CONOPT,CPLEX,43365.479,min,2,11,10,21,10,1,8,Error,0,2.22044604925031E-16,2.5,0,0,3070,#,0,2.22044604925031e-16,0,2.22044604925031e-16,0,0,0,0,0&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk2_30,MINLP,knitro,CONOPT,CPLEX,43365.479,min,2,31,30,61,30,1,2,Error,0,-26.887733399442,900.034,0,0,42269,#,0,-26.887733399442,0,-26.887733399442,Infinity,Infinity,0,0,0&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk3_10,MINLP,knitro,CONOPT,CPLEX,43365.489,min,2,11,10,21,10,1,13,Error,0,NA,NA,NA,NA,NA,#,0,-Infinity,0,-Infinity,Infinity,Infinity,0,NaN,NaN&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-4">&quot;ball_mk4_05,MINLP,knitro,CONOPT,CPLEX,43365.51,min,2,11,10,21,10,1,13,Error,0,NA,NA,NA,NA,NA,#,0,-Infinity,0,-Infinity,Infinity,Infinity,0,NaN,NaN&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">    ],</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;dataFileType&quot;</span><span class="hl-2">: </span><span class="hl-4">&quot;trc&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;defaultTime&quot;</span><span class="hl-2">: </span><span class="hl-5">900</span><span class="hl-2">,</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;gapLimit&quot;</span><span class="hl-2">: </span><span class="hl-5">0.1</span><br/><span class="hl-2">}</span>
-</code><button type="button">Copy</button></pre>
-
-<p>As for now, this structure has to be used for the dataSet. It will eventually be updated to a proper object.</p>
-<h2 id="3-working-with-the-codebase" class="tsd-anchor-link">3. Working with the Codebase<a href="#3-working-with-the-codebase" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<h3 id="31-prerequisites" class="tsd-anchor-link">3.1 Prerequisites<a href="#31-prerequisites" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<h2 id="working-with-the-codebase" class="tsd-anchor-link">Working with the Codebase<a href="#working-with-the-codebase" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="prerequisites" class="tsd-anchor-link">Prerequisites<a href="#prerequisites" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>Before getting started, make sure you have the following software installed on your machine:</p>
 <pre><code>Node.js: https://nodejs.org/
 TypeScript: https://www.typescriptlang.org/
@@ -272,7 +214,7 @@ Webpack: https://webpack.js.org/
 <p>Install the required packages by running:</p>
 <pre><code>npm install
 </code></pre>
-<h3 id="32-bundling" class="tsd-anchor-link">3.2 Bundling<a href="#32-bundling" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<h3 id="bundling" class="tsd-anchor-link">Bundling<a href="#bundling" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>Navigate to the project directory in your terminal and run:</p>
 <pre><code>npm run build
 </code></pre>
@@ -280,7 +222,7 @@ Webpack: https://webpack.js.org/
 <p>Dev server can be run with:</p>
 <pre><code>npm start
 </code></pre>
-<h3 id="33-other-scripts" class="tsd-anchor-link">3.3 Other Scripts<a href="#33-other-scripts" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<h3 id="other-scripts" class="tsd-anchor-link">Other Scripts<a href="#other-scripts" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>Run unit tests using Jest:</p>
 <pre><code>npm run test:functions
 </code></pre>
@@ -309,7 +251,7 @@ npm run check:pages
 <p>Create a slimmed down web release build using gulp:</p>
 <pre><code>npm run release:web
 </code></pre>
-</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#disclaimer"><span>Disclaimer</span></a><a href="#1-instructions-for-using-the-application"><span>1. <wbr/>Instructions for <wbr/>Using the <wbr/>Application</span></a><ul><li><a href="#11-general-button-functionality"><span>1.1 <wbr/>General <wbr/>Button <wbr/>Functionality</span></a></li><li><a href="#12-table-page-button-functionality"><span>1.2 <wbr/>Table <wbr/>Page <wbr/>Button <wbr/>Functionality</span></a></li><li><a href="#13-plot-pages-buttons-functionality"><span>1.3 <wbr/>Plot <wbr/>Pages <wbr/>Buttons <wbr/>Functionality</span></a></li><li><a href="#14-compare-solvers-page-buttons-functionality"><span>1.4 <wbr/>Compare <wbr/>Solvers <wbr/>Page <wbr/>Buttons <wbr/>Functionality</span></a></li></ul><a href="#2-supported-formats"><span>2. <wbr/>Supported <wbr/>Formats</span></a><ul><li><a href="#21-trc"><span>2.1 .trc</span></a></li><li><a href="#22-json"><span>2.2 .json</span></a></li></ul><a href="#3-working-with-the-codebase"><span>3. <wbr/>Working with the <wbr/>Codebase</span></a><ul><li><a href="#31-prerequisites"><span>3.1 <wbr/>Prerequisites</span></a></li><li><a href="#32-bundling"><span>3.2 <wbr/>Bundling</span></a></li><li><a href="#33-other-scripts"><span>3.3 <wbr/>Other <wbr/>Scripts</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">System Documentation</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div><script>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#documentation"><span>Documentation</span></a><a href="#project-layout"><span>Project <wbr/>Layout</span></a><a href="#working-with-the-codebase"><span>Working with the <wbr/>Codebase</span></a><ul><li><a href="#prerequisites"><span>Prerequisites</span></a></li><li><a href="#bundling"><span>Bundling</span></a></li><li><a href="#other-scripts"><span>Other <wbr/>Scripts</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">System Documentation</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div><script>
           try {
             const generateLinkElement = document.querySelector(".tsd-generator a");
             const link = document.createElement("a");

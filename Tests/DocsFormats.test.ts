@@ -13,7 +13,7 @@ import { ExtractTraceData } from "../Src/Scripts/DataProcessing/FilterData";
 import { CategoriesObj } from "../Src/Scripts/Interfaces/Interfaces";
 
 const readme = fs.readFileSync(
-	path.join(__dirname, "..", "Src", "Docs", "README.md"),
+	path.join(__dirname, "..", "Src", "Docs", "USER_GUIDE.md"),
 	"utf8"
 );
 
