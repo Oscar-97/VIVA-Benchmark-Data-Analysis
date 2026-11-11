@@ -2779,6 +2779,12 @@ body > :not(nav, hr) {
 		visibility: visible;
 	}
 
+	/* A click on the item of a menu that is open on hover makes Bootstrap show it, and Bootstrap then adds a margin
+	   above the menu. The hover menu has none, so the menu would move down. */
+	#navbarNav .dropdown-menu[data-bs-popper] {
+		margin-top: 0;
+	}
+
 	/* The Data menu is opened with a click and stays open. The menus of the navigation bar do not open on top of it
 	   while it is, and open again when it is closed. */
 	body:has(#dataMenu .dropdown-menu.show) #navbarNav .dropdown:hover .dropdown-menu {
