@@ -2824,6 +2824,11 @@ body > :not(nav, hr) {
 	margin-right: 1rem;
 }
 
+/* The padding of the modal is the space below the last paragraph or field, so it keeps no margin of its own. */
+.modal-body > :last-child {
+	margin-bottom: 0;
+}
+
 #alertIcon {
 	margin-right: 4px;
 }
