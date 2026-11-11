@@ -12,7 +12,7 @@ Demo-data is attained from [miplib2010 examples](https://github.com/coin-or/Pave
 **Development Note**:  This project is still a work in progress, and therefore, bugs and unexpected behavior may occur.
 
 ## 1. Instructions for Using the Application
-1. Download the release ZIP and extract the contents, or clone the repository, or visit the web version at [viva-app.xyz](https://viva-app.xyz/report).
+1. Download the release ZIP and extract the contents, or clone the repository, or visit the web version at [viva-app.xyz](https://viva-app.xyz/table).
 2. Open the file `report.html` found in the root directory. It is the page with the results table.
 3. Load the files, in one of these ways:
    - Drop the files anywhere on the page.
