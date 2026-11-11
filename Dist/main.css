@@ -2778,6 +2778,13 @@ body > :not(nav, hr) {
 		opacity: 1;
 		visibility: visible;
 	}
+
+	/* The Data menu is opened with a click and stays open. The menus of the navigation bar do not open on top of it
+	   while it is, and open again when it is closed. */
+	body:has(#dataMenu .dropdown-menu.show) #navbarNav .dropdown:hover .dropdown-menu {
+		opacity: 0;
+		visibility: hidden;
+	}
 }
 
 /* The Help menu is at the right edge of the navigation bar. With the navigation bar expanded the menu opens
@@ -2836,7 +2843,7 @@ body > :not(nav, hr) {
 /* The action of a notification is a link in the line of the message, not a button with its own padding and size. */
 #alertActionButton {
 	padding: 0;
-	margin-left: 0.5rem;
+	margin-left: 0.2rem;
 	border: 0;
 	font-size: inherit;
 	line-height: inherit;
