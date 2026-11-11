@@ -147,6 +147,15 @@ test.describe("Table page", () => {
 		await ExpectNotification(page, "Deleted configuration.");
 		await expect(page.locator("#deleteLocalStorageButton")).toBeDisabled();
 
+		// The Undo button is in line with the message.
+		const message = await page.locator("#alertMessage").boundingBox();
+		const undo = await page.locator("#alertActionButton").boundingBox();
+		expect(message).not.toBeNull();
+		expect(undo).not.toBeNull();
+		const middle = (box: { y: number; height: number } | null): number =>
+			(box?.y ?? 0) + (box?.height ?? 0) / 2;
+		expect(Math.abs(middle(undo) - middle(message))).toBeLessThanOrEqual(1);
+
 		await page.locator("#alertActionButton").click();
 		await ExpectNotification(page, "Restored the saved data.");
 		await expect(page.locator("#alertActionButton")).toBeHidden();
