@@ -192,6 +192,24 @@ test.describe("Table page", () => {
 		for (const index of [0, 1, 2]) {
 			await rows.nth(index).click({ modifiers: ["Control"] });
 		}
+
+		// The selected rows are blue in every cell, also in the fixed first column, and the others are not.
+		const BLUE = "rgb(13, 110, 253)";
+		for (const index of [0, 1, 2]) {
+			const cells = rows.nth(index).locator("td");
+			await expect(cells.first()).toHaveCSS("background-color", BLUE);
+			await expect(cells.nth(3)).toHaveCSS("background-color", BLUE);
+		}
+		await expect(rows.nth(3).locator("td").first()).not.toHaveCSS(
+			"background-color",
+			BLUE
+		);
+		// Selecting does not open the details of the row below it.
+		await expect(
+			page.locator("#dataTableGenerated tbody tr.child")
+		).toHaveCount(0);
+		await expect(page.locator(".dt-info")).toContainText("3 rows selected");
+
 		await page.locator("#showSelectedRowsButton").click();
 
 		await expect(rows).toHaveCount(3);
