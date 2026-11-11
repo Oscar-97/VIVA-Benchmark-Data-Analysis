@@ -3,6 +3,7 @@ import { ClearDataTableModal } from "../Elements/Modals/ClearDataTableModal";
 import { CreateConfigurationSettingsModal } from "../Elements/Modals/CustomizeDownloadModal";
 import { CreateDeleteDataModal } from "../Elements/Modals/DeleteDataModal";
 import { CreateFileFormatInformationModal } from "../Elements/Modals/InfoModal";
+import { CloseDataMenuOnNavigation } from "../Elements/NavigationMenus";
 import { ReleaseVersionTag } from "../Elements/ReleaseVersionTag";
 import { CreateScreenSizeToast } from "../Elements/Toasts/ScreenSizeToast";
 import { RegisterServiceWorker } from "../PWA/PWA-utils";
@@ -57,4 +58,5 @@ export function Bootstrap(): void {
 	InitializeProgram();
 	RegisterGlobalListeners();
 	RegisterDragAndDrop();
+	CloseDataMenuOnNavigation();
 }

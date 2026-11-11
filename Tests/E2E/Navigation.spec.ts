@@ -62,6 +62,24 @@ test.describe("Navigation", () => {
 		).toHaveCount(4);
 	});
 
+	test("Opening a menu of the navigation bar closes the Data menu", async ({
+		page
+	}) => {
+		// The navigation bar is expanded, and its menus open when the pointer is over them.
+		await page.setViewportSize({ width: 1500, height: 900 });
+		await page.goto(PageUrl("report.html"));
+		await ImportFiles(page, [TestFile("shotALL.trc")]);
+		await ExpectNotification(page, "Benchmarks loaded with following files");
+
+		await page.locator("#dataMenuButton").click();
+		const dataMenu = page.locator("#dataMenu .dropdown-menu");
+		await expect(dataMenu).toBeVisible();
+
+		await page.locator(`${PLOT_MENU}/a`).hover();
+		await expect(page.locator(`${PLOT_MENU}/ul`)).toBeVisible();
+		await expect(dataMenu).toBeHidden();
+	});
+
 	test.describe("The Help menu fits on the screen", () => {
 		/**
 		 * The position of the Help menu on the page, and of the theme button that follows it.
