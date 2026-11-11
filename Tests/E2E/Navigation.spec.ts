@@ -88,6 +88,45 @@ test.describe("Navigation", () => {
 		await expect(page.locator(`${PLOT_MENU}/ul`)).toBeVisible();
 	});
 
+	test("A menu that is open on hover does not move when its item is clicked", async ({
+		page
+	}) => {
+		await page.setViewportSize({ width: 1500, height: 900 });
+		await page.goto(PageUrl("report.html"));
+
+		for (const [toggle, menu] of [
+			[`${PLOT_MENU}/a`, `${PLOT_MENU}/ul`],
+			["#helpMenuButton", "#helpMenu"]
+		] as const) {
+			await page.locator(toggle).hover();
+			await expect(page.locator(menu)).toBeVisible();
+			const before = await page.locator(menu).boundingBox();
+
+			await page.locator(toggle).click();
+			await expect(page.locator(toggle)).toHaveAttribute(
+				"aria-expanded",
+				"true"
+			);
+			// The menu moves with a transition, so it is measured when that is over.
+			await page
+				.locator(menu)
+				.evaluate((element) =>
+					Promise.all(
+						element.getAnimations().map((animation) => animation.finished)
+					)
+				);
+			const after = await page.locator(menu).boundingBox();
+
+			expect(before).not.toBeNull();
+			expect(after?.y).toBeCloseTo(before?.y ?? -1, 0);
+			expect(after?.x).toBeCloseTo(before?.x ?? -1, 0);
+
+			// Close it for the next menu.
+			await page.mouse.click(2, 2);
+			await page.mouse.move(700, 600);
+		}
+	});
+
 	test.describe("The Help menu fits on the screen", () => {
 		/**
 		 * The position of the Help menu on the page, and of the theme button that follows it.
