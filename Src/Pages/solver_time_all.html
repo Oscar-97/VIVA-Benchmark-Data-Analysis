@@ -84,6 +84,7 @@
               >
               <ul
                 class="dropdown-menu mb-2"
+                id="plotsMenu"
                 aria-labelledby="navbarDropdownMenuLink"
               >
                 <li>
@@ -504,7 +505,7 @@
           <li><b>.solu</b> best known bounds (optional)</li>
           <li><b>.json</b> a configuration that was saved earlier</li>
         </ul>
-        <div class="d-flex flex-wrap justify-content-center gap-2">
+        <div class="d-flex flex-wrap gap-2">
           <button
             id="emptyStateDemoButton"
             class="btn btn-sm btn-primary"
@@ -525,7 +526,7 @@
       </div>
       <div
         id="loadStatus"
-        class="load-status text-center"
+        class="load-status"
         role="status"
         aria-live="polite"
       ></div>

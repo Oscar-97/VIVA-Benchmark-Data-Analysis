@@ -121,7 +121,7 @@ body > :not(nav, hr) {
 
 /* The Help menu is at the right edge of the navigation bar. With the navigation bar expanded the menu opens
    on hover, which Bootstrap does not position, so the menu is aligned to the right edge of its item here.
-   With the navigation bar collapsed the menu opens below its item and moves the items under it down. */
+   With the navigation bar collapsed the Help and Plots menus open below their item and move the items under them down. */
 @media (min-width: 1470px) {
 	#navbarNav #helpMenu {
 		right: 0;
@@ -130,7 +130,8 @@ body > :not(nav, hr) {
 }
 
 @media (max-width: 1469px) {
-	#navbarNav #helpMenu {
+	#navbarNav #helpMenu,
+	#navbarNav #plotsMenu {
 		position: static;
 		display: none;
 		/* As wide as the upload field and the library selector at most. */
@@ -140,7 +141,8 @@ body > :not(nav, hr) {
 		overflow: visible;
 	}
 
-	#navbarNav #helpMenu.show {
+	#navbarNav #helpMenu.show,
+	#navbarNav #plotsMenu.show {
 		display: block;
 	}
 }
@@ -216,6 +218,12 @@ body > :not(nav, hr) {
 	padding-top: 0rem;
 	margin-left: 0.25rem;
 	margin-right: 0.25rem;
+}
+
+/* The floating label is cut off when the selected option is shorter than the label. */
+#statusSelector,
+#chartTypeSelector {
+	min-width: 9rem;
 }
 
 #librarySelectorGroup {
@@ -361,6 +369,11 @@ th, tr {
 	background-color: #0d6efd !important;
 	color: #ffffff;
 	font-weight: bold;
+}
+
+/* The horizontal scrollbar of the table is white in the light theme. */
+[data-bs-theme="light"] .dt-scroll-body {
+	scrollbar-color: #adb5bd #ffffff;
 }
 
 /* Dark theme (Bootstrap sets data-bs-theme on the html element) */

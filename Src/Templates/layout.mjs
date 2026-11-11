@@ -158,7 +158,7 @@ function RenderNavItems(activePage, prefixes) {
     ),
     `<li class="nav-item dropdown"><a class="nav-link dropdown-toggle${
       PLOT_PAGES.has(activePage) ? ' active" aria-current="true' : ""
-    }" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-bar-chart-steps"></i> Plots</a><ul class="dropdown-menu mb-2" aria-labelledby="navbarDropdownMenuLink">${menuItems}</ul></li>`,
+    }" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-bar-chart-steps"></i> Plots</a><ul class="dropdown-menu mb-2" id="plotsMenu" aria-labelledby="navbarDropdownMenuLink">${menuItems}</ul></li>`,
     RenderNavLink(
       '<i class="bi bi-view-stacked"></i> Compare Solvers',
       `${prefixes.pages}compare_solvers.html`,
