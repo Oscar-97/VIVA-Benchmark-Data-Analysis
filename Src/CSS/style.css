@@ -154,6 +154,16 @@ body > :not(nav, hr) {
 	margin-right: 4px;
 }
 
+/* The action of a notification is a link in the line of the message, not a button with its own padding and size. */
+#alertActionButton {
+	padding: 0;
+	margin-left: 0.5rem;
+	border: 0;
+	font-size: inherit;
+	line-height: inherit;
+	vertical-align: baseline;
+}
+
 #buttonContainer {
 	margin-left: 1rem;
 	margin-top: 1rem;
