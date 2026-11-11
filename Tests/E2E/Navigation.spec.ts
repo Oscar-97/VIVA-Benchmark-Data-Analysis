@@ -62,7 +62,7 @@ test.describe("Navigation", () => {
 		).toHaveCount(4);
 	});
 
-	test("Opening a menu of the navigation bar closes the Data menu", async ({
+	test("The Data menu stays open, and the Plots menu does not open on top of it", async ({
 		page
 	}) => {
 		// The navigation bar is expanded, and its menus open when the pointer is over them.
@@ -76,8 +76,16 @@ test.describe("Navigation", () => {
 		await expect(dataMenu).toBeVisible();
 
 		await page.locator(`${PLOT_MENU}/a`).hover();
-		await expect(page.locator(`${PLOT_MENU}/ul`)).toBeVisible();
+		await expect(page.locator(`${PLOT_MENU}/ul`)).toBeHidden();
+		await expect(dataMenu).toBeVisible();
+
+		// The menu can still be used, and the Plots menu opens again when it is closed.
+		await page.locator("#dataMenu .dropdown-item").first().hover();
+		await expect(dataMenu).toBeVisible();
+		await page.keyboard.press("Escape");
 		await expect(dataMenu).toBeHidden();
+		await page.locator(`${PLOT_MENU}/a`).hover();
+		await expect(page.locator(`${PLOT_MENU}/ul`)).toBeVisible();
 	});
 
 	test.describe("The Help menu fits on the screen", () => {
