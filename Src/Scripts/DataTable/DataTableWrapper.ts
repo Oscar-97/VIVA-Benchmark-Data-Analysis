@@ -143,10 +143,9 @@ function DataTablesConfiguration(): void {
 			className: "bg-primary row-selected-problems"
 		},
 		responsive: {
-			details: {
-				type: "column",
-				target: "tr"
-			},
+			// A click on a row selects it. Opening the details of the row as well would put a list of the other
+			// columns below it. The table scrolls sideways, and Settings shows or hides columns.
+			details: false,
 			breakpoints: [
 				{ name: "desktop", width: Infinity },
 				{ name: "tablet", width: 1200 },
