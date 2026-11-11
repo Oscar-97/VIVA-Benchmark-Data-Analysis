@@ -139,13 +139,13 @@ export function CreateConfigurationSettingsModal(): void {
 	modalBody.appendChild(iOptional2);
 	modalBody.appendChild(p3);
 	modalBody.appendChild(gapLimitDiv);
-	modalBody.appendChild(modalFooter);
 
 	modalHeader.appendChild(modalTitle);
 	modalHeader.appendChild(modalCloseButton);
 
 	modalContent.appendChild(modalHeader);
 	modalContent.appendChild(modalBody);
+	modalContent.appendChild(modalFooter);
 
 	modalDialog.appendChild(modalContent);
 	modal.appendChild(modalDialog);
