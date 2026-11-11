@@ -157,12 +157,12 @@ describe("PlotStatusMessages", () => {
 		expect(title).toBe("Status");
 	});
 
-	it("colors the known statuses, and gives an unknown one the default color", () => {
+	it("colors the known statuses, and leaves an unknown one to the palette", () => {
 		const chartData = PlotStatusMessages(traceData, "ModelStatus", "Status");
 
 		expect(At(chartData, 0).backgroundColor).toBe("#05055c");
 		expect(At(chartData, 1).backgroundColor).toBe("#d5fa87");
-		expect(At(chartData, 2).backgroundColor).toBe("rgba(0, 0, 0, 0.1)");
+		expect(At(chartData, 2).backgroundColor).toBeUndefined();
 	});
 
 	it("plots nothing for data without solvers", () => {

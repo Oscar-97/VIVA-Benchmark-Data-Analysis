@@ -15,11 +15,6 @@ import {
 } from "../../DataProcessing/ChartsComputations/ComputeChartData";
 
 /**
- * The color Chart.js uses for a data set without a color of its own.
- */
-const DEFAULT_COLOR = "rgba(0, 0, 0, 0.1)";
-
-/**
  * This function prepares and plots data by a specific category.
  *
  * @param {TraceData[]} traceData - Array of objects containing the result data.
@@ -188,8 +183,8 @@ export function PlotStatusMessages(
 ): {
 	label: string;
 	data: number[];
-	borderColor: string;
-	backgroundColor: string;
+	borderColor?: string;
+	backgroundColor?: string;
 }[] {
 	const data = ExtractStatusMessages(traceData, statusType);
 	const solverNames = data.map((obj) => {
@@ -219,14 +214,17 @@ export function PlotStatusMessages(
 		"Infeasible - No Solution": "#fa9287"
 	};
 
+	// A status without a color of its own, like the solver statuses, gets one from the palette of the chart.
 	const chartData = statusKeys.map((key) => {
+		const color = colorMapping[key];
 		return {
 			label: key,
 			data: data.map((obj) => {
 				return Number(obj[key]) || 0;
 			}),
-			borderColor: colorMapping[key] ?? DEFAULT_COLOR,
-			backgroundColor: colorMapping[key] ?? DEFAULT_COLOR
+			...(color === undefined
+				? {}
+				: { borderColor: color, backgroundColor: color })
 		};
 	});
 
