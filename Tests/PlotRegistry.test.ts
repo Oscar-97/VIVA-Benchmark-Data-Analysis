@@ -138,7 +138,8 @@ describe("the solution quality page", () => {
 			undefined,
 			undefined,
 			expect.stringContaining("excluded"),
-			false
+			false,
+			expect.stringContaining("Logarithmic")
 		);
 	});
 
@@ -154,7 +155,8 @@ describe("the solution quality page", () => {
 			undefined,
 			undefined,
 			expect.stringContaining("0 or less"),
-			true
+			true,
+			expect.any(String)
 		);
 	});
 });
