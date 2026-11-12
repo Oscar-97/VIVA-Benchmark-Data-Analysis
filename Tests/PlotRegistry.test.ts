@@ -6,6 +6,7 @@ const selectors = {
 	statusSelector: { value: "ModelStatus", disabled: false },
 	chartTypeSelector: { value: "Bar", disabled: false },
 	categorySelector: { value: "ObjectiveValue" },
+	scaleSelector: { value: "linear" },
 	saveLocalStorageButton: { id: "save" },
 	deleteLocalStorageButton: { disabled: true },
 	downloadConfigurationButtonLayer: { disabled: true }
@@ -136,7 +137,24 @@ describe("the solution quality page", () => {
 			expect.stringContaining("Average, min, max and std for"),
 			undefined,
 			undefined,
-			expect.stringContaining("excluded")
+			expect.stringContaining("excluded"),
+			false
+		);
+	});
+
+	it("plots on a logarithmic scale when it is chosen, and says what is not shown", () => {
+		selectors.scaleSelector.value = "logarithmic";
+		GetPlotFunction(PageTitles.SOLUTION_QUALITY)?.(traceData);
+		selectors.scaleSelector.value = "linear";
+
+		expect(PlotDataByCategory).toHaveBeenCalledWith(
+			traceData,
+			"ObjectiveValue",
+			expect.any(String),
+			undefined,
+			undefined,
+			expect.stringContaining("0 or less"),
+			true
 		);
 	});
 });

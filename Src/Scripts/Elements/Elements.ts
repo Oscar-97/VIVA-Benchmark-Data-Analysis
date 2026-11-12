@@ -492,6 +492,13 @@ export const elements = {
 	},
 
 	/**
+	 * `scaleSelector` is a reference to the HTMLSelectElement with the ID "scaleSelector".
+	 */
+	get scaleSelector(): HTMLSelectElement {
+		return GetElement<HTMLSelectElement>("scaleSelector");
+	},
+
+	/**
 	 * `filterTypeSelector` is a reference to the HTMLSelectElement with the ID "filterTypeSelector".
 	 */
 	get filterTypeSelector(): HTMLSelectElement {

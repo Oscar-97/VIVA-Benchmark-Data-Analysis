@@ -36,6 +36,32 @@ async function ShowChart(
 	return ReadChartData(page);
 }
 
+test.describe("Solution quality scale", () => {
+	test("The chart can be shown on a logarithmic scale", async ({ page }) => {
+		const errors = await OpenWithData(page, "Src/Pages/solution_quality.html");
+		await expect.poll(() => IsChartDrawn(page)).toBe(true);
+		await expect(page.locator("#scaleSelector")).toHaveValue("linear");
+
+		await page.locator("#scaleSelector").selectOption("logarithmic");
+		await page.locator("#viewPlotsButton").click();
+
+		await expect.poll(() => IsChartDrawn(page)).toBe(true);
+		expect(errors).toEqual([]);
+	});
+
+	test("The statistics have no long rows of digits", async ({ page }) => {
+		const errors = await OpenWithData(page, "Src/Pages/solution_quality.html");
+		await expect.poll(() => IsChartDrawn(page)).toBe(true);
+
+		const cells = await page
+			.locator("#statisticsTable_inner tbody td")
+			.allInnerTexts();
+		expect(cells.length).toBeGreaterThan(0);
+		expect(cells.filter((cell) => /\d{13,}/.test(cell))).toEqual([]);
+		expect(errors).toEqual([]);
+	});
+});
+
 test.describe("Chart for assistive technology", () => {
 	test("The chart is described, with its kind, axes and data sets", async ({
 		page
