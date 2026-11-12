@@ -93,6 +93,30 @@ describe("PlotDataByCategory", () => {
 		expect(At(CreatedChart(), 7)).toBe("A subtitle");
 	});
 
+	it("starts at zero on a linear scale", () => {
+		PlotDataByCategory(traceData, "NumberOfNodes", "Nodes");
+
+		const [, , , , scales, zoom] = CreatedChart();
+		expect(scales?.["y"]).not.toHaveProperty("type");
+		expect(zoom?.limits).toEqual({ y: { min: 0 } });
+	});
+
+	it("uses a logarithmic scale without the limit at zero when asked to", () => {
+		PlotDataByCategory(
+			traceData,
+			"NumberOfNodes",
+			"Nodes",
+			undefined,
+			undefined,
+			undefined,
+			true
+		);
+
+		const [, , , , scales, zoom] = CreatedChart();
+		expect(scales?.["y"]).toMatchObject({ type: "logarithmic" });
+		expect(zoom).not.toHaveProperty("limits");
+	});
+
 	it("has no annotations for a category other than the solver time", () => {
 		PlotDataByCategory(traceData, "NumberOfNodes", "Nodes");
 

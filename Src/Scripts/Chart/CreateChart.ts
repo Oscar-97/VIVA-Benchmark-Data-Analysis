@@ -13,6 +13,7 @@ import {
 	LinearScale,
 	LineController,
 	LineElement,
+	LogarithmicScale,
 	PointElement,
 	RadarController,
 	RadialLinearScale,
@@ -44,7 +45,7 @@ export type ChartAnnotationOptions = NonNullable<
 
 /**
  * Only what the application draws is registered, not everything that chart.js/auto does:
- * bar, line, bubble and radar charts, with the scales and elements that they use, and the plugins
+ * bar, line, bubble and radar charts, with the scales (linear, logarithmic, category and radial) and elements that they use, and the plugins
  * for the colors, the filled areas of a radar chart, the legend, the titles and the tooltips.
  * A chart of another kind needs its controller, scale and elements added here.
  */
@@ -55,6 +56,7 @@ Chart.register(
 	RadarController,
 	CategoryScale,
 	LinearScale,
+	LogarithmicScale,
 	RadialLinearScale,
 	BarElement,
 	LineElement,

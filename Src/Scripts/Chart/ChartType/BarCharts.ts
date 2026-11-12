@@ -20,6 +20,7 @@ import {
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  * @param {string} category - The category by which the data should be analyzed.
  * @param {string} title - The title of the chart.
+ * @param {boolean} logScale - Whether the values are shown on a logarithmic scale. Values of 0 or less are not shown then.
  */
 export function PlotDataByCategory(
 	traceData: TraceData[],
@@ -27,7 +28,8 @@ export function PlotDataByCategory(
 	title: string,
 	defaultTime?: number | undefined,
 	filterType?: string,
-	subtitle?: string
+	subtitle?: string,
+	logScale = false
 ): {
 	label: string;
 	data: number[];
@@ -85,6 +87,8 @@ export function PlotDataByCategory(
 			}
 		},
 		y: {
+			// A logarithmic scale cannot show 0 or less, so the chart does not start at 0 then.
+			...(logScale ? { type: "logarithmic" as const } : {}),
 			title: {
 				display: true,
 				text: "Count"
@@ -106,9 +110,7 @@ export function PlotDataByCategory(
 			mode: "y",
 			scaleMode: "y"
 		},
-		limits: {
-			y: { min: 0 }
-		}
+		...(logScale ? {} : { limits: { y: { min: 0 } } })
 	};
 
 	let annotationOptions: ChartAnnotationOptions = undefined;

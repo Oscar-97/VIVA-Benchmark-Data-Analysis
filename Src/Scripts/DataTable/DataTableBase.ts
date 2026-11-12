@@ -8,6 +8,7 @@ import {
 	CalculateSolveAttributes,
 	ExtractUniqueProblems
 } from "../DataProcessing/ResultComputations/ComputeResults";
+import { FormatStatistic } from "../DataProcessing/Statistics";
 import {
 	ComparisonDetails,
 	ComparisonSummary,
@@ -193,7 +194,7 @@ export function StatisticsTable(
 
 		Object.values(statistics).forEach((dataValue) => {
 			const cell = row.insertCell();
-			cell.textContent = dataValue.toString();
+			cell.textContent = FormatStatistic(dataValue);
 		});
 	});
 
@@ -438,7 +439,7 @@ export function InstanceAttributesTable(traceData: TraceData[]): void {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		Object.entries(values).forEach(([_, value]) => {
 			const cell = row.insertCell();
-			cell.textContent = String(value);
+			cell.textContent = FormatStatistic(value);
 		});
 	});
 
@@ -512,7 +513,7 @@ export function SolveAttributesTable(traceData: TraceData[]): void {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		Object.entries(values).forEach(([_, value]) => {
 			const cell = row.insertCell();
-			cell.textContent = value.toString();
+			cell.textContent = FormatStatistic(value);
 		});
 	});
 

@@ -111,6 +111,7 @@ function PlotTerminationStatusPage(traceData: TraceData[]): object[] {
 
 function PlotSolutionQualityPage(traceData: TraceData[]): object[] {
 	const category = elements.categorySelector.value;
+	const logScale = elements.scaleSelector.value === "logarithmic";
 	const categoryTitle = TraceHeaderMap[category as keyof typeof TraceHeaderMap];
 	return PlotDataByCategory(
 		traceData,
@@ -118,7 +119,10 @@ function PlotSolutionQualityPage(traceData: TraceData[]): object[] {
 		`Average, min, max and std for ${categoryTitle}`,
 		undefined,
 		undefined,
-		"Infinite and NaN values are excluded from the calculations."
+		logScale
+			? "Infinite and NaN values are excluded from the calculations. Values of 0 or less are not shown on a logarithmic scale."
+			: "Infinite and NaN values are excluded from the calculations.",
+		logScale
 	);
 }
 
