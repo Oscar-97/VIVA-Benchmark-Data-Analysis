@@ -10,6 +10,8 @@ import {
 	PlotSolverTimes
 } from "../Chart/ChartType/LineCharts";
 import { PlotSolutionTimes } from "../Chart/ChartType/BubbleCharts";
+import { Values } from "../Constants/Values";
+import { FormatNumber } from "../Locale";
 import { PlotTerminationRelation } from "../Chart/ChartType/RadarCharts";
 import { elements } from "../Elements/Elements";
 import { GetPageName } from "../App/CurrentPage";
@@ -42,7 +44,7 @@ function PlotSolverTimePerSolverPage(traceData: TraceData[]): object[] {
 		"Average, min, max and std for solver time",
 		state.defaultTime,
 		filterType,
-		`${state.defaultTime} is set as default time for NaN values.`
+		`${FormatNumber(state.defaultTime ?? Values.DEFAULT_TIME)} is set as default time for NaN values.`
 	);
 }
 
