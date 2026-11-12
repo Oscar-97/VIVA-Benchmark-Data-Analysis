@@ -25,6 +25,7 @@ import { TableMessages } from "../Constants/Messages";
 import { TraceData } from "../Interfaces/Interfaces";
 import { HideTableHint, ShowTableHint } from "./TableHint";
 import { GetNumberSeparators } from "../Locale";
+import { GetSortValue } from "./NumericColumns";
 
 /**
  * The separators of the numbers that the table shows in its texts, for example the number of entries, in the
@@ -130,6 +131,26 @@ export function DisplayDataTable(traceData: TraceData[]): void {
  * @todo Rewrite all of this.
  */
 
+/**
+ * The text of a column in the menus that show or hide columns: its number and its title.
+ */
+function ColumnText(_dt: Api, idx: number, title: string): string {
+	return idx + 1 + ": " + title;
+}
+
+/**
+ * The positions of the columns that have numbers only, which the table builder marked. DataTables does not take a
+ * number such as 1.510000e+2 for a number, so these columns are given the type: they are then shown to the right and
+ * sorted by the number of their cells.
+ */
+function FindNumericColumnPositions(): number[] {
+	return [
+		...document.querySelectorAll<HTMLElement>("#dataTableGenerated thead th")
+	].flatMap((header, position) =>
+		header.dataset["numeric"] === "true" ? [position] : []
+	);
+}
+
 function DataTablesConfiguration(): void {
 	const table = new DataTable("#dataTableGenerated", {
 		destroy: true,
@@ -153,7 +174,7 @@ function DataTablesConfiguration(): void {
 		},
 		responsive: {
 			// A click on a row selects it. Opening the details of the row as well would put a list of the other
-			// columns below it. The table scrolls sideways, and Settings shows or hides columns.
+			// columns below it. The table scrolls sideways, and Columns shows or hides columns.
 			details: false,
 			breakpoints: [
 				{ name: "desktop", width: Infinity },
@@ -170,6 +191,13 @@ function DataTablesConfiguration(): void {
 		columnDefs: [
 			{
 				targets: [0, 2]
+			},
+			{
+				targets: FindNumericColumnPositions(),
+				type: "num",
+				// Only the sorting gets the number. The data of the cell, which is saved and exported, stays as it is.
+				render: (data: unknown, type: string): unknown =>
+					type === "sort" || type === "type" ? GetSortValue(data) : data
 			}
 		],
 		language: {
@@ -201,15 +229,17 @@ function DataTablesConfiguration(): void {
 					{
 						extend: "colvis",
 						text: "<i class='bi bi-layout-three-columns'></i> Column Visibility",
-						columnText: function (
-							_dt: Api,
-							idx: number,
-							title: string
-						): string {
-							return idx + 1 + ": " + title;
-						}
+						columnText: ColumnText
 					}
 				]
+			},
+			"spacer",
+			{
+				extend: "colvis",
+				text: "<i class='bi bi-layout-three-columns'></i> Columns",
+				titleAttr: "Choose which columns are shown.",
+				className: "rounded btn-sm",
+				columnText: ColumnText
 			},
 			"spacer",
 			{

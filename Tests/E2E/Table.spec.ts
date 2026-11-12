@@ -402,7 +402,7 @@ test.describe("Table page", () => {
 		const hint = page.locator("#tableHint");
 		await expect(hint).toBeVisible();
 		await expect(hint).toContainText(/\d+ of \d+ columns are shown\./);
-		await expect(hint).toContainText("Column Visibility");
+		await expect(hint).toContainText("Show the others with Columns.");
 		await expect(hint).toContainText("hold Ctrl or Shift");
 		const shown = Number(
 			/(\d+) of \d+ columns/.exec(await hint.innerText())?.[1]
