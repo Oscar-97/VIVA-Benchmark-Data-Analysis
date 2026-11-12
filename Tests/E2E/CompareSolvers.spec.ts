@@ -82,6 +82,22 @@ test.describe("Compare solvers page", () => {
 		await expect(page.locator("#compareHint")).toBeHidden();
 	});
 
+	test("The caption of the comparison says what it was made with", async ({
+		page
+	}) => {
+		await page.locator("#terminationTypeSelector").selectOption("3");
+		await page.locator("#gapTypeSelector").selectOption("DualGap");
+		await page.locator("#defaultTimeDirectInput").fill("500");
+		await page.locator("#gapLimitDirectInput").fill("5");
+		await page.locator("#shot").check();
+		await page.locator("#scip").check();
+		await page.locator("#compareSolversButton").click();
+
+		await expect(page.locator("#comparisonTable caption")).toContainText(
+			"Settings: Resource Interrupt, Dual Gap <= 5 %, time limit 500 s."
+		);
+	});
+
 	test("The button compares when exactly two solvers are ticked", async ({
 		page
 	}) => {
