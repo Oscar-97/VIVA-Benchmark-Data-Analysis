@@ -39,8 +39,22 @@ function CreatedChart(): Parameters<typeof CreateChart> {
 }
 
 describe("HasExtremeValues", () => {
-	const solver = (avgValue: number, maxValue: number): StatisticsColumns =>
-		({ avgValue, maxValue }) as StatisticsColumns;
+	const solver = (
+		avgValue: number,
+		maxValue: number,
+		minValue = 0
+	): StatisticsColumns =>
+		({ avgValue, maxValue, minValue }) as StatisticsColumns;
+
+	it("is true when a minimum is very far below zero", () => {
+		expect(
+			HasExtremeValues([
+				solver(-1, -0.5, -10),
+				solver(-3, -2, -20),
+				solver(-2, -1, -2e23)
+			])
+		).toBe(true);
+	});
 
 	it("is true when a maximum is over a million times the typical average", () => {
 		expect(
