@@ -75,6 +75,22 @@ test.describe("Compare solvers page", () => {
 		);
 	});
 
+	test("The error of a comparison with one solver is gone after a correct comparison", async ({
+		page
+	}) => {
+		await page.locator("#shot").check();
+		await page.locator("#compareSolversButton").click();
+		await ExpectNotification(
+			page,
+			"Please select exactly two solvers to compare."
+		);
+
+		await page.locator("#scip").check();
+		await page.locator("#compareSolversButton").click();
+		await expect(page.locator("#comparisonTable")).toBeVisible();
+		await expect(page.locator("#alertNotification")).toBeHidden();
+	});
+
 	test("Selecting a third solver is not possible", async ({ page }) => {
 		for (const solver of ["#shot", "#scip", "#pavito"]) {
 			await page.locator(solver).click();
