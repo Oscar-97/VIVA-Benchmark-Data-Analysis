@@ -23,7 +23,8 @@ const EXTREME_VALUE_FACTOR = 1e6;
 
 /**
  * Whether a few values are so much larger than the rest that a linear scale hides the rest: the largest maximum
- * is more than a million times the median of the averages. Infinite and NaN values do not count.
+ * (or the minimum, for negative values) is more than a million times the median of the averages in size.
+ * Infinite and NaN values do not count.
  *
  * @param statistics - The statistics of every solver.
  */
@@ -33,14 +34,16 @@ export function HasExtremeValues(
 	const averages = statistics
 		.map((solver) => solver.avgValue)
 		.filter((value) => Number.isFinite(value));
-	const maxima = statistics
-		.map((solver) => solver.maxValue)
-		.filter((value) => Number.isFinite(value));
-	if (averages.length === 0 || maxima.length === 0) {
+	// The size of a value is its distance from 0, so a very negative minimum counts as much as a very large maximum.
+	const sizes = statistics
+		.flatMap((solver) => [solver.maxValue, solver.minValue])
+		.filter((value) => Number.isFinite(value))
+		.map((value) => Math.abs(value));
+	if (averages.length === 0 || sizes.length === 0) {
 		return false;
 	}
 	const typical = Math.abs(Quantile(averages, 0.5));
-	return typical > 0 && Max(maxima) / typical > EXTREME_VALUE_FACTOR;
+	return typical > 0 && Max(sizes) / typical > EXTREME_VALUE_FACTOR;
 }
 
 /**

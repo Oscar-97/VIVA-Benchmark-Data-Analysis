@@ -177,6 +177,13 @@ function DrawChart(chart: ChartArguments, keepView = false): void {
 		options: {
 			responsive: true,
 			maintainAspectRatio: false,
+			// The subtitle is wrapped for the width of the chart, so it is wrapped again when the chart is resized.
+			onResize: (resized, size): void => {
+				const options = resized.options.plugins?.subtitle;
+				if (subtitle && options) {
+					options.text = WrapSubtitle(subtitle, size.width);
+				}
+			},
 			...(scaleOptions ? { scales: scaleOptions } : {}),
 			transitions: {
 				zoom: {
@@ -199,7 +206,7 @@ function DrawChart(chart: ChartArguments, keepView = false): void {
 				subtitle: subtitle
 					? {
 							display: true,
-							text: WrapText(subtitle, SubtitleWidthInCharacters())
+							text: WrapSubtitle(subtitle, elements.chartCanvas.clientWidth)
 						}
 					: { display: false },
 				...(zoomOptions ? { zoom: WithToolUpdates(zoomOptions) } : {}),
@@ -212,10 +219,16 @@ function DrawChart(chart: ChartArguments, keepView = false): void {
 }
 
 /**
- * How many characters of the subtitle fit in a line of the chart: about 6.5 pixels for a character.
+ * The subtitle in lines that fit the width of the chart, with about 6.5 pixels for a character. A chart that has
+ * no width, as it is hidden, gets the subtitle in one line: it is wrapped when the chart is shown and resized.
+ *
+ * @param subtitle - The subtitle.
+ * @param width - The width of the chart in pixels.
  */
-function SubtitleWidthInCharacters(): number {
-	return Math.max(20, Math.floor(elements.chartCanvas.clientWidth / 6.5));
+function WrapSubtitle(subtitle: string, width: number): string[] {
+	return width > 0
+		? WrapText(subtitle, Math.max(20, Math.floor(width / 6.5)))
+		: [subtitle];
 }
 
 /**
