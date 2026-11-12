@@ -9,6 +9,7 @@ import {
 	ExtractUniqueProblems
 } from "../DataProcessing/ResultComputations/ComputeResults";
 import { FormatStatistic } from "../DataProcessing/Statistics";
+import { FindNumericColumns } from "./NumericColumns";
 import {
 	ComparisonDetails,
 	ComparisonSummary,
@@ -44,6 +45,16 @@ function SortKeysByEnum(obj: object): string[] {
 		.sort();
 
 	return [...sortedEnumKeys, ...nonEnumKeys];
+}
+
+/**
+ * The text of a cell of the table: the value as text, NaN as "NaN" and a missing value as "-".
+ */
+function FormatCellValue(value: unknown): string {
+	if (Number.isNaN(value)) {
+		return "NaN";
+	}
+	return value === null || value === undefined ? "-" : String(value);
 }
 
 /**
@@ -83,10 +94,14 @@ export function TraceTableData(traceData: TraceData[]): void {
 	const headerRow = document.createElement("tr");
 	const [firstRow] = traceData;
 	const sortedKeys = firstRow ? SortKeysByEnum(firstRow) : [];
+	const numericKeys = FindNumericColumns(traceData, sortedKeys);
 
 	for (const key of sortedKeys) {
 		const th = document.createElement("th");
 		th.textContent = TraceHeaderMap[key as keyof typeof TraceHeaderMap] || key;
+		if (numericKeys.has(key)) {
+			th.dataset["numeric"] = "true";
+		}
 		headerRow.appendChild(th);
 	}
 	dataTableHeaders.appendChild(headerRow);
@@ -102,13 +117,7 @@ export function TraceTableData(traceData: TraceData[]): void {
 		for (const key of sortedKeys) {
 			const value = obj[key as keyof TraceData];
 			const td = document.createElement("td");
-			if (value !== null && value !== undefined && !Number.isNaN(value)) {
-				td.textContent = value.toString();
-			} else if (Number.isNaN(value)) {
-				td.textContent = "NaN";
-			} else {
-				td.textContent = "-";
-			}
+			td.textContent = FormatCellValue(value);
 			resultRow.appendChild(td);
 		}
 		dataTableContent.appendChild(resultRow);
