@@ -210,6 +210,7 @@ export function StatisticsTable(
  * @param comparisonSummaryInverse - Inverse comparison summary of the two solvers.
  * @param {string} solver1Name - The name of the first solver.
  * @param {string} solver2Name - The name of the second solver.
+ * @param {string} settings - What the comparison was made with, which the caption of the table tells.
  *
  * @remarks
  * The table is added to the 'comparisonTableContainer' HTML div.
@@ -219,7 +220,8 @@ export function ComparisonSummaryTable(
 	comparisonSummary: ComparisonSummary,
 	comparisonSummaryInverse: ComparisonSummary,
 	solver1Name: string,
-	solver2Name: string
+	solver2Name: string,
+	settings?: string
 ): void {
 	if (!elements.comparisonTableDiv) return;
 
@@ -235,7 +237,9 @@ export function ComparisonSummaryTable(
 
 	const tableCaption: HTMLTableCaptionElement =
 		document.createElement("caption");
-	tableCaption.textContent = Captions.COMPARISON_TABLE_CAPTION;
+	tableCaption.textContent = settings
+		? `${Captions.COMPARISON_TABLE_CAPTION} Settings: ${settings}`
+		: Captions.COMPARISON_TABLE_CAPTION;
 	comparisonTable.appendChild(tableCaption);
 
 	const header: HTMLTableSectionElement = comparisonTable.createTHead();
