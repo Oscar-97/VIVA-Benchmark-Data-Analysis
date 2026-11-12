@@ -3,6 +3,7 @@ import { Keys } from "../Constants/Keys";
 import { InfoMessages, UserConfigurationMessages } from "../Constants/Messages";
 import { elements } from "../Elements/Elements";
 import { SetEmptyStateVisible } from "../Elements/EmptyState";
+import { ShowFileStorageNote } from "../Elements/FileStorageNote";
 import { ClearLoadStatus } from "../Elements/LoadStatus";
 import { ShowSessionIndicator } from "../Elements/SessionIndicator";
 import { GetSessionData } from "../UserConfiguration/SessionData";
@@ -108,6 +109,7 @@ export function InitializeProgram(): void {
 	ResetAppState();
 	SetElementStates();
 	SetEmptyStateVisible(true);
+	ShowFileStorageNote();
 	ClearLoadStatus();
 
 	/**
