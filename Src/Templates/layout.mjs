@@ -181,12 +181,35 @@ const THEME_SCRIPT = `(function () {
         document.documentElement.setAttribute("data-bs-theme", theme);
       })();`;
 
+/**
+ * Stands for the hash of THEME_SCRIPT in the policy below. The hash depends on the text of the script as
+ * Prettier formats it, so scripts/build-pages.mjs works it out after formatting and replaces this value.
+ * It is as long as a real hash, so that Prettier lays the page out the same way.
+ */
+export const THEME_SCRIPT_HASH_PLACEHOLDER = `sha256-${"A".repeat(43)}=`;
+
+/**
+ * The Content-Security-Policy of the pages. The application loads nothing from other origins, so
+ * only its own files and the theme script above are allowed to run. Styles may be inline, as some
+ * controls have a style attribute. A meta element cannot set frame-ancestors, which needs a header.
+ */
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  `script-src 'self' '${THEME_SCRIPT_HASH_PLACEHOLDER}'`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "object-src 'none'",
+  "base-uri 'none'",
+  "form-action 'none'",
+].join("; ");
+
 function RenderHead(page, prefixes) {
   const manifest = page.manifest
     ? '\n    <!-- Manifest for PWA -->\n    <link rel="manifest" href="manifest.json" />'
     : "";
   return `<head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="${CONTENT_SECURITY_POLICY}" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
