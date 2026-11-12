@@ -62,6 +62,47 @@ test.describe("Solution quality scale", () => {
 	});
 });
 
+test.describe("Table of a chart with many solvers", () => {
+	test("The names of the data sets and the headers stay in view when the table scrolls", async ({
+		page
+	}) => {
+		const errors = CollectPageErrors(page);
+		// Narrow enough that the table, with a column for each of the 20 solvers, is wider than the page.
+		await page.setViewportSize({ width: 800, height: 900 });
+		await page.goto(PageUrl("report.html"));
+		await page.locator("#emptyStateDemoMinlpButton").click();
+		await ViewTable(page);
+		await page.goto(PageUrl("Src/Pages/solution_quality.html"));
+		await expect.poll(() => IsChartDrawn(page)).toBe(true);
+		await page.locator("#chartTableToggleButton").click();
+		const container = page.locator("#chartDataTableContainer");
+		await expect(container).toBeVisible();
+
+		const positions = await container.evaluate((element) => {
+			element.scrollLeft = 400;
+			element.scrollTop = 50;
+			const box = element.getBoundingClientRect();
+			const header = element.querySelector("thead th:first-child");
+			const name = element.querySelector("tbody tr:last-child td:first-child");
+			const column = element.querySelector("thead th:last-child");
+			return {
+				scrolled: element.scrollLeft > 0,
+				headerLeft: header?.getBoundingClientRect().left,
+				nameLeft: name?.getBoundingClientRect().left,
+				columnTop: column?.getBoundingClientRect().top,
+				boxLeft: box.left,
+				boxTop: box.top
+			};
+		});
+
+		expect(positions.scrolled).toBe(true);
+		expect(positions.headerLeft).toBeCloseTo(positions.boxLeft, 0);
+		expect(positions.nameLeft).toBeCloseTo(positions.boxLeft, 0);
+		expect(positions.columnTop).toBeCloseTo(positions.boxTop, 0);
+		expect(errors).toEqual([]);
+	});
+});
+
 test.describe("Chart for assistive technology", () => {
 	test("The chart is described, with its kind, axes and data sets", async ({
 		page
