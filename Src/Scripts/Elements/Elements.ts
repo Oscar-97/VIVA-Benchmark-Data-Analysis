@@ -40,6 +40,15 @@ export const elements = {
 	},
 
 	/**
+	 * `fileStorageNote` is a reference to the HTMLParagraphElement with the ID "fileStorageNote", the note in the
+	 * empty state that a page opened from a file does not share its data with the other pages.
+	 * @type {HTMLParagraphElement}
+	 */
+	get fileStorageNote(): HTMLParagraphElement {
+		return GetElement<HTMLParagraphElement>("fileStorageNote");
+	},
+
+	/**
 	 * `sessionIndicator` is a reference to the HTMLLIElement with the ID "sessionIndicator", which tells that
 	 * the data of this session is kept for the other pages.
 	 * @type {HTMLLIElement}
