@@ -13,13 +13,17 @@ jest.mock("../Src/Scripts/Elements/Elements", () => ({
 
 import { CreateChart } from "../Src/Scripts/Chart/CreateChart";
 import {
+	HasExtremeValues,
 	PlotDataByCategory,
 	PlotFailCount,
 	PlotStatusMessages
 } from "../Src/Scripts/Chart/ChartType/BarCharts";
 import { StatisticsTable } from "../Src/Scripts/DataTable/DataTableBase";
 import { DataTablesConfigurationStats } from "../Src/Scripts/DataTable/DataTableWrapper";
-import { TraceData } from "../Src/Scripts/Interfaces/Interfaces";
+import {
+	StatisticsColumns,
+	TraceData
+} from "../Src/Scripts/Interfaces/Interfaces";
 import { At } from "./TestHelpers";
 
 const createChart = jest.mocked(CreateChart);
@@ -33,6 +37,32 @@ function CreatedChart(): Parameters<typeof CreateChart> {
 	expect(createChart).toHaveBeenCalledTimes(1);
 	return At(createChart.mock.calls, 0);
 }
+
+describe("HasExtremeValues", () => {
+	const solver = (avgValue: number, maxValue: number): StatisticsColumns =>
+		({ avgValue, maxValue }) as StatisticsColumns;
+
+	it("is true when a maximum is over a million times the typical average", () => {
+		expect(
+			HasExtremeValues([solver(1, 10), solver(3, 20), solver(2, 2e23)])
+		).toBe(true);
+	});
+
+	it("is false for values of the same size", () => {
+		expect(HasExtremeValues([solver(1, 10), solver(3, 2000)])).toBe(false);
+	});
+
+	it("leaves out infinite and NaN values", () => {
+		expect(
+			HasExtremeValues([solver(1, Infinity), solver(2, NaN), solver(3, 10)])
+		).toBe(false);
+	});
+
+	it("is false without values, and when the typical average is 0", () => {
+		expect(HasExtremeValues([])).toBe(false);
+		expect(HasExtremeValues([solver(0, 1e9), solver(0, 5)])).toBe(false);
+	});
+});
 
 describe("PlotDataByCategory", () => {
 	const traceData = [
@@ -115,6 +145,46 @@ describe("PlotDataByCategory", () => {
 		const [, , , , scales, zoom] = CreatedChart();
 		expect(scales?.["y"]).toMatchObject({ type: "logarithmic" });
 		expect(zoom).not.toHaveProperty("limits");
+	});
+
+	describe("with a hint for extreme values", () => {
+		const hint = "Choose Logarithmic.";
+		const plot = (data: TraceData[], logScale: boolean): void => {
+			PlotDataByCategory(
+				data,
+				"NumberOfNodes",
+				"Nodes",
+				undefined,
+				undefined,
+				"A subtitle",
+				logScale,
+				hint
+			);
+		};
+		const extreme = [
+			{ SolverName: "A", NumberOfNodes: 1 },
+			{ SolverName: "A", NumberOfNodes: 2 },
+			{ SolverName: "B", NumberOfNodes: 3 },
+			{ SolverName: "C", NumberOfNodes: 1e12 }
+		] as unknown as TraceData[];
+
+		it("adds the hint to the subtitle when a few values stretch a linear scale", () => {
+			plot(extreme, false);
+
+			expect(At(CreatedChart(), 7)).toBe(`A subtitle ${hint}`);
+		});
+
+		it("does not add it on a logarithmic scale", () => {
+			plot(extreme, true);
+
+			expect(At(CreatedChart(), 7)).toBe("A subtitle");
+		});
+
+		it("does not add it when the values are of the same size", () => {
+			plot(traceData, false);
+
+			expect(At(CreatedChart(), 7)).toBe("A subtitle");
+		});
 	});
 
 	it("has no annotations for a category other than the solver time", () => {

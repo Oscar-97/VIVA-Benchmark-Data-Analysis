@@ -6,7 +6,8 @@ import {
 } from "../CreateChart";
 import { StatisticsTable } from "../../DataTable/DataTableBase";
 import { DataTablesConfigurationStats } from "../../DataTable/DataTableWrapper";
-import { TraceData } from "../../Interfaces/Interfaces";
+import { StatisticsColumns, TraceData } from "../../Interfaces/Interfaces";
+import { Max, Quantile } from "../../DataProcessing/Statistics";
 import {
 	ComputeStatisticalMeasures,
 	ExtractFailedCount,
@@ -15,12 +16,41 @@ import {
 } from "../../DataProcessing/ChartsComputations/ComputeChartData";
 
 /**
+ * How many times larger the largest value may be than the typical average before the bars of the other values
+ * are too small to see on a linear scale.
+ */
+const EXTREME_VALUE_FACTOR = 1e6;
+
+/**
+ * Whether a few values are so much larger than the rest that a linear scale hides the rest: the largest maximum
+ * is more than a million times the median of the averages. Infinite and NaN values do not count.
+ *
+ * @param statistics - The statistics of every solver.
+ */
+export function HasExtremeValues(
+	statistics: readonly StatisticsColumns[]
+): boolean {
+	const averages = statistics
+		.map((solver) => solver.avgValue)
+		.filter((value) => Number.isFinite(value));
+	const maxima = statistics
+		.map((solver) => solver.maxValue)
+		.filter((value) => Number.isFinite(value));
+	if (averages.length === 0 || maxima.length === 0) {
+		return false;
+	}
+	const typical = Math.abs(Quantile(averages, 0.5));
+	return typical > 0 && Max(maxima) / typical > EXTREME_VALUE_FACTOR;
+}
+
+/**
  * This function prepares and plots data by a specific category.
  *
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  * @param {string} category - The category by which the data should be analyzed.
  * @param {string} title - The title of the chart.
  * @param {boolean} logScale - Whether the values are shown on a logarithmic scale. Values of 0 or less are not shown then.
+ * @param {string} extremeValuesHint - Added to the subtitle when a few extreme values stretch a linear scale.
  */
 export function PlotDataByCategory(
 	traceData: TraceData[],
@@ -29,7 +59,8 @@ export function PlotDataByCategory(
 	defaultTime?: number | undefined,
 	filterType?: string,
 	subtitle?: string,
-	logScale = false
+	logScale = false,
+	extremeValuesHint?: string
 ): {
 	label: string;
 	data: number[];
@@ -163,7 +194,11 @@ export function PlotDataByCategory(
 		scaleOptions,
 		zoomOptions,
 		annotationOptions,
-		subtitle
+		!logScale &&
+			extremeValuesHint &&
+			HasExtremeValues(solverStatistics.map(([, statistics]) => statistics))
+			? [subtitle, extremeValuesHint].filter(Boolean).join(" ")
+			: subtitle
 	);
 	StatisticsTable(data, title);
 	DataTablesConfigurationStats("#statisticsTable_inner");

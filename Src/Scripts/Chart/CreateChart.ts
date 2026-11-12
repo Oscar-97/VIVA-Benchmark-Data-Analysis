@@ -31,6 +31,7 @@ import { AnyChart, UpdateChartTools, WireChartTools } from "./ChartTools";
 import { ConnectChartTable } from "./ChartTable";
 import { DescribeChart } from "./ChartDescription";
 import { ApplyPalette } from "./Palette";
+import { WrapText } from "./WrapText";
 let myChart: AnyChart | null = null;
 
 /**
@@ -196,7 +197,10 @@ function DrawChart(chart: ChartArguments, keepView = false): void {
 					}
 				},
 				subtitle: subtitle
-					? { display: true, text: subtitle }
+					? {
+							display: true,
+							text: WrapText(subtitle, SubtitleWidthInCharacters())
+						}
 					: { display: false },
 				...(zoomOptions ? { zoom: WithToolUpdates(zoomOptions) } : {}),
 				...(annotationOptions ? { annotation: annotationOptions } : {})
@@ -205,6 +209,13 @@ function DrawChart(chart: ChartArguments, keepView = false): void {
 	});
 
 	ConnectTools(myChart, view);
+}
+
+/**
+ * How many characters of the subtitle fit in a line of the chart: about 6.5 pixels for a character.
+ */
+function SubtitleWidthInCharacters(): number {
+	return Math.max(20, Math.floor(elements.chartCanvas.clientWidth / 6.5));
 }
 
 /**

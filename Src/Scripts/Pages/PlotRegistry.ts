@@ -122,7 +122,8 @@ function PlotSolutionQualityPage(traceData: TraceData[]): object[] {
 		logScale
 			? "Infinite and NaN values are excluded from the calculations. Values of 0 or less are not shown on a logarithmic scale."
 			: "Infinite and NaN values are excluded from the calculations.",
-		logScale
+		logScale,
+		"A few extreme values stretch the scale: choose Logarithmic under Scale to see the others."
 	);
 }
 
