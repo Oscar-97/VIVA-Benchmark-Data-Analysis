@@ -3,12 +3,16 @@
 //   node scripts/build-pages.mjs           writes the pages
 //   node scripts/build-pages.mjs --check   fails if a page is not what the templates produce
 //   node scripts/build-pages.mjs --out DIR writes the pages below DIR instead (to compare them)
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import * as prettier from "prettier";
 import { PAGES } from "../Src/Templates/pages.mjs";
-import { RenderPage } from "../Src/Templates/layout.mjs";
+import {
+  RenderPage,
+  THEME_SCRIPT_HASH_PLACEHOLDER,
+} from "../Src/Templates/layout.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const check = process.argv.includes("--check");
@@ -22,7 +26,25 @@ async function FormatPage(page) {
     endOfLine: "lf",
   });
   // Prettier 3 writes the doctype in lower case, the pages have always had it in upper case.
-  return formatted.replace(/^<!doctype html>/i, "<!DOCTYPE html>");
+  return AllowInlineScript(
+    formatted.replace(/^<!doctype html>/i, "<!DOCTYPE html>"),
+  );
+}
+
+/**
+ * Puts the hash of the one inline script (the theme) into the Content-Security-Policy of the page.
+ * The hash is of the text between the tags, so it is made from the formatted page.
+ */
+function AllowInlineScript(html) {
+  const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+  const [script] = scripts;
+  if (scripts.length !== 1 || !script?.[1]) {
+    throw new Error(
+      `A page must have exactly one inline script, this one has ${scripts.length}.`,
+    );
+  }
+  const hash = crypto.createHash("sha256").update(script[1]).digest("base64");
+  return html.replace(THEME_SCRIPT_HASH_PLACEHOLDER, `sha256-${hash}`);
 }
 
 const stale = [];

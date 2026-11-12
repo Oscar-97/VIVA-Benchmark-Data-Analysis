@@ -1,4 +1,5 @@
 import { expect, Page } from "@playwright/test";
+import * as fs from "fs";
 import * as path from "path";
 
 /**
@@ -150,17 +151,21 @@ export async function IsChartDrawn(page: Page): Promise<boolean> {
 
 /**
  * The data of the chart that is shown, in the form that the page offers for download.
+ * The file is read from the download, as the Content-Security-Policy of the pages does not let them
+ * fetch a blob: address.
  */
 export async function ReadChartData(
 	page: Page
 ): Promise<{ label: string; data: number[] }[]> {
-	return page.evaluate(async () => {
+	const download = page.waitForEvent("download");
+	await page.evaluate(() => {
 		const link = document.getElementById(
 			"downloadChartDataButton"
 		) as HTMLAnchorElement;
 		link.click();
-		return (await fetch(link.href)).json();
 	});
+	const file = await (await download).path();
+	return JSON.parse(fs.readFileSync(file, "utf8"));
 }
 
 /**
