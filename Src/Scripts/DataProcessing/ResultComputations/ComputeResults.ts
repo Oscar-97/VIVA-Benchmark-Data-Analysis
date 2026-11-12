@@ -339,6 +339,7 @@ export function ExtractUniqueProblems(traceData: TraceData[]): TraceData[] {
 
 /**
  * This function applies statistical calculations for the instance attributes.
+ * Infinite and NaN values are left out, as in the charts, so they do not turn the average into infinity.
  * @param data - The data to apply calculations to.
  * @returns An object containing the calculated statistics.
  */
@@ -357,7 +358,7 @@ export function CalculateInstanceAttributes(data: object[]): {
 	keys.forEach((key) => {
 		const values: number[] = data
 			.map((item) => Number((item as Record<string, unknown>)[key]))
-			.filter((value) => !isNaN(value));
+			.filter((value) => Number.isFinite(value));
 
 		if (values.length > 0) {
 			results[key] = {
@@ -372,6 +373,7 @@ export function CalculateInstanceAttributes(data: object[]): {
 
 /**
  * This function applies statistical calculations for the solve attributes.
+ * Infinite and NaN values are left out, as in the charts, so they do not turn the average into infinity.
  * @param data - The data to apply calculations to.
  * @param specificKeys - The keys to calculate the metrics for.
  * @returns An object containing the calculated statistics.
@@ -389,7 +391,7 @@ export function CalculateSolveAttributes(
 	specificKeys.forEach((key) => {
 		const values: number[] = data
 			.map((item) => parseFloat(String((item as Record<string, unknown>)[key])))
-			.filter((value) => !isNaN(value));
+			.filter((value) => Number.isFinite(value));
 
 		if (values.length > 0) {
 			results[key] = {

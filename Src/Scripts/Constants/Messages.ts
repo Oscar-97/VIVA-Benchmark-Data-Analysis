@@ -63,6 +63,6 @@ export enum UserConfigurationMessages {
 export enum Captions {
 	COMPARISON_TABLE_CAPTION = "Direct comparison on how many instances the solver time was better, worse or equal.",
 	COMPARISON_MODAL_LABEL = "Instances where the solver times were:",
-	INSTANCE_ATTRIBUTES_TABLE_CAPTION = "Statistics on the instance attributes.",
-	SOLVE_ATTRIBUTES_TABLE_CAPTION = "Statistics on the solve attributes (all solver runs)."
+	INSTANCE_ATTRIBUTES_TABLE_CAPTION = "Statistics on the instance attributes. Infinite and NaN values are excluded from the calculations.",
+	SOLVE_ATTRIBUTES_TABLE_CAPTION = "Statistics on the solve attributes (all solver runs). Infinite and NaN values are excluded from the calculations."
 }
