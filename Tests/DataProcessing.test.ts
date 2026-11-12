@@ -377,6 +377,20 @@ describe("CalculateSolveAttributes", () => {
 		});
 	});
 
+	it("should leave out infinite values, also when they are written as text", () => {
+		const result = CalculateSolveAttributes(
+			[{ gap: "1" }, { gap: "Infinity" }, { gap: "-Infinity" }, { gap: "3" }],
+			["gap"]
+		);
+
+		expect(result["gap"]).toMatchObject({
+			countValue: 2,
+			avgValue: 2,
+			minValue: 1,
+			maxValue: 3
+		});
+	});
+
 	it("should leave out keys without any numeric value", () => {
 		const result = CalculateSolveAttributes(
 			[{ time: "n/a" }, { other: 1 }],
@@ -403,6 +417,22 @@ describe("CalculateInstanceAttributes", () => {
 			p50Value: 2
 		});
 		expect(result["variables"]?.stdValue).toBeCloseTo(1.414214, 6);
+	});
+
+	it("should skip infinite values", () => {
+		const result = CalculateInstanceAttributes([
+			{ InputFileName: "a", bound: -Infinity },
+			{ InputFileName: "b", bound: 10 },
+			{ InputFileName: "c", bound: 20 },
+			{ InputFileName: "d", bound: Infinity }
+		]);
+
+		expect(result["bound"]).toMatchObject({
+			countValue: 2,
+			avgValue: 15,
+			minValue: 10,
+			maxValue: 20
+		});
 	});
 
 	it("should skip values that are not numbers", () => {
