@@ -4,7 +4,10 @@ import { ConvertToTraceFile } from "../DataProcessing/CreateData";
 import { ExtractAllSolverTimesGapType } from "../DataProcessing/ChartsComputations/ComputeChartData";
 import { CompareSolvers } from "../DataProcessing/ResultComputations/ComputeResults";
 import { ComparisonSummaryTable } from "../DataTable/DataTableBase";
-import { DisplayErrorNotification } from "../Elements/Events/DisplayAlertNotification";
+import {
+	DisplayErrorNotification,
+	HideErrorNotification
+} from "../Elements/Events/DisplayAlertNotification";
 import {
 	GetSelectedCheckboxValues,
 	PopulateCheckboxes
@@ -56,6 +59,7 @@ export function HandleCompareSolversPage(traceData: TraceData[]): void {
 			DisplayErrorNotification(ErrorMessages.SELECT_SOLVER_AMOUNT);
 			return;
 		}
+		HideErrorNotification();
 		const comparisonSummary = CompareSolvers(
 			firstSolver,
 			secondSolver,

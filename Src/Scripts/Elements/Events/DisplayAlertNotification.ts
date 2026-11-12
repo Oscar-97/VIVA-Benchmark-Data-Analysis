@@ -112,6 +112,21 @@ export function DisplayWarningNotification(
 }
 
 /**
+ * Hides the notification when it is an error, for example when the action that caused the error has been done
+ * correctly since. A success or warning notification is not related to such an action and stays.
+ */
+export function HideErrorNotification(): void {
+	const alert = elements.alertNotification;
+	if (!alert.classList.contains("alert-danger")) {
+		return;
+	}
+	clearTimeout(notificationTimeout);
+	$(alert).stop(true);
+	alert.style.display = "none";
+	alert.classList.remove("alert-danger");
+}
+
+/**
  * This function displays an error notification with the specified message.
  * The notification fades in, remains visible for 5 seconds, and then fades out.
  *
