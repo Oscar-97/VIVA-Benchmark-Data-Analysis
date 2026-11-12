@@ -1,4 +1,5 @@
 import { Values } from "../../Constants/Values";
+import { FormatNumber } from "../../Locale";
 import {
 	ExtractAllSolverTimes,
 	ExtractAllSolverTimesGapType
@@ -235,9 +236,9 @@ export function PlotPerformanceProfile(
 		scaleOptions,
 		zoomOptions,
 		undefined,
-		`${selectedGapType} <= ${
+		`${selectedGapType} <= ${FormatNumber(
 			gapLimit || Values.DEFAULT_GAP_LIMIT
-		}% and not failed.`
+		)}% and not failed.`
 	);
 	return chartData;
 }

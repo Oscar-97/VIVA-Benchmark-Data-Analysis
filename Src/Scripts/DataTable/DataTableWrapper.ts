@@ -24,6 +24,15 @@ import { ShowPWANotification } from "../PWA/PWA-utils";
 import { TableMessages } from "../Constants/Messages";
 import { TraceData } from "../Interfaces/Interfaces";
 import { HideTableHint, ShowTableHint } from "./TableHint";
+import { GetNumberSeparators } from "../Locale";
+
+/**
+ * The separators of the numbers that the table shows in its texts, for example the number of entries, in the
+ * locale of the browser. DataTables uses English ones when it is not told otherwise.
+ */
+function DataTableSeparators(): { thousands: string; decimal: string } {
+	return GetNumberSeparators();
+}
 
 /*
  * The Bootstrap 5 styling of the search panes. datatables.net-searchpanes-bs5 3.0.0 does this itself, but its
@@ -164,6 +173,7 @@ function DataTablesConfiguration(): void {
 			}
 		],
 		language: {
+			...DataTableSeparators(),
 			searchPlaceholder: "Search all columns",
 			emptyTable: "There are no rows to show.",
 			zeroRecords:
