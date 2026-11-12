@@ -15,6 +15,7 @@ import {
 import { ElementStateDisplayedComparisonTable } from "../Elements/Events/ElementStatus";
 import { elements } from "../Elements/Elements";
 import { ErrorMessages } from "../Constants/Messages";
+import { Values } from "../Constants/Values";
 import { TraceData } from "../Interfaces/Interfaces";
 import { RegisterSaveToLocalStorage } from "./SaveToLocalStorage";
 
@@ -26,6 +27,12 @@ import { RegisterSaveToLocalStorage } from "./SaveToLocalStorage";
  */
 export function HandleCompareSolversPage(traceData: TraceData[]): void {
 	PopulateCheckboxes(traceData);
+	FillEmptyLimits();
+	ShowCompareHint(true);
+	UpdateCompareButton();
+	document
+		.getElementById("solverOptions")
+		?.addEventListener("change", UpdateCompareButton);
 
 	/**
 	 * Save to local storage when clicking on the "Save to browser" menu item.
@@ -77,5 +84,40 @@ export function HandleCompareSolversPage(traceData: TraceData[]): void {
 			secondSolver
 		);
 		ElementStateDisplayedComparisonTable();
+		ShowCompareHint(false);
 	});
+}
+
+/**
+ * Puts the default time limit and gap limit in the fields that are empty, so the page shows what a comparison
+ * uses before the first one is made, as the performance profile page does.
+ */
+function FillEmptyLimits(): void {
+	if (elements.defaultTimeDirectInput.value === "") {
+		elements.defaultTimeDirectInput.value = String(Values.DEFAULT_TIME);
+	}
+	if (elements.gapLimitDirectInput.value === "") {
+		elements.gapLimitDirectInput.value = String(Values.DEFAULT_GAP_LIMIT);
+	}
+}
+
+/**
+ * The comparison needs exactly two solvers, so the button is available when two are ticked.
+ */
+function UpdateCompareButton(): void {
+	const ready = GetSelectedCheckboxValues().length === 2;
+	elements.compareSolversButton.disabled = !ready;
+	elements.compareSolversButton.title = ready
+		? "Compare the selected solvers."
+		: "Tick two solvers to compare them.";
+}
+
+/**
+ * Shows the line that says what to do until a comparison is shown.
+ */
+function ShowCompareHint(visible: boolean): void {
+	const hint = document.getElementById("compareHint");
+	if (hint) {
+		hint.hidden = !visible;
+	}
 }

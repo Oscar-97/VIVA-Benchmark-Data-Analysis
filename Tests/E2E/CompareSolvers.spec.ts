@@ -65,29 +65,57 @@ test.describe("Compare solvers page", () => {
 		]);
 	});
 
-	test("Select one solver and try to compare", async ({ page }) => {
-		await page.locator("#shot").check();
-		await page.locator("#compareSolversButton").click();
-
-		await ExpectNotification(
-			page,
-			"Please select exactly two solvers to compare."
+	test("The page shows the limits that the comparison uses, and what to do", async ({
+		page
+	}) => {
+		await expect(page.locator("#defaultTimeDirectInput")).toHaveValue("1000");
+		await expect(page.locator("#gapLimitDirectInput")).toHaveValue("0.01");
+		await expect(page.locator("#compareHint")).toBeVisible();
+		await expect(page.locator("#compareHint")).toContainText(
+			"Tick two solvers"
 		);
+
+		await page.locator("#shot").check();
+		await page.locator("#scip").check();
+		await page.locator("#compareSolversButton").click();
+		await expect(page.locator("#comparisonTable table")).toBeVisible();
+		await expect(page.locator("#compareHint")).toBeHidden();
 	});
 
-	test("The error of a comparison with one solver is gone after a correct comparison", async ({
+	test("The button compares when exactly two solvers are ticked", async ({
+		page
+	}) => {
+		const button = page.locator("#compareSolversButton");
+		await expect(button).toBeDisabled();
+		await expect(button).toHaveAttribute("title", /Tick two solvers/);
+
+		await page.locator("#shot").check();
+		await expect(button).toBeDisabled();
+
+		await page.locator("#scip").check();
+		await expect(button).toBeEnabled();
+		await expect(button).toHaveAttribute(
+			"title",
+			"Compare the selected solvers."
+		);
+
+		await page.locator("#scip").uncheck();
+		await expect(button).toBeDisabled();
+	});
+
+	test("The error of a third solver is gone after a correct comparison", async ({
 		page
 	}) => {
 		await page.locator("#shot").check();
-		await page.locator("#compareSolversButton").click();
+		await page.locator("#scip").check();
+		await page.locator("#pavito").click();
 		await ExpectNotification(
 			page,
 			"Please select exactly two solvers to compare."
 		);
 
-		await page.locator("#scip").check();
 		await page.locator("#compareSolversButton").click();
-		await expect(page.locator("#comparisonTable")).toBeVisible();
+		await expect(page.locator("#comparisonTable table")).toBeVisible();
 		await expect(page.locator("#alertNotification")).toBeHidden();
 	});
 

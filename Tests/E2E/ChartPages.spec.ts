@@ -250,16 +250,12 @@ test.describe("Pages with data", () => {
 		await expect(boxes).toHaveCount(3);
 		const comparisonTables = page.locator("#comparisonTable table");
 
-		// No solver, and one solver: an error, and no comparison (this used to throw).
-		await page.locator("#compareSolversButton").click();
-		await ExpectNotification(
-			page,
-			"Please select exactly two solvers to compare."
-		);
+		// No solver, and one solver: the button is not available, and there is no comparison (this used to throw).
+		await expect(page.locator("#compareSolversButton")).toBeDisabled();
 		await expect(comparisonTables).toHaveCount(0);
 
 		await boxes.nth(0).check();
-		await page.locator("#compareSolversButton").click();
+		await expect(page.locator("#compareSolversButton")).toBeDisabled();
 		await expect(comparisonTables).toHaveCount(0);
 
 		// Two solvers: the comparison.
