@@ -4,6 +4,7 @@
 export enum InfoMessages {
 	DEMO_MODE_MSG = "Using demo mode!",
 	FOUND_STORED_CONFIG = "Found stored configuration!",
+	RESTORED_SESSION_DATA = "Restored the data of this session.",
 	LOADED_FILES = "Benchmarks loaded with following files: \n",
 	INSTANCE_INFO_LOADED = "Instance information successfully loaded!",
 	SCREEN_SIZE_NOTICE = "For optimal viewing and functionality, it is recommend to access VIVA via a desktop to get the best user experience."
@@ -19,7 +20,8 @@ export enum ErrorMessages {
 	BOTH_EXTENSIONS = "Cannot upload both .trc and .json files simultaneously.",
 	INVALID_EXTENSION = "Invalid file extension. Only .trc, .json, .solu, and .csv allowed.",
 	INVALID_JSON = "The file is not valid JSON.",
-	INVALID_DATA_STRUCTURE = "Invalid data structure in uploaded JSON."
+	INVALID_DATA_STRUCTURE = "Invalid data structure in uploaded JSON.",
+	UNSUPPORTED_VERSION = "This configuration was made by a newer version of VIVA and cannot be read."
 }
 
 /**
@@ -51,7 +53,8 @@ export enum UserConfigurationMessages {
 	STORE_SUCCESS = "Saved configuration!",
 	NO_STORED_CONFIG = "No saved data configuration found!",
 	PREVIOUSLY_VISITED = "User has previously visited this page in this session/tab.",
-	DELETED_CONFIG = "Deleted configuration."
+	DELETED_CONFIG = "Deleted configuration.",
+	RESTORED_CONFIG = "Restored the saved data."
 }
 
 /**
@@ -60,6 +63,6 @@ export enum UserConfigurationMessages {
 export enum Captions {
 	COMPARISON_TABLE_CAPTION = "Direct comparison on how many instances the solver time was better, worse or equal.",
 	COMPARISON_MODAL_LABEL = "Instances where the solver times were:",
-	INSTANCE_ATTRIBUTES_TABLE_CAPTION = "Statistics on the instance attributes.",
-	SOLVE_ATTRIBUTES_TABLE_CAPTION = "Statistics on the solve attributes (all solver runs)."
+	INSTANCE_ATTRIBUTES_TABLE_CAPTION = "Statistics on the instance attributes. Infinite and NaN values are excluded from the calculations.",
+	SOLVE_ATTRIBUTES_TABLE_CAPTION = "Statistics on the solve attributes (all solver runs). Infinite and NaN values are excluded from the calculations."
 }

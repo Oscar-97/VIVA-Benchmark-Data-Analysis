@@ -1,3 +1,4 @@
+import { GetPageName } from "../../App/CurrentPage";
 import { PageTitles } from "../../Constants/PageTitles";
 import { elements } from "../Elements";
 
@@ -50,7 +51,7 @@ export function ElementStatesPlotPage(): void {
 	elements.configurationSettingsButton.disabled = true;
 	elements.downloadChartDataButtonLayer.disabled = true;
 	elements.deleteLocalStorageButton.disabled = true;
-	if (document.title === PageTitles.PERFORMANCE_PROFILE) {
+	if (GetPageName() === PageTitles.PERFORMANCE_PROFILE) {
 		elements.defaultTimeDirectInput.value = "";
 		elements.gapLimitDirectInput.value = "";
 	}

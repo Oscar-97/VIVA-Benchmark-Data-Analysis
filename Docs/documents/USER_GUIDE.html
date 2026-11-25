@@ -1,0 +1,387 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>USER_GUIDE | System Documentation</title><meta name="description" content="Documentation for System Documentation"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script><style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --md-sys-color-primary: #f6be46;
+    --md-sys-color-on-primary: #412d00;
+    --md-sys-color-primary-container: #5d4200;
+    --md-sys-color-on-primary-container: #ffdea3;
+    --md-sys-color-secondary: #d9c4a0;
+    --md-sys-color-on-secondary: #3b2f15;
+    --md-sys-color-secondary-container: #53452a;
+    --md-sys-color-on-secondary-container: #f6e0bb;
+    --md-sys-color-tertiary: #b2cfa8;
+    --md-sys-color-on-tertiary: #1e361a;
+    --md-sys-color-tertiary-container: #344d2f;
+    --md-sys-color-on-tertiary-container: #cdebc2;
+    --md-sys-color-error: #ffb4ab;
+    --md-sys-color-on-error: #690005;
+    --md-sys-color-error-container: #93000a;
+    --md-sys-color-on-error-container: #ffb4ab;
+    --md-sys-color-background: #1e1b16;
+    --md-sys-color-on-background: #e9e1d9;
+    --md-sys-color-surface: #1e1b16;
+    --md-sys-color-on-surface: #e9e1d9;
+    --md-sys-color-surface-variant: #4e4639;
+    --md-sys-color-on-surface-variant: #d1c5b4;
+    --md-sys-color-outline: #9a8f80;
+    --md-sys-color-outline-variant: #4e4639;
+    --md-sys-color-shadow: #000000;
+    --md-sys-color-scrim: #000000;
+    --md-sys-color-inverse-surface: #e9e1d9;
+    --md-sys-color-inverse-on-surface: #34302a;
+    --md-sys-color-inverse-primary: #7a5900;
+    --md-sys-color-surface-dim: #16130e;
+    --md-sys-color-surface-bright: #3d3933;
+    --md-sys-color-surface-container-lowest: #110e09;
+    --md-sys-color-surface-container-low: #1e1b16;
+    --md-sys-color-surface-container: #221f1a;
+    --md-sys-color-surface-container-high: #2d2924;
+    --md-sys-color-surface-container-highest: #38342e
+  }
+}
+:root[data-theme="dark"] {
+  --md-sys-color-primary: #f6be46;
+  --md-sys-color-on-primary: #412d00;
+  --md-sys-color-primary-container: #5d4200;
+  --md-sys-color-on-primary-container: #ffdea3;
+  --md-sys-color-secondary: #d9c4a0;
+  --md-sys-color-on-secondary: #3b2f15;
+  --md-sys-color-secondary-container: #53452a;
+  --md-sys-color-on-secondary-container: #f6e0bb;
+  --md-sys-color-tertiary: #b2cfa8;
+  --md-sys-color-on-tertiary: #1e361a;
+  --md-sys-color-tertiary-container: #344d2f;
+  --md-sys-color-on-tertiary-container: #cdebc2;
+  --md-sys-color-error: #ffb4ab;
+  --md-sys-color-on-error: #690005;
+  --md-sys-color-error-container: #93000a;
+  --md-sys-color-on-error-container: #ffb4ab;
+  --md-sys-color-background: #1e1b16;
+  --md-sys-color-on-background: #e9e1d9;
+  --md-sys-color-surface: #1e1b16;
+  --md-sys-color-on-surface: #e9e1d9;
+  --md-sys-color-surface-variant: #4e4639;
+  --md-sys-color-on-surface-variant: #d1c5b4;
+  --md-sys-color-outline: #9a8f80;
+  --md-sys-color-outline-variant: #4e4639;
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-inverse-surface: #e9e1d9;
+  --md-sys-color-inverse-on-surface: #34302a;
+  --md-sys-color-inverse-primary: #7a5900;
+  --md-sys-color-surface-dim: #16130e;
+  --md-sys-color-surface-bright: #3d3933;
+  --md-sys-color-surface-container-lowest: #110e09;
+  --md-sys-color-surface-container-low: #1e1b16;
+  --md-sys-color-surface-container: #221f1a;
+  --md-sys-color-surface-container-high: #2d2924;
+  --md-sys-color-surface-container-highest: #38342e
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --md-sys-color-primary: #7a5900;
+    --md-sys-color-on-primary: #ffffff;
+    --md-sys-color-primary-container: #ffdea3;
+    --md-sys-color-on-primary-container: #261900;
+    --md-sys-color-secondary: #6c5c3f;
+    --md-sys-color-on-secondary: #ffffff;
+    --md-sys-color-secondary-container: #f6e0bb;
+    --md-sys-color-on-secondary-container: #251a04;
+    --md-sys-color-tertiary: #4b6545;
+    --md-sys-color-on-tertiary: #ffffff;
+    --md-sys-color-tertiary-container: #cdebc2;
+    --md-sys-color-on-tertiary-container: #092007;
+    --md-sys-color-error: #ba1a1a;
+    --md-sys-color-on-error: #ffffff;
+    --md-sys-color-error-container: #ffdad6;
+    --md-sys-color-on-error-container: #410002;
+    --md-sys-color-background: #fffbff;
+    --md-sys-color-on-background: #1e1b16;
+    --md-sys-color-surface: #fffbff;
+    --md-sys-color-on-surface: #1e1b16;
+    --md-sys-color-surface-variant: #ede1cf;
+    --md-sys-color-on-surface-variant: #4e4639;
+    --md-sys-color-outline: #7f7667;
+    --md-sys-color-outline-variant: #d1c5b4;
+    --md-sys-color-shadow: #000000;
+    --md-sys-color-scrim: #000000;
+    --md-sys-color-inverse-surface: #34302a;
+    --md-sys-color-inverse-on-surface: #f8efe7;
+    --md-sys-color-inverse-primary: #f6be46;
+    --md-sys-color-surface-dim: #e1d9d0;
+    --md-sys-color-surface-bright: #fff8f2;
+    --md-sys-color-surface-container-lowest: #ffffff;
+    --md-sys-color-surface-container-low: #fbf2e9;
+    --md-sys-color-surface-container: #f5ede4;
+    --md-sys-color-surface-container-high: #efe7de;
+    --md-sys-color-surface-container-highest: #e9e1d9
+  }
+}
+:root[data-theme="light"] {
+  --md-sys-color-primary: #7a5900;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #ffdea3;
+  --md-sys-color-on-primary-container: #261900;
+  --md-sys-color-secondary: #6c5c3f;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #f6e0bb;
+  --md-sys-color-on-secondary-container: #251a04;
+  --md-sys-color-tertiary: #4b6545;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #cdebc2;
+  --md-sys-color-on-tertiary-container: #092007;
+  --md-sys-color-error: #ba1a1a;
+  --md-sys-color-on-error: #ffffff;
+  --md-sys-color-error-container: #ffdad6;
+  --md-sys-color-on-error-container: #410002;
+  --md-sys-color-background: #fffbff;
+  --md-sys-color-on-background: #1e1b16;
+  --md-sys-color-surface: #fffbff;
+  --md-sys-color-on-surface: #1e1b16;
+  --md-sys-color-surface-variant: #ede1cf;
+  --md-sys-color-on-surface-variant: #4e4639;
+  --md-sys-color-outline: #7f7667;
+  --md-sys-color-outline-variant: #d1c5b4;
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-inverse-surface: #34302a;
+  --md-sys-color-inverse-on-surface: #f8efe7;
+  --md-sys-color-inverse-primary: #f6be46;
+  --md-sys-color-surface-dim: #e1d9d0;
+  --md-sys-color-surface-bright: #fff8f2;
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #fbf2e9;
+  --md-sys-color-surface-container: #f5ede4;
+  --md-sys-color-surface-container-high: #efe7de;
+  --md-sys-color-surface-container-highest: #e9e1d9
+}
+</style><link rel="stylesheet" href="../assets/material-style.css"/></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="../index.html" class="title">System Documentation</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><ul class="tsd-breadcrumb" aria-label="Breadcrumb"><li><a href="" aria-current="page">USER_GUIDE</a></li></ul></div><div class="tsd-panel tsd-typography"><h1 id="user-guide" class="tsd-anchor-link">User Guide<a href="#user-guide" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>Building on the concept and implementation of <a href="https://github.com/coin-or/paver">PAVER 2.0</a>, the main goal of VIVA is to allow end users to interact with their own uploaded benchmark data from mathematical optimization problems and their solvers. The data is presented in a tabular format, with the added ability to visualize specific results through various plots, making it easier to understand and interpret the data.</p>
+<p>Demo-data is attained from <a href="https://github.com/coin-or/Paver/tree/master/examples/miplib2010">miplib2010 examples</a>. The <code>.solu</code> file data from the problem libraries <a href="https://www.minlplib.org/minlplib.solu">MINLPLib</a>, <a href="https://miplib.zib.de/downloads/miplib2017-v26.solu">MIPLIB 2017</a> and <a href="https://miplib2010.zib.de/download/miplib2010_all.solu">MIPLIB 2010</a> can be used directly with the <strong>Best-known bounds</strong> selector in the navigation bar.</p>
+<h2 id="disclaimer" class="tsd-anchor-link">Disclaimer<a href="#disclaimer" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><strong>Performance Note</strong>:  Performance slowdowns may occur when handling a large number of files or particularly large datasets, as this application operates entirely in the browser without relying on a backend server to parse and process the files.</p>
+<p><strong>Display Note</strong>: While mobile-sized screens are supported, the most optimal experience is achieved using a larger display. A light and a dark theme are available.</p>
+<p><strong>Development Note</strong>:  This project is still a work in progress, and therefore, bugs and unexpected behavior may occur.</p>
+<h2 id="1-instructions-for-using-the-application" class="tsd-anchor-link">1. Instructions for Using the Application<a href="#1-instructions-for-using-the-application" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ol>
+<li>
+<p>Download the release ZIP and extract the contents, or clone the repository, or visit the web version at <a href="https://viva-app.xyz/table">viva-app.xyz</a>.</p>
+</li>
+<li>
+<p>Open the file <code>report.html</code> found in the root directory. It is the page with the results table.</p>
+</li>
+<li>
+<p>Load the files, in one of these ways:</p>
+<ul>
+<li>Drop the files anywhere on the page.</li>
+<li>Click <strong>Choose files</strong> on the start page, or the file field in the navigation bar.</li>
+<li>Click <strong>Try MIP demo data</strong> or <strong>Try MINLP demo data</strong> to look around without files of your own. They are also in the <strong>Help</strong> menu.</li>
+</ul>
+<p>The files can be:</p>
+<ul>
+<li>One or more result files in <code>.trc</code> format, one for each solver.</li>
+<li>A <code>.csv</code> file with instance properties and a <code>.solu</code> file with the best known primal and dual bounds of each instance, both for additional information.</li>
+<li>Instead of <code>.trc</code> files, a single <code>UserConfiguration.json</code> file, which can be created by this application. It cannot be loaded together with <code>.trc</code> files.</li>
+</ul>
+<p>The start page lists the files that you chose, with what each of them is taken for, the solver of a <code>.trc</code> file, and what stops the files from being uploaded.</p>
+</li>
+<li>
+<p>Optionally, choose where the best known bounds come from with <strong>Best-known bounds</strong> in the navigation bar: <strong>None</strong>, <strong>MINLPLib</strong>, <strong>MIPLIB 2017</strong> or <strong>MIPLIB 2010</strong>. When a <code>.solu</code> file is chosen, the selector shows <strong>Uploaded .solu file</strong> and cannot be changed, as the file is used.</p>
+</li>
+<li>
+<p>Click <strong>Upload</strong> in the navigation bar.</p>
+</li>
+<li>
+<p>The table or plot with the benchmark results is shown when the files are loaded, depending on the currently active page. A line below the buttons tells the number of solvers and instances and where the bounds come from. Use the <strong>View Table</strong> or <strong>Update plot</strong> button to show it again after changing the settings. Uploaded result files of more than 50,000 rows are not shown at once, use the button for them.</p>
+</li>
+<li>
+<p>The data stays when you open the other pages in the same tab. The navigation bar shows <strong>Session data</strong> with a <strong>Clear</strong> button that forgets it. Use <strong>Save to browser</strong> in the <strong>Data</strong> menu to keep the data for later visits.</p>
+</li>
+<li>
+<p>Available plots, in the <strong>Plots</strong> menu:</p>
+<ul>
+<li>Performance Profile (Absolute and relative)</li>
+<li>Solver Time per Solver</li>
+<li>Solver Time per Instance</li>
+<li>Number of Nodes</li>
+<li>Number of Iterations</li>
+<li>Termination Status</li>
+<li>Solution Quality</li>
+<li>Solution Time</li>
+</ul>
+</li>
+<li>
+<p>Compare a pair of solvers on the <strong>Compare Solvers</strong> page. Direct comparison on how many instances the solver time was better, worse, or equal.</p>
+</li>
+</ol>
+<p>The button with the moon or the sun in the navigation bar switches between the light and the dark theme.</p>
+<h3 id="11-the-start-page" class="tsd-anchor-link">1.1 The Start Page<a href="#11-the-start-page" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The start page is shown while no data is loaded.</p>
+<ul>
+<li><strong>Choose files</strong>: Open the dialog for choosing the files to load. A click on <strong>Upload</strong> in the navigation bar loads them.</li>
+<li><strong>Try MIP demo data</strong>: Load the demo data of a mixed-integer program. Saved data is only replaced after you confirm.</li>
+<li><strong>Try MINLP demo data</strong>: Load the demo data of a mixed-integer nonlinear program.</li>
+</ul>
+<h3 id="12-data-menu" class="tsd-anchor-link">1.2 Data Menu<a href="#12-data-menu" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The <strong>Data</strong> menu is shown when data is loaded. It is on every page, and groups the actions for the data:</p>
+<ul>
+<li><strong>Save to browser</strong>: Save the currently uploaded data to local storage. If filtering has been applied on the table page, then the currently visible table will be stored.</li>
+<li><strong>Export configuration (.json)</strong>: Download the saved data as a configuration file (<code>UserConfiguration.json</code>).</li>
+<li><strong>Export with options…</strong>: Choose the solvers, the time limit and the gap limit of the configuration file, and download it.</li>
+<li><strong>Remove saved data</strong>: Remove the data saved in local storage. The message that follows has an <strong>Undo</strong> button for a few seconds.</li>
+<li><strong>Clear table view</strong>: Clear the current table and go back to the start page. Only on the table page.</li>
+</ul>
+<h3 id="13-table-page-button-functionality" class="tsd-anchor-link">1.3 Table Page Button Functionality<a href="#13-table-page-button-functionality" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><strong>View Table</strong>: View the table of the uploaded results.</li>
+<li><strong>Show Selected Rows</strong>: View rows that have been selected from the table. Click a row to select it, and hold Ctrl or Shift to select several.</li>
+<li><strong>Settings</strong>:
+<ul>
+<li><strong>Show <em>n</em> rows</strong>: The number of rows to show in the table.</li>
+<li><strong>Column Visibility</strong>: Select which columns to show or hide.</li>
+</ul>
+</li>
+<li><strong>Advanced Search</strong>: Create custom search queries.</li>
+<li><strong>Toggle Filters</strong>: Show filters for each column.</li>
+<li><strong>Reset View</strong>: Clear the search, filters, sorting and selection, and show the default columns and rows.</li>
+<li><strong>Export</strong>: Export the table.
+<ul>
+<li><strong>Print</strong>: Open the print dialog of the browser.</li>
+<li><strong>Copy</strong>: Copy the table to the clipboard.</li>
+<li><strong>CSV</strong>: Download the table as a CSV file.</li>
+</ul>
+</li>
+</ul>
+<h3 id="14-plot-pages-buttons-functionality" class="tsd-anchor-link">1.4 Plot Pages Buttons Functionality<a href="#14-plot-pages-buttons-functionality" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><strong>Update plot</strong>: Draw the plot again, for example after changing the settings. The plot is drawn when the data is loaded.</li>
+<li><strong>Download Chart Data</strong>: Download the chart data.</li>
+<li><strong>Reset Zoom</strong>: Show the whole chart again after zooming or panning.</li>
+<li><strong>Show All</strong>: Show all data sets of the chart.</li>
+<li><strong>Hide All</strong>: Hide all data sets, to show only the ones that you pick in the legend.</li>
+<li><strong>Show as table</strong>: Show the values of the chart as a table below it. The button is then called <strong>Hide table</strong>.</li>
+<li><strong>Download Image</strong>: Download the chart as a PNG image. The selectors next to it set the size of the image (standard, print at 2 times and large at 3 times) and whether the background is the one of the page or transparent. The name of the file has the name of the chart and the date.</li>
+</ul>
+<p>Every data set of a chart has its own color, line dash and point shape. The chart has a text for screen readers with its kind, axes and data sets.</p>
+<h3 id="15-settings-of-the-plot-pages" class="tsd-anchor-link">1.5 Settings of the Plot Pages<a href="#15-settings-of-the-plot-pages" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Some plots have settings, which are applied with <strong>Update plot</strong>:</p>
+<ul>
+<li><strong>Performance Profile</strong>: <strong>Profile type</strong> (absolute or relative performance), <strong>Time limit (s)</strong> (runs exceeding it are counted as unsolved), <strong>Gap limit (%)</strong> (an instance counts as solved when its gap is at or below it) and <strong>Gap type</strong> (primal, dual or solver gap).</li>
+<li><strong>Solver Time per Solver</strong>: <strong>Filter type</strong>, which instances are shown: all of them (<strong>None</strong>), or only the ones that match a condition, for example <strong>No fail for all solvers (Normal Completion only)</strong>. The other conditions combine no failure with a limit on the time or on the gap.</li>
+<li><strong>Termination Status</strong>: <strong>Status Type</strong> (solver status, model status or fail) and <strong>Chart Type</strong> (bar or radar chart).</li>
+<li><strong>Solution Quality</strong>: <strong>Category Type</strong>, the gap or the bound that the average, the minimum, the maximum and the standard deviation are shown for, for each solver. Infinite and undefined values are left out.</li>
+</ul>
+<h3 id="16-compare-solvers-page-buttons-functionality" class="tsd-anchor-link">1.6 Compare Solvers Page Buttons Functionality<a href="#16-compare-solvers-page-buttons-functionality" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><strong>Compare Solvers</strong>: Show the comparison table of the two solvers that are ticked. Exactly two solvers have to be ticked.</li>
+</ul>
+<p>The comparison uses the settings <strong>Time limit (s)</strong>, <strong>Gap limit (%)</strong> and <strong>Gap type</strong>, as on the performance profile page, and <strong>Termination Status</strong>: only the runs that ended with this status are compared.</p>
+<h3 id="17-navigation-bar" class="tsd-anchor-link">1.7 Navigation Bar<a href="#17-navigation-bar" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><strong>Table</strong>: The page with the results table.</li>
+<li><strong>Plots</strong>: The menu with the plot pages.
+<ul>
+<li><strong>Performance Profile</strong></li>
+<li><strong>Solver Time per Solver</strong></li>
+<li><strong>Solver Time per Instance</strong></li>
+<li><strong>Number of Nodes</strong></li>
+<li><strong>Number of Iterations</strong></li>
+<li><strong>Termination Status</strong></li>
+<li><strong>Solution Quality</strong></li>
+<li><strong>Solution Time</strong></li>
+</ul>
+</li>
+<li><strong>Compare Solvers</strong>: The page that compares two solvers.</li>
+<li><strong>Upload</strong>: Load the files that were chosen.</li>
+<li><strong>Best-known bounds</strong>: Where the best known primal and dual bounds come from, which the gaps are calculated against.</li>
+<li><strong>Session data</strong>: The data of this tab, which the other pages show as well. <strong>Clear</strong> forgets it.</li>
+<li><strong>Help</strong>: The menu with help and the project.
+<ul>
+<li><strong>File formats</strong>: The file formats and the headers of a result file.</li>
+<li><strong>Documentation</strong>: This documentation.</li>
+<li><strong>Releases</strong>: The releases of the application, with the version that you use.</li>
+<li><strong>GitHub</strong>: The project.</li>
+<li><strong>Report an issue</strong>: Report a problem or ask for a feature.</li>
+<li><strong>MIP demo data</strong>: Load the demo data of a mixed-integer program.</li>
+<li><strong>MINLP demo data</strong>: Load the demo data of a mixed-integer nonlinear program.</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-supported-formats" class="tsd-anchor-link">2. Supported Formats<a href="#2-supported-formats" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="21-trc" class="tsd-anchor-link">2.1 .trc<a href="#21-trc" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The following header structure and order should be used in conjunction with .trc files, if no header is provided in the result files:</p>
+<pre><code><span class="hl-0">InputFileName</span><br/><span class="hl-0">ModelType</span><br/><span class="hl-0">SolverName</span><br/><span class="hl-1">NLP</span><br/><span class="hl-1">MIP</span><br/><span class="hl-0">JulianDate</span><br/><span class="hl-0">Direction</span><br/><span class="hl-0">NumberOfEquations</span><br/><span class="hl-0">NumberOfVariables</span><br/><span class="hl-0">NumberOfDiscreteVariables</span><br/><span class="hl-0">NumberOfNonZeros</span><br/><span class="hl-0">NumberOfNonlinearNonZeros</span><br/><span class="hl-0">OptionFile</span><br/><span class="hl-0">ModelStatus</span><br/><span class="hl-0">TermStatus</span><br/><span class="hl-0">ObjectiveValue</span><br/><span class="hl-0">ObjectiveValueEstimate</span><br/><span class="hl-0">SolverTime</span><br/><span class="hl-0">NumberOfIterations</span><br/><span class="hl-0">NumberOfDomainViolations</span><br/><span class="hl-0">NumberOfNodes</span><br/><span class="hl-0">UserComment</span>
+</code><button>Copy</button></pre>
+
+<p>For further information, see <a href="https://gams.com/latest/docs/UG_SolverUsage.html#UG_SolverUsage_TraceFile">https://gams.com/latest/docs/UG_SolverUsage.html#UG_SolverUsage_TraceFile</a>.</p>
+<h3 id="22-json" class="tsd-anchor-link">2.2 .json<a href="#22-json" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The file has these fields:</p>
+<ul>
+<li><code>version</code>: The version of the format, currently <code>2</code>. A file without it is of version 1, see below.</li>
+<li><code>dataSet</code>: The results, with a row for every solver run.</li>
+<li><code>dataFileType</code>: The kind of data, <code>&quot;json&quot;</code> for data that was saved by the application.</li>
+<li><code>defaultTime</code> (optional): The <strong>Time limit (s)</strong> shown in the app. Runs exceeding it are counted as unsolved.</li>
+<li><code>gapLimit</code> (optional): The <strong>Gap limit (%)</strong>. An instance counts as solved when its gap is at or below it.</li>
+</ul>
+<p>Every row of <code>dataSet</code> is an object. Its keys are the names of the columns of the trace file (see 2.1), and its values are numbers, <code>true</code> or <code>false</code> where the value is one, and else text. A column that a row does not have is empty. The columns of the first row come first, then the columns that the other rows add.</p>
+<pre><code class="json"><span class="hl-2">{</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;version&quot;</span><span class="hl-2">: </span><span class="hl-4">2</span><span class="hl-2">,</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;dataSet&quot;</span><span class="hl-2">: [</span><br/><span class="hl-2">        { </span><span class="hl-3">&quot;InputFileName&quot;</span><span class="hl-2">: </span><span class="hl-5">&quot;alan&quot;</span><span class="hl-2">, </span><span class="hl-3">&quot;ModelType&quot;</span><span class="hl-2">: </span><span class="hl-5">&quot;MINLP&quot;</span><span class="hl-2">, </span><span class="hl-3">&quot;SolverName&quot;</span><span class="hl-2">: </span><span class="hl-5">&quot;knitro&quot;</span><span class="hl-2">, </span><span class="hl-3">&quot;Direction&quot;</span><span class="hl-2">: </span><span class="hl-5">&quot;min&quot;</span><span class="hl-2">, </span><span class="hl-3">&quot;SolverTime&quot;</span><span class="hl-2">: </span><span class="hl-4">0.142</span><span class="hl-2">, </span><span class="hl-3">&quot;Fail&quot;</span><span class="hl-2">: </span><span class="hl-6">false</span><span class="hl-2"> },</span><br/><span class="hl-2">        { </span><span class="hl-3">&quot;InputFileName&quot;</span><span class="hl-2">: </span><span class="hl-5">&quot;ball_mk2_30&quot;</span><span class="hl-2">, </span><span class="hl-3">&quot;ModelType&quot;</span><span class="hl-2">: </span><span class="hl-5">&quot;MINLP&quot;</span><span class="hl-2">, </span><span class="hl-3">&quot;SolverName&quot;</span><span class="hl-2">: </span><span class="hl-5">&quot;knitro&quot;</span><span class="hl-2">, </span><span class="hl-3">&quot;Direction&quot;</span><span class="hl-2">: </span><span class="hl-5">&quot;min&quot;</span><span class="hl-2">, </span><span class="hl-3">&quot;SolverTime&quot;</span><span class="hl-2">: </span><span class="hl-4">900.034</span><span class="hl-2">, </span><span class="hl-3">&quot;Fail&quot;</span><span class="hl-2">: </span><span class="hl-6">false</span><span class="hl-2"> },</span><br/><span class="hl-2">        { </span><span class="hl-3">&quot;InputFileName&quot;</span><span class="hl-2">: </span><span class="hl-5">&quot;ball_mk3_10&quot;</span><span class="hl-2">, </span><span class="hl-3">&quot;ModelType&quot;</span><span class="hl-2">: </span><span class="hl-5">&quot;MINLP&quot;</span><span class="hl-2">, </span><span class="hl-3">&quot;SolverName&quot;</span><span class="hl-2">: </span><span class="hl-5">&quot;knitro&quot;</span><span class="hl-2">, </span><span class="hl-3">&quot;Direction&quot;</span><span class="hl-2">: </span><span class="hl-5">&quot;min&quot;</span><span class="hl-2">, </span><span class="hl-3">&quot;SolverTime&quot;</span><span class="hl-2">: </span><span class="hl-4">0.95</span><span class="hl-2">, </span><span class="hl-3">&quot;Fail&quot;</span><span class="hl-2">: </span><span class="hl-6">true</span><span class="hl-2"> }</span><br/><span class="hl-2">    ],</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;dataFileType&quot;</span><span class="hl-2">: </span><span class="hl-5">&quot;json&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;defaultTime&quot;</span><span class="hl-2">: </span><span class="hl-4">900</span><span class="hl-2">,</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;gapLimit&quot;</span><span class="hl-2">: </span><span class="hl-4">0.1</span><br/><span class="hl-2">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The application writes this format when the data is saved to the browser, and when the configuration is exported.</p>
+<p><strong>Version 1.</strong> Earlier versions of the application wrote <code>dataSet</code> as a list of the lines of a trace file as text, without a <code>version</code>. Such a file is still read, and what is saved or exported from it is in the format above. A file with a version that is higher than the one that the application knows is not read, and the application says so.</p>
+<pre><code class="json"><span class="hl-2">{</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;dataSet&quot;</span><span class="hl-2">: [</span><br/><span class="hl-2">        </span><span class="hl-5">&quot;* InputFileName,ModelType,SolverName,Direction,SolverTime,Fail&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-5">&quot;alan,MINLP,knitro,min,0.142,false&quot;</span><span class="hl-2">,</span><br/><span class="hl-2">        </span><span class="hl-5">&quot;ball_mk2_30,MINLP,knitro,min,900.034,false&quot;</span><br/><span class="hl-2">    ],</span><br/><span class="hl-2">    </span><span class="hl-3">&quot;dataFileType&quot;</span><span class="hl-2">: </span><span class="hl-5">&quot;json&quot;</span><br/><span class="hl-2">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="23-csv" class="tsd-anchor-link">2.3 .csv<a href="#23-csv" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>An optional file with information about the instances, for example the instance data of MINLPLib. Its columns are added to the table next to the results.</p>
+<ul>
+<li>The values of a line are separated by semicolons (<code>;</code>). The first line has the names of the columns, and every other line is one instance.</li>
+<li>The column <code>name</code> (or <code>InputFileName</code>) holds the name of the instance. It has to be the same as the name of the instance in the <code>.trc</code> files, as it is what joins the two. A result whose instance is not in the file gets empty cells in the columns of the file.</li>
+<li>All other columns are free. Each of them becomes a column of the table. The values are shown as text, and an empty cell stays empty. A line with fewer values than the header has empty cells for the missing ones.</li>
+<li>The columns <code>primalbound</code> and <code>dualbound</code> (in lower case) are the best known bounds of the instance, and show in the table as <code>ProblemPrimalBound</code> and <code>ProblemDualBound</code>. The gaps of the results are calculated against them. Where an instance has no bound, the bound that the solver reports for the result is used instead. A bound from a <code>.solu</code> file (see 2.4) replaces the bound of this file.</li>
+</ul>
+<pre><code class="csv"><span class="hl-2">name;application;nvars;ncons;primalbound;dualbound</span><br/><span class="hl-2">alan;Portfolio Optimization;8;7;2.925;2.925</span><br/><span class="hl-2">alkyl;Alkylation;14;7;-1.764999646;-1.765001273</span>
+</code><button type="button">Copy</button></pre>
+
+<p>A larger example is <a href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/blob/main/Tests/TestData/instancedata.csv">instancedata.csv</a>, which is the instance data of MINLPLib.</p>
+<h3 id="24-solu" class="tsd-anchor-link">2.4 .solu<a href="#24-solu" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>An optional file with the best known bounds of the instances, in the format of the <code>.solu</code> files of <a href="https://www.minlplib.org/">MINLPLib</a>, <a href="https://miplib.zib.de/">MIPLIB 2017</a> and <a href="https://miplib.zib.de/miplib2010.html">MIPLIB 2010</a>. These libraries are also built into the application, see the selector <strong>Best-known bounds</strong> in the navigation bar. A <code>.solu</code> file that is uploaded is used instead of the library.</p>
+<ul>
+<li>Every line gives one bound: a keyword between equal signs, the name of the instance and the value, separated by spaces or tabs.</li>
+<li>The name of the instance has to be the same as the name of the instance in the <code>.trc</code> files.</li>
+<li>The keyword says what the value is:
+<ul>
+<li><code>=best=</code>: the best known primal bound.</li>
+<li><code>=bestdual=</code>: the best known dual bound.</li>
+<li><code>=opt=</code>: the optimal value, which is both the primal and the dual bound.</li>
+<li><code>=inf=</code>: the instance is infeasible, and both bounds are infinite.</li>
+</ul>
+</li>
+<li>An instance can have several lines, for example a <code>=best=</code> and a <code>=bestdual=</code> line. They are all used. When two lines give the same bound, the first one is used.</li>
+<li>Lines with another keyword, and lines that are not in this form, are skipped.</li>
+<li>The values show in the table with six decimals in exponential form, for example 116329.67 as <code>1.163297e+5</code>.</li>
+</ul>
+<pre><code class="text">=best=     4stufen                      116329.6706
+=bestdual= 4stufen                      109309.63
+=opt=      alan                         2.925
+=inf=      infeasible_example           0
+</code><button type="button">Copy</button></pre>
+
+<p>Larger examples are <a href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/blob/main/Tests/TestData/minlp.solu">minlp.solu</a> and <a href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/blob/main/Tests/TestData/miplib.solu">miplib.solu</a>.</p>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#user-guide"><span>User <wbr/>Guide</span></a><ul><li><a href="#disclaimer"><span>Disclaimer</span></a></li><li><a href="#1-instructions-for-using-the-application"><span>1. <wbr/>Instructions for <wbr/>Using the <wbr/>Application</span></a></li><li><ul><li><a href="#11-the-start-page"><span>1.1 <wbr/>The <wbr/>Start <wbr/>Page</span></a></li><li><a href="#12-data-menu"><span>1.2 <wbr/>Data <wbr/>Menu</span></a></li><li><a href="#13-table-page-button-functionality"><span>1.3 <wbr/>Table <wbr/>Page <wbr/>Button <wbr/>Functionality</span></a></li><li><a href="#14-plot-pages-buttons-functionality"><span>1.4 <wbr/>Plot <wbr/>Pages <wbr/>Buttons <wbr/>Functionality</span></a></li><li><a href="#15-settings-of-the-plot-pages"><span>1.5 <wbr/>Settings of the <wbr/>Plot <wbr/>Pages</span></a></li><li><a href="#16-compare-solvers-page-buttons-functionality"><span>1.6 <wbr/>Compare <wbr/>Solvers <wbr/>Page <wbr/>Buttons <wbr/>Functionality</span></a></li><li><a href="#17-navigation-bar"><span>1.7 <wbr/>Navigation <wbr/>Bar</span></a></li></ul></li><li><a href="#2-supported-formats"><span>2. <wbr/>Supported <wbr/>Formats</span></a></li><li><ul><li><a href="#21-trc"><span>2.1 .trc</span></a></li><li><a href="#22-json"><span>2.2 .json</span></a></li><li><a href="#23-csv"><span>2.3 .csv</span></a></li><li><a href="#24-solu"><span>2.4 .solu</span></a></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="../modules.html">System Documentation</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div><script>
+          try {
+            const generateLinkElement = document.querySelector(".tsd-generator a");
+            const link = document.createElement("a");
+            Object.assign(link, {
+              href: "https://github.com/dmnsgn/typedoc-material-theme",
+              target: "_blank",
+              rel: "noreferrer",
+              innerText: "typedoc-material-theme."
+            });
+            generateLinkElement.insertAdjacentElement("afterend", link);
+            generateLinkElement.insertAdjacentText("afterend", " with ");
+          } catch (error) {
+
+          }
+        </script></body></html>

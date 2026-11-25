@@ -2,6 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'sha256-dZnR49q2fhwLrpNj+UuzOqZ/uXeYujsD0OLn6noiBIg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
@@ -26,7 +30,7 @@
       content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers."
     />
     <!-- Title and icon -->
-    <title id="ReportTitle">Number of Iterations</title>
+    <title id="ReportTitle">Number of Iterations – VIVA</title>
     <link rel="icon" href="../CSS/tab_icon.png" />
     <!-- Styling -->
     <link href="../../Dist/main.css" rel="stylesheet" />
@@ -75,6 +79,7 @@
             <li class="nav-item dropdown">
               <a
                 class="nav-link dropdown-toggle active"
+                aria-current="true"
                 id="navbarDropdownMenuLink"
                 role="button"
                 data-bs-toggle="dropdown"
@@ -83,6 +88,7 @@
               >
               <ul
                 class="dropdown-menu mb-2"
+                id="plotsMenu"
                 aria-labelledby="navbarDropdownMenuLink"
               >
                 <li>
@@ -110,9 +116,12 @@
                   >
                 </li>
                 <li>
-                  <span class="dropdown-item active"
+                  <a
+                    class="dropdown-item active"
+                    aria-current="page"
+                    href="../Pages/number_of_iterations.html"
                     ><i class="bi bi-bar-chart-line"></i> Number of
-                    Iterations</span
+                    Iterations</a
                   >
                 </li>
                 <li>
@@ -151,7 +160,7 @@
                   value=""
                   data-toggle="tooltip"
                   data-placement="top"
-                  title="Select and upload a trace or JSON file."
+                  title="Choose the files to load: .trc, .csv, .solu or a .json configuration."
                   multiple
                 />
                 <button
@@ -167,54 +176,127 @@
                 </button>
               </div>
             </li>
-            <li class="nav-item">
-              <div class="input-group" id="librarySelectorGroup">
-                <span class="input-group-text">Library</span>
-                <select
-                  class="form-select"
-                  id="librarySelector"
-                  aria-label="Select library"
+            <li class="nav-item" id="sessionIndicator" hidden>
+              <div
+                class="navbar-text d-flex align-items-center gap-2 ms-2 text-nowrap"
+              >
+                <span id="sessionIndicatorLabel"></span>
+                <button
+                  class="btn btn-secondary btn-sm"
+                  type="button"
+                  id="clearSessionDataButton"
+                  title="Forget the data of this session. Data that is saved in the browser is kept."
                 >
+                  <i class="bi bi-x-lg"></i> Clear
+                </button>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div
+                class="input-group"
+                id="librarySelectorGroup"
+                title="Best-known bounds are used to compute primal and dual gaps. An uploaded .solu file is used instead of a library."
+              >
+                <label class="input-group-text" for="librarySelector"
+                  >Best-known bounds</label
+                >
+                <select class="form-select" id="librarySelector">
                   <option value="none" selected>None</option>
                   <option value="MINLPLib">MINLPLib</option>
                   <option value="MIPLIB_2017">MIPLIB 2017</option>
                   <option value="MIPLIB_2010">MIPLIB 2010</option>
+                  <option value="solu" disabled>Uploaded .solu file</option>
                 </select>
               </div>
             </li>
           </ul>
           <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="../../Docs/index.html" target="_blank"
-                ><i class="bi bi-journal-code"></i> Docs</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis"
-                target="_blank"
-                ><i class="bi bi-github"></i> GitHub</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues/new"
-                target="_blank"
-                ><i class="bi bi-plus-square"></i> New Issue</a
-              >
-            </li>
-            <li class="nav-item">
+            <li class="nav-item dropdown">
               <button
-                class="nav-link"
-                aria-label="Help"
-                data-bs-toggle="modal"
-                data-bs-target="#fileFormatInformationModal"
-                name="Help"
+                class="nav-link dropdown-toggle"
+                id="helpMenuButton"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
                 <i class="bi bi-question-circle-fill"></i> Help
               </button>
+              <ul
+                class="dropdown-menu"
+                id="helpMenu"
+                aria-labelledby="helpMenuButton"
+              >
+                <li>
+                  <button
+                    class="dropdown-item"
+                    id="fileFormatsHelpItem"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#fileFormatInformationModal"
+                  >
+                    <i class="bi bi-file-earmark-text"></i> File formats
+                  </button>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="../../Docs/documents/USER_GUIDE.html"
+                    target="_blank"
+                    ><i class="bi bi-journal-code"></i> Documentation</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/releases"
+                    target="_blank"
+                    ><i class="bi bi-tags"></i> Releases
+                    <span
+                      id="releaseVersionTagSpan"
+                      class="text-body-secondary"
+                    ></span
+                  ></a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis"
+                    target="_blank"
+                    ><i class="bi bi-github"></i> GitHub</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues/new"
+                    target="_blank"
+                    ><i class="bi bi-plus-square"></i> Report an issue</a
+                  >
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><h6 class="dropdown-header">Demo data</h6></li>
+                <li>
+                  <button
+                    class="dropdown-item"
+                    id="demoMipMenuItem"
+                    type="button"
+                    title="Load the demo data of a mixed-integer program (MIP)."
+                  >
+                    <i class="bi bi-activity"></i> MIP demo data
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="dropdown-item"
+                    id="demoMinlpMenuItem"
+                    type="button"
+                    title="Load the demo data of a mixed-integer nonlinear program (MINLP)."
+                  >
+                    <i class="bi bi-activity"></i> MINLP demo data
+                  </button>
+                </li>
+              </ul>
             </li>
             <li class="nav-item">
               <button
@@ -228,15 +310,6 @@
                 <i class="bi bi-moon-stars"></i>
               </button>
             </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/releases"
-                target="_blank"
-                id="releaseVersionTagSpan"
-                >Releases</a
-              >
-            </li>
           </ul>
         </div>
       </div>
@@ -244,6 +317,12 @@
     <div class="alert alert-dismissible" role="alert" id="alertNotification">
       <i id="alertIcon" class="bi"></i>
       <span id="alertMessage"></span>
+      <button
+        id="alertActionButton"
+        type="button"
+        class="btn btn-sm btn-link alert-link"
+        hidden
+      ></button>
       <button
         id="closeAlertButton"
         type="button"
@@ -255,10 +334,11 @@
       <div
         id="buttonContainer"
         class="d-flex flex-wrap justify-content-start gap-2"
+        title="Load data first."
       >
         <div class="col-auto">
           <button
-            class="btn btn-success btn-sm"
+            class="btn btn-primary btn-sm"
             type="submit"
             id="viewPlotsButton"
             disabled="true"
@@ -266,51 +346,7 @@
             data-placement="top"
             title="View number of iterations."
           >
-            <i class="bi bi-diagram-2"></i> View Number of Iterations
-          </button>
-        </div>
-        <div class="col-auto">
-          <button
-            class="btn btn-primary btn-sm"
-            id="saveLocalStorageButton"
-            disabled="true"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Save currently loaded data to local storage."
-          >
-            <i class="bi bi-save"></i> Save Data
-          </button>
-        </div>
-        <div class="col-auto vertical-separator"></div>
-        <div class="col-auto">
-          <button
-            class="btn btn-dark btn-sm"
-            type="button"
-            id="downloadConfigurationButtonLayer"
-            disabled="true"
-          >
-            <a
-              id="downloadConfigurationButton"
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Download the user configuration."
-              ><i class="bi bi-download"></i> Download Saved Data</a
-            >
-          </button>
-        </div>
-        <div class="col-auto">
-          <button
-            class="btn btn-dark btn-sm"
-            type="button"
-            data-bs-toggle="modal"
-            data-bs-target="#configurationSettingsModal"
-            id="configurationSettingsButton"
-            disabled="true"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Customize the downloadable user configuration file."
-          >
-            <i class="bi bi-gear"></i> Download Data
+            <i class="bi bi-diagram-2"></i> Update plot
           </button>
         </div>
         <div class="col-auto">
@@ -330,49 +366,131 @@
             >
           </button>
         </div>
-        <div class="col-auto vertical-separator"></div>
-        <div class="col-auto">
+        <div class="col-auto dropdown" id="dataMenu" hidden>
           <button
-            class="btn btn-danger btn-sm"
+            class="btn btn-dark btn-sm dropdown-toggle"
             type="button"
-            data-bs-toggle="modal"
-            data-bs-target="#deleteDataModal"
-            id="deleteLocalStorageButton"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Delete currently saved data in local storage."
+            id="dataMenuButton"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            title="Save, export and remove the data."
           >
-            <i class="bi bi-trash"></i> Delete Data
+            <i class="bi bi-database"></i> Data
           </button>
+          <ul class="dropdown-menu" aria-labelledby="dataMenuButton">
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                id="saveLocalStorageButton"
+                disabled="true"
+                title="Save the loaded data in the local storage of this browser."
+              >
+                <i class="bi bi-save"></i> Save to browser
+              </button>
+            </li>
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                id="downloadConfigurationButtonLayer"
+                disabled="true"
+              >
+                <a
+                  id="downloadConfigurationButton"
+                  title="Download the saved data as a configuration file (UserConfiguration.json)."
+                  ><i class="bi bi-download"></i> Export configuration
+                  (.json)</a
+                >
+              </button>
+            </li>
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#configurationSettingsModal"
+                id="configurationSettingsButton"
+                disabled="true"
+                title="Choose the solvers, time limit and gap limit of the exported configuration file."
+              >
+                <i class="bi bi-gear"></i> Export with options…
+              </button>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <button
+                class="dropdown-item text-danger"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteDataModal"
+                id="deleteLocalStorageButton"
+                title="Remove the data saved in the local storage of this browser."
+              >
+                <i class="bi bi-trash"></i> Remove saved data
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
       <hr />
       <div id="emptyState" class="empty-state">
         <h2 class="h5">Load benchmark data to get started</h2>
-        <p>
-          Drop files anywhere on this page, or choose them with the file field
-          in the navigation bar and click Upload.
+        <p class="mb-2">
+          Drop files anywhere on this page, or choose them, and then click
+          Upload in the navigation bar.
         </p>
+        <button
+          id="emptyStateChooseButton"
+          class="btn btn-sm btn-primary mb-3"
+          type="button"
+        >
+          <i class="bi bi-folder2-open"></i> Choose files
+        </button>
+        <div
+          id="selectedFiles"
+          class="selected-files text-start mb-3"
+          aria-live="polite"
+        ></div>
         <ul class="list-unstyled mb-3">
           <li><b>.trc</b> trace files, one for each solver</li>
           <li><b>.csv</b> instance information (optional)</li>
           <li><b>.solu</b> best known bounds (optional)</li>
           <li><b>.json</b> a configuration that was saved earlier</li>
         </ul>
-        <p class="mb-2">
-          The buttons above can be used after the data is loaded.
-        </p>
-        <button
-          id="emptyStateDemoButton"
-          class="btn btn-sm btn-primary"
-          type="button"
+        <div class="d-flex flex-wrap gap-2">
+          <button
+            id="emptyStateDemoButton"
+            class="btn btn-sm btn-primary"
+            type="button"
+            title="Load the demo data of a mixed-integer program (MIP)."
+          >
+            <i class="bi bi-activity"></i> Try MIP demo data
+          </button>
+          <button
+            id="emptyStateDemoMinlpButton"
+            class="btn btn-sm btn-primary"
+            type="button"
+            title="Load the demo data of a mixed-integer nonlinear program (MINLP)."
+          >
+            <i class="bi bi-activity"></i> Try MINLP demo data
+          </button>
+        </div>
+        <p
+          id="fileStorageNote"
+          class="alert alert-warning small text-start mt-3 mb-0"
+          role="note"
+          hidden
         >
-          <i class="bi bi-activity"></i> Try demo data
-        </button>
+          <b>Opened from a file.</b> This browser keeps each page of a file
+          apart, so data that is loaded or saved here is not available on the
+          other pages. Open VIVA from a web server to keep the data when
+          switching pages.
+        </p>
       </div>
       <div
         id="loadStatus"
-        class="load-status text-center"
+        class="load-status"
         role="status"
         aria-live="polite"
       ></div>
@@ -404,6 +522,16 @@
           <i class="bi bi-eye-slash"></i> Hide All
         </button>
         <button
+          id="chartTableToggleButton"
+          class="btn btn-dark btn-sm"
+          type="button"
+          aria-expanded="false"
+          aria-controls="chartDataTableContainer"
+          title="Show the values of the chart as a table."
+        >
+          <i class="bi bi-table"></i> Show as table
+        </button>
+        <button
           id="downloadChartImageButton"
           class="btn btn-dark btn-sm"
           type="button"
@@ -411,6 +539,29 @@
         >
           <i class="bi bi-file-earmark-image"></i> Download Image
         </button>
+        <label class="visually-hidden" for="chartImageResolution"
+          >Size of the image</label
+        >
+        <select
+          id="chartImageResolution"
+          class="form-select form-select-sm w-auto"
+          title="The size of the downloaded image. A larger image is drawn again at a higher resolution, for print."
+        >
+          <option value="1" selected>Standard size (1×)</option>
+          <option value="2">Print size (2×)</option>
+          <option value="3">Large (3×)</option>
+        </select>
+        <label class="visually-hidden" for="chartImageBackground"
+          >Background of the image</label
+        >
+        <select
+          id="chartImageBackground"
+          class="form-select form-select-sm w-auto"
+          title="The background of the downloaded image."
+        >
+          <option value="page" selected>Page background</option>
+          <option value="transparent">Transparent background</option>
+        </select>
         <span
           id="chartToolsStatus"
           class="chart-tools-status"
@@ -422,6 +573,14 @@
           <!-- Content created with Chart.js will be displayed here. -->
         </canvas>
       </div>
+      <div
+        id="chartDataTableContainer"
+        class="chart-data-table"
+        role="region"
+        aria-label="Data of the chart"
+        tabindex="0"
+        hidden
+      ></div>
 
       <div id="statisticsTable">
         <!-- statistics table element will be created here. -->

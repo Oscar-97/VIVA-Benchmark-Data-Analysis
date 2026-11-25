@@ -1,9 +1,22 @@
-const demoDataSelector = { value: "Demo_1" };
+const classes = new Set<string>();
+const demoMipMenuItem = {
+	disabled: false,
+	classList: { add: (name: string): void => void classes.add(`mip ${name}`) }
+};
+const demoMinlpMenuItem = {
+	disabled: false,
+	classList: {
+		add: (name: string): void => void classes.add(`minlp ${name}`)
+	}
+};
 
 jest.mock("../Src/Scripts/Elements/Elements", () => ({
 	elements: {
-		get demoDataSelector(): typeof demoDataSelector {
-			return demoDataSelector;
+		get demoMipMenuItem(): typeof demoMipMenuItem {
+			return demoMipMenuItem;
+		},
+		get demoMinlpMenuItem(): typeof demoMinlpMenuItem {
+			return demoMinlpMenuItem;
 		}
 	}
 }));
@@ -19,6 +32,7 @@ jest.mock("../Src/Scripts/Datasets/DemoData", () => ({
 
 import {
 	ActivateDemoMode,
+	NotifyDemoMode,
 	RequestDemoMode
 } from "../Src/Scripts/Actions/DemoMode";
 import { Keys } from "../Src/Scripts/Constants/Keys";
@@ -37,7 +51,9 @@ async function Settled(): Promise<void> {
 describe("DemoMode", () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
-		demoDataSelector.value = "Demo_1";
+		classes.clear();
+		demoMipMenuItem.disabled = false;
+		demoMinlpMenuItem.disabled = false;
 		stored = new Map<string, string>();
 		Object.defineProperty(globalThis, "localStorage", {
 			value: {
@@ -68,14 +84,6 @@ describe("DemoMode", () => {
 
 			expect(stored.get(Keys.DEMO_DATA)).toBe("demo2");
 			expect(stored.get(Keys.USER_CONFIGURATION)).toContain("two");
-		});
-
-		it("should use the selected demo data set by default", async () => {
-			demoDataSelector.value = "Demo_2";
-
-			await ActivateDemoMode();
-
-			expect(stored.get(Keys.DEMO_DATA)).toBe("demo2");
 		});
 	});
 
@@ -117,14 +125,22 @@ describe("DemoMode", () => {
 			expect(stored.get(Keys.DEMO_DATA)).toBe("demo1");
 			expect(reload).toHaveBeenCalledTimes(1);
 		});
+	});
 
-		it("should use the selected demo data set when none is given", async () => {
-			demoDataSelector.value = "Demo_2";
+	describe("NotifyDemoMode", () => {
+		it("should mark the first demo data in the Help menu as the one in use", () => {
+			NotifyDemoMode("demo1");
 
-			RequestDemoMode();
-			await Settled();
+			expect(demoMipMenuItem.disabled).toBe(true);
+			expect(demoMinlpMenuItem.disabled).toBe(false);
+			expect([...classes]).toEqual(["mip text-success"]);
+		});
 
-			expect(stored.get(Keys.DEMO_DATA)).toBe("demo2");
+		it("should mark the second demo data", () => {
+			NotifyDemoMode("demo2");
+
+			expect(demoMipMenuItem.disabled).toBe(false);
+			expect(demoMinlpMenuItem.disabled).toBe(true);
 		});
 	});
 });

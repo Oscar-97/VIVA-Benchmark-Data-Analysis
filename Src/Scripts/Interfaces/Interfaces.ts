@@ -1,8 +1,11 @@
 /**
  * UserData consists of dataset and file extension.
+ * The `dataSet` is a list of the lines of a trace file as text (version 1, which has no `version`), or a list of rows
+ * as objects with the names of the columns as keys (version 2).
  * @interface UserData
  */
 export interface UserData {
+	version?: number | undefined;
 	dataSet: string[] | object[];
 	dataFileType: string;
 	defaultTime?: number | undefined;

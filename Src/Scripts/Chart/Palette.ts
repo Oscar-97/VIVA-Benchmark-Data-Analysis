@@ -32,10 +32,23 @@ const PALETTE: Record<"light" | "dark", readonly string[]> = {
 };
 
 /**
- * The dashes of the lines after the colors have been used once. A ninth solver has the color of the first, so
- * it is told apart by the line: solid, long dashes, short dashes.
+ * The dashes of the lines: solid, long dashes, short dashes. Colors are not the only way to tell the data sets
+ * apart, so every data set has a dash and a point style by its place, and not only the ones after the ninth.
+ * The numbers of dashes (3), point styles (5) and colors (8) have no common factor, so the combination
+ * repeats only after 120 data sets.
  */
 const DASHES: readonly (readonly number[])[] = [[], [8, 4], [2, 3]];
+
+/**
+ * The shapes of the points of the data sets, in the order in which they are given out.
+ */
+const POINT_STYLES: readonly string[] = [
+	"circle",
+	"triangle",
+	"rect",
+	"rectRot",
+	"star"
+];
 
 /**
  * How transparent the area of a mark is, as the two hex digits of an alpha channel.
@@ -57,6 +70,23 @@ interface Colorable {
 	borderColor?: unknown;
 	backgroundColor?: unknown;
 	borderDash?: unknown;
+	pointStyle?: unknown;
+}
+
+/**
+ * Gives a data set the shape of its points and the dash of its line by its place in the chart, so it can be told
+ * apart without its color. Bars have neither.
+ */
+function ApplyShape(dataset: Colorable, index: number, type: string): void {
+	const hasPoints = type === "line" || type === "radar" || type === "bubble";
+	const hasLine = type === "line" || type === "radar";
+	if (hasPoints) {
+		dataset.pointStyle = POINT_STYLES[index % POINT_STYLES.length] ?? "circle";
+	}
+	const dash = DASHES[index % DASHES.length] ?? [];
+	if (hasLine && dash.length > 0) {
+		dataset.borderDash = [...dash];
+	}
 }
 
 /**
@@ -65,7 +95,8 @@ interface Colorable {
  *
  * @param dataset - The data set.
  * @param index - The place of the data set in the chart.
- * @param type - The kind of chart. Bars are filled, the other kinds have a line with a lighter area.
+ * @param type - The kind of chart. Bars are filled, the other kinds have a line with a lighter area, and the points
+ * and the lines of the data sets differ in their shape and dash as well as in their color.
  * @param theme - The theme that the chart is drawn in.
  */
 export function ApplyPalette<T extends object>(
@@ -87,9 +118,6 @@ export function ApplyPalette<T extends object>(
 		borderColor: color,
 		backgroundColor: type === "bar" ? color : color + FILL_ALPHA
 	};
-	const round = Math.floor(index / PALETTE.light.length);
-	if (round > 0 && (type === "line" || type === "radar")) {
-		colored.borderDash = [...(DASHES[round % DASHES.length] ?? [])];
-	}
+	ApplyShape(colored, index, type);
 	return colored as T;
 }

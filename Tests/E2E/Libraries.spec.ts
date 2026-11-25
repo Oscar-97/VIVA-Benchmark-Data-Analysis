@@ -1,3 +1,4 @@
+import * as fs from "fs";
 import { test, expect, Page } from "@playwright/test";
 import {
 	CollectPageErrors,
@@ -76,4 +77,67 @@ test.describe("Problem libraries", () => {
 			expect(errors).toEqual([]);
 		});
 	}
+
+	test("The table is shown after the upload, with a summary of the data", async ({
+		page
+	}) => {
+		const errors = CollectPageErrors(page);
+		await page.goto(PageUrl("report.html"));
+
+		await ImportFiles(page, [TestFile("library_test.trc")], "MINLPLib");
+
+		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible();
+		await expect(page.locator("#loadStatus")).toContainText(
+			/\d+ solvers? · \d+ instances? · bounds: MINLPLib/
+		);
+		expect(errors).toEqual([]);
+	});
+
+	test("An uploaded .solu file gives both bounds when they are on lines of their own", async ({
+		page
+	}, testInfo) => {
+		const errors = CollectPageErrors(page);
+		const solu = testInfo.outputPath("bounds.solu");
+		fs.writeFileSync(
+			solu,
+			[
+				"=best=     alkylation     100",
+				"=bestdual= alkylation     90",
+				""
+			].join("\n")
+		);
+		await page.goto(PageUrl("report.html"));
+
+		await ImportFiles(page, [TestFile("library_test.trc"), solu]);
+		await ViewTable(page);
+		await ShowProblemCells(page);
+
+		// The row of alkylation is the third. The dual bound is in the column 4, the primal bound in the column 5.
+		await expect(Cell(page, 3, 5)).toHaveText("1.000000e+2");
+		await expect(Cell(page, 3, 4)).toHaveText("9.000000e+1");
+		expect(errors).toEqual([]);
+	});
+
+	test("An uploaded .solu file is shown as the source of the bounds", async ({
+		page
+	}) => {
+		const errors = CollectPageErrors(page);
+		await page.goto(PageUrl("report.html"));
+		const selector = page.locator("#librarySelector");
+		await expect(page.getByLabel("Best-known bounds")).toBeVisible();
+
+		await page.setInputFiles('input[type="file"]', [
+			TestFile("library_test.trc"),
+			TestFile("minlp.solu")
+		]);
+		await expect(selector).toHaveValue("solu");
+		await expect(selector).toBeDisabled();
+
+		await page.setInputFiles('input[type="file"]', [
+			TestFile("library_test.trc")
+		]);
+		await expect(selector).toHaveValue("none");
+		await expect(selector).toBeEnabled();
+		expect(errors).toEqual([]);
+	});
 });

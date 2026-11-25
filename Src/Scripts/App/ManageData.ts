@@ -1,7 +1,15 @@
 import { ExtractTraceData } from "../DataProcessing/FilterData";
 import { ProcessData } from "../DataProcessing/ProcessTraceData";
 import { elements } from "../Elements/Elements";
-import { TraceData } from "../Interfaces/Interfaces";
+import { DescribeTraceData, ShowLoadStatus } from "../Elements/LoadStatus";
+import { Values } from "../Constants/Values";
+import { ConvertToTraceFile } from "../DataProcessing/CreateData";
+import { ShowSessionIndicator } from "../Elements/SessionIndicator";
+import {
+	GetSessionData,
+	StoreSessionData
+} from "../UserConfiguration/SessionData";
+import { StoredConfiguration, TraceData } from "../Interfaces/Interfaces";
 import { HandleCommonButtons } from "../Pages/CommonButtons";
 import { HandleCompareSolversPage } from "../Pages/CompareSolversPage";
 import { HandlePlotPages } from "../Pages/PlotPages";
@@ -10,6 +18,53 @@ import { GetUserConfiguration } from "../UserConfiguration/UserConfiguration";
 import { ApplyStoredConfiguration, state } from "./AppState";
 import { GetPageKind, PageKind } from "./CurrentPage";
 import { ResetPageListeners } from "./PageListeners";
+
+/**
+ * Gets the configuration to show: the data of this session, or else the data saved in the browser.
+ */
+function GetCurrentConfiguration(): StoredConfiguration | undefined {
+	return GetSessionData() ?? GetUserConfiguration();
+}
+
+/**
+ * Tells what was loaded, and for a large data set that the view button shows it.
+ */
+function ShowLoadSummary(traceData: TraceData[], isLarge: boolean): string {
+	if (traceData.length === 0) {
+		return "";
+	}
+	const bounds =
+		state.dataFileType === "trc"
+			? (elements.librarySelector.selectedOptions[0]?.text ?? "None")
+			: undefined;
+	const summary = DescribeTraceData(traceData, bounds);
+	ShowLoadStatus(
+		isLarge
+			? `${summary}. The data set is large, use the view button to show it.`
+			: summary,
+		false
+	);
+	return summary;
+}
+
+/**
+ * Keeps the data that was just uploaded for the other pages of the application in this tab.
+ * Saved data is in the browser already.
+ */
+function KeepForOtherPages(traceData: TraceData[], label: string): void {
+	if (state.dataFileType !== "trc" || traceData.length === 0) {
+		return;
+	}
+	const isKept = StoreSessionData(
+		ConvertToTraceFile(traceData),
+		label,
+		state.defaultTime,
+		state.gapLimit
+	);
+	if (isKept) {
+		ShowSessionIndicator(label);
+	}
+}
 
 /**
  * Manage the benchmark results data.
@@ -30,7 +85,7 @@ export async function ManageData(): Promise<void> {
 	 * and updates the unprocessedData and dataFileType variables.
 	 */
 	if (state.dataFileType === "json") {
-		const config = GetUserConfiguration();
+		const config = GetCurrentConfiguration();
 		if (!config) {
 			return;
 		}
@@ -52,6 +107,14 @@ export async function ManageData(): Promise<void> {
 	}
 
 	/**
+	 * Tell what was loaded. Large data sets are not shown at once, the view button shows them.
+	 */
+	const isLarge =
+		state.dataFileType === "trc" &&
+		traceData.length > Values.AUTO_RENDER_ROW_LIMIT;
+	KeepForOtherPages(traceData, ShowLoadSummary(traceData, isLarge));
+
+	/**
 	 * Remove the listeners of earlier data, so only the ones for this data run.
 	 */
 	ResetPageListeners();
@@ -67,7 +130,7 @@ export async function ManageData(): Promise<void> {
 	switch (GetPageKind()) {
 		case PageKind.TABLE:
 			HandleReportPage(traceData);
-			if (state.dataFileType === "json") {
+			if (!isLarge) {
 				elements.viewTableButton.click();
 			}
 			break;
@@ -76,7 +139,7 @@ export async function ManageData(): Promise<void> {
 			break;
 		case PageKind.PLOT:
 			HandlePlotPages(traceData);
-			if (state.dataFileType === "json") {
+			if (!isLarge) {
 				elements.viewPlotsButton.click();
 			}
 			break;

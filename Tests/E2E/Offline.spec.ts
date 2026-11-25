@@ -3,7 +3,13 @@ import * as fs from "fs";
 import * as http from "http";
 import * as path from "path";
 import { AddressInfo } from "net";
-import { ImportFiles, ROOT, TestFile, ViewTable } from "./Helpers";
+import {
+	ClickHelpMenuItem,
+	ImportFiles,
+	ROOT,
+	TestFile,
+	ViewTable
+} from "./Helpers";
 
 const contentTypes: Record<string, string> = {
 	".html": "text/html; charset=utf-8",
@@ -128,11 +134,10 @@ test.describe("Offline use", () => {
 	test("The application works without a network connection, with demo data and a library", async () => {
 		GoOffline();
 		await page.reload();
-		expect(await page.title()).toBe("Report");
+		expect(await page.title()).toBe("Results Table – VIVA");
 
 		// The demo data is in a chunk of its own that has to come from the cache.
-		await page.selectOption("#demoDataSelector", "Demo_1");
-		await page.click("#demoModeButton");
+		await ClickHelpMenuItem(page, "#demoMipMenuItem");
 		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible({
 			timeout: 60_000
 		});
@@ -144,7 +149,6 @@ test.describe("Offline use", () => {
 		});
 		await page.reload();
 		await ImportFiles(page, [TestFile("library_test.trc")], "MINLPLib");
-		await expect(page.locator("#viewTableButton")).toBeEnabled();
 		await ViewTable(page);
 	});
 });

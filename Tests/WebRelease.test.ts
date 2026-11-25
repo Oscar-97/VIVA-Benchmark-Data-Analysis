@@ -3,33 +3,42 @@ import * as fs from "fs";
 import * as path from "path";
 import { pathToFileURL } from "url";
 
+interface WebFile {
+	name: string;
+	source: string;
+}
+
 interface WebRelease {
-	BuildRedirects: () => string;
-	REDIRECTS_FILE: string;
-	LEGACY: Record<string, string>;
+	redirects: string;
+	file: string;
+	legacy: Record<string, string>;
+	routes: Record<string, string>;
+	files: WebFile[];
+	outputs: Record<string, string>;
 }
 
 const root = path.resolve(__dirname, "..");
 
 /**
- * Loads the ES module that builds the redirects in a Node process, as jest runs the tests as CommonJS.
+ * Loads the ES module that builds the web release in a Node process, as jest runs the tests as CommonJS.
  */
 function LoadWebRelease(): WebRelease {
 	const url = pathToFileURL(path.join(root, "scripts/web-release.mjs")).href;
-	const script = `import(${JSON.stringify(url)}).then((m) => console.log(JSON.stringify({ redirects: m.BuildRedirects(), file: m.REDIRECTS_FILE, legacy: m.LEGACY })))`;
+	const pages = pathToFileURL(path.join(root, "Src/Templates/pages.mjs")).href;
+	const script = `Promise.all([import(${JSON.stringify(url)}), import(${JSON.stringify(pages)})]).then(([m, p]) => console.log(JSON.stringify({
+		redirects: m.BuildRedirects(),
+		file: m.REDIRECTS_FILE,
+		legacy: m.LEGACY,
+		routes: m.ROUTES,
+		files: m.BuildWebFiles(),
+		outputs: Object.fromEntries(p.PAGES.map((page) => [page.name, page.output]))
+	})))`;
 	const output = execFileSync(process.execPath, ["-e", script], {
-		encoding: "utf8"
+		encoding: "utf8",
+		cwd: root,
+		maxBuffer: 64 * 1024 * 1024
 	});
-	const loaded = JSON.parse(output) as {
-		redirects: string;
-		file: string;
-		legacy: Record<string, string>;
-	};
-	return {
-		BuildRedirects: () => loaded.redirects,
-		REDIRECTS_FILE: loaded.file,
-		LEGACY: loaded.legacy
-	};
+	return JSON.parse(output) as WebRelease;
 }
 
 /**
@@ -45,61 +54,178 @@ function ParseRules(content: string): [string, string][] {
 		});
 }
 
-describe("Web release redirects", () => {
+describe("Web release", () => {
 	let webRelease: WebRelease;
 	let rules: [string, string][];
 
 	beforeAll(() => {
 		webRelease = LoadWebRelease();
-		rules = ParseRules(webRelease.BuildRedirects());
+		rules = ParseRules(webRelease.redirects);
 	});
 
-	it("should be written to the file that Cloudflare Pages reads", () => {
-		expect(webRelease.REDIRECTS_FILE).toBe("_redirects");
-	});
+	function WebFile(name: string): string {
+		const found = webRelease.files.find((file) => file.name === name);
+		if (found === undefined) {
+			throw new Error(`The web release has no file ${name}.`);
+		}
+		return found.source;
+	}
 
-	it("should only point to pages that exist", () => {
-		expect(rules.length).toBeGreaterThan(0);
-		for (const [, target] of rules) {
-			expect(fs.existsSync(path.join(root, `${target.slice(1)}.html`))).toBe(
-				true
+	describe("addresses", () => {
+		it("should give every page its own short address", () => {
+			const pages = Object.keys(webRelease.outputs);
+			expect(Object.keys(webRelease.routes).sort()).toEqual(pages.sort());
+			const routes = Object.values(webRelease.routes);
+			expect(new Set(routes).size).toBe(routes.length);
+			for (const route of routes) {
+				expect(route).toMatch(/^\/[a-z]+(-[a-z]+)*(\/[a-z]+(-[a-z]+)*)?$/);
+				expect(route).not.toContain("_");
+			}
+		});
+
+		it("should have the addresses of the table, the plots and the comparison", () => {
+			expect(webRelease.routes["report"]).toBe("/table");
+			expect(webRelease.routes["performance_profile"]).toBe(
+				"/plots/performance-profile"
 			);
-		}
+			expect(webRelease.routes["compare_solvers"]).toBe("/compare");
+		});
+
+		it("should have a file for every address, which Cloudflare Pages serves without the extension", () => {
+			const names = webRelease.files.map((file) => file.name);
+			for (const route of Object.values(webRelease.routes)) {
+				expect(names).toContain(`${route.slice(1)}.html`);
+			}
+		});
 	});
 
-	it("should not redirect addresses that Cloudflare Pages already handles", () => {
-		for (const [source] of rules) {
-			expect(source.endsWith(".html")).toBe(false);
-		}
-		expect(rules.map(([source]) => source)).not.toContain("/");
+	describe("redirects", () => {
+		it("should be written to the file that Cloudflare Pages reads", () => {
+			expect(webRelease.file).toBe("_redirects");
+			expect(webRelease.files.map((file) => file.name)).toContain("_redirects");
+		});
+
+		it("should only point to the addresses of the pages", () => {
+			const routes = Object.values(webRelease.routes);
+			expect(rules.length).toBeGreaterThan(0);
+			for (const [, target] of rules) {
+				expect(routes).toContain(target);
+			}
+		});
+
+		it("should send the addresses of the repository to the short addresses", () => {
+			for (const [name, output] of Object.entries(webRelease.outputs)) {
+				const route = webRelease.routes[name];
+				expect(rules).toContainEqual([`/${output}`, route]);
+				expect(rules).toContainEqual([
+					`/${output.replace(".html", "")}`,
+					route
+				]);
+			}
+		});
+
+		it("should send the old names of renamed pages to the current page", () => {
+			for (const [oldName, name] of Object.entries(webRelease.legacy)) {
+				const route = webRelease.routes[name];
+				expect(rules).toContainEqual([`/${oldName}`, route]);
+				expect(rules).toContainEqual([`/Src/Pages/${oldName}`, route]);
+			}
+		});
+
+		it("should have no chains, loops or duplicate sources", () => {
+			const sources = rules.map(([source]) => source);
+			expect(new Set(sources).size).toBe(sources.length);
+			for (const [, target] of rules) {
+				expect(sources).not.toContain(target);
+			}
+			expect(sources).not.toContain("/");
+		});
 	});
 
-	it("should give every page in Src/Pages a short address", () => {
-		const pages = fs
-			.readdirSync(path.join(root, "Src/Pages"))
-			.filter((name) => name.endsWith(".html"))
-			.map((name) => name.replace(".html", ""));
-		const sources = rules.map(([source]) => source);
-		for (const page of pages) {
-			expect(sources).toContain(`/${page}`);
-		}
+	describe("pages", () => {
+		const pageFiles = (): WebFile[] =>
+			webRelease.files.filter((file) => file.name.endsWith(".html"));
+
+		/**
+		 * The links and the loaded files of a page, as "file: address".
+		 */
+		const addressesOf = (file: WebFile): string[] =>
+			[...file.source.matchAll(/\b(?:href|src)="([^"]*)"/g)].map(
+				(match) => `${file.name}: ${match[1] ?? ""}`
+			);
+
+		it("should link to the short addresses, and to no file of the repository", () => {
+			for (const file of pageFiles()) {
+				const addresses = addressesOf(file);
+				expect(
+					addresses.filter((entry) => /report|Src\/Pages/.test(entry))
+				).toEqual([]);
+				for (const route of [
+					"/table",
+					"/compare",
+					"/plots/performance-profile"
+				]) {
+					expect(addresses).toContain(`${file.name}: ${route}`);
+				}
+			}
+		});
+
+		it("should load the files with absolute addresses, as the folders of the pages differ", () => {
+			const relative = pageFiles()
+				.flatMap(addressesOf)
+				.filter((entry) => !/: (\/|https?:\/\/|mailto:|#)/.test(entry));
+			expect(relative).toEqual([]);
+		});
+
+		it("should only link to files that exist", () => {
+			const names = webRelease.files.map((file) => file.name);
+			const missing = pageFiles()
+				.flatMap(addressesOf)
+				.filter((entry) => /: \/[^/]/.test(entry))
+				.filter((entry) => {
+					const address = (entry.split(": ")[1] ?? "").replace(/[#?].*$/, "");
+					return !(
+						names.includes(`${address.slice(1)}.html`) ||
+						fs.existsSync(path.join(root, address)) ||
+						fs.existsSync(path.join(root, `${address}.html`))
+					);
+				});
+			expect(missing).toEqual([]);
+		});
+
+		it("should serve the table at the root address as well", () => {
+			expect(WebFile("index.html")).toBe(WebFile("table.html"));
+		});
 	});
 
-	it("should send the old names of renamed pages to the current page", () => {
-		for (const [oldName, name] of Object.entries(webRelease.LEGACY)) {
-			expect(rules).toContainEqual([`/${oldName}`, `/Src/Pages/${name}`]);
-			expect(rules).toContainEqual([
-				`/Src/Pages/${oldName}`,
-				`/Src/Pages/${name}`
-			]);
-		}
-	});
+	describe("manifest and service worker", () => {
+		it("should start the application at the table and open the short addresses", () => {
+			const manifest = JSON.parse(WebFile("manifest.json")) as {
+				start_url: string;
+				shortcuts: { url: string }[];
+			};
+			const routes = Object.values(webRelease.routes);
+			expect(manifest.start_url).toBe("/table");
+			expect(manifest.shortcuts.length).toBeGreaterThan(0);
+			for (const { url } of manifest.shortcuts) {
+				expect(routes).toContain(url);
+			}
+		});
 
-	it("should have no chains, loops or duplicate sources", () => {
-		const sources = rules.map(([source]) => source);
-		expect(new Set(sources).size).toBe(sources.length);
-		for (const [, target] of rules) {
-			expect(sources).not.toContain(target);
-		}
+		it("should cache the pages by their short addresses", () => {
+			const source = WebFile("service-worker.js");
+			const block = /const filesToCache = \[([\s\S]*?)\];/.exec(source)?.[1];
+			const entries = [...(block ?? "").matchAll(/"([^"]+)"/g)].map(
+				(match) => match[1]
+			);
+			for (const route of Object.values(webRelease.routes)) {
+				expect(entries).toContain(route.slice(1));
+			}
+			expect(entries).not.toContain("report.html");
+			expect(entries.filter((entry) => entry?.startsWith("Src/Pages"))).toEqual(
+				[]
+			);
+			expect(source).toContain('cache.match("table")');
+		});
 	});
 });

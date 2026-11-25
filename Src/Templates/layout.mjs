@@ -63,6 +63,23 @@ const buttons = Object.fromEntries(
     }, []),
 );
 
+/**
+ * The data actions of a page, grouped in a menu. A "separator" entry becomes a divider.
+ */
+function RenderDataMenu(items) {
+  const entries = items
+    .map((item) =>
+      item === "separator"
+        ? '<li><hr class="dropdown-divider" /></li>'
+        : RenderButton(item),
+    )
+    .join("\n");
+  return `<div class="col-auto dropdown" id="dataMenu" hidden>
+        <button class="btn btn-dark btn-sm dropdown-toggle" type="button" id="dataMenuButton" data-bs-toggle="dropdown" aria-expanded="false" title="Save, export and remove the data."><i class="bi bi-database"></i> Data</button>
+        <ul class="dropdown-menu" aria-labelledby="dataMenuButton">${entries}</ul>
+      </div>`;
+}
+
 function RenderButton(button) {
   const [name, values] = Array.isArray(button) ? button : [button, {}];
   if (!(name in buttons)) {
@@ -116,13 +133,11 @@ const PLOT_PAGES = new Set(
 );
 
 /**
- * A link of the navigation bar. The link to the page that is shown is not a link but is marked as active.
+ * A link of the navigation bar. The link to the page that is shown is marked as active and as the current page.
  */
 function RenderNavLink(label, href, isActive) {
-  const content = `<li class="nav-item">`;
-  return isActive
-    ? `${content}<span class="nav-link active" aria-current="page">${label}</span></li>`
-    : `${content}<a class="nav-link" href="${href}">${label}</a></li>`;
+  const state = isActive ? ' active" aria-current="page' : "";
+  return `<li class="nav-item"><a class="nav-link${state}" href="${href}">${label}</a></li>`;
 }
 
 function RenderNavItems(activePage, prefixes) {
@@ -130,9 +145,9 @@ function RenderNavItems(activePage, prefixes) {
     if (entry === "separator") {
       return "<hr />";
     }
-    return entry.page === activePage
-      ? `<li><span class="dropdown-item active">${entry.label}</span></li>`
-      : `<li><a class="dropdown-item" href="${prefixes.pages}${entry.page}.html">${entry.label}</a></li>`;
+    const state =
+      entry.page === activePage ? ' active" aria-current="page' : "";
+    return `<li><a class="dropdown-item${state}" href="${prefixes.pages}${entry.page}.html">${entry.label}</a></li>`;
   }).join("");
 
   return [
@@ -142,8 +157,8 @@ function RenderNavItems(activePage, prefixes) {
       activePage === "report",
     ),
     `<li class="nav-item dropdown"><a class="nav-link dropdown-toggle${
-      PLOT_PAGES.has(activePage) ? " active" : ""
-    }" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-bar-chart-steps"></i> Plots</a><ul class="dropdown-menu mb-2" aria-labelledby="navbarDropdownMenuLink">${menuItems}</ul></li>`,
+      PLOT_PAGES.has(activePage) ? ' active" aria-current="true' : ""
+    }" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-bar-chart-steps"></i> Plots</a><ul class="dropdown-menu mb-2" id="plotsMenu" aria-labelledby="navbarDropdownMenuLink">${menuItems}</ul></li>`,
     RenderNavLink(
       '<i class="bi bi-view-stacked"></i> Compare Solvers',
       `${prefixes.pages}compare_solvers.html`,
@@ -166,12 +181,35 @@ const THEME_SCRIPT = `(function () {
         document.documentElement.setAttribute("data-bs-theme", theme);
       })();`;
 
+/**
+ * Stands for the hash of THEME_SCRIPT in the policy below. The hash depends on the text of the script as
+ * Prettier formats it, so scripts/build-pages.mjs works it out after formatting and replaces this value.
+ * It is as long as a real hash, so that Prettier lays the page out the same way.
+ */
+export const THEME_SCRIPT_HASH_PLACEHOLDER = `sha256-${"A".repeat(43)}=`;
+
+/**
+ * The Content-Security-Policy of the pages. The application loads nothing from other origins, so
+ * only its own files and the theme script above are allowed to run. Styles may be inline, as some
+ * controls have a style attribute. A meta element cannot set frame-ancestors, which needs a header.
+ */
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  `script-src 'self' '${THEME_SCRIPT_HASH_PLACEHOLDER}'`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "object-src 'none'",
+  "base-uri 'none'",
+  "form-action 'none'",
+].join("; ");
+
 function RenderHead(page, prefixes) {
   const manifest = page.manifest
     ? '\n    <!-- Manifest for PWA -->\n    <link rel="manifest" href="manifest.json" />'
     : "";
   return `<head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="${CONTENT_SECURITY_POLICY}" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
@@ -185,7 +223,7 @@ function RenderHead(page, prefixes) {
       content="Visualize, interact, verify, and analyze benchmarking data for optimization solvers."
     />${manifest}
     <!-- Title and icon -->
-    <title id="ReportTitle">${page.title}</title>
+    <title id="ReportTitle">${page.title} – VIVA</title>
     <link rel="icon" href="${prefixes.css}tab_icon.png" />
     <!-- Styling -->
     <link href="${prefixes.dist}main.css" rel="stylesheet" />
@@ -215,7 +253,15 @@ function RenderContent(content) {
       <canvas id="myChart" class="chart">
         <!-- Content created with Chart.js will be displayed here. -->
       </canvas>
-    </div>`;
+    </div>
+    <div
+      id="chartDataTableContainer"
+      class="chart-data-table"
+      role="region"
+      aria-label="Data of the chart"
+      tabindex="0"
+      hidden
+    ></div>`;
   const statistics = `<div id="statisticsTable">
       <!-- statistics table element will be created here. -->
     </div>`;
@@ -232,8 +278,6 @@ export function RenderPage(page) {
   const navigation = Fill(ReadTemplate("partials/nav.html"), {
     ...prefixes,
     navItems: RenderNavItems(page.name, prefixes),
-    navExtra:
-      page.location === "root" ? ReadTemplate("partials/nav-demo.html") : "",
   });
   const alert = ReadTemplate("partials/alert.html");
   const emptyState = ReadTemplate("partials/empty-state.html");
@@ -252,8 +296,12 @@ export function RenderPage(page) {
     ${navigation}
     ${alert}
     <main id="main" tabindex="-1">
-    <div id="buttonContainer" class="d-flex flex-wrap justify-content-start gap-2">
-      ${page.buttons.map(RenderButton).join("\n")}
+    <div id="buttonContainer" class="d-flex flex-wrap justify-content-start gap-2" title="Load data first.">
+      ${page.buttons
+        .map((button) =>
+          button.menu ? RenderDataMenu(button.menu) : RenderButton(button),
+        )
+        .join("\n")}
     </div>${controls}
     <hr />
     ${emptyState}${gap}    ${RenderContent(page.content)}${gap}    </main>

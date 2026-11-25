@@ -1,6 +1,6 @@
 const fileInput: { files: File[] } = { files: [] };
 const importDataButton = { disabled: false };
-const librarySelector = { disabled: true };
+const librarySelector = { disabled: true, value: "none" };
 
 jest.mock("../Src/Scripts/Elements/Elements", () => ({
 	elements: {
@@ -58,6 +58,7 @@ describe("ReadData", () => {
 		stored = UseStorage();
 		importDataButton.disabled = false;
 		librarySelector.disabled = true;
+		librarySelector.value = "none";
 	});
 
 	afterEach(() => {
@@ -72,14 +73,116 @@ describe("ReadData", () => {
 		expect(librarySelector.disabled).toBe(false);
 	});
 
+	it("should show an uploaded .solu file as the source of the bounds", async () => {
+		await Read(
+			new File(["a"], "run.trc"),
+			new File(["=opt= x 1"], "bounds.solu")
+		);
+
+		expect(librarySelector.value).toBe("solu");
+		expect(librarySelector.disabled).toBe(true);
+	});
+
+	it("should open the selector again when the .solu file is gone", async () => {
+		librarySelector.value = "solu";
+
+		await Read(new File(["a"], "run.trc"));
+
+		expect(librarySelector.value).toBe("none");
+		expect(librarySelector.disabled).toBe(false);
+	});
+
 	it("should store a valid configuration file", async () => {
 		const content = JSON.stringify({ dataSet: ["x"], dataFileType: "trc" });
 
 		await Read(new File([content], "UserConfiguration.json"));
 
-		expect(stored.get(Keys.USER_CONFIGURATION)).toContain('"dataSet":["x"]');
+		expect(JSON.parse(stored.get(Keys.USER_CONFIGURATION) ?? "")).toEqual({
+			version: 2,
+			dataSet: [{ InputFileName: "x" }],
+			dataFileType: "trc"
+		});
 		expect(DisplayErrorNotification).not.toHaveBeenCalled();
 		expect(importDataButton.disabled).toBe(false);
+	});
+
+	it("should store a configuration file of version 1 in the current format, with both limits", async () => {
+		const content = JSON.stringify({
+			dataSet: ["* InputFileName,SolverName,SolverTime", "alan,shot,0.04"],
+			dataFileType: "json",
+			defaultTime: "900",
+			gapLimit: 0.5
+		});
+
+		await Read(new File([content], "UserConfiguration.json"));
+
+		expect(JSON.parse(stored.get(Keys.USER_CONFIGURATION) ?? "")).toEqual({
+			version: 2,
+			dataSet: [
+				{ InputFileName: "alan", SolverName: "shot", SolverTime: 0.04 }
+			],
+			dataFileType: "json",
+			defaultTime: 900,
+			gapLimit: 0.5
+		});
+	});
+
+	it("should store a configuration file of version 2 as it is", async () => {
+		const file = {
+			version: 2,
+			dataSet: [
+				{ InputFileName: "alan", SolverName: "shot", SolverTime: 0.04 }
+			],
+			dataFileType: "json",
+			defaultTime: 900,
+			gapLimit: 0.5
+		};
+
+		await Read(new File([JSON.stringify(file)], "UserConfiguration.json"));
+
+		expect(JSON.parse(stored.get(Keys.USER_CONFIGURATION) ?? "")).toEqual(file);
+	});
+
+	it("should not keep the limits of an earlier file for a file that has none", async () => {
+		await Read(
+			new File(
+				[
+					JSON.stringify({
+						dataSet: ["a"],
+						dataFileType: "json",
+						defaultTime: 900,
+						gapLimit: 0.5
+					})
+				],
+				"one.json"
+			)
+		);
+		await Read(
+			new File(
+				[JSON.stringify({ dataSet: ["b"], dataFileType: "json" })],
+				"two.json"
+			)
+		);
+
+		const config = JSON.parse(stored.get(Keys.USER_CONFIGURATION) ?? "");
+		expect(config.defaultTime).toBeUndefined();
+		expect(config.gapLimit).toBeUndefined();
+	});
+
+	it("should reject a configuration file of a newer version, and keep the import closed", async () => {
+		const content = JSON.stringify({
+			version: 3,
+			dataSet: [{ a: 1 }],
+			dataFileType: "json"
+		});
+
+		await Read(new File([content], "future.json"));
+
+		expect(DisplayErrorNotification).toHaveBeenCalledWith(
+			`future.json: ${ErrorMessages.UNSUPPORTED_VERSION}`
+		);
+		expect(stored.has(Keys.USER_CONFIGURATION)).toBe(false);
+		expect(importDataButton.disabled).toBe(true);
 	});
 
 	it("should name a file that is not valid JSON, and keep the import closed", async () => {
@@ -98,6 +201,8 @@ describe("ReadData", () => {
 		'{"dataSet": []}',
 		'{"dataSet": "x", "dataFileType": "trc"}',
 		'{"dataSet": [1, 2], "dataFileType": "trc"}',
+		'{"dataSet": ["x", {"a": 1}], "dataFileType": "trc"}',
+		'{"dataSet": [{"a": [1]}], "dataFileType": "trc"}',
 		'{"dataSet": ["x"], "dataFileType": 5}'
 	])("should reject the JSON %s as a configuration", async (content) => {
 		await Read(new File([content], "other.json"));

@@ -2778,6 +2778,47 @@ body > :not(nav, hr) {
 		opacity: 1;
 		visibility: visible;
 	}
+
+	/* A click on the item of a menu that is open on hover makes Bootstrap show it, and Bootstrap then adds a margin
+	   above the menu. The hover menu has none, so the menu would move down. */
+	#navbarNav .dropdown-menu[data-bs-popper] {
+		margin-top: 0;
+	}
+
+	/* The Data menu is opened with a click and stays open. The menus of the navigation bar do not open on top of it
+	   while it is, and open again when it is closed. */
+	body:has(#dataMenu .dropdown-menu.show) #navbarNav .dropdown:hover .dropdown-menu {
+		opacity: 0;
+		visibility: hidden;
+	}
+}
+
+/* The Help menu is at the right edge of the navigation bar. With the navigation bar expanded the menu opens
+   on hover, which Bootstrap does not position, so the menu is aligned to the right edge of its item here.
+   With the navigation bar collapsed the Help and Plots menus open below their item and move the items under them down. */
+@media (min-width: 1470px) {
+	#navbarNav #helpMenu {
+		right: 0;
+		left: auto;
+	}
+}
+
+@media (max-width: 1469px) {
+	#navbarNav #helpMenu,
+	#navbarNav #plotsMenu {
+		position: static;
+		display: none;
+		/* As wide as the upload field and the library selector at most. */
+		max-width: 500px;
+		max-height: none;
+		opacity: 1;
+		overflow: visible;
+	}
+
+	#navbarNav #helpMenu.show,
+	#navbarNav #plotsMenu.show {
+		display: block;
+	}
 }
 
 @keyframes spinner {
@@ -2798,8 +2839,23 @@ body > :not(nav, hr) {
 	margin-right: 1rem;
 }
 
+/* The padding of the modal is the space below the last paragraph or field, so it keeps no margin of its own. */
+.modal-body > :last-child {
+	margin-bottom: 0;
+}
+
 #alertIcon {
 	margin-right: 4px;
+}
+
+/* The action of a notification is a link in the line of the message, not a button with its own padding and size. */
+#alertActionButton {
+	padding: 0;
+	margin-left: 0.2rem;
+	border: 0;
+	font-size: inherit;
+	line-height: inherit;
+	vertical-align: baseline;
 }
 
 #buttonContainer {
@@ -2838,10 +2894,10 @@ body > :not(nav, hr) {
 	margin-right: 0.25rem;
 }
 
-#demoDataSelectorGroup {
-	flex-wrap: nowrap;
-	min-width: 160px;
-	max-width: 500px;
+/* The floating label is cut off when the selected option is shorter than the label. */
+#statusSelector,
+#chartTypeSelector {
+	min-width: 9rem;
 }
 
 #librarySelectorGroup {
@@ -2935,6 +2991,23 @@ body > :not(nav, hr) {
     margin-right: 1rem;
 }
 
+#dataMenu .dropdown-item {
+	position: relative;
+}
+
+#dataMenu .dropdown-item > a {
+	color: inherit;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+/* The whole menu entry is the link, not only its text. */
+#dataMenu .dropdown-item > a::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+}
+
 .vertical-separator {
 	border-left: 1px solid var(--bs-border-color);
 	height: auto;
@@ -2959,46 +3032,22 @@ table.table-bordered.dataTable td:first-child {
 	border-left-width: 0px;
 }
 
-tbody tr.even td.dtfc-fixed-left {
-	background-color: #f2f2f2 !important;
-}
-
-tbody tr.odd td.dtfc-fixed-left {
-	background-color: #d9d9d9 !important;
-}
-
 th, tr {
 	white-space: nowrap;
 }
 
-tr.even td,
-tr.even th {
-	background-color: rgba(0, 0, 0, 0.05) !important;
-}
-
-tr.odd td,
-tr.odd th {
-	background-color: rgba(0, 0, 0, 0.15) !important;
-}
-
-tr.even.bg-primary.row-selected-problems,
-tr.odd.bg-primary.row-selected-problems {
-	background-color: #0d6efd;
-	color: #ffffff;
-	font-weight: bold;
-}
-
-tr.even.bg-primary.row-selected-problems td,
-tr.odd.bg-primary.row-selected-problems td,
-tr.even.bg-primary.row-selected-problems th,
-tr.odd.bg-primary.row-selected-problems th,
-tr.even.bg-primary.row-selected-problems td.dtfc-fixed-left.sorting_1,
-tr.even.bg-primary.row-selected-problems th.dtfc-fixed-left.sorting_1,
-tr.odd.bg-primary.row-selected-problems td.dtfc-fixed-left.sorting_1,
-tr.odd.bg-primary.row-selected-problems th.dtfc-fixed-left.sorting_1 {
+/* A selected row. DataTables adds the classes of the "select" option to the row, and the cells have their own
+   background, so the cells are colored, including the fixed first column. */
+#dataTableGenerated tbody tr.row-selected-problems > td,
+#dataTableGenerated tbody tr.row-selected-problems > th {
 	background-color: #0d6efd !important;
 	color: #ffffff;
 	font-weight: bold;
+}
+
+/* The horizontal scrollbar of the table is white in the light theme. */
+[data-bs-theme="light"] .dt-scroll-body {
+	scrollbar-color: #adb5bd #ffffff;
 }
 
 /* Dark theme (Bootstrap sets data-bs-theme on the html element) */
@@ -3059,6 +3108,17 @@ tr.odd.bg-primary.row-selected-problems th.dtfc-fixed-left.sorting_1 {
 	border-radius: var(--bs-border-radius-lg);
 }
 
+.selected-files {
+	max-width: 30rem;
+	margin-left: auto;
+	margin-right: auto;
+	overflow-wrap: anywhere;
+}
+
+.selected-file {
+	padding: 0.15rem 0;
+}
+
 .load-status {
 	margin: 0.5rem 1rem;
 	min-height: 1.5rem;
@@ -3085,6 +3145,40 @@ body.drop-active {
 	align-items: center;
 	gap: 0.5rem;
 	margin: 1rem 1rem 0;
+}
+
+/* The values of the chart as a table, below the chart. It scrolls, as a chart can have thousands of points. */
+.chart-data-table {
+	max-height: 24rem;
+	overflow: auto;
+	margin: 1rem;
+}
+
+/* A table with a column for every solver is wider than the page. The names of the data sets, in the first column,
+   and the headers stay in view while it scrolls. The cells need a background, as the table shows through otherwise. */
+.chart-data-table th,
+.chart-data-table td:first-child {
+	background-color: var(--bs-body-bg);
+	box-shadow: inset 0 -1px 0 var(--bs-border-color);
+}
+
+.chart-data-table thead th {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+}
+
+.chart-data-table tbody td:first-child,
+.chart-data-table thead th:first-child {
+	position: sticky;
+	left: 0;
+	z-index: 1;
+	font-weight: bold;
+	white-space: nowrap;
+}
+
+.chart-data-table thead th:first-child {
+	z-index: 3;
 }
 
 .chart-tools-status {

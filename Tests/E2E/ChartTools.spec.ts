@@ -1,4 +1,4 @@
-import { test, expect, Page } from "@playwright/test";
+import { test, expect, Download, Page } from "@playwright/test";
 import {
 	CollectPageErrors,
 	ExpectNotification,
@@ -17,6 +17,54 @@ async function ShowChart(page: Page, file: string): Promise<void> {
 	await ExpectNotification(page, "Benchmarks loaded with following files");
 	await page.locator("#viewPlotsButton").click();
 	await expect.poll(() => IsChartDrawn(page)).toBe(true);
+}
+
+/**
+ * The bytes of a file that was downloaded.
+ */
+async function DownloadedBytes(download: Download): Promise<Buffer> {
+	const chunks: Buffer[] = [];
+	for await (const chunk of await download.createReadStream()) {
+		chunks.push(chunk as Buffer);
+	}
+	return Buffer.concat(chunks);
+}
+
+/**
+ * Uses the button that downloads the image of the chart.
+ */
+async function DownloadImage(page: Page): Promise<Buffer> {
+	const [download] = await Promise.all([
+		page.waitForEvent("download"),
+		page.locator("#downloadChartImageButton").click()
+	]);
+	return DownloadedBytes(download);
+}
+
+/**
+ * The size of a PNG image, and how transparent its first pixel is.
+ */
+async function ImageOf(
+	page: Page,
+	bytes: Buffer
+): Promise<{ width: number; height: number; cornerAlpha: number }> {
+	return page.evaluate(
+		async (data) => {
+			const bitmap = await createImageBitmap(new Blob([new Uint8Array(data)]));
+			const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+			const context = canvas.getContext("2d");
+			if (!context) {
+				throw new Error("No canvas context.");
+			}
+			context.drawImage(bitmap, 0, 0);
+			return {
+				width: bitmap.width,
+				height: bitmap.height,
+				cornerAlpha: context.getImageData(0, 0, 1, 1).data[3] ?? -1
+			};
+		},
+		[...bytes]
+	);
 }
 
 test.describe("Chart tools", () => {
@@ -43,7 +91,7 @@ test.describe("Chart tools", () => {
 		await expect(canvas).toHaveAttribute("role", "img");
 		await expect(canvas).toHaveAttribute(
 			"aria-label",
-			/^Solver time per Instance\. Data sets: .*shot/
+			/^Line chart: Solver time per Instance\. .*Data sets: .*shot/
 		);
 	});
 
@@ -132,18 +180,46 @@ test.describe("Chart tools", () => {
 			page.locator("#downloadChartImageButton").click()
 		]);
 
-		expect(download.suggestedFilename()).toBe(
-			"viva-solver-time-per-instance.png"
+		expect(download.suggestedFilename()).toMatch(
+			/^viva_solver_time_per_instance_\d{4}-\d{2}-\d{2}\.png$/
 		);
-		const stream = await download.createReadStream();
-		const chunks: Buffer[] = [];
-		for await (const chunk of stream) {
-			chunks.push(chunk as Buffer);
-		}
+		const bytes = await DownloadedBytes(download);
 		// The first bytes of every PNG file.
-		expect([...Buffer.concat(chunks).subarray(0, 4)]).toEqual([
-			0x89, 0x50, 0x4e, 0x47
-		]);
+		expect([...bytes.subarray(0, 4)]).toEqual([0x89, 0x50, 0x4e, 0x47]);
+	});
+
+	test("download the chart image at a larger size, and the chart stays as it was", async ({
+		page
+	}) => {
+		await ShowChart(page, "Src/Pages/solver_time.html");
+		const canvasWidth = (): Promise<number> =>
+			page.evaluate(
+				() => (document.getElementById("myChart") as HTMLCanvasElement).width
+			);
+		const before = await canvasWidth();
+
+		const standard = await ImageOf(page, await DownloadImage(page));
+		await page.selectOption("#chartImageResolution", "2");
+		const larger = await ImageOf(page, await DownloadImage(page));
+
+		expect(standard.width).toBe(before);
+		expect(larger.width).toBe(before * 2);
+		expect(larger.height).toBe(standard.height * 2);
+		expect(await canvasWidth()).toBe(before);
+		await expect.poll(() => IsChartDrawn(page)).toBe(true);
+	});
+
+	test("download the chart image with the background of the page, or a transparent one", async ({
+		page
+	}) => {
+		await ShowChart(page, "Src/Pages/solver_time.html");
+
+		const withBackground = await ImageOf(page, await DownloadImage(page));
+		await page.selectOption("#chartImageBackground", "transparent");
+		const transparent = await ImageOf(page, await DownloadImage(page));
+
+		expect(withBackground.cornerAlpha).toBe(255);
+		expect(transparent.cornerAlpha).toBe(0);
 	});
 
 	test("leave out the zoom on a chart that cannot be zoomed", async ({

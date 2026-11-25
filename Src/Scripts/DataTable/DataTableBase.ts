@@ -8,6 +8,8 @@ import {
 	CalculateSolveAttributes,
 	ExtractUniqueProblems
 } from "../DataProcessing/ResultComputations/ComputeResults";
+import { FormatStatistic } from "../DataProcessing/Statistics";
+import { FindNumericColumns } from "./NumericColumns";
 import {
 	ComparisonDetails,
 	ComparisonSummary,
@@ -43,6 +45,16 @@ function SortKeysByEnum(obj: object): string[] {
 		.sort();
 
 	return [...sortedEnumKeys, ...nonEnumKeys];
+}
+
+/**
+ * The text of a cell of the table: the value as text, NaN as "NaN" and a missing value as "-".
+ */
+function FormatCellValue(value: unknown): string {
+	if (Number.isNaN(value)) {
+		return "NaN";
+	}
+	return value === null || value === undefined ? "-" : String(value);
 }
 
 /**
@@ -82,10 +94,14 @@ export function TraceTableData(traceData: TraceData[]): void {
 	const headerRow = document.createElement("tr");
 	const [firstRow] = traceData;
 	const sortedKeys = firstRow ? SortKeysByEnum(firstRow) : [];
+	const numericKeys = FindNumericColumns(traceData, sortedKeys);
 
 	for (const key of sortedKeys) {
 		const th = document.createElement("th");
 		th.textContent = TraceHeaderMap[key as keyof typeof TraceHeaderMap] || key;
+		if (numericKeys.has(key)) {
+			th.dataset["numeric"] = "true";
+		}
 		headerRow.appendChild(th);
 	}
 	dataTableHeaders.appendChild(headerRow);
@@ -101,13 +117,7 @@ export function TraceTableData(traceData: TraceData[]): void {
 		for (const key of sortedKeys) {
 			const value = obj[key as keyof TraceData];
 			const td = document.createElement("td");
-			if (value !== null && value !== undefined && !Number.isNaN(value)) {
-				td.textContent = value.toString();
-			} else if (Number.isNaN(value)) {
-				td.textContent = "NaN";
-			} else {
-				td.textContent = "-";
-			}
+			td.textContent = FormatCellValue(value);
 			resultRow.appendChild(td);
 		}
 		dataTableContent.appendChild(resultRow);
@@ -193,7 +203,7 @@ export function StatisticsTable(
 
 		Object.values(statistics).forEach((dataValue) => {
 			const cell = row.insertCell();
-			cell.textContent = dataValue.toString();
+			cell.textContent = FormatStatistic(dataValue);
 		});
 	});
 
@@ -209,6 +219,7 @@ export function StatisticsTable(
  * @param comparisonSummaryInverse - Inverse comparison summary of the two solvers.
  * @param {string} solver1Name - The name of the first solver.
  * @param {string} solver2Name - The name of the second solver.
+ * @param {string} settings - What the comparison was made with, which the caption of the table tells.
  *
  * @remarks
  * The table is added to the 'comparisonTableContainer' HTML div.
@@ -218,7 +229,8 @@ export function ComparisonSummaryTable(
 	comparisonSummary: ComparisonSummary,
 	comparisonSummaryInverse: ComparisonSummary,
 	solver1Name: string,
-	solver2Name: string
+	solver2Name: string,
+	settings?: string
 ): void {
 	if (!elements.comparisonTableDiv) return;
 
@@ -234,7 +246,9 @@ export function ComparisonSummaryTable(
 
 	const tableCaption: HTMLTableCaptionElement =
 		document.createElement("caption");
-	tableCaption.textContent = Captions.COMPARISON_TABLE_CAPTION;
+	tableCaption.textContent = settings
+		? `${Captions.COMPARISON_TABLE_CAPTION} Settings: ${settings}`
+		: Captions.COMPARISON_TABLE_CAPTION;
 	comparisonTable.appendChild(tableCaption);
 
 	const header: HTMLTableSectionElement = comparisonTable.createTHead();
@@ -438,7 +452,7 @@ export function InstanceAttributesTable(traceData: TraceData[]): void {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		Object.entries(values).forEach(([_, value]) => {
 			const cell = row.insertCell();
-			cell.textContent = String(value);
+			cell.textContent = FormatStatistic(value);
 		});
 	});
 
@@ -512,7 +526,7 @@ export function SolveAttributesTable(traceData: TraceData[]): void {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		Object.entries(values).forEach(([_, value]) => {
 			const cell = row.insertCell();
-			cell.textContent = value.toString();
+			cell.textContent = FormatStatistic(value);
 		});
 	});
 

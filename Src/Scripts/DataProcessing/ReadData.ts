@@ -1,5 +1,11 @@
 import { elements } from "../Elements/Elements";
 import { DisplayErrorNotification } from "../Elements/Events/DisplayAlertNotification";
+import {
+	CONFIGURATION_VERSION,
+	IsSupportedVersion,
+	LinesToRows,
+	ReadDataSet
+} from "../UserConfiguration/ConfigurationFormat";
 import { userData } from "../UserConfiguration/UserConfiguration";
 import { Keys } from "../Constants/Keys";
 import { ErrorMessages } from "../Constants/Messages";
@@ -130,6 +136,22 @@ export function SplitIntoLines(
 }
 
 /**
+ * Sets the source of the best-known bounds. An uploaded .solu file is used instead of a library,
+ * so the selector shows it and cannot be changed, otherwise the selector is open for a choice.
+ *
+ * @param files - The selected files.
+ */
+function UpdateLibrarySelector(files: File[]): void {
+	const hasSoluFile = files.some((file) => file.name.endsWith(".solu"));
+	if (hasSoluFile) {
+		elements.librarySelector.value = "solu";
+	} else if (elements.librarySelector.value === "solu") {
+		elements.librarySelector.value = "none";
+	}
+	elements.librarySelector.disabled = hasSoluFile;
+}
+
+/**
  * This function reads data from multiple file inputs, returning the raw data, instance information data and solu data.
  *
  * @param {string[]} unprocessedData - An array to store the raw data from .trc files.
@@ -180,11 +202,11 @@ export async function ReadData(
 		);
 	} catch (error) {
 		// Without all files the import stays closed, until other files are chosen.
-		elements.librarySelector.disabled = false;
+		UpdateLibrarySelector(files);
 		throw error;
 	}
 	elements.importDataButton.disabled = false;
-	elements.librarySelector.disabled = false;
+	UpdateLibrarySelector(files);
 
 	files.forEach((file, index) => {
 		const fileExtension = file.name.split(".").pop();
@@ -228,10 +250,11 @@ export async function ReadData(
  * This function checks the properties of the data in the JSON file.
  */
 interface ParsedData {
-	dataSet: string[];
-	dataFileType: string;
-	defaultTime?: string;
-	[key: string]: unknown;
+	version?: unknown;
+	dataSet?: unknown;
+	dataFileType?: unknown;
+	defaultTime?: unknown;
+	gapLimit?: unknown;
 }
 
 /**
@@ -257,23 +280,31 @@ function VerifyConfigurationProperties(
 		RejectConfigurationFile(fileName, ErrorMessages.INVALID_DATA_STRUCTURE);
 		return;
 	}
-	const { dataSet, dataFileType } = parsedData;
-	if (
-		Array.isArray(dataSet) &&
-		dataSet.every((entry) => typeof entry === "string") &&
-		typeof dataFileType === "string"
-	) {
-		userData.dataSet = dataSet;
-		userData.dataFileType = dataFileType;
-
-		if (parsedData.hasOwnProperty.call(parsedData, "defaultTime")) {
-			userData.defaultTime = parsedData.defaultTime
-				? Number(parsedData.defaultTime)
-				: undefined;
-		}
-
-		localStorage.setItem(Keys.USER_CONFIGURATION, JSON.stringify(userData));
-	} else {
-		RejectConfigurationFile(fileName, ErrorMessages.INVALID_DATA_STRUCTURE);
+	if (!IsSupportedVersion(parsedData.version)) {
+		RejectConfigurationFile(fileName, ErrorMessages.UNSUPPORTED_VERSION);
+		return;
 	}
+	const lines = ReadDataSet(parsedData.dataSet);
+	const { dataFileType } = parsedData;
+	if (!lines || typeof dataFileType !== "string") {
+		RejectConfigurationFile(fileName, ErrorMessages.INVALID_DATA_STRUCTURE);
+		return;
+	}
+
+	// The configuration is stored in the current format, whatever the version of the file is.
+	userData.version = CONFIGURATION_VERSION;
+	userData.dataSet = LinesToRows(lines);
+	userData.dataFileType = dataFileType;
+	userData.defaultTime = ToLimit(parsedData.defaultTime);
+	userData.gapLimit = ToLimit(parsedData.gapLimit);
+	localStorage.setItem(Keys.USER_CONFIGURATION, JSON.stringify(userData));
+}
+
+/**
+ * A time limit or gap limit of a configuration file as a number, or undefined when the file has none.
+ * The configuration of an earlier version has the number as text.
+ */
+function ToLimit(value: unknown): number | undefined {
+	const limit = Number(value);
+	return value && Number.isFinite(limit) ? limit : undefined;
 }

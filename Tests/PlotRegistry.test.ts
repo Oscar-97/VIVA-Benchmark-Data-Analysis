@@ -6,6 +6,7 @@ const selectors = {
 	statusSelector: { value: "ModelStatus", disabled: false },
 	chartTypeSelector: { value: "Bar", disabled: false },
 	categorySelector: { value: "ObjectiveValue" },
+	scaleSelector: { value: "linear" },
 	saveLocalStorageButton: { id: "save" },
 	deleteLocalStorageButton: { disabled: true },
 	downloadConfigurationButtonLayer: { disabled: true }
@@ -45,6 +46,9 @@ jest.mock("../Src/Scripts/Chart/ChartType/RadarCharts", () => ({
 jest.mock("../Src/Scripts/UserConfiguration/UserConfiguration", () => ({
 	CreateUserConfiguration: jest.fn()
 }));
+jest.mock("../Src/Scripts/Elements/SessionIndicator", () => ({
+	ForgetSessionData: jest.fn()
+}));
 
 import { state } from "../Src/Scripts/App/AppState";
 import {
@@ -57,6 +61,7 @@ import { PlotTerminationRelation } from "../Src/Scripts/Chart/ChartType/RadarCha
 import { PageTitles } from "../Src/Scripts/Constants/PageTitles";
 import { Keys } from "../Src/Scripts/Constants/Keys";
 import { GetPlotFunction } from "../Src/Scripts/Pages/PlotRegistry";
+import { ForgetSessionData } from "../Src/Scripts/Elements/SessionIndicator";
 import { RegisterSaveToLocalStorage } from "../Src/Scripts/Pages/SaveToLocalStorage";
 import { CreateUserConfiguration } from "../Src/Scripts/UserConfiguration/UserConfiguration";
 import { TraceData } from "../Src/Scripts/Interfaces/Interfaces";
@@ -92,7 +97,7 @@ describe("GetPlotFunction", () => {
 	});
 
 	it("has none for a page without a chart", () => {
-		expect(GetPlotFunction("Report")).toBeUndefined();
+		expect(GetPlotFunction(PageTitles.TABLE)).toBeUndefined();
 		expect(GetPlotFunction("")).toBeUndefined();
 	});
 
@@ -132,7 +137,26 @@ describe("the solution quality page", () => {
 			expect.stringContaining("Average, min, max and std for"),
 			undefined,
 			undefined,
-			expect.stringContaining("excluded")
+			expect.stringContaining("excluded"),
+			false,
+			expect.stringContaining("Logarithmic")
+		);
+	});
+
+	it("plots on a logarithmic scale when it is chosen, and says what is not shown", () => {
+		selectors.scaleSelector.value = "logarithmic";
+		GetPlotFunction(PageTitles.SOLUTION_QUALITY)?.(traceData);
+		selectors.scaleSelector.value = "linear";
+
+		expect(PlotDataByCategory).toHaveBeenCalledWith(
+			traceData,
+			"ObjectiveValue",
+			expect.any(String),
+			undefined,
+			undefined,
+			expect.stringContaining("0 or less"),
+			true,
+			expect.any(String)
 		);
 	});
 });
@@ -250,6 +274,7 @@ describe("RegisterSaveToLocalStorage", () => {
 		Click();
 
 		expect(CreateUserConfiguration).toHaveBeenCalledWith(["a", "b"], "json");
+		expect(ForgetSessionData).toHaveBeenCalledTimes(1);
 		expect(selectors.deleteLocalStorageButton.disabled).toBe(false);
 		expect(selectors.downloadConfigurationButtonLayer.disabled).toBe(false);
 		expect(session.get(Keys.ALERTED_STORAGE)).toBe("true");

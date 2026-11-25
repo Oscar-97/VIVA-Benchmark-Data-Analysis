@@ -5,7 +5,10 @@ import {
 	ImportFiles,
 	PageUrl,
 	PLOT_PAGES,
-	TestFile
+	TestFile,
+	ClickDataMenuItem,
+	ClickHelpMenuItem,
+	ViewTable
 } from "./Helpers";
 
 const PAGES = [
@@ -86,11 +89,21 @@ test.describe("Empty state", () => {
 			const emptyState = page.locator("#emptyState");
 			await expect(emptyState).toBeVisible();
 			await expect(emptyState).toContainText("Load benchmark data");
+			await expect(page.locator("#dataMenu")).toBeHidden();
+			await expect(page.locator("#buttonContainer")).toHaveAttribute(
+				"title",
+				"Load data first."
+			);
 
 			await ImportFiles(page, [TestFile("shotALL.trc")]);
 
 			await ExpectNotification(page, "Benchmarks loaded with following files");
 			await expect(emptyState).toBeHidden();
+			await expect(page.locator("#dataMenu")).toBeVisible();
+			await expect(page.locator("#buttonContainer")).not.toHaveAttribute(
+				"title",
+				/.*/
+			);
 		});
 	}
 
@@ -99,23 +112,42 @@ test.describe("Empty state", () => {
 	}) => {
 		await page.goto(PageUrl("report.html"));
 		await ImportFiles(page, [TestFile("shotALL.trc")]);
-		await page.locator("#viewTableButton").click();
+		await ViewTable(page);
 		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible();
 
-		await page.locator("#clearTableButton").click();
+		await ClickDataMenuItem(page, "#clearTableButton");
 		await page.locator("#clearTableButtonInModal").click();
 
 		await expect(page.locator("#emptyState")).toBeVisible();
 	});
 
-	for (const file of ["report.html", "Src/Pages/solver_time.html"]) {
-		test(`The demo button of ${file} loads demo data`, async ({ page }) => {
+	for (const file of PAGES) {
+		for (const [button, demo] of [
+			["#emptyStateDemoButton", "demo1"],
+			["#emptyStateDemoMinlpButton", "demo2"]
+		] as const) {
+			test(`${button} of ${file} loads the demo data`, async ({ page }) => {
+				await page.goto(PageUrl(file));
+
+				await page.locator(button).click();
+
+				await ExpectNotification(page, "Using demo mode!");
+				await expect(page.locator("#emptyState")).toBeHidden();
+				expect(
+					await page.evaluate(() => localStorage.getItem("DemoData"))
+				).toBe(demo);
+			});
+		}
+	}
+
+	for (const file of PAGES) {
+		test(`The Help menu of ${file} offers the demo data`, async ({ page }) => {
 			await page.goto(PageUrl(file));
 
-			await page.locator("#emptyStateDemoButton").click();
+			await page.locator("#helpMenuButton").click();
 
-			await ExpectNotification(page, "Using demo mode!");
-			await expect(page.locator("#emptyState")).toBeHidden();
+			await expect(page.locator("#demoMipMenuItem")).toBeVisible();
+			await expect(page.locator("#demoMinlpMenuItem")).toBeVisible();
 		});
 	}
 });
@@ -189,9 +221,9 @@ test.describe("Demo data and saved data", () => {
 	async function SaveOwnData(page: Page): Promise<void> {
 		await page.goto(PageUrl("report.html"));
 		await ImportFiles(page, [TestFile("shotALL.trc")]);
-		await page.locator("#viewTableButton").click();
+		await ViewTable(page);
 		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible();
-		await page.locator("#saveLocalStorageButton").click();
+		await ClickDataMenuItem(page, "#saveLocalStorageButton");
 		await page.reload();
 		await ExpectNotification(page, "Found stored configuration!");
 	}
@@ -200,13 +232,16 @@ test.describe("Demo data and saved data", () => {
 		page
 	}) => {
 		await SaveOwnData(page);
-		// The explanation is hidden when data is restored, so the button of the navigation bar is used.
-		await page.locator("#demoModeButton").click();
+		// The explanation is hidden when data is restored, so the Help menu is used.
+		await ClickHelpMenuItem(page, "#demoMipMenuItem");
 
 		const modal = page.locator("#replaceDataModal");
 		await expect(modal).toBeVisible();
-		await modal.getByRole("button", { name: "Cancel" }).click();
-		await expect(modal).toBeHidden();
+		// Bootstrap ignores a close while the modal is still fading in, so the click is repeated until the modal has closed.
+		await expect(async () => {
+			await modal.getByRole("button", { name: "Cancel" }).click();
+			await expect(modal).toBeHidden({ timeout: 1000 });
+		}).toPass();
 
 		expect(
 			await page.evaluate(() => [
@@ -220,13 +255,13 @@ test.describe("Demo data and saved data", () => {
 		page
 	}) => {
 		await SaveOwnData(page);
-		await page.locator("#demoModeButton").click();
+		await ClickHelpMenuItem(page, "#demoMipMenuItem");
 
 		await page.locator("#replaceDataButtonInModal").click();
 
 		// The page loads again with the demo data. The notification is not shown in a session that has
 		// shown the one for the saved data, so the demo mode is recognized by the data and the disabled selector.
-		await expect(page.locator("#demoDataSelector")).toBeDisabled();
+		await expect(page.locator("#demoMipMenuItem")).toBeDisabled();
 		expect(
 			await page.evaluate(() => localStorage.getItem("DemoData"))
 		).not.toBeNull();

@@ -6,7 +6,8 @@ import {
 } from "../CreateChart";
 import { StatisticsTable } from "../../DataTable/DataTableBase";
 import { DataTablesConfigurationStats } from "../../DataTable/DataTableWrapper";
-import { TraceData } from "../../Interfaces/Interfaces";
+import { StatisticsColumns, TraceData } from "../../Interfaces/Interfaces";
+import { Max, Quantile } from "../../DataProcessing/Statistics";
 import {
 	ComputeStatisticalMeasures,
 	ExtractFailedCount,
@@ -15,9 +16,35 @@ import {
 } from "../../DataProcessing/ChartsComputations/ComputeChartData";
 
 /**
- * The color Chart.js uses for a data set without a color of its own.
+ * How many times larger the largest value may be than the typical average before the bars of the other values
+ * are too small to see on a linear scale.
  */
-const DEFAULT_COLOR = "rgba(0, 0, 0, 0.1)";
+const EXTREME_VALUE_FACTOR = 1e6;
+
+/**
+ * Whether a few values are so much larger than the rest that a linear scale hides the rest: the largest maximum
+ * (or the minimum, for negative values) is more than a million times the median of the averages in size.
+ * Infinite and NaN values do not count.
+ *
+ * @param statistics - The statistics of every solver.
+ */
+export function HasExtremeValues(
+	statistics: readonly StatisticsColumns[]
+): boolean {
+	const averages = statistics
+		.map((solver) => solver.avgValue)
+		.filter((value) => Number.isFinite(value));
+	// The size of a value is its distance from 0, so a very negative minimum counts as much as a very large maximum.
+	const sizes = statistics
+		.flatMap((solver) => [solver.maxValue, solver.minValue])
+		.filter((value) => Number.isFinite(value))
+		.map((value) => Math.abs(value));
+	if (averages.length === 0 || sizes.length === 0) {
+		return false;
+	}
+	const typical = Math.abs(Quantile(averages, 0.5));
+	return typical > 0 && Max(sizes) / typical > EXTREME_VALUE_FACTOR;
+}
 
 /**
  * This function prepares and plots data by a specific category.
@@ -25,6 +52,8 @@ const DEFAULT_COLOR = "rgba(0, 0, 0, 0.1)";
  * @param {TraceData[]} traceData - Array of objects containing the result data.
  * @param {string} category - The category by which the data should be analyzed.
  * @param {string} title - The title of the chart.
+ * @param {boolean} logScale - Whether the values are shown on a logarithmic scale. Values of 0 or less are not shown then.
+ * @param {string} extremeValuesHint - Added to the subtitle when a few extreme values stretch a linear scale.
  */
 export function PlotDataByCategory(
 	traceData: TraceData[],
@@ -32,7 +61,9 @@ export function PlotDataByCategory(
 	title: string,
 	defaultTime?: number | undefined,
 	filterType?: string,
-	subtitle?: string
+	subtitle?: string,
+	logScale = false,
+	extremeValuesHint?: string
 ): {
 	label: string;
 	data: number[];
@@ -90,6 +121,8 @@ export function PlotDataByCategory(
 			}
 		},
 		y: {
+			// A logarithmic scale cannot show 0 or less, so the chart does not start at 0 then.
+			...(logScale ? { type: "logarithmic" as const } : {}),
 			title: {
 				display: true,
 				text: "Count"
@@ -111,9 +144,7 @@ export function PlotDataByCategory(
 			mode: "y",
 			scaleMode: "y"
 		},
-		limits: {
-			y: { min: 0 }
-		}
+		...(logScale ? {} : { limits: { y: { min: 0 } } })
 	};
 
 	let annotationOptions: ChartAnnotationOptions = undefined;
@@ -166,7 +197,11 @@ export function PlotDataByCategory(
 		scaleOptions,
 		zoomOptions,
 		annotationOptions,
-		subtitle
+		!logScale &&
+			extremeValuesHint &&
+			HasExtremeValues(solverStatistics.map(([, statistics]) => statistics))
+			? [subtitle, extremeValuesHint].filter(Boolean).join(" ")
+			: subtitle
 	);
 	StatisticsTable(data, title);
 	DataTablesConfigurationStats("#statisticsTable_inner");
@@ -188,8 +223,8 @@ export function PlotStatusMessages(
 ): {
 	label: string;
 	data: number[];
-	borderColor: string;
-	backgroundColor: string;
+	borderColor?: string;
+	backgroundColor?: string;
 }[] {
 	const data = ExtractStatusMessages(traceData, statusType);
 	const solverNames = data.map((obj) => {
@@ -219,14 +254,17 @@ export function PlotStatusMessages(
 		"Infeasible - No Solution": "#fa9287"
 	};
 
+	// A status without a color of its own, like the solver statuses, gets one from the palette of the chart.
 	const chartData = statusKeys.map((key) => {
+		const color = colorMapping[key];
 		return {
 			label: key,
 			data: data.map((obj) => {
 				return Number(obj[key]) || 0;
 			}),
-			borderColor: colorMapping[key] ?? DEFAULT_COLOR,
-			backgroundColor: colorMapping[key] ?? DEFAULT_COLOR
+			...(color === undefined
+				? {}
+				: { borderColor: color, backgroundColor: color })
 		};
 	});
 

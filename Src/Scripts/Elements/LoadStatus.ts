@@ -1,3 +1,4 @@
+import { TraceData } from "../Interfaces/Interfaces";
 import { elements } from "./Elements";
 
 /**
@@ -33,6 +34,36 @@ export function DescribeFiles(files: readonly File[]): string {
 	const total = files.reduce((sum, file) => sum + file.size, 0);
 	const noun = files.length === 1 ? "file" : "files";
 	return `${files.length} ${noun} (${FormatFileSize(total)}): ${names.join(", ")}`;
+}
+
+/**
+ * Describes the loaded results: how many solvers and instances, and where the best-known bounds come from.
+ *
+ * @param traceData - The results.
+ * @param bounds - The source of the best-known bounds, left out when it is not known.
+ */
+export function DescribeTraceData(
+	traceData: readonly TraceData[],
+	bounds?: string
+): string {
+	const solvers = new Set<string>();
+	const instances = new Set<string>();
+	for (const row of traceData) {
+		if (row.SolverName) {
+			solvers.add(row.SolverName);
+		}
+		if (row.InputFileName) {
+			instances.add(row.InputFileName);
+		}
+	}
+	const parts = [
+		`${solvers.size} ${solvers.size === 1 ? "solver" : "solvers"}`,
+		`${instances.size} ${instances.size === 1 ? "instance" : "instances"}`
+	];
+	if (bounds !== undefined) {
+		parts.push(`bounds: ${bounds}`);
+	}
+	return parts.join(" · ");
 }
 
 /**

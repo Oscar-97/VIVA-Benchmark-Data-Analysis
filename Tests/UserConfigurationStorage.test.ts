@@ -83,7 +83,8 @@ describe("CreateUserConfiguration", () => {
 		expect(
 			JSON.parse(localStorage.getItem(Keys.USER_CONFIGURATION) ?? "")
 		).toEqual({
-			dataSet: ["a", "b"],
+			version: 2,
+			dataSet: [{ InputFileName: "a" }, { InputFileName: "b" }],
 			dataFileType: "trc",
 			defaultTime: 1500,
 			gapLimit: 0.02
@@ -98,7 +99,11 @@ describe("CreateUserConfiguration", () => {
 		const stored = JSON.parse(
 			localStorage.getItem(Keys.USER_CONFIGURATION) ?? ""
 		);
-		expect(stored).toEqual({ dataSet: ["a"], dataFileType: "trc" });
+		expect(stored).toEqual({
+			version: 2,
+			dataSet: [{ InputFileName: "a" }],
+			dataFileType: "trc"
+		});
 	});
 
 	it.each([
@@ -127,6 +132,30 @@ describe("DeleteUserConfiguration", () => {
 		DeleteUserConfiguration();
 		expect(localStorage.getItem(Keys.USER_CONFIGURATION)).toBeNull();
 		expect(localStorage.getItem(Keys.DEMO_DATA)).toBeNull();
+		expect(DisplayWarningNotification).toHaveBeenCalledWith(
+			UserConfigurationMessages.DELETED_CONFIG,
+			expect.objectContaining({ label: "Undo" })
+		);
+	});
+
+	it("puts the data back when the removal is undone", () => {
+		const onRestore = jest.fn();
+		localStorage.setItem(Keys.USER_CONFIGURATION, '{"a":1}');
+		DeleteUserConfiguration(onRestore);
+		const action = jest.mocked(DisplayWarningNotification).mock.calls[0]?.[1];
+
+		action?.onClick();
+
+		expect(localStorage.getItem(Keys.USER_CONFIGURATION)).toBe('{"a":1}');
+		expect(localStorage.getItem(Keys.DEMO_DATA)).toBeNull();
+		expect(onRestore).toHaveBeenCalledTimes(1);
+		expect(DisplayAlertNotification).toHaveBeenCalledWith(
+			UserConfigurationMessages.RESTORED_CONFIG
+		);
+	});
+
+	it("offers no undo when nothing was saved", () => {
+		DeleteUserConfiguration();
 		expect(DisplayWarningNotification).toHaveBeenCalledWith(
 			UserConfigurationMessages.DELETED_CONFIG
 		);
@@ -168,7 +197,8 @@ describe("DownloadCustomizedUserConfiguration", () => {
 		expect(customDownloadButton.href).toBe("blob:test");
 		expect(customDownloadButton.download).toBe("UserConfiguration.json");
 		expect(userData).toMatchObject({
-			dataSet: ["x", "y"],
+			version: 2,
+			dataSet: [{ InputFileName: "x" }, { InputFileName: "y" }],
 			dataFileType: "json",
 			defaultTime: 900,
 			gapLimit: 0.5

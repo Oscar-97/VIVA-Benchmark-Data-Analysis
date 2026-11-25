@@ -2,6 +2,7 @@ jest.mock("../Src/Scripts/Elements/Elements", () => ({ elements: {} }));
 
 import {
 	DescribeFiles,
+	DescribeTraceData,
 	FormatFileSize
 } from "../Src/Scripts/Elements/LoadStatus";
 
@@ -45,5 +46,26 @@ describe("DescribeFiles", () => {
 		expect(DescribeFiles(files)).toBe(
 			"6 files (60 B): a.trc, b.trc, c.trc, d.trc, and 2 more"
 		);
+	});
+});
+
+describe("DescribeTraceData", () => {
+	const rows = [
+		{ SolverName: "SCIP", InputFileName: "a" },
+		{ SolverName: "SCIP", InputFileName: "b" },
+		{ SolverName: "SHOT", InputFileName: "a" },
+		{}
+	];
+
+	it("should count the solvers and the instances, and name the bounds", () => {
+		expect(DescribeTraceData(rows, "MIPLIB 2017")).toBe(
+			"2 solvers · 2 instances · bounds: MIPLIB 2017"
+		);
+	});
+
+	it("should leave out the bounds when they are not known, and use the singular", () => {
+		expect(
+			DescribeTraceData([{ SolverName: "SCIP", InputFileName: "a" }])
+		).toBe("1 solver · 1 instance");
 	});
 });

@@ -40,7 +40,83 @@ export const elements = {
 	},
 
 	/**
+	 * `fileStorageNote` is a reference to the HTMLParagraphElement with the ID "fileStorageNote", the note in the
+	 * empty state that a page opened from a file does not share its data with the other pages.
+	 * @type {HTMLParagraphElement}
+	 */
+	get fileStorageNote(): HTMLParagraphElement {
+		return GetElement<HTMLParagraphElement>("fileStorageNote");
+	},
+
+	/**
+	 * `sessionIndicator` is a reference to the HTMLLIElement with the ID "sessionIndicator", which tells that
+	 * the data of this session is kept for the other pages.
+	 * @type {HTMLLIElement}
+	 */
+	get sessionIndicator(): HTMLLIElement {
+		return GetElement<HTMLLIElement>("sessionIndicator");
+	},
+
+	/**
+	 * `sessionIndicatorLabel` is a reference to the HTMLSpanElement with the ID "sessionIndicatorLabel".
+	 * @type {HTMLSpanElement}
+	 */
+	get sessionIndicatorLabel(): HTMLSpanElement {
+		return GetElement<HTMLSpanElement>("sessionIndicatorLabel");
+	},
+
+	/**
+	 * `clearSessionDataButton` is a reference to the HTMLButtonElement with the ID "clearSessionDataButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get clearSessionDataButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("clearSessionDataButton");
+	},
+
+	/**
+	 * `buttonContainer` is a reference to the HTMLDivElement with the ID "buttonContainer", which holds the buttons of the page.
+	 * @type {HTMLDivElement}
+	 */
+	get buttonContainer(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("buttonContainer");
+	},
+
+	/**
+	 * `dataMenu` is a reference to the HTMLDivElement with the ID "dataMenu", which holds the menu of the data actions.
+	 * @type {HTMLDivElement}
+	 */
+	get dataMenu(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("dataMenu");
+	},
+
+	/**
+	 * `emptyStateChooseButton` is a reference to the HTMLButtonElement with the ID "emptyStateChooseButton".
+	 * It opens the dialog for choosing the files to load.
+	 * @type {HTMLButtonElement}
+	 */
+	get emptyStateChooseButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("emptyStateChooseButton");
+	},
+
+	/**
+	 * `selectedFiles` is a reference to the HTMLDivElement with the ID "selectedFiles", which lists the chosen files.
+	 * @type {HTMLDivElement}
+	 */
+	get selectedFiles(): HTMLDivElement {
+		return GetElement<HTMLDivElement>("selectedFiles");
+	},
+
+	/**
+	 * `emptyStateDemoMinlpButton` is a reference to the HTMLButtonElement with the ID "emptyStateDemoMinlpButton".
+	 * @type {HTMLButtonElement}
+	 */
+	get emptyStateDemoMinlpButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("emptyStateDemoMinlpButton");
+	},
+
+	/**
 	 * `emptyStateDemoButton` is a reference to the HTMLButtonElement with the ID "emptyStateDemoButton".
+	 * It loads the MIP demo data.
 	 * @type {HTMLButtonElement}
 	 */
 	get emptyStateDemoButton(): HTMLButtonElement {
@@ -101,6 +177,15 @@ export const elements = {
 	 */
 	get alertMessage(): HTMLSpanElement {
 		return GetElement<HTMLSpanElement>("alertMessage");
+	},
+
+	/**
+	 * `alertActionButton` is a reference to the HTMLButtonElement with the ID "alertActionButton".
+	 * It is shown in the notification when the notification offers an action, like undoing the removal of data.
+	 * @type {HTMLButtonElement}
+	 */
+	get alertActionButton(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("alertActionButton");
 	},
 
 	/**
@@ -326,19 +411,19 @@ export const elements = {
 	},
 
 	/**
-	 * `demoModeButton` is a reference to the HTMLButtonElement with the ID "demoModeButton".
+	 * `demoMipMenuItem` is a reference to the HTMLButtonElement with the ID "demoMipMenuItem", in the Help menu.
 	 * @type {HTMLButtonElement}
 	 */
-	get demoDataButton(): HTMLButtonElement {
-		return GetElement<HTMLButtonElement>("demoModeButton");
+	get demoMipMenuItem(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("demoMipMenuItem");
 	},
 
 	/**
-	 * `demoDataSelector` is a reference to the HTMLSelectElement with the ID "demoDataSelector".
-	 * @type {HTMLSelectElement}
+	 * `demoMinlpMenuItem` is a reference to the HTMLButtonElement with the ID "demoMinlpMenuItem", in the Help menu.
+	 * @type {HTMLButtonElement}
 	 */
-	get demoDataSelector(): HTMLSelectElement {
-		return GetElement<HTMLSelectElement>("demoDataSelector");
+	get demoMinlpMenuItem(): HTMLButtonElement {
+		return GetElement<HTMLButtonElement>("demoMinlpMenuItem");
 	},
 
 	/**
@@ -413,6 +498,13 @@ export const elements = {
 	 */
 	get categorySelector(): HTMLSelectElement {
 		return GetElement<HTMLSelectElement>("categorySelector");
+	},
+
+	/**
+	 * `scaleSelector` is a reference to the HTMLSelectElement with the ID "scaleSelector".
+	 */
+	get scaleSelector(): HTMLSelectElement {
+		return GetElement<HTMLSelectElement>("scaleSelector");
 	},
 
 	/**

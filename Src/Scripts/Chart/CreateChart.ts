@@ -13,6 +13,7 @@ import {
 	LinearScale,
 	LineController,
 	LineElement,
+	LogarithmicScale,
 	PointElement,
 	RadarController,
 	RadialLinearScale,
@@ -27,7 +28,10 @@ import { ShowPWANotification } from "../PWA/PWA-utils";
 import { ChartMessages } from "../Constants/Messages";
 import { GetCurrentTheme, THEME_CHANGE_EVENT } from "../Theme";
 import { AnyChart, UpdateChartTools, WireChartTools } from "./ChartTools";
+import { ConnectChartTable } from "./ChartTable";
+import { DescribeChart } from "./ChartDescription";
 import { ApplyPalette } from "./Palette";
+import { WrapText } from "./WrapText";
 let myChart: AnyChart | null = null;
 
 /**
@@ -42,7 +46,7 @@ export type ChartAnnotationOptions = NonNullable<
 
 /**
  * Only what the application draws is registered, not everything that chart.js/auto does:
- * bar, line, bubble and radar charts, with the scales and elements that they use, and the plugins
+ * bar, line, bubble and radar charts, with the scales (linear, logarithmic, category and radial) and elements that they use, and the plugins
  * for the colors, the filled areas of a radar chart, the legend, the titles and the tooltips.
  * A chart of another kind needs its controller, scale and elements added here.
  */
@@ -53,6 +57,7 @@ Chart.register(
 	RadarController,
 	CategoryScale,
 	LinearScale,
+	LogarithmicScale,
 	RadialLinearScale,
 	BarElement,
 	LineElement,
@@ -150,7 +155,16 @@ function DrawChart(chart: ChartArguments, keepView = false): void {
 
 	ApplyChartTheme();
 	const theme = GetCurrentTheme();
-	LabelCanvas(DescribeChart(title, data));
+	LabelCanvas(
+		DescribeChart(
+			type,
+			title,
+			data.flatMap((dataset) =>
+				typeof dataset.label === "string" ? [dataset.label] : []
+			),
+			scaleOptions
+		)
+	);
 
 	myChart = new Chart(elements.chartCanvas, {
 		type: type,
@@ -163,6 +177,13 @@ function DrawChart(chart: ChartArguments, keepView = false): void {
 		options: {
 			responsive: true,
 			maintainAspectRatio: false,
+			// The subtitle is wrapped for the width of the chart, so it is wrapped again when the chart is resized.
+			onResize: (resized, size): void => {
+				const options = resized.options.plugins?.subtitle;
+				if (subtitle && options) {
+					options.text = WrapSubtitle(subtitle, size.width);
+				}
+			},
 			...(scaleOptions ? { scales: scaleOptions } : {}),
 			transitions: {
 				zoom: {
@@ -183,7 +204,10 @@ function DrawChart(chart: ChartArguments, keepView = false): void {
 					}
 				},
 				subtitle: subtitle
-					? { display: true, text: subtitle }
+					? {
+							display: true,
+							text: WrapSubtitle(subtitle, elements.chartCanvas.clientWidth)
+						}
 					: { display: false },
 				...(zoomOptions ? { zoom: WithToolUpdates(zoomOptions) } : {}),
 				...(annotationOptions ? { annotation: annotationOptions } : {})
@@ -192,6 +216,19 @@ function DrawChart(chart: ChartArguments, keepView = false): void {
 	});
 
 	ConnectTools(myChart, view);
+}
+
+/**
+ * The subtitle in lines that fit the width of the chart, with about 6.5 pixels for a character. A chart that has
+ * no width, as it is hidden, gets the subtitle in one line: it is wrapped when the chart is shown and resized.
+ *
+ * @param subtitle - The subtitle.
+ * @param width - The width of the chart in pixels.
+ */
+function WrapSubtitle(subtitle: string, width: number): string[] {
+	return width > 0
+		? WrapText(subtitle, Math.max(20, Math.floor(width / 6.5)))
+		: [subtitle];
 }
 
 /**
@@ -228,6 +265,18 @@ function ConnectTools(chart: AnyChart, view: ChartView | null): void {
 		() => lastChart?.title ?? ""
 	);
 	UpdateChartTools(chart);
+	ConnectChartTable(() =>
+		lastChart
+			? {
+					data: lastChart.data,
+					labels:
+						typeof lastChart.label === "string"
+							? [lastChart.label]
+							: lastChart.label,
+					title: lastChart.title
+				}
+			: null
+	);
 }
 
 /**
@@ -282,22 +331,6 @@ function WithToolUpdates(
 			onPanComplete: ({ chart }) => UpdateChartTools(chart as AnyChart)
 		}
 	};
-}
-
-/**
- * A text for a screen reader: a chart on a canvas has no content of its own.
- */
-function DescribeChart(title: string, data: ChartDatasets): string {
-	const labels = data
-		.map((dataset) => dataset.label)
-		.filter((label): label is string => typeof label === "string");
-	const MAX_LABELS = 12;
-	const listed = labels.slice(0, MAX_LABELS).join(", ");
-	const more =
-		labels.length > MAX_LABELS
-			? `, and ${labels.length - MAX_LABELS} more`
-			: "";
-	return labels.length > 0 ? `${title}. Data sets: ${listed}${more}.` : title;
 }
 
 /**

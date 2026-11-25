@@ -9,7 +9,7 @@ import { FindElement } from "../Elements/Elements";
 export function DescribeTableHint(visible: number, total: number): string {
 	const columns =
 		visible < total
-			? `${visible} of ${total} columns are shown. Show the others with Settings, then Column Visibility.`
+			? `${visible} of ${total} columns are shown. Show the others with Columns.`
 			: `All ${total} columns are shown.`;
 	return `${columns} Click a row to select it, hold Ctrl or Shift to select several, then use Show Selected Rows.`;
 }

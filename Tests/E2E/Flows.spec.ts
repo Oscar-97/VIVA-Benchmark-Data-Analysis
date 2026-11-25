@@ -8,7 +8,9 @@ import {
 	PageUrl,
 	PLOT_PAGES,
 	TestFile,
-	ViewTable
+	ViewTable,
+	ClickDataMenuItem,
+	ClickHelpMenuItem
 } from "./Helpers";
 
 const PAGES = [
@@ -71,7 +73,7 @@ test.describe("Modals", () => {
 	test("The help modal explains the file formats, and closes", async ({
 		page
 	}) => {
-		await page.locator('button[name="Help"]').click();
+		await ClickHelpMenuItem(page, "#fileFormatsHelpItem");
 
 		const modal = page.locator("#fileFormatInformationModal");
 		await expect(modal).toBeVisible();
@@ -88,14 +90,16 @@ test.describe("Modals", () => {
 	test("Cancelling the delete modal keeps the stored data", async ({
 		page
 	}) => {
-		await page.locator("#saveLocalStorageButton").click();
-		await page.locator("#deleteLocalStorageButton").click();
+		await ClickDataMenuItem(page, "#saveLocalStorageButton");
+		await ClickDataMenuItem(page, "#deleteLocalStorageButton");
 		const modal = page.locator("#deleteDataModal");
 		await expect(modal).toBeVisible();
 
-		await modal.getByRole("button", { name: "Cancel" }).click();
-
-		await expect(modal).toBeHidden();
+		// Bootstrap ignores a close while the modal is still fading in, so the click is repeated until the modal has closed.
+		await expect(async () => {
+			await modal.getByRole("button", { name: "Cancel" }).click();
+			await expect(modal).toBeHidden({ timeout: 1000 });
+		}).toPass();
 		expect(
 			await page.evaluate(() => localStorage.getItem("UserConfiguration"))
 		).not.toBeNull();
@@ -104,15 +108,18 @@ test.describe("Modals", () => {
 	test("Clearing the table asks first, and removes the table", async ({
 		page
 	}) => {
-		await page.locator("#clearTableButton").click();
+		await ClickDataMenuItem(page, "#clearTableButton");
 		const modal = page.locator("#clearDataTableModal");
 		await expect(modal).toBeVisible();
 
-		await modal.getByRole("button", { name: "Cancel" }).click();
-		await expect(modal).toBeHidden();
+		// Bootstrap ignores a close while the modal is still fading in, so the click is repeated until the modal has closed.
+		await expect(async () => {
+			await modal.getByRole("button", { name: "Cancel" }).click();
+			await expect(modal).toBeHidden({ timeout: 1000 });
+		}).toPass();
 		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible();
 
-		await page.locator("#clearTableButton").click();
+		await ClickDataMenuItem(page, "#clearTableButton");
 		await page.locator("#clearTableButtonInModal").click();
 
 		await expect(page.locator("#dataTableGenerated_wrapper")).toHaveCount(0);
@@ -131,8 +138,9 @@ test.describe("Saved data", () => {
 		const firstRows = await page
 			.locator("#dataTableGenerated tbody tr")
 			.allInnerTexts();
-		await page.locator("#saveLocalStorageButton").click();
+		await ClickDataMenuItem(page, "#saveLocalStorageButton");
 
+		await page.locator("#dataMenuButton").click();
 		const [download] = await Promise.all([
 			page.waitForEvent("download"),
 			page.locator("#downloadConfigurationButton").click()
@@ -168,7 +176,7 @@ test.describe("Customized download", () => {
 		await ExpectNotification(page, "Benchmarks loaded with following files");
 		await ViewTable(page);
 
-		await page.locator("#configurationSettingsButton").click();
+		await ClickDataMenuItem(page, "#configurationSettingsButton");
 		await page.locator("#solverSelector").selectOption("scip");
 		await page.locator("#defaultTimeInput").fill("500");
 		await page.locator("#gapLimitInput").fill("0.5");
@@ -180,27 +188,22 @@ test.describe("Customized download", () => {
 		const file = testInfo.outputPath(download.suggestedFilename());
 		await download.saveAs(file);
 		const configuration = JSON.parse(fs.readFileSync(file, "utf8")) as {
-			dataSet: string[];
+			version: number;
+			dataSet: { SolverName: string }[];
 			dataFileType: string;
 			defaultTime: number;
 			gapLimit: number;
 		};
 		expect(download.suggestedFilename()).toBe("UserConfiguration.json");
 		expect(configuration).toMatchObject({
+			version: 2,
 			dataFileType: "json",
 			defaultTime: 500,
 			gapLimit: 0.5
 		});
-		// Only the 335 instances of scip, and no line of the other solvers.
-		const solverLines = configuration.dataSet.filter((line) =>
-			line.includes("scip")
-		);
-		expect(solverLines.length).toBeGreaterThanOrEqual(335);
-		expect(configuration.dataSet.some((line) => line.includes("shot"))).toBe(
-			false
-		);
-		expect(configuration.dataSet.some((line) => line.includes("pavito"))).toBe(
-			false
-		);
+		// Only the 335 instances of scip, and no row of the other solvers.
+		const solvers = configuration.dataSet.map((row) => row.SolverName);
+		expect(solvers.filter((solver) => solver === "scip")).toHaveLength(335);
+		expect(solvers.every((solver) => solver === "scip")).toBe(true);
 	});
 });

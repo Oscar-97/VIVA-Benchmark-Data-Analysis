@@ -1,4 +1,5 @@
 import { expect, Page } from "@playwright/test";
+import * as fs from "fs";
 import * as path from "path";
 
 /**
@@ -121,10 +122,15 @@ export async function ExpectNotification(
 }
 
 /**
- * Opens the table of the imported data.
+ * Waits for the table of the imported data. The table is shown when the data is loaded, so the button
+ * is only used when it is still enabled, for example for a large data set.
  */
 export async function ViewTable(page: Page): Promise<void> {
-	await page.locator("#viewTableButton").click();
+	const button = page.locator("#viewTableButton");
+	if (await button.isEnabled()) {
+		// The application can show the table, and disable the button, just after this check.
+		await button.click({ timeout: 2000 }).catch(() => undefined);
+	}
 	await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible({
 		timeout: 60_000
 	});
@@ -145,15 +151,47 @@ export async function IsChartDrawn(page: Page): Promise<boolean> {
 
 /**
  * The data of the chart that is shown, in the form that the page offers for download.
+ * The file is read from the download, as the Content-Security-Policy of the pages does not let them
+ * fetch a blob: address.
  */
 export async function ReadChartData(
 	page: Page
 ): Promise<{ label: string; data: number[] }[]> {
-	return page.evaluate(async () => {
+	const download = page.waitForEvent("download");
+	await page.evaluate(() => {
 		const link = document.getElementById(
 			"downloadChartDataButton"
 		) as HTMLAnchorElement;
 		link.click();
-		return (await fetch(link.href)).json();
 	});
+	const file = await (await download).path();
+	return JSON.parse(fs.readFileSync(file, "utf8"));
+}
+
+/**
+ * Opens the Data menu, if it is not open yet, and uses the action with the id, for example "#saveLocalStorageButton".
+ */
+export async function ClickDataMenuItem(
+	page: Page,
+	selector: string
+): Promise<void> {
+	const item = page.locator(selector);
+	if (!(await item.isVisible())) {
+		await page.locator("#dataMenuButton").click();
+	}
+	await item.click();
+}
+
+/**
+ * Opens the Help menu, if it is not open yet, and uses the item with the id, for example "#demoMipMenuItem".
+ */
+export async function ClickHelpMenuItem(
+	page: Page,
+	selector: string
+): Promise<void> {
+	const item = page.locator(selector);
+	if (!(await item.isVisible())) {
+		await page.locator("#helpMenuButton").click();
+	}
+	await item.click();
 }

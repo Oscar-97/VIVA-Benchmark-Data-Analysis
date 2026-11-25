@@ -16,14 +16,14 @@ describe("DescribeTableHint", () => {
 		const text = DescribeTableHint(15, 40);
 
 		expect(text).toContain("15 of 40 columns are shown.");
-		expect(text).toContain("Settings, then Column Visibility");
+		expect(text).toContain("Show the others with Columns.");
 	});
 
 	it("should not mention hidden columns when all are shown", () => {
 		const text = DescribeTableHint(40, 40);
 
 		expect(text).toContain("All 40 columns are shown.");
-		expect(text).not.toContain("Column Visibility");
+		expect(text).not.toContain("Columns.");
 	});
 
 	it("should explain how rows are selected", () => {

@@ -4,20 +4,20 @@
 
 ## App
 
-- [Table](https://viva-app.xyz/report): the benchmark data as an interactive table
-- [Compare Solvers](https://viva-app.xyz/Src/Pages/compare_solvers): compare the results of solvers
-- [Performance profile](https://viva-app.xyz/Src/Pages/performance_profile): performance profile plot
-- [Solution quality](https://viva-app.xyz/Src/Pages/solution_quality): solution quality plot
-- [Solution time](https://viva-app.xyz/Src/Pages/solution_time): solution time plot
-- [Solver time per instance](https://viva-app.xyz/Src/Pages/solver_time): solver time per instance plot
-- [Solver time per solver](https://viva-app.xyz/Src/Pages/solver_time_all): solver time per solver plot
-- [Number of nodes](https://viva-app.xyz/Src/Pages/number_of_nodes): number of nodes plot
-- [Number of iterations](https://viva-app.xyz/Src/Pages/number_of_iterations): number of iterations plot
-- [Termination status](https://viva-app.xyz/Src/Pages/termination_status): termination status plot
+- [Table](https://viva-app.xyz/table): the benchmark data as an interactive table
+- [Compare Solvers](https://viva-app.xyz/compare): compare the results of solvers
+- [Performance profile](https://viva-app.xyz/plots/performance-profile): performance profile plot
+- [Solution quality](https://viva-app.xyz/plots/solution-quality): solution quality plot
+- [Solution time](https://viva-app.xyz/plots/solution-time): solution time plot
+- [Solver time per instance](https://viva-app.xyz/plots/solver-time-per-instance): solver time per instance plot
+- [Solver time per solver](https://viva-app.xyz/plots/solver-time-per-solver): solver time per solver plot
+- [Number of nodes](https://viva-app.xyz/plots/number-of-nodes): number of nodes plot
+- [Number of iterations](https://viva-app.xyz/plots/number-of-iterations): number of iterations plot
+- [Termination status](https://viva-app.xyz/plots/termination-status): termination status plot
 
 ## Documentation and source
 
-- [Documentation](https://viva-app.xyz/Docs/index.html): API documentation of the code
+- [Documentation](https://viva-app.xyz/Docs/documents/USER_GUIDE.html): user guide and API documentation
 - [GitHub repository](https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis): source code and README
 - [Releases](https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/releases): downloads and release notes
 - [Issues](https://github.com/Oscar-97/VIVA-Benchmark-Data-Analysis/issues): bug reports and feature requests

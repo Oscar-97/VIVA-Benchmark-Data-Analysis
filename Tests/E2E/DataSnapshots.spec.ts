@@ -129,17 +129,12 @@ test.describe("Data snapshots", () => {
 	});
 
 	test("The navigation of a plot page", async ({ page }) => {
-		// The last link shows the version of the application, which changes with every release, so the
-		// snapshot has the text that the page has without a version.
+		// The version of the application changes with every release. It is in the Help menu, which is closed
+		// and so not part of the snapshot, but it is checked here.
 		await page.goto(PageUrl("Src/Pages/solver_time.html"));
-		const releaseLink = page.locator("#releaseVersionTagSpan");
-		await expect(releaseLink).toHaveText(/^\s*v\d+\.\d+\.\d+/);
-		await releaseLink.evaluate((link) => {
-			link.replaceChildren(
-				Object.assign(document.createElement("i"), { className: "bi bi-git" }),
-				" Releases"
-			);
-		});
+		await expect(page.locator("#releaseVersionTagSpan")).toHaveText(
+			/^\s*v\d+\.\d+\.\d+/
+		);
 
 		await expect(page.locator("nav").first()).toMatchAriaSnapshot({
 			name: "navigation.aria.yml"

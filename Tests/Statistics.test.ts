@@ -1,5 +1,6 @@
 import * as math from "mathjs";
 import {
+	FormatStatistic,
 	Max,
 	Mean,
 	Min,
@@ -249,6 +250,31 @@ describe("RoundToSignificant", () => {
 		expect(RoundToSignificant(Infinity, 7)).toBe(Infinity);
 		expect(RoundToSignificant(-Infinity, 7)).toBe(-Infinity);
 		expect(RoundToSignificant(NaN, 7)).toBeNaN();
+	});
+});
+
+describe("FormatStatistic", () => {
+	it("writes an ordinary number as it is", () => {
+		expect(FormatStatistic(0)).toBe("0");
+		expect(FormatStatistic(0.4240061)).toBe("0.4240061");
+		expect(FormatStatistic(-784302300)).toBe("-784302300");
+		expect(FormatStatistic(27682800)).toBe("27682800");
+	});
+
+	it("writes a very large number with an exponent, not as a long row of digits", () => {
+		expect(FormatStatistic(63564690000000000)).toBe("6.356469e+16");
+		expect(FormatStatistic(3.106284e21)).toBe("3.106284e+21");
+		expect(FormatStatistic(-2.5e13)).toBe("-2.5e+13");
+	});
+
+	it("writes a very small number with an exponent", () => {
+		expect(FormatStatistic(0.00001234)).toBe("1.234e-5");
+	});
+
+	it("writes infinity and NaN as they are", () => {
+		expect(FormatStatistic(Infinity)).toBe("Infinity");
+		expect(FormatStatistic(-Infinity)).toBe("-Infinity");
+		expect(FormatStatistic(NaN)).toBe("NaN");
 	});
 });
 

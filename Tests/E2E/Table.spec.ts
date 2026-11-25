@@ -6,7 +6,9 @@ import {
 	ImportFiles,
 	PageUrl,
 	TestFile,
-	ViewTable
+	ViewTable,
+	ClickDataMenuItem,
+	ClickHelpMenuItem
 } from "./Helpers";
 
 const SHOT_LOADED = "Benchmarks loaded with following files: shotALL.trc";
@@ -43,19 +45,32 @@ test.describe("Table page", () => {
 	 * Deletes the stored configuration, through the modal that asks for it.
 	 */
 	async function DeleteConfiguration(page: Page): Promise<void> {
-		await page.locator("#deleteLocalStorageButton").click();
+		await ClickDataMenuItem(page, "#deleteLocalStorageButton");
+		const modal = page.locator("#deleteDataModal");
 		await page.locator("#deleteButtonInModal").click();
+		// Bootstrap ignores a close while the modal is still fading in, although the data is deleted. Cancel
+		// closes the modal again until it has closed, and does not delete a second time.
+		await expect(async () => {
+			if (await modal.isVisible()) {
+				await modal
+					.getByRole("button", { name: "Cancel" })
+					.click({ timeout: 1000 });
+			}
+			await expect(modal).toBeHidden({ timeout: 1000 });
+		}).toPass();
 	}
 
-	for (const demo of ["Demo_1", "Demo_2"]) {
+	for (const [demo, item] of [
+		["Demo_1", "#demoMipMenuItem"],
+		["Demo_2", "#demoMinlpMenuItem"]
+	] as const) {
 		test(`Demo mode: ${demo}`, async ({ page }) => {
-			await page.selectOption("#demoDataSelector", demo);
-			await page.click("#demoModeButton");
+			await ClickHelpMenuItem(page, item);
 			await ExpectNotification(page, "Using demo mode!");
 			await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible({
 				timeout: 60_000
 			});
-			await expect(page.locator("#demoDataSelector")).toBeDisabled();
+			await expect(page.locator(item)).toBeDisabled();
 
 			await DeleteConfiguration(page);
 
@@ -109,7 +124,7 @@ test.describe("Table page", () => {
 
 	test("Save to, load from and remove local storage", async ({ page }) => {
 		await ImportAndView(page, ["shotALL.trc"], SHOT_LOADED);
-		await page.locator("#saveLocalStorageButton").click();
+		await ClickDataMenuItem(page, "#saveLocalStorageButton");
 		await page.reload();
 
 		await ExpectNotification(page, "Found stored configuration!");
@@ -120,6 +135,39 @@ test.describe("Table page", () => {
 
 		await DeleteConfiguration(page);
 		await ExpectNotification(page, "Deleted configuration.");
+	});
+
+	test("Removing the saved data can be undone", async ({ page }) => {
+		await ImportAndView(page, ["shotALL.trc"], SHOT_LOADED);
+		await ClickDataMenuItem(page, "#saveLocalStorageButton");
+		await page.reload();
+		await ExpectNotification(page, "Found stored configuration!");
+
+		await DeleteConfiguration(page);
+		await ExpectNotification(page, "Deleted configuration.");
+		await expect(page.locator("#deleteLocalStorageButton")).toBeDisabled();
+
+		// The Undo button is in line with the message.
+		const message = await page.locator("#alertMessage").boundingBox();
+		const undo = await page.locator("#alertActionButton").boundingBox();
+		expect(message).not.toBeNull();
+		expect(undo).not.toBeNull();
+		const middle = (box: { y: number; height: number } | null): number =>
+			(box?.y ?? 0) + (box?.height ?? 0) / 2;
+		expect(Math.abs(middle(undo) - middle(message))).toBeLessThanOrEqual(1);
+
+		await page.locator("#alertActionButton").click();
+		await ExpectNotification(page, "Restored the saved data.");
+		await expect(page.locator("#alertActionButton")).toBeHidden();
+		await expect(page.locator("#deleteLocalStorageButton")).toBeEnabled();
+		await expect(
+			page.locator("#downloadConfigurationButtonLayer")
+		).toBeEnabled();
+
+		// The data is stored again, so it is loaded after a reload.
+		await page.reload();
+		await expect(page.locator("#deleteLocalStorageButton")).toBeEnabled();
+		await expect(page.locator("#dataTableGenerated")).toBeVisible();
 	});
 
 	test("Loading wrong file format", async ({ page }) => {
@@ -153,6 +201,24 @@ test.describe("Table page", () => {
 		for (const index of [0, 1, 2]) {
 			await rows.nth(index).click({ modifiers: ["Control"] });
 		}
+
+		// The selected rows are blue in every cell, also in the fixed first column, and the others are not.
+		const BLUE = "rgb(13, 110, 253)";
+		for (const index of [0, 1, 2]) {
+			const cells = rows.nth(index).locator("td");
+			await expect(cells.first()).toHaveCSS("background-color", BLUE);
+			await expect(cells.nth(3)).toHaveCSS("background-color", BLUE);
+		}
+		await expect(rows.nth(3).locator("td").first()).not.toHaveCSS(
+			"background-color",
+			BLUE
+		);
+		// Selecting does not open the details of the row below it.
+		await expect(
+			page.locator("#dataTableGenerated tbody tr.child")
+		).toHaveCount(0);
+		await expect(page.locator(".dt-info")).toContainText("3 rows selected");
+
 		await page.locator("#showSelectedRowsButton").click();
 
 		await expect(rows).toHaveCount(3);
@@ -161,6 +227,7 @@ test.describe("Table page", () => {
 	test("Button status after viewing a table", async ({ page }) => {
 		await ImportAndView(page, ["shotALL.trc"], SHOT_LOADED);
 
+		await page.locator("#dataMenuButton").click();
 		for (const selector of [
 			"#showSelectedRowsButton",
 			"#saveLocalStorageButton",
@@ -176,8 +243,9 @@ test.describe("Table page", () => {
 
 	test("Download data", async ({ page }) => {
 		await ImportAndView(page, ["shotALL.trc"], SHOT_LOADED);
-		await page.locator("#saveLocalStorageButton").click();
+		await ClickDataMenuItem(page, "#saveLocalStorageButton");
 
+		await page.locator("#dataMenuButton").click();
 		const [download] = await Promise.all([
 			page.waitForEvent("download"),
 			page.locator("#downloadConfigurationButton").click()
@@ -186,9 +254,107 @@ test.describe("Table page", () => {
 		expect(download.suggestedFilename()).toBe("UserConfiguration.json");
 		const downloaded = JSON.parse(
 			fs.readFileSync((await download.path()) ?? "", "utf8")
-		) as { dataSet: unknown[]; dataFileType: string };
+		) as {
+			version: number;
+			dataSet: Record<string, unknown>[];
+			dataFileType: string;
+		};
+		expect(downloaded.version).toBe(2);
 		expect(downloaded.dataFileType).toBe("json");
-		expect(downloaded.dataSet.length).toBeGreaterThan(0);
+		// A row has the names of the columns, and numbers where the value is one.
+		expect(downloaded.dataSet).toHaveLength(335);
+		expect(downloaded.dataSet[0]).toMatchObject({
+			InputFileName: "alan",
+			SolverName: "shot",
+			SolverTime: 0.04
+		});
+	});
+
+	test("A configuration that was saved in the old format is downloaded in the new one", async ({
+		page
+	}) => {
+		const old = JSON.parse(
+			fs.readFileSync(TestFile("UserConfiguration.json"), "utf8")
+		) as { dataSet: string[] };
+		expect(old.dataSet.every((line) => typeof line === "string")).toBe(true);
+		await page.evaluate(
+			(stored) => localStorage.setItem("UserConfiguration", stored),
+			JSON.stringify(old)
+		);
+		await page.reload();
+		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible({
+			timeout: 60_000
+		});
+
+		await page.locator("#dataMenuButton").click();
+		const [download] = await Promise.all([
+			page.waitForEvent("download"),
+			page.locator("#downloadConfigurationButton").click()
+		]);
+
+		const downloaded = JSON.parse(
+			fs.readFileSync((await download.path()) ?? "", "utf8")
+		) as { version: number; dataSet: Record<string, unknown>[] };
+		expect(downloaded.version).toBe(2);
+		// The five rows of the file, as rows with the names of the columns.
+		expect(downloaded.dataSet).toHaveLength(5);
+		expect(downloaded.dataSet[0]).toMatchObject({
+			InputFileName: "ball_mk3_20",
+			SolverName: "shot",
+			SolverTime: 900.04
+		});
+	});
+
+	test("A configuration file of the old format is stored in the new one, with its limits", async ({
+		page
+	}, testInfo) => {
+		const old = JSON.parse(
+			fs.readFileSync(TestFile("UserConfiguration.json"), "utf8")
+		) as object;
+		const file = testInfo.outputPath("Old.json");
+		fs.writeFileSync(
+			file,
+			JSON.stringify({ ...old, defaultTime: "900", gapLimit: 0.5 })
+		);
+
+		await ImportFiles(page, [file]);
+		await expect(page.locator("#dataTableGenerated_wrapper")).toBeVisible({
+			timeout: 60_000
+		});
+
+		const stored = await page.evaluate(() =>
+			JSON.parse(localStorage.getItem("UserConfiguration") ?? "{}")
+		);
+		expect(stored).toMatchObject({
+			version: 2,
+			dataFileType: "json",
+			defaultTime: 900,
+			gapLimit: 0.5
+		});
+		expect(stored.dataSet).toHaveLength(5);
+	});
+
+	test("A configuration file of a newer version is not taken, and says so", async ({
+		page
+	}, testInfo) => {
+		const file = testInfo.outputPath("Newer.json");
+		fs.writeFileSync(
+			file,
+			JSON.stringify({ version: 3, dataSet: [{ A: 1 }], dataFileType: "json" })
+		);
+		errors.length = 0;
+
+		await page.setInputFiles('input[type="file"]', file);
+
+		await ExpectNotification(
+			page,
+			"Newer.json: This configuration was made by a newer version of VIVA"
+		);
+		await expect(page.locator("#importDataButton")).toBeDisabled();
+		expect(
+			await page.evaluate(() => localStorage.getItem("UserConfiguration"))
+		).toBeNull();
+		errors.length = 0;
 	});
 
 	test("Sort table and hide columns", async ({ page }) => {
@@ -236,7 +402,7 @@ test.describe("Table page", () => {
 		const hint = page.locator("#tableHint");
 		await expect(hint).toBeVisible();
 		await expect(hint).toContainText(/\d+ of \d+ columns are shown\./);
-		await expect(hint).toContainText("Column Visibility");
+		await expect(hint).toContainText("Show the others with Columns.");
 		await expect(hint).toContainText("hold Ctrl or Shift");
 		const shown = Number(
 			/(\d+) of \d+ columns/.exec(await hint.innerText())?.[1]
@@ -298,7 +464,7 @@ test.describe("Table page", () => {
 	test("Clearing the table is done at once, and says so", async ({ page }) => {
 		await ImportAndView(page, ["shotALL.trc"], SHOT_LOADED);
 
-		await page.locator("#clearTableButton").click();
+		await ClickDataMenuItem(page, "#clearTableButton");
 		await page.locator("#clearTableButtonInModal").click();
 
 		await ExpectNotification(page, "Table cleared.");

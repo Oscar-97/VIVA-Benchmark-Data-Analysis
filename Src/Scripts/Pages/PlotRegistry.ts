@@ -10,8 +10,11 @@ import {
 	PlotSolverTimes
 } from "../Chart/ChartType/LineCharts";
 import { PlotSolutionTimes } from "../Chart/ChartType/BubbleCharts";
+import { Values } from "../Constants/Values";
+import { FormatNumber } from "../Locale";
 import { PlotTerminationRelation } from "../Chart/ChartType/RadarCharts";
 import { elements } from "../Elements/Elements";
+import { GetPageName } from "../App/CurrentPage";
 import { PageTitles } from "../Constants/PageTitles";
 import { TraceHeaderMap } from "../Constants/TraceHeaders";
 import { TraceData } from "../Interfaces/Interfaces";
@@ -41,7 +44,7 @@ function PlotSolverTimePerSolverPage(traceData: TraceData[]): object[] {
 		"Average, min, max and std for solver time",
 		state.defaultTime,
 		filterType,
-		`${state.defaultTime} is set as default time for NaN values.`
+		`${FormatNumber(state.defaultTime ?? Values.DEFAULT_TIME)} is set as default time for NaN values.`
 	);
 }
 
@@ -108,6 +111,7 @@ function PlotTerminationStatusPage(traceData: TraceData[]): object[] {
 
 function PlotSolutionQualityPage(traceData: TraceData[]): object[] {
 	const category = elements.categorySelector.value;
+	const logScale = elements.scaleSelector.value === "logarithmic";
 	const categoryTitle = TraceHeaderMap[category as keyof typeof TraceHeaderMap];
 	return PlotDataByCategory(
 		traceData,
@@ -115,7 +119,11 @@ function PlotSolutionQualityPage(traceData: TraceData[]): object[] {
 		`Average, min, max and std for ${categoryTitle}`,
 		undefined,
 		undefined,
-		"Infinite and NaN values are excluded from the calculations."
+		logScale
+			? "Infinite and NaN values are excluded from the calculations. Values of 0 or less are not shown on a logarithmic scale."
+			: "Infinite and NaN values are excluded from the calculations.",
+		logScale,
+		"A few extreme values stretch the scale: choose Logarithmic under Scale to see the others."
 	);
 }
 
@@ -146,5 +154,5 @@ const plotRegistry: Partial<Record<string, PlotFunction>> = {
 export function GetPlotFunction(
 	title: string = document.title
 ): PlotFunction | undefined {
-	return plotRegistry[title];
+	return plotRegistry[GetPageName(title)];
 }

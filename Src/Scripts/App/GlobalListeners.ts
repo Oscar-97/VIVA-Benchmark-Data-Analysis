@@ -9,10 +9,11 @@ import {
 	DescribeFiles,
 	ShowLoadStatus
 } from "../Elements/LoadStatus";
+import { ForgetSessionData } from "../Elements/SessionIndicator";
+import { ShowFileList } from "../Elements/FileList";
 import { ImportDataEvents } from "../Elements/Events/ImportDataEvents";
 import { RequestPWANotificationPermission } from "../PWA/PWA-utils";
 import { state } from "./AppState";
-import { GetPageKind, PageKind } from "./CurrentPage";
 import { ManageData } from "./ManageData";
 
 /**
@@ -30,8 +31,9 @@ export function RegisterGlobalListeners(): void {
 	 */
 	elements.fileInput.addEventListener("change", () => {
 		ClearLoadStatus();
-		state.dataFileType = GetDataFileType();
 		const files = Array.from(elements.fileInput.files ?? []);
+		ShowFileList(files);
+		state.dataFileType = GetDataFileType();
 		ShowLoadStatus(`Reading ${DescribeFiles(files)}`, true);
 		ReadData(
 			state.unprocessedData,
@@ -59,6 +61,13 @@ export function RegisterGlobalListeners(): void {
 	});
 
 	/**
+	 * The explanation for an empty page opens the dialog for choosing files.
+	 */
+	elements.emptyStateChooseButton.addEventListener("click", () => {
+		elements.fileInput.click();
+	});
+
+	/**
 	 * Adds an event listener to the "Import Data" button that calls the
 	 * ImportDataEvents() function with a success message containing the list of files loaded
 	 * and the ManageData() function whenever the button is clicked.
@@ -67,6 +76,10 @@ export function RegisterGlobalListeners(): void {
 	 */
 	elements.importDataButton.addEventListener("click", () => {
 		sessionStorage.removeItem(Keys.SAVED_STORAGE_NOTIFICATION);
+		if (state.dataFileType === "json") {
+			// A configuration file is stored in the browser, it replaces the data of the session.
+			ForgetSessionData();
+		}
 		const fileNames = elements.fileInput.files
 			? Array.from(elements.fileInput.files)
 					.map((file) => {
@@ -80,18 +93,25 @@ export function RegisterGlobalListeners(): void {
 	});
 
 	/**
-	 * Adds an event listener to the "Demo-Mode" button that loads a demo data set and savet it to local storage.
+	 * Forgets the data of the session, and shows what is left: the data saved in the browser, or the empty page.
 	 */
-	if (GetPageKind() === PageKind.TABLE) {
-		elements.demoDataButton.addEventListener("click", () => {
-			RequestDemoMode();
-		});
-	}
+	elements.clearSessionDataButton.addEventListener("click", () => {
+		ForgetSessionData();
+		location.reload();
+	});
 
 	/**
-	 * The explanation for an empty page offers the first demo data set, on every page.
+	 * The demo data sets are offered by the explanation for an empty page and by the Help menu, on every page.
+	 * They load the data set and save it to local storage.
 	 */
-	elements.emptyStateDemoButton.addEventListener("click", () => {
-		RequestDemoMode("Demo_1");
-	});
+	for (const [button, demo] of [
+		[elements.emptyStateDemoButton, "Demo_1"],
+		[elements.emptyStateDemoMinlpButton, "Demo_2"],
+		[elements.demoMipMenuItem, "Demo_1"],
+		[elements.demoMinlpMenuItem, "Demo_2"]
+	] as const) {
+		button.addEventListener("click", () => {
+			RequestDemoMode(demo);
+		});
+	}
 }

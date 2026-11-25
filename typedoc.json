@@ -7,6 +7,8 @@
   "categorizeByGroup": true,
   "name": "System Documentation",
   "readme": "Src/Docs/README.md",
+  "highlightLanguages": ["bash", "console", "css", "csv", "html", "javascript", "json", "jsonc", "text", "tsx", "typescript"],
+  "projectDocuments": ["Src/Docs/USER_GUIDE.md"],
   "plugin": ["typedoc-material-theme"],
   "themeColor": "#cb9820",
 }

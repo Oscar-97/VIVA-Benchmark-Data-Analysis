@@ -124,6 +124,19 @@ export function RoundToSignificant(value: number, digits: number): number {
 	return value < 0 ? -rounded : rounded;
 }
 /**
+ * A statistic as text for a table: a plain number, and a number with an exponent when it is too large or too small
+ * to read, so that 63564690000000000 does not stand next to 3.106284e+21 in a column.
+ * Infinity and NaN are written as they are.
+ */
+export function FormatStatistic(value: number): string {
+	const size = Math.abs(value);
+	if (Number.isFinite(value) && (size >= 1e12 || (size > 0 && size < 1e-4))) {
+		return value.toExponential();
+	}
+	return String(value);
+}
+
+/**
  * The number of significant digits in the statistics that the tables show.
  */
 const STATISTICS_DIGITS = 7;
