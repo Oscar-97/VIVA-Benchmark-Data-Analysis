@@ -40,7 +40,7 @@ function StubDocument(headers: FakeCell[], rows: FakeRow[]): void {
 	Object.defineProperty(globalThis, "document", {
 		value: {
 			querySelectorAll: (selector: string): (FakeCell | FakeRow)[] => {
-				if (selector === ".thead-dark th") return headers;
+				if (selector === ".data-table-header th") return headers;
 				if (selector === ".row-selected-problems") return rows;
 				return [];
 			}

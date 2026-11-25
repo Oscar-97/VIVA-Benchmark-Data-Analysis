@@ -39,8 +39,6 @@ export function ClearDataTableModal(): void {
 	clearButton.className = "btn btn-danger";
 	clearButton.id = "clearTableButtonInModal";
 	clearButton.setAttribute("data-bs-dismiss", "modal");
-	clearButton.setAttribute("data-toggle", "tooltip");
-	clearButton.setAttribute("data-placement", "top");
 	clearButton.setAttribute(
 		"title",
 		"Clear current table and refresh table page."

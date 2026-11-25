@@ -1,6 +1,5 @@
 import { elements } from "../Elements/Elements";
 import { TraceHeaderMap } from "../Constants/TraceHeaders";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from "bootstrap/js/dist/modal";
 import { Captions } from "../Constants/Messages";
 import {
@@ -86,7 +85,7 @@ export function TraceTableData(traceData: TraceData[]): void {
 	dataTableDiv.innerHTML = "";
 
 	const dataTableHeaders = document.createElement("thead");
-	dataTableHeaders.classList.add("thead-dark");
+	dataTableHeaders.classList.add("data-table-header");
 
 	/**
 	 * Thead created from the categories.

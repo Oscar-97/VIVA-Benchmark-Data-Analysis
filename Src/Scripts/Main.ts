@@ -2,7 +2,13 @@
  * Bootstrap.
  */
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
+/**
+ * Only the components that the data attributes use. They share one registry with the Modal that the code imports.
+ */
+import "bootstrap/js/dist/collapse";
+import "bootstrap/js/dist/dropdown";
+import "bootstrap/js/dist/modal";
+import "bootstrap/js/dist/toast";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 /**
@@ -19,7 +25,7 @@ import "datatables.net-datetime/css";
 /**
  * CSS.
  */
-import "../css/style.css";
+import "../CSS/style.css";
 
 import { Bootstrap } from "./App/Bootstrap";
 
