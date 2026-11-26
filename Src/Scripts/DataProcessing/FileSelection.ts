@@ -5,11 +5,7 @@ import { ExtractTraceData } from "./FilterData";
  * The kinds of files that the application can read.
  */
 export type FileKind =
-	| "trace"
-	| "instances"
-	| "bounds"
-	| "configuration"
-	| "unsupported";
+	"trace" | "instances" | "bounds" | "configuration" | "unsupported";
 
 /**
  * A file that the user chose, with what the application takes it for.

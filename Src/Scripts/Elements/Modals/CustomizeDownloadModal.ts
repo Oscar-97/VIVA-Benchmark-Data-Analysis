@@ -116,8 +116,6 @@ export function CreateConfigurationSettingsModal(): void {
 
 	const downloadButton = document.createElement("a");
 	downloadButton.id = "downloadCustomConfigurationButton";
-	downloadButton.setAttribute("data-toggle", "tooltip");
-	downloadButton.setAttribute("data-placement", "top");
 	downloadButton.setAttribute(
 		"title",
 		"Download a customized user configuration."

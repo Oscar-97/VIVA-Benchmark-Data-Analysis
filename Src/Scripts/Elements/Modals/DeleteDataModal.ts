@@ -39,8 +39,6 @@ export function CreateDeleteDataModal(): void {
 	deleteButton.className = "btn btn-danger";
 	deleteButton.id = "deleteButtonInModal";
 	deleteButton.setAttribute("data-bs-dismiss", "modal");
-	deleteButton.setAttribute("data-toggle", "tooltip");
-	deleteButton.setAttribute("data-placement", "top");
 	deleteButton.setAttribute(
 		"title",
 		"Delete currently saved data in local storage."
